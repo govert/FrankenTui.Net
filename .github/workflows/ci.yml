@@ -21,6 +21,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Clone upstream reference workspace
+        shell: bash
+        run: |
+          mkdir -p .external
+          git clone https://github.com/Dicklesworthstone/frankentui.git .external/frankentui
+          git -C .external/frankentui checkout 7a91089366bd4644e086d5a422cb76b052e3de17
+
       - name: Setup .NET 10
         uses: actions/setup-dotnet@v4
         with:
@@ -37,7 +44,7 @@ jobs:
 
       - name: Refresh doctor artifacts
         if: runner.os == 'Linux'
-        run: dotnet run --project tools/FrankenTui.Doctor/FrankenTui.Doctor.csproj --no-build --configuration Release -- --format text --write-artifacts
+        run: dotnet run --project tools/FrankenTui.Doctor/FrankenTui.Doctor.csproj --no-build --configuration Release -- --format text --write-artifacts --write-manifest --run-benchmarks --run-id ci-linux
 
       - name: Upload hosted artifacts
         if: runner.os == 'Linux'
@@ -46,5 +53,6 @@ jobs:
           name: hosted-parity-artifacts
           path: |
             artifacts/doctor/
+            artifacts/benchmarks/
             artifacts/replay/
             artifacts/web/

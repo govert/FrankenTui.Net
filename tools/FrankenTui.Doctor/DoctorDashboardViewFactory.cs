@@ -39,6 +39,12 @@ public static class DoctorDashboardViewFactory
                             }),
                             (LayoutConstraint.Fill(), new StatusWidget
                             {
+                                Label = "Host status",
+                                Value = report.HostValidationStatus,
+                                IsHealthy = !string.Equals(report.HostValidationStatus, "blocked", StringComparison.Ordinal)
+                            }),
+                            (LayoutConstraint.Fill(), new StatusWidget
+                            {
                                 Label = "Mux",
                                 Value = report.InMux ? "yes" : "no",
                                 IsHealthy = !report.InMux
@@ -57,6 +63,7 @@ public static class DoctorDashboardViewFactory
                                     [
                                         new[] { "Runtime", report.RuntimeVersion },
                                         new[] { "TERM", report.Term },
+                                        new[] { "Validation", report.HostValidationStatus },
                                         new[] { "Hyperlinks", report.SupportsHyperlinks ? "yes" : "no" },
                                         new[] { "Sync output", report.SupportsSyncOutput ? "yes" : "no" }
                                     ],
@@ -91,6 +98,7 @@ public static class DoctorDashboardViewFactory
             new Dictionary<string, string>(StringComparer.Ordinal)
             {
                 ["host-profile"] = report.HostProfile,
+                ["host-validation-status"] = report.HostValidationStatus,
                 ["operating-system"] = report.OperatingSystem
             });
 
@@ -106,9 +114,13 @@ public static class DoctorDashboardViewFactory
                 $"Runtime: {report.RuntimeVersion}",
                 $"TERM: {report.Term}",
                 $"Host: {report.HostProfile}",
+                $"Host status: {report.HostValidationStatus}",
                 $"Hyperlinks: {(report.SupportsHyperlinks ? "yes" : "no")}",
                 $"Sync output: {(report.SupportsSyncOutput ? "yes" : "no")}",
                 $"In mux: {(report.InMux ? "yes" : "no")}",
+                $"Host evidence: {string.Join(" | ", report.HostEvidenceSources ?? [])}",
+                $"Host divergences: {string.Join(" | ", report.KnownHostDivergences ?? [])}",
+                $"Capability overrides: {string.Join(" | ", report.CapabilityOverrides ?? [])}",
                 $"Notes: {string.Join(" | ", report.Notes)}",
                 $"Recommendations: {string.Join(" | ", report.Recommendations ?? [])}",
                 report.ArtifactPaths is null

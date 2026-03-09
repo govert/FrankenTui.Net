@@ -18,6 +18,13 @@ public static class Ui
     public static AppSimulator<TModel, TMessage> CreateSimulator<TModel, TMessage>(ushort width, ushort height, Theme? theme = null) =>
         new(new Size(width, height), theme);
 
+    public static AppSimulator<TModel, TMessage> CreateSimulator<TModel, TMessage>(
+        ushort width,
+        ushort height,
+        Theme? theme,
+        RuntimeExecutionPolicy policy) =>
+        new(new Size(width, height), theme, policy);
+
     public static WidgetInputState CreateInputState(IEnumerable<string>? focusOrder = null, string language = "en-US")
     {
         var state = WidgetInputState.Default with { Language = language };

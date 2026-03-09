@@ -7,15 +7,19 @@ namespace FrankenTui.Runtime;
 
 public sealed class AppSimulator<TModel, TMessage>
 {
-    public AppSimulator(Size size, Theme? theme = null)
+    public AppSimulator(Size size, Theme? theme = null, RuntimeExecutionPolicy? policy = null)
     {
         Backend = new MemoryTerminalBackend(size);
-        Runtime = new AppRuntime<TModel, TMessage>(Backend, size, theme);
+        Runtime = new AppRuntime<TModel, TMessage>(Backend, size, theme, policy);
     }
 
     public MemoryTerminalBackend Backend { get; }
 
     public AppRuntime<TModel, TMessage> Runtime { get; }
+
+    public RuntimeTrace<TMessage> Trace => Runtime.Trace;
+
+    public ReplayTape<TMessage> Replay => Runtime.Replay;
 
     public ValueTask<PresentResult> RenderAsync(IRuntimeView view, CancellationToken cancellationToken = default) =>
         Runtime.RenderAsync(view, cancellationToken);

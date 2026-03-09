@@ -23,11 +23,12 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
 
 ## Current Basis
 
-- Current status basis commit: working tree after `352c835`
+- Current status basis commit:
+  working tree during the fidelity-and-evidence batch after `352c835`
 - Current upstream workspace basis:
   `7a91089366bd4644e086d5a422cb76b052e3de17`
 - Last full verification pass at status update time:
-  `dotnet test FrankenTui.Net.sln`
+  `dotnet test FrankenTui.Net.sln --configuration Release`
 
 ## Story So Far
 
@@ -50,8 +51,13 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
 - hosted-parity working tree after `352c835`
   Shared hosted session state, richer widget interaction support, styled web
   output, evidence writing, doctor dashboards, web/showcase alignment, and CI
-  wiring have landed. Current local verification is `47` headless tests, `3`
-  web tests, and `4` PTY tests via `dotnet test FrankenTui.Net.sln`.
+  wiring have landed.
+- fidelity-and-evidence working tree after `352c835`
+  Upstream basis refresh rules, divergence ledgers, runtime replay/evidence
+  artifacts, DOM-level hosted verification, benchmark gates, doctor evidence
+  output, and CI cloning of the upstream reference corpus have landed. Current
+  local verification is `54` headless tests, `4` web tests, and `4` PTY tests
+  via `dotnet test FrankenTui.Net.sln --configuration Release`.
 
 ## Status
 
@@ -81,9 +87,9 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
 | Code | Status | Note |
 | --- | --- | --- |
 | `241-MAP` | `completed` | Module mapping ledger exists. |
-| `242-MAP` | `in progress` | Batch commits and notes carry basis/divergence context, but the workflow is still informal. |
-| `243-MAP` | `in progress` | `.external` rebuild instructions exist, but refresh/reconciliation workflow is not yet fully explicit. |
-| `244-MAP` | `in progress` | Divergence tracking has started through blocker notes and host-policy docs, but not yet as separate ledgers per surface. |
+| `242-MAP` | `completed` | Upstream basis recording and refresh rules are now explicit in `242-MAP-upstream-sync-workflow.md`. |
+| `243-MAP` | `completed` | `.external` refresh and reconciliation workflow is explicit and is exercised in CI by cloning the upstream reference corpus. |
+| `244-MAP` | `completed` | Divergence recording now has explicit ledgers and index docs rather than only batch notes. |
 
 ### 250-KRN Terminal Kernel And Core Primitives
 
@@ -137,8 +143,8 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
 | --- | --- | --- |
 | `301-RTM` | `completed` | Runtime skeleton, view rendering, and backend presentation path are implemented. |
 | `302-RTM` | `in progress` | Commands and subscriptions exist; deeper queueing, cancellation, and resize semantics are still light. |
-| `303-RTM` | `in progress` | Trace and replay scaffolding exist; richer determinism tooling remains to be built. |
-| `304-RTM` | `not started` | Later runtime policy/telemetry/state subsystems are not yet evaluated. |
+| `303-RTM` | `completed` | Deterministic runtime trace, replay tape, JSON round-trip, and evidence-manifest integration are implemented and tested. |
+| `304-RTM` | `completed` | Runtime execution policy switches and evidence/baseline decisions are now explicit in code and documented in `304-RTM-determinism-and-evidence.md`. |
 | `305-RTM` | `completed` | App simulator and headless runtime helpers are implemented. |
 
 ### 310-WGT Widget Surface
@@ -166,7 +172,7 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
 | `332-HST` | `completed` | Unix/macOS/Linux host behavior has a working baseline through the console backend and PTY tests. |
 | `333-HST` | `completed` | Windows host contract baseline exists; native Windows evidence remains a documented gap from this workspace. |
 | `334-HST` | `completed` | PTY test-host support is implemented. |
-| `335-HST` | `in progress` | Divergence recording exists, but not yet as a fuller maintained host ledger. |
+| `335-HST` | `completed` | Host validation status, known divergences, evidence sources, and capability override policy are maintained in code and in `335-HST-host-divergence-ledger.md`. |
 
 ### 340-WEB Web And WASM Host Surfaces
 
@@ -184,12 +190,12 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
 | `351-VRF` | `completed` | Baseline test and artifact infrastructure is in place. |
 | `352-VRF` | `completed` | Kernel/render headless tests are active and passing. |
 | `353-VRF` | `completed` | Widget/runtime headless tests and simulator checks are active and passing at baseline level. |
-| `354-VRF` | `in progress` | Invariant-style tests exist; fuzz/corpus depth is still limited. |
+| `354-VRF` | `completed` | Invariant and corpus-backed regression now cover runtime replay, manifest contracts, benchmark fixtures, and host metadata. |
 | `355-VRF` | `completed` | PTY-backed integration tests are active and passing on the current Unix workspace. Cross-platform evidence gaps are documented in the blocker note. |
-| `356-VRF` | `in progress` | Hosted web parity tests now cover styled HTML, metadata, and shared showcase rendering, but browser/node automation is still blocked. |
-| `357-VRF` | `in progress` | Hosted parity evidence bundles now write replay-style JSON, text, and HTML artifacts, but upstream automated comparison is still missing. |
-| `358-VRF` | `blocked` | Benchmark and performance-gate automation did not land in this batch; see `2026-03-09-hosted-parity-blockers.md`. |
-| `359-VRF` | `completed` | GitHub Actions now restores, builds, tests, and refreshes doctor artifacts across Linux and Windows. |
+| `356-VRF` | `completed` | Hosted web parity tests now include deterministic DOM-level parsing through `WebDomRunner` in addition to render-equivalence checks. |
+| `357-VRF` | `completed` | Evidence manifests, replay artifacts, and contract-shape checks now compare against the managed upstream corpus under `.external/frankentui`. |
+| `358-VRF` | `completed` | Benchmark runner, tracked budget fixture, doctor gate, and artifact writing are now active. |
+| `359-VRF` | `completed` | GitHub Actions now restores, builds, tests, clones the upstream reference corpus, and refreshes doctor evidence artifacts across Linux and Windows. |
 
 ### 360-DEM Demo And Showcase Surface
 
@@ -211,15 +217,15 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
 
 | Code | Status | Note |
 | --- | --- | --- |
-| `381-TOL` | `completed` | Doctor now reports environment state plus recommendations and artifact output paths. |
-| `382-TOL` | `completed` | Harness and doctor flows now write hosted-parity JSON, text, and HTML artifacts. |
-| `383-TOL` | `completed` | Maintainer-facing doctor output now exists in both JSON and readable text dashboard form. |
-| `384-TOL` | `completed` | CI now refreshes doctor artifacts and uploads hosted-parity artifact directories on Linux. |
+| `381-TOL` | `completed` | Doctor now reports environment state, host validation status, divergence notes, and recommendations. |
+| `382-TOL` | `completed` | Harness and doctor flows now write hosted-parity JSON, text, HTML, replay, benchmark, and manifest artifacts. |
+| `383-TOL` | `completed` | Maintainer-facing doctor output now exists in JSON and readable text form with evidence-oriented status details. |
+| `384-TOL` | `completed` | CI now refreshes doctor artifacts, benchmark artifacts, and replay evidence on Linux. |
 
 ### 390-DOC FrankenTui.Net Implementation Docs
 
 | Code | Status | Note |
 | --- | --- | --- |
-| `391-DOC` | `not started` | Deeper .NET-specific implementation docs are not yet written. |
-| `392-DOC` | `in progress` | Divergence and verification docs now exist, including blocker and status tracking notes. |
-| `393-DOC` | `in progress` | README and agent guidance are being kept aligned, but this remains an ongoing maintenance item. |
+| `391-DOC` | `completed` | .NET-specific implementation notes are recorded in `391-DOC-dotnet-implementation-notes.md`. |
+| `392-DOC` | `completed` | Divergence, sync, host, and verification docs now exist as maintained ledgers and workflows rather than only blockers. |
+| `393-DOC` | `completed` | README and AGENTS guidance now point at the status ledger and the new sync/evidence/host docs. |

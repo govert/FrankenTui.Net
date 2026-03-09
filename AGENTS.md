@@ -18,6 +18,13 @@ documentation.
 - Treat [docs/EXTERNALS.md](./docs/EXTERNALS.md) as the inventory of managed
   local external repositories and the source of truth for recreating
   `.external/`.
+- Use [docs/210-STS-port-status.md](./docs/210-STS-port-status.md) as the
+  canonical execution-status ledger before starting or resuming a workstream.
+- Use [docs/242-MAP-upstream-sync-workflow.md](./docs/242-MAP-upstream-sync-workflow.md),
+  [docs/304-RTM-determinism-and-evidence.md](./docs/304-RTM-determinism-and-evidence.md),
+  and [docs/335-HST-host-divergence-ledger.md](./docs/335-HST-host-divergence-ledger.md)
+  when working on provenance-sensitive, fidelity-sensitive, or host-sensitive
+  surfaces.
 - When reporting each work batch, orient the user to the relevant planning-doc
   location by code and path, so implementation progress stays anchored to the
   tracked hierarchy.

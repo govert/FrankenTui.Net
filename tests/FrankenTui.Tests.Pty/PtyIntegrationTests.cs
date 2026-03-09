@@ -99,6 +99,7 @@ public sealed class PtyIntegrationTests
         Assert.True(result.Success, result.Stderr);
         Assert.Contains("\"OperatingSystem\"", result.Stdout);
         Assert.Contains("\"HostProfile\"", result.Stdout);
+        Assert.Contains("\"HostValidationStatus\"", result.Stdout);
         Assert.Contains("\"Notes\"", result.Stdout);
     }
 
@@ -122,13 +123,20 @@ public sealed class PtyIntegrationTests
             "--",
             "--format",
             "text",
-            "--write-artifacts"
+            "--write-artifacts",
+            "--write-manifest",
+            "--run-benchmarks",
+            "--run-id",
+            "pty-doctor"
         ]);
 
         Assert.True(result.Success, result.Stderr);
         Assert.Contains("FrankenTui.Net Doctor", result.Stdout);
         Assert.Contains("Artifacts:", result.Stdout);
+        Assert.DoesNotContain("Benchmark gate:", result.Stdout);
         Assert.True(File.Exists(Path.Combine(root, "artifacts", "doctor", "doctor-dashboard.json")));
+        Assert.True(File.Exists(Path.Combine(root, "artifacts", "benchmarks", "pty-doctor-benchmark-suite.json")));
+        Assert.True(File.Exists(Path.Combine(root, "artifacts", "replay", "pty-doctor-manifest.json")));
         Assert.True(File.Exists(Path.Combine(root, "artifacts", "web", "doctor-dashboard.html")));
     }
 

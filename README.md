@@ -17,6 +17,8 @@ The initial .NET workspace baseline is now in place under
 
 - [CHARTER.md](./CHARTER.md): mission, scope, non-goals, and execution doctrine
 - [docs/README.md](./docs/README.md): tracked documentation index
+- [docs/210-STS-port-status.md](./docs/210-STS-port-status.md): canonical
+  execution-status ledger for the hierarchical port plan
 - [docs/EXTERNALS.md](./docs/EXTERNALS.md): `.external/` inventory and rebuild
   instructions
 - [docs/220-PTH-pathfinder-baseline.md](./docs/220-PTH-pathfinder-baseline.md):
@@ -25,6 +27,10 @@ The initial .NET workspace baseline is now in place under
   initial .NET solution shape and artifact layout
 - [docs/240-MAP-module-mapping-ledger.md](./docs/240-MAP-module-mapping-ledger.md):
   upstream crate-to-project mapping ledger
+- [docs/242-MAP-upstream-sync-workflow.md](./docs/242-MAP-upstream-sync-workflow.md):
+  upstream basis recording and `.external` refresh workflow
+- [docs/304-RTM-determinism-and-evidence.md](./docs/304-RTM-determinism-and-evidence.md):
+  runtime replay, evidence manifest, and benchmark gate baseline
 - [PROVENANCE.md](./PROVENANCE.md): upstream basis, port framing, and rights
   allocation
 - [LICENSE](./LICENSE): repository licensing overview

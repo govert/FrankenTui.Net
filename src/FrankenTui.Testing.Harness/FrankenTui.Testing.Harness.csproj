@@ -1,6 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <PackageReference Include="AngleSharp" Version="1.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\FrankenTui.Core\FrankenTui.Core.csproj" />
     <ProjectReference Include="..\FrankenTui.Render\FrankenTui.Render.csproj" />
     <ProjectReference Include="..\FrankenTui.Style\FrankenTui.Style.csproj" />

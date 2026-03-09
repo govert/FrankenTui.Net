@@ -6,4 +6,5 @@ public sealed record RuntimeStepResult<TModel, TMessage>(
     TModel Model,
     PresentResult Presentation,
     string ScreenText,
-    IReadOnlyList<TMessage> EmittedMessages);
+    IReadOnlyList<TMessage> EmittedMessages,
+    RuntimeTraceEntry<TMessage>? TraceEntry = null);

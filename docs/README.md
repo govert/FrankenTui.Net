@@ -19,8 +19,20 @@ repository root documents.
   solution shape, project grouping, and artifact layout
 - [240-MAP-module-mapping-ledger.md](./240-MAP-module-mapping-ledger.md):
   upstream crate-to-project mapping ledger
+- [242-MAP-upstream-sync-workflow.md](./242-MAP-upstream-sync-workflow.md):
+  upstream basis recording and `.external` refresh/reconciliation workflow
+- [244-MAP-divergence-ledgers.md](./244-MAP-divergence-ledgers.md):
+  maintained index of active divergence ledgers across host, runtime, and web
+  surfaces
+- [304-RTM-determinism-and-evidence.md](./304-RTM-determinism-and-evidence.md):
+  runtime determinism, evidence-manifest, DOM-runner, and benchmark-gate
+  baseline
+- [335-HST-host-divergence-ledger.md](./335-HST-host-divergence-ledger.md):
+  per-platform host validation status, evidence sources, and divergence notes
 - [344-WEB-web-boundary.md](./344-WEB-web-boundary.md): in-scope boundary for
   the local web and wasm host surface
+- [391-DOC-dotnet-implementation-notes.md](./391-DOC-dotnet-implementation-notes.md):
+  .NET-specific implementation, verification, and maintainer-orientation notes
 - [EXTERNALS.md](./EXTERNALS.md): inventory of local external repositories and
   libraries managed under `.external/`, plus rebuild instructions
 - [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.md):

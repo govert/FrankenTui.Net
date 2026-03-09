@@ -6,4 +6,8 @@ public sealed record TerminalHostProfile(
     string Platform,
     string Host,
     TerminalCapabilities Capabilities,
-    string Notes);
+    string Notes,
+    string ValidationStatus,
+    IReadOnlyList<string> EvidenceSources,
+    IReadOnlyList<string> KnownDivergences,
+    IReadOnlyList<string> CapabilityOverrides);

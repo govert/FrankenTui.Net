@@ -14,13 +14,18 @@ public static class EnvironmentDoctor
             Environment.Version.ToString(),
             Environment.GetEnvironmentVariable("TERM") ?? string.Empty,
             profile.Host,
+            profile.ValidationStatus,
             capabilities.UseHyperlinks(),
             capabilities.UseSyncOutput(),
             capabilities.InAnyMux(),
             [
+                profile.Notes,
                 "True OS-level raw-mode parity beyond the current platform requires external CI or host validation.",
                 "PTY-backed verification in this repo currently targets Unix hosts through the 'script' command."
             ],
+            profile.EvidenceSources,
+            profile.KnownDivergences,
+            profile.CapabilityOverrides,
             [
                 "Use the hosted parity showcase in both terminal and web modes before widening the public surface.",
                 "Refresh replay, doctor, and CI artifacts together so parity evidence stays comparable."

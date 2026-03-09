@@ -1,0 +1,82 @@
+[
+  {
+    "name": "frame_render",
+    "upstream_key": "frame_render",
+    "description": "Full frame render pipeline (diff + present, 80x24 @ sparse change).",
+    "mean_budget_ns": 4000000,
+    "p95_budget_ns": 8000000,
+    "iterations": 20
+  },
+  {
+    "name": "diff_strategy",
+    "upstream_key": "diff_strategy",
+    "description": "Diff computation on an 80x24 sparse update.",
+    "mean_budget_ns": 1500000,
+    "p95_budget_ns": 3000000,
+    "iterations": 20
+  },
+  {
+    "name": "ansi_emit",
+    "upstream_key": "ansi_emit",
+    "description": "ANSI presentation on an 80x24 sparse update.",
+    "mean_budget_ns": 3000000,
+    "p95_budget_ns": 6000000,
+    "iterations": 20
+  },
+  {
+    "name": "layout_computation",
+    "upstream_key": "layout_computation",
+    "description": "Constraint-based layout solver over a medium dashboard.",
+    "mean_budget_ns": 500000,
+    "p95_budget_ns": 1000000,
+    "iterations": 25
+  },
+  {
+    "name": "widget_render_block",
+    "upstream_key": "widget_render_block",
+    "description": "Panel/block widget rendering with title and paragraph body.",
+    "mean_budget_ns": 1500000,
+    "p95_budget_ns": 3000000,
+    "iterations": 20
+  },
+  {
+    "name": "widget_render_table",
+    "upstream_key": "widget_render_table",
+    "description": "Table widget rendering for the hosted parity metrics view.",
+    "mean_budget_ns": 3000000,
+    "p95_budget_ns": 6000000,
+    "iterations": 20
+  },
+  {
+    "name": "buffer_new_80x24",
+    "upstream_key": "buffer_new_80x24",
+    "description": "Allocate a baseline 80x24 render buffer.",
+    "mean_budget_ns": 500000,
+    "p95_budget_ns": 1000000,
+    "iterations": 25
+  },
+  {
+    "name": "text_wrap_word",
+    "upstream_key": "dotnet/text_wrap_word",
+    "description": "Word wrapping over a representative paragraph.",
+    "mean_budget_ns": 1000000,
+    "p95_budget_ns": 2500000,
+    "iterations": 20
+  },
+  {
+    "name": "runtime_dispatch",
+    "upstream_key": "dotnet/runtime_dispatch",
+    "description": "One deterministic runtime update/render cycle.",
+    "mean_budget_ns": 4000000,
+    "p95_budget_ns": 8000000,
+    "iterations": 20
+  },
+  {
+    "name": "web_document",
+    "upstream_key": "dotnet/web_document",
+    "description": "Render one hosted parity web document.",
+    "mean_budget_ns": 5000000,
+    "p95_budget_ns": 10000000,
+    "iterations": 20
+  }
+]
