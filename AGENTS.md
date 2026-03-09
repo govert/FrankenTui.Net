@@ -18,6 +18,9 @@ documentation.
 - Treat [docs/EXTERNALS.md](./docs/EXTERNALS.md) as the inventory of managed
   local external repositories and the source of truth for recreating
   `.external/`.
+- When reporting each work batch, orient the user to the relevant planning-doc
+  location by code and path, so implementation progress stays anchored to the
+  tracked hierarchy.
 
 ## Tooling Hints
 
