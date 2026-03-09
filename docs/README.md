@@ -11,6 +11,8 @@ repository root documents.
   FrankenTUI workspace roadmap and port relevance map
 - [200-PRT-port-work-breakdown.md](./200-PRT-port-work-breakdown.md): initial
   dependency-based hierarchical port plan
+- [210-STS-port-status.md](./210-STS-port-status.md): canonical status ledger
+  for the hierarchical port plan
 - [220-PTH-pathfinder-baseline.md](./220-PTH-pathfinder-baseline.md):
   upstream baseline, parity corpus, and early verification doctrine
 - [230-ARC-solution-skeleton.md](./230-ARC-solution-skeleton.md): .NET
