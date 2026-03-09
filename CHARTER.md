@@ -10,20 +10,23 @@ The name is intentionally direct. It prioritizes lineage, searchability, and lon
 
 ## Mission
 
-Build a .NET 10-only, cross-platform TUI core that reproduces FrankenTUI behavior as faithfully as practical, with special emphasis on:
+Build a .NET 10-only, cross-platform port of FrankenTUI that reproduces FrankenTUI behavior as faithfully as practical, with special emphasis on:
 
 - Bit-identical rendered output where terminal capabilities and encoding make that meaningful
 - Console movement-identical behavior, including cursor motion and screen updates
 - A traceable relationship to upstream FrankenTUI so the port can be audited, updated, and kept in sync over time
 - A dependency-light design suitable for NativeAOT
+- Full planned coverage of the FrankenTUI library, supporting tools, testing and verification surface, and web/wasm host surfaces that materially define the project in practice
 
-This project exists to port FrankenTUI itself, not to design a new general-purpose .NET terminal UI framework.
+This project exists to port FrankenTUI itself, including the supporting tooling, verification, and host surfaces that are part of its practical repository scope, not to design a new general-purpose .NET terminal UI framework.
 
 ## Vision
 
 The first release should feel like a direct systems port of FrankenTUI into idiomatic-enough .NET, not a reinterpretation.
 
 The core library should preserve the rendering model, terminal discipline, and behavioral constraints of FrankenTUI. A future .NET-facing integration layer may adapt that core to common .NET hosting conventions such as dependency injection, logging abstractions, and application scaffolding, but that is explicitly secondary to port fidelity.
+
+The core remains the architectural center, but the repository should ultimately cover the surrounding verification, demo, doctor, and web/wasm surfaces needed to keep the port honest, usable, and updateable.
 
 The project will initially track upstream FrankenTUI `main` rather than pinning to a fixed tag or commit. That choice is intended to maximize sync pressure early, while the port structure is still being established.
 
@@ -52,10 +55,15 @@ The project will initially track upstream FrankenTUI `main` rather than pinning 
 ### In Scope
 
 - A .NET 10 implementation of the FrankenTUI core concepts and behavior
+- A coherent public facade and package surface for the .NET port
 - Cross-platform terminal support on Windows, macOS, and Linux
 - Terminal host support aligned with FrankenTUI’s practical support model rather than broadened independently by the .NET port
+- Web/wasm host surfaces corresponding to the upstream `ftui-web` and `ftui-showcase-wasm` scope
 - Rendering and diff/update behavior intended to match FrankenTUI as closely as feasible
 - Terminal lifecycle correctness, including setup, mode transitions, cleanup, and restoration
+- Supporting tools corresponding to the practical `doctor_frankentui` surface, adapted as needed for the .NET port context
+- Verification tooling, parity corpora, replay/evidence assets, snapshot/golden coverage, PTY/integration harnesses, and benchmark/regression gates
+- Demo/showcase surfaces used to exercise and verify the port
 - A codebase structure that makes upstream comparison and future syncing practical
 - A NativeAOT-buildable path, if feasible without violating the core fidelity goals
 
@@ -67,6 +75,7 @@ The project will initially track upstream FrankenTUI `main` rather than pinning 
 - Building a large widget ecosystem before the core port is trustworthy
 - Supporting older .NET runtimes
 - Supporting non-VT legacy terminal behavior as a primary target
+- Mirroring upstream website/content repositories or copying nonessential upstream assets into this repository when upstream references are sufficient
 
 ## Non-Goals
 
@@ -74,6 +83,7 @@ The project will initially track upstream FrankenTUI `main` rather than pinning 
 - We are not trying to abstract away every terminal quirk behind a large compatibility layer.
 - We are not trying to optimize for drop-in replacement of other .NET UI libraries.
 - We are not trying to chase a broad feature set ahead of behavioral equivalence.
+- We are not trying to mechanically fork or mirror every upstream repository artifact when a traced port plus upstream references is the better representation.
 
 ## Primary Requirements
 
@@ -109,6 +119,18 @@ The project will initially track upstream FrankenTUI `main` rather than pinning 
 - If full NativeAOT support is not possible initially, the blockers must be documented and actively designed around.
 - Core architecture decisions should assume NativeAOT matters even before it is fully validated.
 
+### Verification And Evidence
+
+- The project should build its own verification stack, including headless, PTY, replay, benchmark, and host-specific checks where appropriate.
+- Verification should begin at the earliest layer that can be tested rather than waiting for upper layers such as widgets or demos.
+- Benchmarks, traces, snapshots, parity corpora, and evidence artifacts should be treated as core engineering assets.
+
+### Tooling And Host Surface Coverage
+
+- Supporting tools that materially participate in capture, diagnostics, replay, parity evaluation, or maintainer workflows are in scope.
+- Web/wasm host surfaces that materially define upstream FrankenTUI behavior are in scope.
+- Tooling and host surfaces should adapt the shared core rather than becoming alternate implementations with separate semantics.
+
 ## Architecture Direction
 
 ### Core First
@@ -121,6 +143,23 @@ This core should:
 - Centralize rendering and diff application
 - Avoid incidental dependency on host frameworks
 - Prefer explicit state machines and data flow over ambient services
+
+### Verification And Tooling As First-Class Surfaces
+
+The repository should also carry the verification and tooling surfaces needed to
+prove, inspect, and maintain parity with upstream FrankenTUI.
+
+These surfaces should:
+
+- Exercise the same core rather than reimplementing it
+- Produce durable evidence for parity, divergence, and regression analysis
+- Stay aligned with the core package structure and provenance model
+
+### Additional Host Surfaces
+
+Terminal hosts are not the only relevant runtime surfaces. Web/wasm host
+surfaces that are part of FrankenTUI’s practical repository scope should be
+ported as first-class consumers of the same core behavior.
 
 ### Future Shim Layer
 
@@ -143,6 +182,8 @@ The quality bar includes:
 - Predictable terminal cleanup and restoration
 - Test coverage around terminal deltas and cursor motion behavior
 - Cross-platform verification in supported terminals
+- Credible parity evidence across headless, PTY, replay, benchmark, and host-specific verification paths
+- Web/wasm and tooling surfaces that stay aligned with the same core semantics
 - Clear documentation of known divergences
 
 ## Trade-Offs
@@ -168,6 +209,7 @@ The project is succeeding when:
 - A maintainer can point to the upstream FrankenTUI basis for major parts of the implementation
 - Rendered terminal behavior matches FrankenTUI closely enough to catch meaningful diffs in automated tests
 - The core remains understandable as a port rather than an unrelated rewrite
+- Verification, demo, web/wasm, and tooling surfaces exercise the same ported core rather than drifting into alternate implementations
 - NativeAOT remains viable as the project grows
 - Future upstream syncing work is incremental instead of traumatic
 
@@ -196,6 +238,7 @@ Every meaningful divergence should be:
 - Maintain strict provenance where practical in files, tests, and port notes, while also keeping higher-level sync and divergence documentation current.
 - Keep generated code, source generators, and reflection-based helpers out of the core unless there is a compelling need.
 - Treat benchmarks and output snapshots as core engineering assets, not optional polish.
+- Treat harnesses, replay traces, doctor tooling, and showcase runners as core repository assets, not afterthoughts.
 
 ## Open Questions
 
@@ -205,3 +248,5 @@ These should be resolved early, but they do not block starting the project:
 2. At what point should the project stop treating strict provenance as the default for new work and treat it instead as one input among maintainability concerns?
 3. What exact definition of “end of the first porting pass” should trigger upstream conformance testing?
 4. Which FrankenTUI terminal support assumptions need to be copied verbatim into project documentation so the .NET port does not accidentally over-promise?
+5. Which parts of the upstream `doctor_frankentui` surface should be direct ports versus .NET-native adaptations over equivalent responsibilities?
+6. What is the exact boundary between in-scope web/wasm host behavior and reference-only external website or remote-protocol assets?
