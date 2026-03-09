@@ -1,5 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\FrankenTui.Core\FrankenTui.Core.csproj" />
+    <ProjectReference Include="..\..\src\FrankenTui.Tty\FrankenTui.Tty.csproj" />
+  </ItemGroup>
+
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net10.0</TargetFramework>

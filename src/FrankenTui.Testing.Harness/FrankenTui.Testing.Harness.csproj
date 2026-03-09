@@ -7,6 +7,7 @@
     <ProjectReference Include="..\FrankenTui.Text\FrankenTui.Text.csproj" />
     <ProjectReference Include="..\FrankenTui.Layout\FrankenTui.Layout.csproj" />
     <ProjectReference Include="..\FrankenTui.Runtime\FrankenTui.Runtime.csproj" />
+    <ProjectReference Include="..\FrankenTui.Web\FrankenTui.Web.csproj" />
     <ProjectReference Include="..\FrankenTui.Widgets\FrankenTui.Widgets.csproj" />
     <ProjectReference Include="..\FrankenTui.Extras\FrankenTui.Extras.csproj" />
     <ProjectReference Include="..\FrankenTui.Testing.Pty\FrankenTui.Testing.Pty.csproj" />

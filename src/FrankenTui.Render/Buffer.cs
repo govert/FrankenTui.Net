@@ -50,6 +50,34 @@ public sealed class Buffer
     public Cell? Get(ushort x, ushort y) =>
         TryIndex(x, y, out var index) ? _cells[index] : null;
 
+    public Buffer Clone()
+    {
+        var copy = new Buffer(Width, Height);
+        copy.CopyFrom(this);
+        return copy;
+    }
+
+    public void CopyFrom(Buffer other)
+    {
+        ArgumentNullException.ThrowIfNull(other);
+
+        if (other.Width != Width || other.Height != Height)
+        {
+            throw new ArgumentException("Buffers must have identical dimensions.", nameof(other));
+        }
+
+        for (ushort y = 0; y < Height; y++)
+        {
+            var row = other.GetRow(y);
+            for (ushort x = 0; x < Width; x++)
+            {
+                _cells[IndexUnchecked(x, y)] = row[x];
+            }
+        }
+
+        MarkAllDirty();
+    }
+
     public void Set(ushort x, ushort y, Cell cell)
     {
         var width = cell.Content.Width();
