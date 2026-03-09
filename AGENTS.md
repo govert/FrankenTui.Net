@@ -19,4 +19,13 @@ documentation.
   local external repositories and the source of truth for recreating
   `.external/`.
 
+## Tooling Hints
+
+- For C#/.NET work, prefer the installed `roscli` CLI over MCP wiring for
+  semantic navigation, structured edits, and diagnostics.
+- Use `xmlcli` for XML/XAML-oriented structure and validation work.
+- Use `dotnet-inspect` for external package/framework API inspection.
+- A C# language server may be used when helpful, but `roscli` is the default
+  first tool for repo-local semantic work.
+
 Additional agent-specific execution doctrine will be added here over time.
