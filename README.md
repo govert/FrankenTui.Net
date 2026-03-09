@@ -12,6 +12,9 @@ aspirational.
 ## Start Here
 
 - [CHARTER.md](./CHARTER.md): mission, scope, non-goals, and execution doctrine
+- [docs/README.md](./docs/README.md): tracked documentation index
+- [docs/EXTERNALS.md](./docs/EXTERNALS.md): `.external/` inventory and rebuild
+  instructions
 - [PROVENANCE.md](./PROVENANCE.md): upstream basis, port framing, and rights
   allocation
 - [LICENSE](./LICENSE): repository licensing overview
