@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <ProjectReference Include="..\FrankenTui.A11y\FrankenTui.A11y.csproj" />
     <ProjectReference Include="..\FrankenTui.Backend\FrankenTui.Backend.csproj" />
     <ProjectReference Include="..\FrankenTui.Core\FrankenTui.Core.csproj" />
     <ProjectReference Include="..\FrankenTui.Layout\FrankenTui.Layout.csproj" />

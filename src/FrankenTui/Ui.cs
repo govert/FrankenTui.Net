@@ -1,7 +1,9 @@
 using FrankenTui.Backend;
 using FrankenTui.Core;
+using FrankenTui.Extras;
 using FrankenTui.Runtime;
 using FrankenTui.Style;
+using FrankenTui.Web;
 using FrankenTui.Widgets;
 
 namespace FrankenTui;
@@ -16,7 +18,44 @@ public static class Ui
     public static AppSimulator<TModel, TMessage> CreateSimulator<TModel, TMessage>(ushort width, ushort height, Theme? theme = null) =>
         new(new Size(width, height), theme);
 
+    public static WidgetInputState CreateInputState(IEnumerable<string>? focusOrder = null, string language = "en-US")
+    {
+        var state = WidgetInputState.Default with { Language = language };
+        return focusOrder is null ? state : state.WithFocusOrder(focusOrder);
+    }
+
     public static ParagraphWidget Paragraph(string text) => new(text);
 
     public static PanelWidget Panel(string title, IWidget child) => new() { Title = title, Child = child };
+
+    public static IWidget HostedParityView(
+        bool inlineMode = false,
+        HostedParityScenarioId scenarioId = HostedParityScenarioId.Overview,
+        int frame = 0,
+        string language = "en-US",
+        WidgetFlowDirection flowDirection = WidgetFlowDirection.LeftToRight) =>
+        HostedParitySurface.Create(HostedParitySession.ForFrame(inlineMode, frame, scenarioId, language, flowDirection));
+
+    public static WebFrame RenderWeb(
+        IRuntimeView view,
+        ushort width,
+        ushort height,
+        Theme? theme = null,
+        WebRenderOptions? options = null) =>
+        WebHost.Render(view, new Size(width, height), theme, options);
+
+    public static WebFrame RenderHostedParity(
+        bool inlineMode = false,
+        ushort width = 64,
+        ushort height = 18,
+        HostedParityScenarioId scenarioId = HostedParityScenarioId.Overview,
+        int frame = 0,
+        string language = "en-US",
+        WidgetFlowDirection flowDirection = WidgetFlowDirection.LeftToRight,
+        Theme? theme = null)
+    {
+        var session = HostedParitySession.ForFrame(inlineMode, frame, scenarioId, language, flowDirection);
+        var view = HostedParitySurface.Create(session);
+        return WebHost.Render(view, new Size(width, height), theme, HostedParitySurface.CreateWebOptions(session));
+    }
 }

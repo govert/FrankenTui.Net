@@ -1,0 +1,50 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build-and-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore FrankenTui.Net.sln
+
+      - name: Build
+        run: dotnet build FrankenTui.Net.sln --no-restore --configuration Release
+
+      - name: Test
+        run: dotnet test FrankenTui.Net.sln --no-build --configuration Release
+
+      - name: Refresh doctor artifacts
+        if: runner.os == 'Linux'
+        run: dotnet run --project tools/FrankenTui.Doctor/FrankenTui.Doctor.csproj --no-build --configuration Release -- --format text --write-artifacts
+
+      - name: Upload hosted artifacts
+        if: runner.os == 'Linux'
+        uses: actions/upload-artifact@v4
+        with:
+          name: hosted-parity-artifacts
+          path: |
+            artifacts/doctor/
+            artifacts/replay/
+            artifacts/web/

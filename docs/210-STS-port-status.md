@@ -18,11 +18,12 @@ actually landed so far.
 - `blocked`: currently blocked from progressing from this workspace
 
 Cross-cutting blockers that do not fully stop adjacent work are recorded
-separately in [2026-03-09-big-batch-blockers.md](./2026-03-09-big-batch-blockers.md).
+separately in [2026-03-09-big-batch-blockers.md](./2026-03-09-big-batch-blockers.md)
+and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.md).
 
 ## Current Basis
 
-- Current status basis commit: `3812dca`
+- Current status basis commit: working tree after `352c835`
 - Current upstream workspace basis:
   `7a91089366bd4644e086d5a422cb76b052e3de17`
 - Last full verification pass at status update time:
@@ -46,6 +47,11 @@ separately in [2026-03-09-big-batch-blockers.md](./2026-03-09-big-batch-blockers
   The first end-to-end base-port band from kernel through PTY verification
   landed, including style, layout, text, runtime, widgets, web baseline, demo,
   doctor, harness, and PTY tests.
+- hosted-parity working tree after `352c835`
+  Shared hosted session state, richer widget interaction support, styled web
+  output, evidence writing, doctor dashboards, web/showcase alignment, and CI
+  wiring have landed. Current local verification is `47` headless tests, `3`
+  web tests, and `4` PTY tests via `dotnet test FrankenTui.Net.sln`.
 
 ## Status
 
@@ -140,17 +146,17 @@ separately in [2026-03-09-big-batch-blockers.md](./2026-03-09-big-batch-blockers
 | Code | Status | Note |
 | --- | --- | --- |
 | `311-WGT` | `completed` | Foundational widgets and composition primitives have landed at baseline level. |
-| `312-WGT` | `in progress` | Widget input/focus/state support is started but still shallow. |
+| `312-WGT` | `completed` | Shared focus order, pointer state, live-region messaging, and scripted hosted-parity session state are implemented. |
 | `313-WGT` | `completed` | Inspector and debug-oriented widgets are present. |
-| `314-WGT` | `in progress` | A11y and i18n integration points exist, but widget-layer integration is still partial. |
-| `315-WGT` | `in progress` | Operator-facing/dashboard-style surfaces have started, but deeper advanced widgets remain. |
+| `314-WGT` | `completed` | Hosted surfaces now carry language, direction, and accessibility snapshot data through shared view/state helpers. |
+| `315-WGT` | `completed` | Hosted parity and doctor dashboard surfaces now exercise operator-facing widget compositions directly. |
 
 ### 320-API Public Facade And Package Surface
 
 | Code | Status | Note |
 | --- | --- | --- |
 | `321-API` | `completed` | A first coherent public facade exists in `src/FrankenTui/Ui.cs`. |
-| `322-API` | `in progress` | Consumer-facing composition is working, but not yet stabilized as a mature package surface. |
+| `322-API` | `completed` | `Ui` now exposes hosted-parity and web rendering entry points used by showcase and tests. |
 
 ### 330-HST Terminal Host Backends And Platforms
 
@@ -168,8 +174,8 @@ separately in [2026-03-09-big-batch-blockers.md](./2026-03-09-big-batch-blockers
 | --- | --- | --- |
 | `341-WEB` | `completed` | Web execution boundary is defined in code through the shared render/runtime path and web host. |
 | `342-WEB` | `completed` | Deterministic web host baseline exists. |
-| `343-WEB` | `in progress` | Showcase wasm runner baseline exists, but it is still shallow. |
-| `344-WEB` | `in progress` | Boundary discipline is understood, but not yet fully documented as a dedicated divergence ledger. |
+| `343-WEB` | `completed` | Showcase wasm rendering now rides the shared hosted-parity session and web document path. |
+| `344-WEB` | `completed` | Boundary is now recorded explicitly in `344-WEB-web-boundary.md`. |
 
 ### 350-VRF Verification Stack
 
@@ -180,18 +186,18 @@ separately in [2026-03-09-big-batch-blockers.md](./2026-03-09-big-batch-blockers
 | `353-VRF` | `completed` | Widget/runtime headless tests and simulator checks are active and passing at baseline level. |
 | `354-VRF` | `in progress` | Invariant-style tests exist; fuzz/corpus depth is still limited. |
 | `355-VRF` | `completed` | PTY-backed integration tests are active and passing on the current Unix workspace. Cross-platform evidence gaps are documented in the blocker note. |
-| `356-VRF` | `in progress` | Baseline web tests exist, but browser/node parity runners are not yet present. |
-| `357-VRF` | `not started` | Replay/evidence comparison workflows against upstream are not yet built. |
-| `358-VRF` | `not started` | Benchmarks and performance gates are not yet built. |
-| `359-VRF` | `not started` | CI/regression runner wiring has not yet been added. |
+| `356-VRF` | `in progress` | Hosted web parity tests now cover styled HTML, metadata, and shared showcase rendering, but browser/node automation is still blocked. |
+| `357-VRF` | `in progress` | Hosted parity evidence bundles now write replay-style JSON, text, and HTML artifacts, but upstream automated comparison is still missing. |
+| `358-VRF` | `blocked` | Benchmark and performance-gate automation did not land in this batch; see `2026-03-09-hosted-parity-blockers.md`. |
+| `359-VRF` | `completed` | GitHub Actions now restores, builds, tests, and refreshes doctor artifacts across Linux and Windows. |
 
 ### 360-DEM Demo And Showcase Surface
 
 | Code | Status | Note |
 | --- | --- | --- |
-| `361-DEM` | `in progress` | The minimum showcase slice has effectively started to emerge, but is not yet formally captured. |
-| `362-DEM` | `in progress` | Terminal showcase baseline exists and is exercised by PTY tests. |
-| `363-DEM` | `not started` | Terminal and web showcase alignment is not yet treated as its own parity workflow. |
+| `361-DEM` | `completed` | The hosted-parity showcase slice is now formalized as a shared session and surface. |
+| `362-DEM` | `completed` | Terminal showcase now uses scenario/frame-driven hosted-parity rendering and is exercised by PTY tests. |
+| `363-DEM` | `completed` | Terminal and web showcase alignment is now explicit through shared `Ui`/showcase rendering and web tests. |
 
 ### 370-EXT Extras And Optional Optimization Surface
 
@@ -205,10 +211,10 @@ separately in [2026-03-09-big-batch-blockers.md](./2026-03-09-big-batch-blockers
 
 | Code | Status | Note |
 | --- | --- | --- |
-| `381-TOL` | `in progress` | Doctor scope mapping has started through the current environment report and blocker notes. |
-| `382-TOL` | `in progress` | Capture/reporting support has started through harness and PTY tooling, but not full replay triage flows. |
-| `383-TOL` | `in progress` | Maintainer-facing reporting exists at baseline JSON-report level only. |
-| `384-TOL` | `not started` | CI/demo/parity alignment for doctor tooling is not yet built. |
+| `381-TOL` | `completed` | Doctor now reports environment state plus recommendations and artifact output paths. |
+| `382-TOL` | `completed` | Harness and doctor flows now write hosted-parity JSON, text, and HTML artifacts. |
+| `383-TOL` | `completed` | Maintainer-facing doctor output now exists in both JSON and readable text dashboard form. |
+| `384-TOL` | `completed` | CI now refreshes doctor artifacts and uploads hosted-parity artifact directories on Linux. |
 
 ### 390-DOC FrankenTui.Net Implementation Docs
 

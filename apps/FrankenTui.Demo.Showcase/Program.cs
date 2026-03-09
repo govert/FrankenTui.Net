@@ -1,6 +1,7 @@
 using FrankenTui.Demo.Showcase;
 using FrankenTui.Backend;
 using FrankenTui.Core;
+using FrankenTui.Extras;
 using FrankenTui.Render;
 using FrankenTui.Runtime;
 using FrankenTui.Style;
@@ -12,6 +13,11 @@ var inlineMode = args.Contains("--inline", StringComparer.OrdinalIgnoreCase);
 var width = ParseUShort(args, "--width", 64);
 var height = ParseUShort(args, "--height", 18);
 var frames = ParseInt(args, "--frames", 2);
+var language = Parse(args, "--lang") ?? "en-US";
+var flowDirection = args.Contains("--rtl", StringComparer.OrdinalIgnoreCase)
+    ? WidgetFlowDirection.RightToLeft
+    : WidgetFlowDirection.LeftToRight;
+var scenario = ParseScenario(Parse(args, "--scenario"));
 
 ITerminalBackend backend = OperatingSystem.IsWindows()
     ? new WindowsTerminalBackend()
@@ -31,7 +37,7 @@ var theme = Theme.DefaultTheme;
 for (var frame = 0; frame < Math.Max(frames, 1); frame++)
 {
     current.Clear();
-    IWidget view = ShowcaseViewFactory.Build(inlineMode);
+    IWidget view = ShowcaseViewFactory.Build(inlineMode, scenario, frame, language, flowDirection);
     view.Render(new RuntimeRenderContext(current, Rect.FromSize(width, height), theme));
     await session.PresentAsync(current, frame == 0 ? BufferDiff.Full(width, height) : null);
     if (inlineMode)
@@ -58,3 +64,11 @@ static string? Parse(string[] arguments, string name)
 
     return null;
 }
+
+static HostedParityScenarioId ParseScenario(string? value) =>
+    value?.Trim().ToLowerInvariant() switch
+    {
+        "interaction" => HostedParityScenarioId.Interaction,
+        "tooling" => HostedParityScenarioId.Tooling,
+        _ => HostedParityScenarioId.Overview
+    };

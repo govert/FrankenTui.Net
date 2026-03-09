@@ -8,4 +8,6 @@ public sealed record DoctorReport(
     bool SupportsHyperlinks,
     bool SupportsSyncOutput,
     bool InMux,
-    IReadOnlyList<string> Notes);
+    IReadOnlyList<string> Notes,
+    IReadOnlyList<string>? Recommendations = null,
+    IReadOnlyDictionary<string, string>? ArtifactPaths = null);

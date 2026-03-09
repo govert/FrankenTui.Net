@@ -8,6 +8,11 @@ public sealed class PtyIntegrationTests
     [Fact]
     public async Task ShowcaseDefaultSessionUsesAlternateScreenAndCleanup()
     {
+        if (!CanRunPty())
+        {
+            return;
+        }
+
         var root = RepositoryPaths.FindRepositoryRoot();
         var demoProject = Path.Combine(root, "apps", "FrankenTui.Demo.Showcase", "FrankenTui.Demo.Showcase.csproj");
 
@@ -23,7 +28,9 @@ public sealed class PtyIntegrationTests
             "--height",
             "16",
             "--frames",
-            "2"
+            "2",
+            "--scenario",
+            "tooling"
         ]);
 
         Assert.True(result.Success, result.Stderr);
@@ -31,12 +38,18 @@ public sealed class PtyIntegrationTests
         Assert.Contains("\u001b[?1049l", result.Stdout);
         Assert.Contains("\u001b[?25l", result.Stdout);
         Assert.Contains("\u001b[?25h", result.Stdout);
-        Assert.Contains("FrankenTui.Net", result.Stdout);
+        Assert.Contains("Tooling", result.Stdout);
+        Assert.Contains("Hosted parity", result.Stdout);
     }
 
     [Fact]
     public async Task ShowcaseInlineModeAvoidsAlternateScreenAndKeepsVisibleTranscript()
     {
+        if (!CanRunPty())
+        {
+            return;
+        }
+
         var root = RepositoryPaths.FindRepositoryRoot();
         var demoProject = Path.Combine(root, "apps", "FrankenTui.Demo.Showcase", "FrankenTui.Demo.Showcase.csproj");
 
@@ -53,17 +66,25 @@ public sealed class PtyIntegrationTests
             "--height",
             "16",
             "--frames",
-            "1"
+            "3",
+            "--scenario",
+            "interaction"
         ]);
 
         Assert.True(result.Success, result.Stderr);
         Assert.DoesNotContain("\u001b[?1049h", result.Stdout);
-        Assert.Contains("FrankenTui.Net", result.Stdout);
+        Assert.Contains("Interaction", result.Stdout);
+        Assert.Contains("Focus", result.Stdout);
     }
 
     [Fact]
     public async Task DoctorRunsUnderPtyAndProducesJson()
     {
+        if (!CanRunPty())
+        {
+            return;
+        }
+
         var root = RepositoryPaths.FindRepositoryRoot();
         var doctorProject = Path.Combine(root, "tools", "FrankenTui.Doctor", "FrankenTui.Doctor.csproj");
 
@@ -80,4 +101,36 @@ public sealed class PtyIntegrationTests
         Assert.Contains("\"HostProfile\"", result.Stdout);
         Assert.Contains("\"Notes\"", result.Stdout);
     }
+
+    [Fact]
+    public async Task DoctorCanWriteArtifactsAndTextSummary()
+    {
+        if (!CanRunPty())
+        {
+            return;
+        }
+
+        var root = RepositoryPaths.FindRepositoryRoot();
+        var doctorProject = Path.Combine(root, "tools", "FrankenTui.Doctor", "FrankenTui.Doctor.csproj");
+
+        var result = await ScriptPtyRunner.RunCommandAsync("dotnet",
+        [
+            "run",
+            "--project",
+            doctorProject,
+            "--no-restore",
+            "--",
+            "--format",
+            "text",
+            "--write-artifacts"
+        ]);
+
+        Assert.True(result.Success, result.Stderr);
+        Assert.Contains("FrankenTui.Net Doctor", result.Stdout);
+        Assert.Contains("Artifacts:", result.Stdout);
+        Assert.True(File.Exists(Path.Combine(root, "artifacts", "doctor", "doctor-dashboard.json")));
+        Assert.True(File.Exists(Path.Combine(root, "artifacts", "web", "doctor-dashboard.html")));
+    }
+
+    private static bool CanRunPty() => OperatingSystem.IsLinux() || OperatingSystem.IsMacOS();
 }

@@ -10,15 +10,38 @@ public sealed class TextAreaWidget : IWidget
 
     public TextCursor Cursor { get; init; }
 
+    public bool HasFocus { get; init; }
+
+    public string? PlaceholderText { get; init; }
+
+    public string? StatusText { get; init; }
+
     public void Render(RuntimeRenderContext context)
     {
-        var lines = TextWrapper.Wrap(Document, context.Bounds.Width, TextWrapMode.Character);
-        for (var row = 0; row < Math.Min(lines.Count, context.Bounds.Height); row++)
+        var content = Document.Lines.Count == 0 && !string.IsNullOrWhiteSpace(PlaceholderText)
+            ? TextDocument.FromString(PlaceholderText)
+            : Document;
+        var lines = TextWrapper.Wrap(content, context.Bounds.Width, TextWrapMode.Character);
+        var contentRows = StatusText is null ? context.Bounds.Height : Math.Max(context.Bounds.Height - 1, 0);
+        for (var row = 0; row < Math.Min(lines.Count, contentRows); row++)
         {
-            BufferPainter.WriteText(context.Buffer, context.Bounds.X, (ushort)(context.Bounds.Y + row), lines[row], context.Theme.Default.ToCell());
+            var style = Document.Lines.Count == 0 && !string.IsNullOrWhiteSpace(PlaceholderText)
+                ? context.Theme.Muted
+                : context.Theme.Default;
+            BufferPainter.WriteText(context.Buffer, context.Bounds.X, (ushort)(context.Bounds.Y + row), lines[row], style.ToCell());
         }
 
-        if (Cursor.Line < context.Bounds.Height && Cursor.Column < context.Bounds.Width)
+        if (!string.IsNullOrWhiteSpace(StatusText) && context.Bounds.Height > 0)
+        {
+            BufferPainter.WriteText(
+                context.Buffer,
+                context.Bounds.X,
+                (ushort)(context.Bounds.Bottom - 1),
+                StatusText,
+                context.Theme.Muted.ToCell());
+        }
+
+        if (HasFocus && Cursor.Line < contentRows && Cursor.Column < context.Bounds.Width)
         {
             context.Buffer.Set(
                 (ushort)(context.Bounds.X + Cursor.Column),

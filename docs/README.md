@@ -19,8 +19,14 @@ repository root documents.
   solution shape, project grouping, and artifact layout
 - [240-MAP-module-mapping-ledger.md](./240-MAP-module-mapping-ledger.md):
   upstream crate-to-project mapping ledger
+- [344-WEB-web-boundary.md](./344-WEB-web-boundary.md): in-scope boundary for
+  the local web and wasm host surface
 - [EXTERNALS.md](./EXTERNALS.md): inventory of local external repositories and
   libraries managed under `.external/`, plus rebuild instructions
+- [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.md):
+  blockers and remaining gaps from the hosted parity batch
+- [2026-03-09-big-batch-blockers.md](./2026-03-09-big-batch-blockers.md):
+  blockers and remaining gaps from the base-port batch
 
 ## Root Documents
 

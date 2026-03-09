@@ -12,6 +12,10 @@ public sealed class TableWidget : IWidget
 
     public int SelectedRow { get; init; } = -1;
 
+    public int FocusedRow { get; init; } = -1;
+
+    public int HoveredRow { get; init; } = -1;
+
     public void Render(RuntimeRenderContext context)
     {
         if (Headers.Count == 0)
@@ -34,7 +38,14 @@ public sealed class TableWidget : IWidget
                 constraints);
             for (var column = 0; column < Math.Min(Rows[rowIndex].Count, rects.Count); column++)
             {
-                var style = rowIndex == SelectedRow ? context.Theme.Table.Selected : context.Theme.Table.Cell;
+                var style = rowIndex switch
+                {
+                    _ when rowIndex == SelectedRow && rowIndex == FocusedRow => context.Theme.Selection,
+                    _ when rowIndex == SelectedRow => context.Theme.Table.Selected,
+                    _ when rowIndex == FocusedRow => context.Theme.Interactive.Focused,
+                    _ when rowIndex == HoveredRow => context.Theme.Interactive.Hover,
+                    _ => context.Theme.Table.Cell
+                };
                 BufferPainter.WriteText(context.Buffer, rects[column].X, rects[column].Y, Rows[rowIndex][column], style.ToCell());
             }
         }

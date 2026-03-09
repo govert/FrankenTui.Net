@@ -19,4 +19,17 @@ public static class RenderHarness
 
     public static WebFrame RenderWeb(IRuntimeView view, ushort width, ushort height, Theme? theme = null) =>
         WebHost.Render(view, new Size(width, height), theme);
+
+    public static HostedParityEvidence CaptureHostedParity(
+        string name,
+        IRuntimeView view,
+        ushort width,
+        ushort height,
+        Theme? theme = null,
+        WebRenderOptions? options = null)
+    {
+        var terminal = Render(view, width, height, theme);
+        var web = WebHost.Render(view, new Size(width, height), theme, options);
+        return HostedParityEvidence.Create(name, terminal, web);
+    }
 }
