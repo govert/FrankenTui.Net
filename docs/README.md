@@ -11,6 +11,12 @@ repository root documents.
   FrankenTUI workspace roadmap and port relevance map
 - [200-PRT-port-work-breakdown.md](./200-PRT-port-work-breakdown.md): initial
   dependency-based hierarchical port plan
+- [220-PTH-pathfinder-baseline.md](./220-PTH-pathfinder-baseline.md):
+  upstream baseline, parity corpus, and early verification doctrine
+- [230-ARC-solution-skeleton.md](./230-ARC-solution-skeleton.md): .NET
+  solution shape, project grouping, and artifact layout
+- [240-MAP-module-mapping-ledger.md](./240-MAP-module-mapping-ledger.md):
+  upstream crate-to-project mapping ledger
 - [EXTERNALS.md](./EXTERNALS.md): inventory of local external repositories and
   libraries managed under `.external/`, plus rebuild instructions
 

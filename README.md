@@ -9,16 +9,35 @@ This repository is currently at bootstrap stage. The governing project
 definition is in [CHARTER.md](./CHARTER.md), which is prescriptive rather than
 aspirational.
 
+The initial .NET workspace baseline is now in place under
+[FrankenTui.Net.sln](./FrankenTui.Net.sln) with the SDK pinned in
+[global.json](./global.json).
+
 ## Start Here
 
 - [CHARTER.md](./CHARTER.md): mission, scope, non-goals, and execution doctrine
 - [docs/README.md](./docs/README.md): tracked documentation index
 - [docs/EXTERNALS.md](./docs/EXTERNALS.md): `.external/` inventory and rebuild
   instructions
+- [docs/220-PTH-pathfinder-baseline.md](./docs/220-PTH-pathfinder-baseline.md):
+  upstream baseline, parity corpus, and early verification doctrine
+- [docs/230-ARC-solution-skeleton.md](./docs/230-ARC-solution-skeleton.md):
+  initial .NET solution shape and artifact layout
+- [docs/240-MAP-module-mapping-ledger.md](./docs/240-MAP-module-mapping-ledger.md):
+  upstream crate-to-project mapping ledger
 - [PROVENANCE.md](./PROVENANCE.md): upstream basis, port framing, and rights
   allocation
 - [LICENSE](./LICENSE): repository licensing overview
 - [AGENTS.md](./AGENTS.md): current agent guidance for work in this repository
+
+## Repo Shape
+
+- `src/`: ported library surfaces plus reusable verification support libraries
+- `tests/`: runnable .NET test projects, initially split by verification mode
+- `apps/`: showcase and wasm host application surfaces
+- `tools/`: operator and diagnostics entry points such as `FrankenTui.Doctor`
+- `artifacts/`: tracked artifact layout; generated evidence remains ignored by
+  default unless promoted intentionally
 
 ## Licensing Summary
 

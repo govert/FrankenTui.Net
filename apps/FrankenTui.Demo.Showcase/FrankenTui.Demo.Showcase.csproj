@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\FrankenTui.Core\FrankenTui.Core.csproj" />
+    <ProjectReference Include="..\..\src\FrankenTui.I18n\FrankenTui.I18n.csproj" />
+    <ProjectReference Include="..\..\src\FrankenTui.Render\FrankenTui.Render.csproj" />
+    <ProjectReference Include="..\..\src\FrankenTui.Style\FrankenTui.Style.csproj" />
+    <ProjectReference Include="..\..\src\FrankenTui.Text\FrankenTui.Text.csproj" />
+    <ProjectReference Include="..\..\src\FrankenTui.Layout\FrankenTui.Layout.csproj" />
+    <ProjectReference Include="..\..\src\FrankenTui.Runtime\FrankenTui.Runtime.csproj" />
+    <ProjectReference Include="..\..\src\FrankenTui.Widgets\FrankenTui.Widgets.csproj" />
+    <ProjectReference Include="..\..\src\FrankenTui.Extras\FrankenTui.Extras.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

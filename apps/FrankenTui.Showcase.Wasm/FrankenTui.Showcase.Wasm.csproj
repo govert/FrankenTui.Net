@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\FrankenTui.Web\FrankenTui.Web.csproj" />
+    <ProjectReference Include="..\FrankenTui.Demo.Showcase\FrankenTui.Demo.Showcase.csproj" />
+    <ProjectReference Include="..\..\src\FrankenTui.Layout\FrankenTui.Layout.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>
