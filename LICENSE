@@ -1,0 +1,37 @@
+FrankenTui.Net Repository License Notice
+
+This repository contains both original FrankenTui.Net material and material
+derived from FrankenTUI. The applicable license depends on the provenance of the
+material.
+
+1. FrankenTUI-derived material
+
+Any material in this repository that is copied from, translated from, ported
+from, adapted from, or otherwise derived from FrankenTUI is distributed under
+the FrankenTUI upstream license reproduced in
+LICENSES/FrankenTUI-UPSTREAM.txt.
+
+Copyright in that upstream-derived material remains with Jeffrey Emanuel and any
+other upstream rights holders, if any. The FrankenTUI OpenAI/Anthropic rider
+remains in force for all such material.
+
+2. Original FrankenTui.Net material
+
+Repository materials authored originally for FrankenTui.Net and not derived
+from FrankenTUI are Copyright (c) 2026 FrankenTui.Net contributors and are
+licensed under the MIT License reproduced in LICENSES/MIT.txt.
+
+3. Mixed files and combined works
+
+If a file or deliverable combines original FrankenTui.Net material with
+FrankenTUI-derived material, treat it as containing FrankenTUI-derived material
+and comply with the FrankenTUI upstream license for that portion. Nothing in
+this repository grants broader rights in FrankenTUI-derived material than the
+upstream license grants.
+
+4. Project framing
+
+FrankenTui.Net is presented as a faithful .NET port and translation of
+FrankenTUI into another implementation medium, not as a clean-room
+reimplementation. See PROVENANCE.md and CHARTER.md for the governing project
+framing.
