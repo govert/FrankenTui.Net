@@ -29,7 +29,7 @@ waves can stay traceable.
 | `ftui-extras` | `src/FrankenTui.Extras` | library | scaffolded | optional higher-level features |
 | `ftui-a11y` | `src/FrankenTui.A11y` | library | scaffolded | accessibility integration |
 | `ftui-i18n` | `src/FrankenTui.I18n` | library | scaffolded | localization and catalog support |
-| `ftui-simd` | `src/FrankenTui.Simd` | optimization | scaffolded | optional optimization surface |
+| `ftui-simd` | `src/FrankenTui.Simd` | optimization | landed | optional optimization surface with hook-based enablement |
 | `ftui-harness` | `src/FrankenTui.Testing.Harness` | verification support | scaffolded | reusable support library, not a test bucket |
 | `ftui-pty` | `src/FrankenTui.Testing.Pty` | verification support | scaffolded | reusable PTY support layer |
 | `ftui-web` | `src/FrankenTui.Web` | host | scaffolded | deterministic web host surface |
@@ -54,5 +54,5 @@ waves can stay traceable.
   be consumed by apps, tools, and test projects.
 - Actual runnable tests live in `tests/` and are currently split by mode rather
   than by crate.
-- This ledger records ownership, not completeness. Every listed surface is only
-  scaffolded at this point.
+- This ledger records ownership first; several surfaces have now advanced far
+  beyond the initial scaffolded baseline.

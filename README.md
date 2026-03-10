@@ -17,7 +17,9 @@ The current sample surface is the hosted-parity showcase under
 `apps/FrankenTui.Demo.Showcase`, which now supports both scripted frame output
 and a small interactive terminal mode. The showcase also now includes an
 `extras` scenario that exercises markdown, validation, help, export, and
-traceback-oriented surfaces.
+traceback-oriented surfaces. Optional safe acceleration now lives in
+`src/FrankenTui.Simd` and is used by the local benchmark, demo, and doctor
+surfaces.
 
 ## Start Here
 

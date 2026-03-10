@@ -45,6 +45,12 @@ public static class DoctorDashboardViewFactory
                             }),
                             (LayoutConstraint.Fill(), new StatusWidget
                             {
+                                Label = "SIMD",
+                                Value = report.SimdEnabled ? "enabled" : report.SimdSupported ? "available" : "off",
+                                IsHealthy = report.SimdSupported
+                            }),
+                            (LayoutConstraint.Fill(), new StatusWidget
+                            {
                                 Label = "Mux",
                                 Value = report.InMux ? "yes" : "no",
                                 IsHealthy = !report.InMux
@@ -64,6 +70,7 @@ public static class DoctorDashboardViewFactory
                                         new[] { "Runtime", report.RuntimeVersion },
                                         new[] { "TERM", report.Term },
                                         new[] { "Validation", report.HostValidationStatus },
+                                        new[] { "SIMD", report.SimdEnabled ? "enabled" : report.SimdSupported ? "available" : "off" },
                                         new[] { "Hyperlinks", report.SupportsHyperlinks ? "yes" : "no" },
                                         new[] { "Sync output", report.SupportsSyncOutput ? "yes" : "no" }
                                     ],
@@ -115,6 +122,7 @@ public static class DoctorDashboardViewFactory
                 $"TERM: {report.Term}",
                 $"Host: {report.HostProfile}",
                 $"Host status: {report.HostValidationStatus}",
+                $"SIMD: {(report.SimdEnabled ? "enabled" : report.SimdSupported ? "available" : "off")} ({report.SimdSummary})",
                 $"Hyperlinks: {(report.SupportsHyperlinks ? "yes" : "no")}",
                 $"Sync output: {(report.SupportsSyncOutput ? "yes" : "no")}",
                 $"In mux: {(report.InMux ? "yes" : "no")}",

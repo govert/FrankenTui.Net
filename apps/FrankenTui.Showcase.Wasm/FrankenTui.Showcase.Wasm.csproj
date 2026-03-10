@@ -6,6 +6,7 @@
     <ProjectReference Include="..\..\src\FrankenTui.Widgets\FrankenTui.Widgets.csproj" />
     <ProjectReference Include="..\FrankenTui.Demo.Showcase\FrankenTui.Demo.Showcase.csproj" />
     <ProjectReference Include="..\..\src\FrankenTui.Layout\FrankenTui.Layout.csproj" />
+    <ProjectReference Include="..\..\src\FrankenTui.Simd\FrankenTui.Simd.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

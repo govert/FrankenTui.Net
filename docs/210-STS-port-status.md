@@ -24,7 +24,7 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
 ## Current Basis
 
 - Current status basis commit:
-  working tree completing the material extras batch after `7335c55`
+  working tree completing the SIMD optimization batch after `cb31a4a`
 - Current upstream workspace basis:
   `7a91089366bd4644e086d5a422cb76b052e3de17`
 - Last full verification pass at status update time:
@@ -72,6 +72,13 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   terminal, web, and PTY verification. Current local verification is `62`
   headless tests, `5` web tests, and `6` PTY tests via `dotnet test
   FrankenTui.Net.sln --configuration Release`.
+- simd-optimization working tree after `cb31a4a`
+  `FrankenTui.Simd` now provides optional safe acceleration hooks for row diff
+  and word wrap, benchmark/doctors/demo surfaces opt into it explicitly, and
+  equivalence coverage keeps the optimized path behaviorally aligned with the
+  baseline path. Current local verification is `65` headless tests, `5` web
+  tests, and `6` PTY tests via `dotnet test FrankenTui.Net.sln --configuration
+  Release`.
 
 ## Status
 
@@ -225,7 +232,7 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
 | --- | --- | --- |
 | `371-EXT` | `completed` | Extras classification is now recorded in `371-EXT-extras-classification.md`. |
 | `372-EXT` | `completed` | The in-sequence material extras slice is now landed in `FrankenTui.Extras` and recorded in `372-EXT-material-extras-slice.md`. |
-| `373-EXT` | `not started` | SIMD/optimization work has not started. |
+| `373-EXT` | `completed` | The optional safe optimization surface is now landed in `FrankenTui.Simd` and recorded in `373-EXT-simd-optimization-surface.md`. |
 
 ### 380-TOL Doctor And Operational Tooling
 

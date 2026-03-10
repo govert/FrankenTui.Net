@@ -35,6 +35,8 @@ repository root documents.
   current classification of parity-critical, later, and optional extras
 - [372-EXT-material-extras-slice.md](./372-EXT-material-extras-slice.md):
   current in-sequence material extras surface landed for the .NET port
+- [373-EXT-simd-optimization-surface.md](./373-EXT-simd-optimization-surface.md):
+  optional safe optimization surface and hook model for the .NET port
 - [344-WEB-web-boundary.md](./344-WEB-web-boundary.md): in-scope boundary for
   the local web and wasm host surface
 - [391-DOC-dotnet-implementation-notes.md](./391-DOC-dotnet-implementation-notes.md):

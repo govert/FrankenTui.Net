@@ -14,6 +14,7 @@
     <ProjectReference Include="..\FrankenTui.Web\FrankenTui.Web.csproj" />
     <ProjectReference Include="..\FrankenTui.Widgets\FrankenTui.Widgets.csproj" />
     <ProjectReference Include="..\FrankenTui.Extras\FrankenTui.Extras.csproj" />
+    <ProjectReference Include="..\FrankenTui.Simd\FrankenTui.Simd.csproj" />
     <ProjectReference Include="..\FrankenTui.Testing.Pty\FrankenTui.Testing.Pty.csproj" />
   </ItemGroup>
 

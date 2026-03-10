@@ -5,10 +5,13 @@ using FrankenTui.Core;
 using FrankenTui.Extras;
 using FrankenTui.Render;
 using FrankenTui.Runtime;
+using FrankenTui.Simd;
 using FrankenTui.Style;
 using FrankenTui.Tty;
 using FrankenTui.Widgets;
 using RenderBuffer = FrankenTui.Render.Buffer;
+
+SimdAccelerators.EnableIfSupported();
 
 var inlineMode = HasFlag(args, "--inline");
 var interactiveMode = HasFlag(args, "--interactive");

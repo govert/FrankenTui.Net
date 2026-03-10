@@ -1,7 +1,10 @@
 using System.Text.Json;
 using FrankenTui.Doctor;
 using FrankenTui.Runtime;
+using FrankenTui.Simd;
 using FrankenTui.Testing.Harness;
+
+SimdAccelerators.EnableIfSupported();
 
 var format = Parse(args, "--format") ?? "json";
 var width = ParseUShort(args, "--width", 72);

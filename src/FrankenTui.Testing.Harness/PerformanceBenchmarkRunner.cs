@@ -6,6 +6,7 @@ using FrankenTui.Extras;
 using FrankenTui.Layout;
 using FrankenTui.Render;
 using FrankenTui.Runtime;
+using FrankenTui.Simd;
 using FrankenTui.Style;
 using FrankenTui.Text;
 using FrankenTui.Web;
@@ -86,24 +87,36 @@ public static class PerformanceBenchmarkRunner
     {
         ArgumentNullException.ThrowIfNull(budgets);
 
+        var wasEnabled = SimdAccelerators.IsEnabled;
+        SimdAccelerators.EnableIfSupported();
         var measurements = new List<BenchmarkMeasurement>();
-        foreach (var budget in budgets)
+        try
         {
-            measurements.Add(
-                budget.Name switch
-                {
-                    "ansi_emit" => Measure(budget, AnsiEmitBenchmark),
-                    "buffer_new_80x24" => Measure(budget, BufferNewBenchmark),
-                    "diff_strategy" => Measure(budget, DiffStrategyBenchmark),
-                    "frame_render" => Measure(budget, FrameRenderBenchmark),
-                    "layout_computation" => Measure(budget, LayoutBenchmark),
-                    "text_wrap_word" => Measure(budget, TextWrapBenchmark),
-                    "runtime_dispatch" => Measure(budget, RuntimeDispatchBenchmark),
-                    "widget_render_block" => Measure(budget, WidgetRenderBlockBenchmark),
-                    "widget_render_table" => Measure(budget, WidgetRenderBenchmark),
-                    "web_document" => Measure(budget, WebDocumentBenchmark),
-                    _ => throw new InvalidOperationException($"Unknown benchmark '{budget.Name}'.")
-                });
+            foreach (var budget in budgets)
+            {
+                measurements.Add(
+                    budget.Name switch
+                    {
+                        "ansi_emit" => Measure(budget, AnsiEmitBenchmark),
+                        "buffer_new_80x24" => Measure(budget, BufferNewBenchmark),
+                        "diff_strategy" => Measure(budget, DiffStrategyBenchmark),
+                        "frame_render" => Measure(budget, FrameRenderBenchmark),
+                        "layout_computation" => Measure(budget, LayoutBenchmark),
+                        "text_wrap_word" => Measure(budget, TextWrapBenchmark),
+                        "runtime_dispatch" => Measure(budget, RuntimeDispatchBenchmark),
+                        "widget_render_block" => Measure(budget, WidgetRenderBlockBenchmark),
+                        "widget_render_table" => Measure(budget, WidgetRenderBenchmark),
+                        "web_document" => Measure(budget, WebDocumentBenchmark),
+                        _ => throw new InvalidOperationException($"Unknown benchmark '{budget.Name}'.")
+                    });
+            }
+        }
+        finally
+        {
+            if (!wasEnabled)
+            {
+                SimdAccelerators.Disable();
+            }
         }
 
         return new BenchmarkSuiteResult(measurements);

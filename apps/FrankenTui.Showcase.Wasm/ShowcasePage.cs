@@ -1,6 +1,7 @@
 using FrankenTui;
 using FrankenTui.Web;
 using FrankenTui.Extras;
+using FrankenTui.Simd;
 using FrankenTui.Widgets;
 
 namespace FrankenTui.Showcase.Wasm;
@@ -17,6 +18,9 @@ public static class ShowcasePage
         ushort width = 64,
         ushort height = 18,
         string language = "en-US",
-        WidgetFlowDirection flowDirection = WidgetFlowDirection.LeftToRight) =>
-        Ui.RenderHostedParity(inlineMode, width, height, scenarioId, frame, language, flowDirection);
+        WidgetFlowDirection flowDirection = WidgetFlowDirection.LeftToRight)
+    {
+        SimdAccelerators.EnableIfSupported();
+        return Ui.RenderHostedParity(inlineMode, width, height, scenarioId, frame, language, flowDirection);
+    }
 }

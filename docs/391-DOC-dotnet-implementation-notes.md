@@ -59,6 +59,20 @@ That choice keeps the first extras wave:
 - honest about what is already ported
 - open to later package decomposition if NuGet/trimming concerns justify it
 
+## Optimization Packaging Choice
+
+Upstream keeps optimization work in `ftui-simd` as an optional crate. The .NET
+port now mirrors that through `FrankenTui.Simd`, but uses hook registration
+instead of feature flags:
+
+- core render/text assemblies expose accelerator hooks
+- `FrankenTui.Simd` owns the optional accelerated implementations
+- apps/tools/benchmarks opt in explicitly by calling
+  `SimdAccelerators.EnableIfSupported()`
+
+This preserves the same architectural intent as upstream: the optimization
+surface is real and measured, but correctness does not depend on it.
+
 ## Upstream Reference Choice
 
 The `.external/frankentui` workspace is a managed local reference corpus, not a

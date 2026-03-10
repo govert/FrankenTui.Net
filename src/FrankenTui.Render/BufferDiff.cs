@@ -4,6 +4,8 @@ public sealed class BufferDiff
 {
     private readonly List<CellPosition> _changes = [];
 
+    public static IBufferDiffAccelerator? Accelerator { get; set; }
+
     public IReadOnlyList<CellPosition> Changes => _changes;
 
     public int Count => _changes.Count;
@@ -47,18 +49,12 @@ public sealed class BufferDiff
         {
             var oldRow = oldBuffer.GetRow(y);
             var newRow = newBuffer.GetRow(y);
-            if (oldRow.SequenceEqual(newRow))
+            if (Accelerator?.TryAppendRowChanges(oldRow, newRow, y, _changes) == true)
             {
                 continue;
             }
 
-            for (ushort x = 0; x < newBuffer.Width; x++)
-            {
-                if (!oldRow[x].BitsEqual(newRow[x]))
-                {
-                    _changes.Add(new CellPosition(x, y));
-                }
-            }
+            AppendRowChanges(oldRow, newRow, y, _changes);
         }
     }
 
@@ -76,18 +72,12 @@ public sealed class BufferDiff
 
             var oldRow = oldBuffer.GetRow(y);
             var newRow = newBuffer.GetRow(y);
-            if (oldRow.SequenceEqual(newRow))
+            if (Accelerator?.TryAppendRowChanges(oldRow, newRow, y, _changes) == true)
             {
                 continue;
             }
 
-            for (ushort x = 0; x < newBuffer.Width; x++)
-            {
-                if (!oldRow[x].BitsEqual(newRow[x]))
-                {
-                    _changes.Add(new CellPosition(x, y));
-                }
-            }
+            AppendRowChanges(oldRow, newRow, y, _changes);
         }
     }
 
@@ -125,6 +115,26 @@ public sealed class BufferDiff
     }
 
     public void Clear() => _changes.Clear();
+
+    internal static void AppendRowChanges(
+        ReadOnlySpan<Cell> oldRow,
+        ReadOnlySpan<Cell> newRow,
+        ushort y,
+        List<CellPosition> changes)
+    {
+        if (oldRow.SequenceEqual(newRow))
+        {
+            return;
+        }
+
+        for (ushort x = 0; x < newRow.Length; x++)
+        {
+            if (!oldRow[x].BitsEqual(newRow[x]))
+            {
+                changes.Add(new CellPosition(x, y));
+            }
+        }
+    }
 
     private static void EnsureCompatible(Buffer oldBuffer, Buffer newBuffer)
     {

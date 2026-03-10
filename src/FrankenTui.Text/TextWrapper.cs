@@ -4,6 +4,8 @@ namespace FrankenTui.Text;
 
 public static class TextWrapper
 {
+    public static ITextWrapAccelerator? Accelerator { get; set; }
+
     public static IReadOnlyList<string> Wrap(TextDocument document, ushort width, TextWrapMode mode)
     {
         ArgumentNullException.ThrowIfNull(document);
@@ -28,6 +30,11 @@ public static class TextWrapper
         }
 
         var result = new List<string>();
+        if (Accelerator?.TryWrapLine(text, width, mode, result) == true)
+        {
+            return result;
+        }
+
         if (mode == TextWrapMode.Character)
         {
             var current = string.Empty;

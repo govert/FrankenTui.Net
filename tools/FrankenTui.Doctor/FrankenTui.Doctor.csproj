@@ -9,6 +9,7 @@
     <ProjectReference Include="..\..\src\FrankenTui.Testing.Harness\FrankenTui.Testing.Harness.csproj" />
     <ProjectReference Include="..\..\src\FrankenTui.Text\FrankenTui.Text.csproj" />
     <ProjectReference Include="..\..\src\FrankenTui.Web\FrankenTui.Web.csproj" />
+    <ProjectReference Include="..\..\src\FrankenTui.Simd\FrankenTui.Simd.csproj" />
     <ProjectReference Include="..\..\src\FrankenTui.Tty\FrankenTui.Tty.csproj" />
     <ProjectReference Include="..\..\src\FrankenTui.Widgets\FrankenTui.Widgets.csproj" />
   </ItemGroup>
