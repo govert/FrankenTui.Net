@@ -24,8 +24,7 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
 ## Current Basis
 
 - Current status basis commit:
-  working tree completing the runtime-text-interactivity and extras-classification
-  batch after `9797fbe`
+  working tree completing the material extras batch after `7335c55`
 - Current upstream workspace basis:
   `7a91089366bd4644e086d5a422cb76b052e3de17`
 - Last full verification pass at status update time:
@@ -66,6 +65,13 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   classification have landed. Current local verification is `58` headless tests,
   `4` web tests, and `5` PTY tests via `dotnet test FrankenTui.Net.sln
   --configuration Release`.
+- material-extras working tree after `7335c55`
+  Material `FrankenTui.Extras` surfaces now include markdown rendering, export
+  helpers, ANSI-aware console cleanup, forms/validation, help/timing widgets,
+  traceback rendering, and an extras showcase slice that is exercised in
+  terminal, web, and PTY verification. Current local verification is `62`
+  headless tests, `5` web tests, and `6` PTY tests via `dotnet test
+  FrankenTui.Net.sln --configuration Release`.
 
 ## Status
 
@@ -210,7 +216,7 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
 | Code | Status | Note |
 | --- | --- | --- |
 | `361-DEM` | `completed` | The hosted-parity showcase slice is now formalized as a shared session and surface. |
-| `362-DEM` | `completed` | Terminal showcase now supports both scenario/frame-driven scripted rendering and a small interactive mode, exercised by PTY tests. |
+| `362-DEM` | `completed` | Terminal showcase now supports scenario/frame-driven scripted rendering, a small interactive mode, and an extras scenario, exercised by PTY tests. |
 | `363-DEM` | `completed` | Terminal and web showcase alignment is now explicit through shared `Ui`/showcase rendering and web tests. |
 
 ### 370-EXT Extras And Optional Optimization Surface
@@ -218,7 +224,7 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
 | Code | Status | Note |
 | --- | --- | --- |
 | `371-EXT` | `completed` | Extras classification is now recorded in `371-EXT-extras-classification.md`. |
-| `372-EXT` | `not started` | Feature-gated extras beyond the current dashboard baseline are not yet ported. |
+| `372-EXT` | `completed` | The in-sequence material extras slice is now landed in `FrankenTui.Extras` and recorded in `372-EXT-material-extras-slice.md`. |
 | `373-EXT` | `not started` | SIMD/optimization work has not started. |
 
 ### 380-TOL Doctor And Operational Tooling

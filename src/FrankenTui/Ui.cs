@@ -49,6 +49,12 @@ public static class Ui
 
     public static ParagraphWidget Paragraph(string text) => new(text);
 
+    public static ParagraphWidget Markdown(string markdown) =>
+        new(string.Empty)
+        {
+            Document = MarkdownDocumentBuilder.Parse(markdown)
+        };
+
     public static PanelWidget Panel(string title, IWidget child) => new() { Title = title, Child = child };
 
     public static IWidget HostedParityView(

@@ -15,7 +15,9 @@ The initial .NET workspace baseline is now in place under
 
 The current sample surface is the hosted-parity showcase under
 `apps/FrankenTui.Demo.Showcase`, which now supports both scripted frame output
-and a small interactive terminal mode.
+and a small interactive terminal mode. The showcase also now includes an
+`extras` scenario that exercises markdown, validation, help, export, and
+traceback-oriented surfaces.
 
 ## Start Here
 

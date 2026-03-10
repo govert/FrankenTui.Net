@@ -33,6 +33,8 @@ repository root documents.
   per-platform host validation status, evidence sources, and divergence notes
 - [371-EXT-extras-classification.md](./371-EXT-extras-classification.md):
   current classification of parity-critical, later, and optional extras
+- [372-EXT-material-extras-slice.md](./372-EXT-material-extras-slice.md):
+  current in-sequence material extras surface landed for the .NET port
 - [344-WEB-web-boundary.md](./344-WEB-web-boundary.md): in-scope boundary for
   the local web and wasm host surface
 - [391-DOC-dotnet-implementation-notes.md](./391-DOC-dotnet-implementation-notes.md):

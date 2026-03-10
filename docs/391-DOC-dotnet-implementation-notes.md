@@ -41,6 +41,24 @@ The terminal showcase likewise now has two local modes:
 - scripted frame output for deterministic evidence and PTY coverage
 - a small interactive mode that stays inside the same core runtime/widget path
 
+The hosted showcase also now carries a dedicated extras scenario, so higher
+level optional surfaces remain visible in the same testable terminal/web path
+instead of drifting into unverified helper code.
+
+## Extras Packaging Choice
+
+Upstream `ftui-extras` is feature-gated at Cargo level. The current .NET port
+does not mirror that one-feature-per-flag layout mechanically. Instead, the
+material extras slice lives in `FrankenTui.Extras` as a modular assembly with
+separate types for markdown, export, validation/forms, help, timing, traceback,
+and console helpers.
+
+That choice keeps the first extras wave:
+
+- easy to exercise in tests and demos
+- honest about what is already ported
+- open to later package decomposition if NuGet/trimming concerns justify it
+
 ## Upstream Reference Choice
 
 The `.external/frankentui` workspace is a managed local reference corpus, not a

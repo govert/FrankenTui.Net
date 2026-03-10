@@ -9,7 +9,8 @@ public enum HostedParityScenarioId
 {
     Overview,
     Interaction,
-    Tooling
+    Tooling,
+    Extras
 }
 
 public sealed record HostedParityMetric(string Label, string Value, bool Healthy = true);
@@ -174,17 +175,9 @@ public sealed record HostedParitySession(
 
     private static HostedParityScenarioId ScenarioFromColumn(int column)
     {
-        if (column < 12)
-        {
-            return HostedParityScenarioId.Overview;
-        }
-
-        if (column < 28)
-        {
-            return HostedParityScenarioId.Interaction;
-        }
-
-        return HostedParityScenarioId.Tooling;
+        var scenarios = Enum.GetValues<HostedParityScenarioId>();
+        var index = Math.Clamp(column / 12, 0, scenarios.Length - 1);
+        return scenarios[index];
     }
 
     private static int Wrap(int index, int count)
@@ -231,7 +224,15 @@ public static class HostedParityText
                 .Add("scenario.interaction.label", "Interaktion")
                 .Add("scenario.interaction.summary", "Fokus, Pointer-Zustand, Sprache und Live-Region-Hinweise laufen durch ein gemeinsames Sitzungsmodell.")
                 .Add("scenario.tooling.label", "Werkzeuge")
-                .Add("scenario.tooling.summary", "Doctor-Ausgabe, Evidence-Capture, Web-Rendering und CI-Pruefung nutzen dieselben Kern-Einstiegspunkte.");
+                .Add("scenario.tooling.summary", "Doctor-Ausgabe, Evidence-Capture, Web-Rendering und CI-Pruefung nutzen dieselben Kern-Einstiegspunkte.")
+                .Add("scenario.extras.label", "Extras")
+                .Add("scenario.extras.summary", "Markdown, Export, Formulare, Validierung, Hilfe und Traceback-Oberflaechen sind jetzt in die .NET-Portoberflaeche eingebunden.");
+        }
+        else
+        {
+            catalog
+                .Add("scenario.extras.label", "Extras")
+                .Add("scenario.extras.summary", "Markdown, export, forms, validation, help, and traceback surfaces now participate in the .NET port.");
         }
 
         return catalog;

@@ -89,12 +89,8 @@ public static class HostedParitySurface
                             }),
                             (LayoutConstraint.Fill(), new PanelWidget
                             {
-                                Title = "Notes",
-                                Child = new ParagraphWidget(string.Empty)
-                                {
-                                    Document = BuildNotesDocument(description, focus, session.InputState.LiveRegionText),
-                                    RenderOptions = new TextRenderOptions(TextWrapMode.Word)
-                                }
+                                Title = DetailTitle(session.ScenarioId),
+                                Child = BuildDetailWidget(session, description, focus)
                             })
                         ])),
                     (LayoutConstraint.Fill(), new ParagraphWidget(
@@ -182,17 +178,20 @@ public static class HostedParitySurface
             ]);
 
     private static IReadOnlyList<HostedParityMetric> BuildMetrics(HostedParitySession session, string direction) =>
-    [
-        new HostedParityMetric("Surface", session.ScenarioId.ToString()),
-        new HostedParityMetric("Focus", session.InputState.EffectiveFocusId ?? "none"),
-        new HostedParityMetric("Mode", session.InlineMode ? "inline" : "alternate-screen"),
-        new HostedParityMetric("Language", session.InputState.Language),
-        new HostedParityMetric("Direction", direction),
-        new HostedParityMetric("Segments", TextSegmenter.Segment(session.InputState.LiveRegionText).Count.ToString(System.Globalization.CultureInfo.InvariantCulture)),
-        new HostedParityMetric("Search", TextSearch.FindAllNormalized(TextDocument.FromString(session.InputState.LiveRegionText), "focus").Count.ToString(System.Globalization.CultureInfo.InvariantCulture)),
-        new HostedParityMetric("Shaping", "aot-safe"),
-        new HostedParityMetric("Evidence", session.AppliedEvents.Count > 0 ? "capturing" : "baseline", session.AppliedEvents.Count > 0)
-    ];
+        session.ScenarioId == HostedParityScenarioId.Extras
+            ? ExtrasShowcaseFactory.BuildMetrics(session)
+            :
+            [
+                new HostedParityMetric("Surface", session.ScenarioId.ToString()),
+                new HostedParityMetric("Focus", session.InputState.EffectiveFocusId ?? "none"),
+                new HostedParityMetric("Mode", session.InlineMode ? "inline" : "alternate-screen"),
+                new HostedParityMetric("Language", session.InputState.Language),
+                new HostedParityMetric("Direction", direction),
+                new HostedParityMetric("Segments", TextSegmenter.Segment(session.InputState.LiveRegionText).Count.ToString(System.Globalization.CultureInfo.InvariantCulture)),
+                new HostedParityMetric("Search", TextSearch.FindAllNormalized(TextDocument.FromString(session.InputState.LiveRegionText), "focus").Count.ToString(System.Globalization.CultureInfo.InvariantCulture)),
+                new HostedParityMetric("Shaping", "aot-safe"),
+                new HostedParityMetric("Evidence", session.AppliedEvents.Count > 0 ? "capturing" : "baseline", session.AppliedEvents.Count > 0)
+            ];
 
     private static IReadOnlyList<string> BuildEventLog(HostedParitySession session, string label)
     {
@@ -245,6 +244,7 @@ public static class HostedParitySurface
         HostedParityScenarioId.Overview => "scenario.overview.label",
         HostedParityScenarioId.Interaction => "scenario.interaction.label",
         HostedParityScenarioId.Tooling => "scenario.tooling.label",
+        HostedParityScenarioId.Extras => "scenario.extras.label",
         _ => throw new ArgumentOutOfRangeException(nameof(scenarioId), scenarioId, "Unknown hosted parity scenario.")
     };
 
@@ -253,6 +253,7 @@ public static class HostedParitySurface
         HostedParityScenarioId.Overview => "scenario.overview.summary",
         HostedParityScenarioId.Interaction => "scenario.interaction.summary",
         HostedParityScenarioId.Tooling => "scenario.tooling.summary",
+        HostedParityScenarioId.Extras => "scenario.extras.summary",
         _ => throw new ArgumentOutOfRangeException(nameof(scenarioId), scenarioId, "Unknown hosted parity scenario.")
     };
 
@@ -261,6 +262,7 @@ public static class HostedParitySurface
         HostedParityScenarioId.Overview => ["module.core", "module.runtime", "module.web", "module.tooling"],
         HostedParityScenarioId.Interaction => ["module.focus", "module.pointer", "module.language", "module.live"],
         HostedParityScenarioId.Tooling => ["module.evidence", "module.pty", "module.doctor", "module.workflow"],
+        HostedParityScenarioId.Extras => ExtrasShowcaseFactory.ModuleLabels(),
         _ => throw new ArgumentOutOfRangeException(nameof(scenarioId), scenarioId, "Unknown hosted parity scenario.")
     };
 
@@ -269,23 +271,30 @@ public static class HostedParitySurface
         HostedParityScenarioId.Overview => ["322-API", "341-WEB", "342-WEB", "361-DEM", "362-DEM"],
         HostedParityScenarioId.Interaction => ["312-WGT", "314-WGT", "315-WGT", "343-WEB", "356-VRF"],
         HostedParityScenarioId.Tooling => ["357-VRF", "359-VRF", "381-TOL", "382-TOL", "383-TOL", "384-TOL"],
+        HostedParityScenarioId.Extras => ["372-EXT", "362-DEM", "356-VRF", "381-TOL"],
         _ => throw new ArgumentOutOfRangeException(nameof(scenarioId), scenarioId, "Unknown hosted parity scenario.")
     };
 
-    private static int HoveredTabIndex(int pointerColumn)
+    private static int HoveredTabIndex(int pointerColumn) =>
+        Math.Clamp(pointerColumn / 12, 0, Enum.GetValues<HostedParityScenarioId>().Length - 1);
+
+    private static string DetailTitle(HostedParityScenarioId scenarioId) => scenarioId switch
     {
-        if (pointerColumn < 12)
-        {
-            return 0;
-        }
+        HostedParityScenarioId.Extras => "Extras",
+        _ => "Notes"
+    };
 
-        if (pointerColumn < 28)
-        {
-            return 1;
-        }
-
-        return 2;
-    }
+    private static IWidget BuildDetailWidget(
+        HostedParitySession session,
+        HostedParityDescription description,
+        string? focus) =>
+        session.ScenarioId == HostedParityScenarioId.Extras
+            ? ExtrasShowcaseFactory.CreateDetail(session)
+            : new ParagraphWidget(string.Empty)
+            {
+                Document = BuildNotesDocument(description, focus, session.InputState.LiveRegionText),
+                RenderOptions = new TextRenderOptions(TextWrapMode.Word)
+            };
 
     private static TextDocument BuildNotesDocument(
         HostedParityDescription description,

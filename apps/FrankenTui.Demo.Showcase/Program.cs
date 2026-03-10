@@ -97,6 +97,7 @@ static HostedParityScenarioId ParseScenario(string? value) =>
     {
         "interaction" => HostedParityScenarioId.Interaction,
         "tooling" => HostedParityScenarioId.Tooling,
+        "extras" => HostedParityScenarioId.Extras,
         _ => HostedParityScenarioId.Overview
     };
 

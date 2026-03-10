@@ -174,5 +174,40 @@ public sealed class PtyIntegrationTests
         Assert.Contains("Notes", result.Stdout);
     }
 
+    [Fact]
+    public async Task ShowcaseExtrasScenarioRendersMaterialExtras()
+    {
+        if (!CanRunPty())
+        {
+            return;
+        }
+
+        var root = RepositoryPaths.FindRepositoryRoot();
+        var demoProject = Path.Combine(root, "apps", "FrankenTui.Demo.Showcase", "FrankenTui.Demo.Showcase.csproj");
+
+        var result = await ScriptPtyRunner.RunCommandAsync("dotnet",
+        [
+            "run",
+            "--project",
+            demoProject,
+            "--no-restore",
+            "--",
+            "--inline",
+            "--width",
+            "72",
+            "--height",
+            "18",
+            "--frames",
+            "2",
+            "--scenario",
+            "extras"
+        ]);
+
+        Assert.True(result.Success, result.Stderr);
+        Assert.Contains("Extras", result.Stdout);
+        Assert.Contains("Markdown", result.Stdout);
+        Assert.Contains("Validation", result.Stdout);
+    }
+
     private static bool CanRunPty() => OperatingSystem.IsLinux() || OperatingSystem.IsMacOS();
 }
