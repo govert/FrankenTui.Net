@@ -7,13 +7,23 @@ public static class LayoutSolver
     public static IReadOnlyList<Rect> Split(Rect bounds, LayoutDirection direction, IReadOnlyList<LayoutConstraint> constraints) =>
         SplitWithTrace(bounds, direction, constraints).Result;
 
-    public static LayoutTrace SplitWithTrace(Rect bounds, LayoutDirection direction, IReadOnlyList<LayoutConstraint> constraints)
+    public static LayoutTrace SplitWithTrace(
+        Rect bounds,
+        LayoutDirection direction,
+        IReadOnlyList<LayoutConstraint> constraints,
+        LayoutCache? cache = null)
     {
         ArgumentNullException.ThrowIfNull(constraints);
 
         if (constraints.Count == 0)
         {
-            return new LayoutTrace(bounds, direction, constraints, []);
+            var emptyKey = LayoutCacheKey.Create(bounds, direction, constraints).ToString();
+            return new LayoutTrace(bounds, direction, constraints, [], 0, 0, 0, [], emptyKey, false);
+        }
+
+        if (cache is not null && cache.TryGet(bounds, direction, constraints, out var cached))
+        {
+            return cached with { CacheHit = true };
         }
 
         var total = direction == LayoutDirection.Horizontal ? bounds.Width : bounds.Height;
@@ -76,6 +86,25 @@ public static class LayoutSolver
             }
         }
 
-        return new LayoutTrace(bounds, direction, constraints, result);
+        var trace = new LayoutTrace(
+            bounds,
+            direction,
+            constraints,
+            lengths,
+            total,
+            reserved,
+            remaining,
+            result,
+            LayoutCacheKey.Create(bounds, direction, constraints).ToString(),
+            false);
+        cache?.Set(trace);
+        return trace;
     }
+
+    public static LayoutTrace SplitCached(
+        Rect bounds,
+        LayoutDirection direction,
+        IReadOnlyList<LayoutConstraint> constraints,
+        LayoutCache cache) =>
+        SplitWithTrace(bounds, direction, constraints, cache);
 }

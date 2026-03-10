@@ -10,5 +10,8 @@ public sealed record TextDocument(IReadOnlyList<TextLine> Lines)
             .Select(line => new TextLine([new TextSpan(line, style)]))
             .ToArray());
 
+    public static TextDocument FromMarkup(string text) =>
+        MarkupParser.ParseDocument(text);
+
     public string PlainText => string.Join(Environment.NewLine, Lines.Select(static line => line.PlainText));
 }

@@ -6,8 +6,8 @@ This document records the current .NET baseline for runtime determinism,
 evidence artifacts, DOM-level hosted verification, and benchmark regression
 gates.
 
-It closes the current baseline for `303-RTM`, `304-RTM`, and the fidelity band
-from `354-VRF` through `358-VRF` in
+It closes the current baseline for `302-RTM`, `303-RTM`, `304-RTM`, and the
+fidelity band from `354-VRF` through `358-VRF` in
 [`200-PRT-port-work-breakdown.md`](./200-PRT-port-work-breakdown.md).
 
 ## Runtime Determinism Surface
@@ -22,6 +22,14 @@ The current deterministic runtime surface is:
 
 The runtime now records step index, incoming message, emitted messages,
 headless screen text, presenter output, and a stable fingerprint per step.
+
+Queued application flow now has a first-class local baseline through
+`AppSession<TModel, TMessage>`, which provides:
+
+- pending-message queueing
+- drain semantics for command/subscription follow-on messages
+- resize-aware rerender flow
+- cancellation-aware loops suitable for terminal demos and tests
 
 `RuntimeExecutionPolicy` is the local switchboard for evidence-related behavior:
 

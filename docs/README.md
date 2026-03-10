@@ -24,11 +24,15 @@ repository root documents.
 - [244-MAP-divergence-ledgers.md](./244-MAP-divergence-ledgers.md):
   maintained index of active divergence ledgers across host, runtime, and web
   surfaces
+- [294-TXT-shaping-and-hyphenation-evaluation.md](./294-TXT-shaping-and-hyphenation-evaluation.md):
+  current .NET text-shaping and hyphenation decision under AOT constraints
 - [304-RTM-determinism-and-evidence.md](./304-RTM-determinism-and-evidence.md):
   runtime determinism, evidence-manifest, DOM-runner, and benchmark-gate
   baseline
 - [335-HST-host-divergence-ledger.md](./335-HST-host-divergence-ledger.md):
   per-platform host validation status, evidence sources, and divergence notes
+- [371-EXT-extras-classification.md](./371-EXT-extras-classification.md):
+  current classification of parity-critical, later, and optional extras
 - [344-WEB-web-boundary.md](./344-WEB-web-boundary.md): in-scope boundary for
   the local web and wasm host surface
 - [391-DOC-dotnet-implementation-notes.md](./391-DOC-dotnet-implementation-notes.md):

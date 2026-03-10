@@ -36,6 +36,11 @@ tracked hosted verification baseline. This is intentionally lighter than a full
 browser-engine stack, but it still exercises the semantic document structure
 that the shared hosted-parity surfaces produce.
 
+The terminal showcase likewise now has two local modes:
+
+- scripted frame output for deterministic evidence and PTY coverage
+- a small interactive mode that stays inside the same core runtime/widget path
+
 ## Upstream Reference Choice
 
 The `.external/frankentui` workspace is a managed local reference corpus, not a

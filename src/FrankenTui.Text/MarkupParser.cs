@@ -5,6 +5,17 @@ namespace FrankenTui.Text;
 
 public static class MarkupParser
 {
+    public static TextDocument ParseDocument(string text)
+    {
+        ArgumentNullException.ThrowIfNull(text);
+
+        var lines = text.Replace("\r\n", "\n", StringComparison.Ordinal)
+            .Split('\n')
+            .Select(ParseInline)
+            .ToArray();
+        return new TextDocument(lines);
+    }
+
     public static TextLine ParseInline(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
@@ -30,6 +41,17 @@ public static class MarkupParser
                 if (end > index)
                 {
                     spans.Add(new TextSpan(text[(index + 1)..end], UiStyle.Default.WithFlags(CellStyleFlags.Italic)));
+                    index = end + 1;
+                    continue;
+                }
+            }
+
+            if (text[index] == '`')
+            {
+                var end = text.IndexOf('`', index + 1);
+                if (end > index)
+                {
+                    spans.Add(new TextSpan(text[(index + 1)..end], UiStyle.Muted.WithBackground(PackedRgba.Rgb(24, 30, 40))));
                     index = end + 1;
                     continue;
                 }

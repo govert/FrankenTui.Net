@@ -140,5 +140,39 @@ public sealed class PtyIntegrationTests
         Assert.True(File.Exists(Path.Combine(root, "artifacts", "web", "doctor-dashboard.html")));
     }
 
+    [Fact]
+    public async Task ShowcaseInteractiveInlineModeConsumesInputAndExitsOnQuit()
+    {
+        if (!CanRunPty())
+        {
+            return;
+        }
+
+        var root = RepositoryPaths.FindRepositoryRoot();
+        var demoProject = Path.Combine(root, "apps", "FrankenTui.Demo.Showcase", "FrankenTui.Demo.Showcase.csproj");
+
+        var result = await ScriptPtyRunner.RunCommandAsync(
+            "dotnet",
+            [
+                "run",
+                "--project",
+                demoProject,
+                "--no-restore",
+                "--",
+                "--inline",
+                "--interactive",
+                "--width",
+                "60",
+                "--height",
+                "16"
+            ],
+            stdin: "\tjlq");
+
+        Assert.True(result.Success, result.Stderr);
+        Assert.Contains("Overview", result.Stdout);
+        Assert.Contains("Segments", result.Stdout);
+        Assert.Contains("Notes", result.Stdout);
+    }
+
     private static bool CanRunPty() => OperatingSystem.IsLinux() || OperatingSystem.IsMacOS();
 }

@@ -21,6 +21,9 @@ public sealed class AppSimulator<TModel, TMessage>
 
     public ReplayTape<TMessage> Replay => Runtime.Replay;
 
+    public AppSession<TModel, TMessage> CreateSession(IAppProgram<TModel, TMessage> program, TModel? model = default) =>
+        new(Runtime, program, model);
+
     public ValueTask<PresentResult> RenderAsync(IRuntimeView view, CancellationToken cancellationToken = default) =>
         Runtime.RenderAsync(view, cancellationToken);
 

@@ -9,8 +9,8 @@ namespace FrankenTui.Runtime;
 public sealed class AppRuntime<TModel, TMessage>
 {
     private readonly ITerminalBackend _backend;
-    private readonly RenderBuffer _current;
-    private readonly RenderBuffer _next;
+    private RenderBuffer _current;
+    private RenderBuffer _next;
     private int _stepIndex;
 
     public AppRuntime(
@@ -21,11 +21,14 @@ public sealed class AppRuntime<TModel, TMessage>
     {
         _backend = backend ?? throw new ArgumentNullException(nameof(backend));
         var effectiveSize = size.IsEmpty ? new Size(1, 1) : size;
+        Size = effectiveSize;
         _current = new RenderBuffer(effectiveSize.Width, effectiveSize.Height);
         _next = new RenderBuffer(effectiveSize.Width, effectiveSize.Height);
         Theme = theme ?? Theme.DefaultTheme;
         Policy = policy ?? RuntimeExecutionPolicy.Default;
     }
+
+    public Size Size { get; private set; }
 
     public Theme Theme { get; }
 
@@ -79,6 +82,20 @@ public sealed class AppRuntime<TModel, TMessage>
         var result = await _backend.PresentAsync(_next, diff, links, cancellationToken).ConfigureAwait(false);
         _current.CopyFrom(_next);
         return result;
+    }
+
+    public async ValueTask ResizeAsync(Size size, CancellationToken cancellationToken = default)
+    {
+        var effectiveSize = size.IsEmpty ? new Size(1, 1) : size;
+        if (effectiveSize == Size)
+        {
+            return;
+        }
+
+        await _backend.ResizeAsync(effectiveSize, cancellationToken).ConfigureAwait(false);
+        Size = effectiveSize;
+        _current = new RenderBuffer(effectiveSize.Width, effectiveSize.Height);
+        _next = new RenderBuffer(effectiveSize.Width, effectiveSize.Height);
     }
 
     private IReadOnlyList<TMessage> CollectMessages(

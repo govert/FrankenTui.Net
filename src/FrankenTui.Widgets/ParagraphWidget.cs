@@ -18,18 +18,18 @@ public sealed class ParagraphWidget : IWidget
 
     public UiStyle? Style { get; init; }
 
+    public TextRenderOptions? RenderOptions { get; init; }
+
     public void Render(RuntimeRenderContext context)
     {
         var style = Style ?? context.Theme.Default;
-        var lines = TextWrapper.Wrap(Document, context.Bounds.Width, WrapMode);
+        var lines = TextRenderer.Layout(
+            Document,
+            context.Bounds.Width,
+            RenderOptions ?? new TextRenderOptions(WrapMode));
         for (var row = 0; row < Math.Min(lines.Count, context.Bounds.Height); row++)
         {
-            BufferPainter.WriteText(
-                context.Buffer,
-                context.Bounds.X,
-                (ushort)(context.Bounds.Y + row),
-                lines[row],
-                style.ToCell());
+            TextRenderer.Write(context.Buffer, context.Bounds.X, (ushort)(context.Bounds.Y + row), lines[row], style);
         }
     }
 }

@@ -13,6 +13,10 @@ The initial .NET workspace baseline is now in place under
 [FrankenTui.Net.sln](./FrankenTui.Net.sln) with the SDK pinned in
 [global.json](./global.json).
 
+The current sample surface is the hosted-parity showcase under
+`apps/FrankenTui.Demo.Showcase`, which now supports both scripted frame output
+and a small interactive terminal mode.
+
 ## Start Here
 
 - [CHARTER.md](./CHARTER.md): mission, scope, non-goals, and execution doctrine

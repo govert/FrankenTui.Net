@@ -25,6 +25,22 @@ public static class Ui
         RuntimeExecutionPolicy policy) =>
         new(new Size(width, height), theme, policy);
 
+    public static AppSession<TModel, TMessage> CreateSession<TModel, TMessage>(
+        ushort width,
+        ushort height,
+        IAppProgram<TModel, TMessage> program,
+        Theme? theme = null,
+        RuntimeExecutionPolicy? policy = null,
+        TModel? model = default) =>
+        new(
+            new AppRuntime<TModel, TMessage>(
+                new MemoryTerminalBackend(new Size(width, height)),
+                new Size(width, height),
+                theme,
+                policy),
+            program,
+            model);
+
     public static WidgetInputState CreateInputState(IEnumerable<string>? focusOrder = null, string language = "en-US")
     {
         var state = WidgetInputState.Default with { Language = language };

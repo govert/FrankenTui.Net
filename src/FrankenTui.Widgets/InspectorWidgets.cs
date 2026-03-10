@@ -35,14 +35,26 @@ public sealed class LayoutInspectorWidget : IWidget
 
     public void Render(RuntimeRenderContext context)
     {
-        for (var index = 0; index < Math.Min(Trace.Result.Count, context.Bounds.Height); index++)
+        if (context.Bounds.Height == 0)
+        {
+            return;
+        }
+
+        BufferPainter.WriteText(
+            context.Buffer,
+            context.Bounds.X,
+            context.Bounds.Y,
+            $"{Trace.Direction} total={Trace.TotalLength} reserved={Trace.ReservedLength} remaining={Trace.RemainingLength} cache={(Trace.CacheHit ? "hit" : "miss")}",
+            context.Theme.Accent.ToCell());
+
+        for (var index = 0; index < Math.Min(Trace.Result.Count, Math.Max(context.Bounds.Height - 1, 0)); index++)
         {
             var rect = Trace.Result[index];
             BufferPainter.WriteText(
                 context.Buffer,
                 context.Bounds.X,
-                (ushort)(context.Bounds.Y + index),
-                $"[{index}] {rect.X},{rect.Y} {rect.Width}x{rect.Height}",
+                (ushort)(context.Bounds.Y + 1 + index),
+                $"[{index}] {Trace.Constraints[index].Kind}:{Trace.Constraints[index].Value} len={Trace.RequestedLengths[index]} rect={rect.X},{rect.Y} {rect.Width}x{rect.Height}",
                 context.Theme.Muted.ToCell());
         }
     }

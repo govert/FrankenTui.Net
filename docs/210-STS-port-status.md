@@ -24,7 +24,8 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
 ## Current Basis
 
 - Current status basis commit:
-  working tree during the fidelity-and-evidence batch after `352c835`
+  working tree completing the runtime-text-interactivity and extras-classification
+  batch after `9797fbe`
 - Current upstream workspace basis:
   `7a91089366bd4644e086d5a422cb76b052e3de17`
 - Last full verification pass at status update time:
@@ -58,6 +59,13 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   output, and CI cloning of the upstream reference corpus have landed. Current
   local verification is `54` headless tests, `4` web tests, and `4` PTY tests
   via `dotnet test FrankenTui.Net.sln --configuration Release`.
+- runtime-text-interactivity working tree after `9797fbe`
+  Queued runtime sessions, resize-aware app flow, interactive showcase mode,
+  layout cache/trace metadata, normalized mixed-script text helpers, styled text
+  rendering in widgets, shaping/hyphenation policy recording, and extras
+  classification have landed. Current local verification is `58` headless tests,
+  `4` web tests, and `5` PTY tests via `dotnet test FrankenTui.Net.sln
+  --configuration Release`.
 
 ## Status
 
@@ -124,7 +132,7 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
 | --- | --- | --- |
 | `281-LYT` | `completed` | Base layout primitives and directionality are implemented. |
 | `282-LYT` | `completed` | Constraint-based split solver is implemented. |
-| `283-LYT` | `in progress` | Trace and inspector support exist; incremental/cache-oriented layout tooling is still thin. |
+| `283-LYT` | `completed` | Layout cache, richer trace metadata, and improved inspector output now provide cache/debug/repro support. |
 | `284-LYT` | `completed` | Responsive breakpoint baseline is present. |
 
 ### 290-TXT Text System
@@ -133,16 +141,16 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
 | --- | --- | --- |
 | `291-TXT` | `completed` | Spans, lines, documents, wrapping, cursoring, and basic markup/view logic are present. |
 | `292-TXT` | `completed` | Width calculation and wrapping policy are implemented. |
-| `293-TXT` | `in progress` | Search and normalization landed; rope, bidi, and deeper script segmentation are not yet present. |
-| `294-TXT` | `not started` | Shaping and hyphenation evaluation has not yet been recorded. |
-| `295-TXT` | `in progress` | Markup and fallback text paths exist; shaped-render integration does not. |
+| `293-TXT` | `completed` | Normalized search and mixed-script direction/script segmentation are now implemented and tested. |
+| `294-TXT` | `completed` | Shaping and hyphenation policy decisions are now explicit in code and in `294-TXT-shaping-and-hyphenation-evaluation.md`. |
+| `295-TXT` | `completed` | Styled text rendering and markup/fallback integration are now used directly by paragraph and textarea widgets. |
 
 ### 300-RTM Runtime And Execution Loop
 
 | Code | Status | Note |
 | --- | --- | --- |
 | `301-RTM` | `completed` | Runtime skeleton, view rendering, and backend presentation path are implemented. |
-| `302-RTM` | `in progress` | Commands and subscriptions exist; deeper queueing, cancellation, and resize semantics are still light. |
+| `302-RTM` | `completed` | Queued app sessions, resize-aware flow, cancellation-aware loops, and interactive showcase use of the runtime are now implemented. |
 | `303-RTM` | `completed` | Deterministic runtime trace, replay tape, JSON round-trip, and evidence-manifest integration are implemented and tested. |
 | `304-RTM` | `completed` | Runtime execution policy switches and evidence/baseline decisions are now explicit in code and documented in `304-RTM-determinism-and-evidence.md`. |
 | `305-RTM` | `completed` | App simulator and headless runtime helpers are implemented. |
@@ -202,14 +210,14 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
 | Code | Status | Note |
 | --- | --- | --- |
 | `361-DEM` | `completed` | The hosted-parity showcase slice is now formalized as a shared session and surface. |
-| `362-DEM` | `completed` | Terminal showcase now uses scenario/frame-driven hosted-parity rendering and is exercised by PTY tests. |
+| `362-DEM` | `completed` | Terminal showcase now supports both scenario/frame-driven scripted rendering and a small interactive mode, exercised by PTY tests. |
 | `363-DEM` | `completed` | Terminal and web showcase alignment is now explicit through shared `Ui`/showcase rendering and web tests. |
 
 ### 370-EXT Extras And Optional Optimization Surface
 
 | Code | Status | Note |
 | --- | --- | --- |
-| `371-EXT` | `not started` | Extras classification is not yet recorded. |
+| `371-EXT` | `completed` | Extras classification is now recorded in `371-EXT-extras-classification.md`. |
 | `372-EXT` | `not started` | Feature-gated extras beyond the current dashboard baseline are not yet ported. |
 | `373-EXT` | `not started` | SIMD/optimization work has not started. |
 

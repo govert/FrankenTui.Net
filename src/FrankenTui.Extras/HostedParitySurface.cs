@@ -90,12 +90,15 @@ public static class HostedParitySurface
                             (LayoutConstraint.Fill(), new PanelWidget
                             {
                                 Title = "Notes",
-                                Child = new ParagraphWidget(
-                                    $"{description.Summary} Focus: {focus ?? "none"}. Live: {session.InputState.LiveRegionText}")
+                                Child = new ParagraphWidget(string.Empty)
+                                {
+                                    Document = BuildNotesDocument(description, focus, session.InputState.LiveRegionText),
+                                    RenderOptions = new TextRenderOptions(TextWrapMode.Word)
+                                }
                             })
                         ])),
                     (LayoutConstraint.Fill(), new ParagraphWidget(
-                        "Keys: Tab focus  Left/Right scenario  Up/Down select  Enter announce  Mouse tabs"))
+                        "Keys: Tab focus  Left/Right scenario  Up/Down select  Enter announce  Mouse tabs  q quit"))
                 ]),
             Sides.All(1));
     }
@@ -185,6 +188,9 @@ public static class HostedParitySurface
         new HostedParityMetric("Mode", session.InlineMode ? "inline" : "alternate-screen"),
         new HostedParityMetric("Language", session.InputState.Language),
         new HostedParityMetric("Direction", direction),
+        new HostedParityMetric("Segments", TextSegmenter.Segment(session.InputState.LiveRegionText).Count.ToString(System.Globalization.CultureInfo.InvariantCulture)),
+        new HostedParityMetric("Search", TextSearch.FindAllNormalized(TextDocument.FromString(session.InputState.LiveRegionText), "focus").Count.ToString(System.Globalization.CultureInfo.InvariantCulture)),
+        new HostedParityMetric("Shaping", "aot-safe"),
         new HostedParityMetric("Evidence", session.AppliedEvents.Count > 0 ? "capturing" : "baseline", session.AppliedEvents.Count > 0)
     ];
 
@@ -279,5 +285,17 @@ public static class HostedParitySurface
         }
 
         return 2;
+    }
+
+    private static TextDocument BuildNotesDocument(
+        HostedParityDescription description,
+        string? focus,
+        string liveRegionText)
+    {
+        var live = string.IsNullOrWhiteSpace(liveRegionText) ? "no announcements" : liveRegionText;
+        return TextDocument.FromMarkup(
+            $"**{description.Label}** {description.Summary}\n" +
+            $"_Focus_: {focus ?? "none"}  `segments={TextSegmenter.Segment(description.Summary).Count}`  `direction={description.Direction}`\n" +
+            $"Live: {live}");
     }
 }
