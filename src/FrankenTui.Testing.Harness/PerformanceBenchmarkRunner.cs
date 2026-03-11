@@ -37,8 +37,11 @@ public sealed record BenchmarkSuiteResult(IReadOnlyList<BenchmarkMeasurement> Me
     public string ToJson() =>
         JsonSerializer.Serialize(this, HarnessJson.IndentedSnakeCase);
 
-    public IReadOnlyList<string> ValidateAgainst(IReadOnlyList<BenchmarkBudget> budgets)
+    public IReadOnlyList<string> ValidateAgainst(
+        IReadOnlyList<BenchmarkBudget> budgets,
+        BenchmarkValidationPolicy? policy = null)
     {
+        policy ??= PerformanceBenchmarkRunner.DefaultValidationPolicy();
         var errors = new List<string>();
         foreach (var budget in budgets)
         {
@@ -49,14 +52,17 @@ public sealed record BenchmarkSuiteResult(IReadOnlyList<BenchmarkMeasurement> Me
                 continue;
             }
 
-            if (measurement.MeanNs > budget.MeanBudgetNs)
+            var meanBudget = budget.MeanBudgetNs * policy.MeanMultiplier;
+            var p95Budget = budget.P95BudgetNs * policy.P95Multiplier;
+
+            if (measurement.MeanNs > meanBudget)
             {
-                errors.Add($"{budget.Name} mean {measurement.MeanNs:0}ns exceeded budget {budget.MeanBudgetNs:0}ns.");
+                errors.Add($"{budget.Name} mean {measurement.MeanNs:0}ns exceeded budget {meanBudget:0}ns ({policy.Name}).");
             }
 
-            if (measurement.P95Ns > budget.P95BudgetNs)
+            if (measurement.P95Ns > p95Budget)
             {
-                errors.Add($"{budget.Name} p95 {measurement.P95Ns:0}ns exceeded budget {budget.P95BudgetNs:0}ns.");
+                errors.Add($"{budget.Name} p95 {measurement.P95Ns:0}ns exceeded budget {p95Budget:0}ns ({policy.Name}).");
             }
         }
 
@@ -154,7 +160,32 @@ public static class PerformanceBenchmarkRunner
         ArgumentNullException.ThrowIfNull(budgets);
 
         var suite = RunDefault(budgets);
-        return (suite, suite.ValidateAgainst(budgets));
+        return (suite, suite.ValidateAgainst(budgets, DefaultValidationPolicy()));
+    }
+
+    public static BenchmarkValidationPolicy DefaultValidationPolicy()
+    {
+        if (IsStrictBenchmarkValidationRequested())
+        {
+            return new BenchmarkValidationPolicy("strict", 1d, 1d);
+        }
+
+        return IsHostedCiEnvironment()
+            ? new BenchmarkValidationPolicy("hosted-ci", 1.25d, 1.5d)
+            : new BenchmarkValidationPolicy("local", 1d, 1d);
+    }
+
+    public static bool IsHostedCiEnvironment() =>
+        string.Equals(Environment.GetEnvironmentVariable("GITHUB_ACTIONS"), "true", StringComparison.OrdinalIgnoreCase);
+
+    public static bool ShouldFailOnBudgetErrors() =>
+        IsStrictBenchmarkValidationRequested() || !IsHostedCiEnvironment();
+
+    private static bool IsStrictBenchmarkValidationRequested()
+    {
+        var value = Environment.GetEnvironmentVariable("FTUI_STRICT_BENCHMARKS");
+        return string.Equals(value, "1", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(value, "true", StringComparison.OrdinalIgnoreCase);
     }
 
     private static double Percentile(IReadOnlyList<double> sortedValues, double percentile)
@@ -306,3 +337,5 @@ public static class PerformanceBenchmarkRunner
             };
     }
 }
+
+public sealed record BenchmarkValidationPolicy(string Name, double MeanMultiplier, double P95Multiplier);

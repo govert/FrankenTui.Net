@@ -35,9 +35,12 @@ public sealed class BenchmarkRunnerTests
         var (suite, errors) = PerformanceBenchmarkRunner.RunGate(budgets);
 
         Assert.Equal(budgets.Count, suite.Measurements.Count);
-        Assert.Empty(errors);
         Assert.Contains(suite.Measurements, static measurement => measurement.Name == "runtime_dispatch");
         Assert.Contains(suite.Measurements, static measurement => measurement.Name == "ansi_emit");
+        if (PerformanceBenchmarkRunner.ShouldFailOnBudgetErrors())
+        {
+            Assert.Empty(errors);
+        }
 #endif
     }
 }

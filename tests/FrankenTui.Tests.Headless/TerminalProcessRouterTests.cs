@@ -12,10 +12,14 @@ public sealed class TerminalProcessRouterTests
     public async Task StreamingRunnerEmitsStdoutAndStderrChunks()
     {
         var chunks = new List<ProcessOutputChunk>();
+        var command = ProcessCommandRunner.CreateShellCommand(
+            OperatingSystem.IsWindows()
+                ? "[Console]::Out.WriteLine('alpha'); [Console]::Error.WriteLine('beta')"
+                : "printf 'alpha\\n'; >&2 printf 'beta\\n'");
 
         var result = await ProcessCommandRunner.RunStreamingAsync(
-            "bash",
-            ["-lc", "printf 'alpha\\n'; >&2 printf 'beta\\n'"],
+            command.FileName,
+            command.Arguments,
             (chunk, _) =>
             {
                 chunks.Add(chunk);
@@ -41,10 +45,15 @@ public sealed class TerminalProcessRouterTests
         await backend.PresentAsync(buffer, BufferDiff.Full(buffer.Width, buffer.Height));
         backend.DrainOutput();
 
+        var command = ProcessCommandRunner.CreateShellCommand(
+            OperatingSystem.IsWindows()
+                ? "[Console]::Out.Write('safe'); [Console]::Out.Write([char]27); [Console]::Out.Write('[31m red'); [Console]::Out.WriteLine()"
+                : "printf 'safe\\e[31m red\\n'");
+
         var result = await TerminalProcessRouter.RunAsync(
             backend,
-            "bash",
-            ["-lc", "printf 'safe\\e[31m red\\n'"]);
+            command.FileName,
+            command.Arguments);
         var transcript = backend.DrainOutput();
 
         Assert.True(result.Success);

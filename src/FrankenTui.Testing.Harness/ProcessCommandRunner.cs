@@ -5,6 +5,17 @@ namespace FrankenTui.Testing.Harness;
 
 public static class ProcessCommandRunner
 {
+    public static ShellCommand CreateShellCommand(string script)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(script);
+
+        return OperatingSystem.IsWindows()
+            ? new ShellCommand(
+                "pwsh",
+                ["-NoLogo", "-NoProfile", "-NonInteractive", "-Command", script])
+            : new ShellCommand("bash", ["-lc", script]);
+    }
+
     public static async Task<ProcessRunResult> RunAsync(
         string fileName,
         IEnumerable<string> arguments,
@@ -208,3 +219,5 @@ public enum ProcessOutputStream
 }
 
 public readonly record struct ProcessOutputChunk(ProcessOutputStream Stream, string Text);
+
+public sealed record ShellCommand(string FileName, IReadOnlyList<string> Arguments);

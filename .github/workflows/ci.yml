@@ -44,15 +44,15 @@ jobs:
         run: dotnet test FrankenTui.Net.sln --no-build --configuration Release
 
       - name: Refresh doctor artifacts
-        if: runner.os == 'Linux'
+        if: runner.os == 'Linux' && always()
         run: dotnet run --project tools/FrankenTui.Doctor/FrankenTui.Doctor.csproj --no-build --configuration Release -- --format text --write-artifacts --write-manifest --run-benchmarks --run-id ci-linux
 
       - name: Refresh doctor artifacts
-        if: runner.os == 'Windows'
+        if: runner.os == 'Windows' && always()
         run: dotnet run --project tools/FrankenTui.Doctor/FrankenTui.Doctor.csproj --no-build --configuration Release -- --format text --write-artifacts --run-id ci-windows
 
       - name: Capture Windows host evidence
-        if: runner.os == 'Windows'
+        if: runner.os == 'Windows' && always()
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force artifacts/replay | Out-Null
@@ -76,10 +76,11 @@ jobs:
             | Tee-Object -FilePath artifacts/replay/ci-windows-showcase-extras-inline.txt
 
       - name: Upload hosted artifacts
-        if: runner.os == 'Linux'
+        if: runner.os == 'Linux' && always()
         uses: actions/upload-artifact@v4
         with:
           name: hosted-parity-artifacts
+          if-no-files-found: warn
           path: |
             artifacts/doctor/
             artifacts/benchmarks/
@@ -87,10 +88,11 @@ jobs:
             artifacts/web/
 
       - name: Upload Windows doctor artifacts
-        if: runner.os == 'Windows'
+        if: runner.os == 'Windows' && always()
         uses: actions/upload-artifact@v4
         with:
           name: windows-doctor-artifacts
+          if-no-files-found: warn
           path: |
             artifacts/contracts/
             artifacts/doctor/

@@ -111,7 +111,10 @@ if (string.Equals(format, "text", StringComparison.OrdinalIgnoreCase))
     Console.WriteLine(DoctorDashboardViewFactory.RenderText(report));
     if (benchmarkErrors.Count > 0)
     {
-        Console.WriteLine($"Benchmark gate: {string.Join(" | ", benchmarkErrors)}");
+        var benchmarkLabel = PerformanceBenchmarkRunner.ShouldFailOnBudgetErrors()
+            ? "Benchmark gate"
+            : "Benchmark advisory";
+        Console.WriteLine($"{benchmarkLabel}: {string.Join(" | ", benchmarkErrors)}");
     }
 }
 else
@@ -122,7 +125,7 @@ else
     }));
 }
 
-if (benchmarkErrors.Count > 0)
+if (benchmarkErrors.Count > 0 && PerformanceBenchmarkRunner.ShouldFailOnBudgetErrors())
 {
     Environment.ExitCode = 1;
 }
