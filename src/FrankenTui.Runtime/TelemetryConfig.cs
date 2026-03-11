@@ -41,6 +41,13 @@ public enum TelemetryTraceContextSource
     ExplicitParent
 }
 
+public enum TelemetryInstallStatus
+{
+    Installed,
+    Disabled,
+    SubscriberAlreadySet
+}
+
 public sealed record TelemetryParentContext(
     string TraceId,
     string ParentSpanId);
@@ -164,6 +171,39 @@ public sealed record TelemetryConfig(
             PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
             WriteIndented = true
         });
+
+    public TelemetryLayerPlan BuildLayer() =>
+        new(
+            Enabled,
+            Endpoint,
+            EndpointSource,
+            Protocol,
+            SpanProcessor,
+            ServiceName,
+            Propagators,
+            ParentContext,
+            Verbose);
+
+    public TelemetryInstallResult Install(TelemetryRegistry registry)
+    {
+        ArgumentNullException.ThrowIfNull(registry);
+
+        if (!Enabled)
+        {
+            return new TelemetryInstallResult(TelemetryInstallStatus.Disabled, null, null);
+        }
+
+        var layer = BuildLayer();
+        if (!registry.TryInstall(layer))
+        {
+            return new TelemetryInstallResult(
+                TelemetryInstallStatus.SubscriberAlreadySet,
+                layer,
+                "A telemetry subscriber/layer is already installed.");
+        }
+
+        return new TelemetryInstallResult(TelemetryInstallStatus.Installed, layer, null);
+    }
 
     private static TelemetryEnabledReason ResolveEnabledReason(
         bool sdkDisabled,
@@ -400,3 +440,40 @@ public sealed record TelemetryConfigSummary(
     IReadOnlyList<string> ResourceAttributeKeys,
     IReadOnlyList<string> Propagators,
     IReadOnlyList<string> Warnings);
+
+public sealed record TelemetryLayerPlan(
+    bool Enabled,
+    string? Endpoint,
+    TelemetryEndpointSource EndpointSource,
+    TelemetryProtocol Protocol,
+    TelemetrySpanProcessor SpanProcessor,
+    string ServiceName,
+    IReadOnlyList<string> Propagators,
+    TelemetryParentContext? ParentContext,
+    bool Verbose);
+
+public sealed record TelemetryInstallResult(
+    TelemetryInstallStatus Status,
+    TelemetryLayerPlan? Layer,
+    string? Error)
+{
+    public bool Success => Status is TelemetryInstallStatus.Installed or TelemetryInstallStatus.Disabled;
+}
+
+public sealed class TelemetryRegistry
+{
+    public TelemetryLayerPlan? InstalledLayer { get; private set; }
+
+    public bool TryInstall(TelemetryLayerPlan layer)
+    {
+        ArgumentNullException.ThrowIfNull(layer);
+
+        if (InstalledLayer is not null)
+        {
+            return false;
+        }
+
+        InstalledLayer = layer;
+        return true;
+    }
+}

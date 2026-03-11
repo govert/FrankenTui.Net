@@ -24,7 +24,7 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
 ## Current Basis
 
 - Current status basis commit:
-  working tree after telemetry / Mermaid / OpenTUI contract wave
+  working tree after telemetry install and OpenTUI contract-gate depth batch
 - Current upstream workspace basis:
   `7a91089366bd4644e086d5a422cb76b052e3de17`
 - Last full verification pass at status update time:
@@ -137,6 +137,14 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   artifact export, and new headless coverage around all three surfaces. Current
   local verification is `97` headless tests, `5` web tests, and `6` PTY tests
   via `dotnet test FrankenTui.Net.sln --no-restore`.
+- telemetry-install-and-opentui-gate depth batch after `e9f96a9`
+  Added deterministic telemetry layer/install APIs, PTY env-backed telemetry
+  verification, OpenTUI confidence/licensing contract loading, and an
+  evidence-driven OpenTUI contract gate that writes clause-level doctor
+  artifacts from the managed upstream contract set. Current local verification
+  is `100` headless tests, `5` web tests, and `7` PTY tests via `dotnet test
+  FrankenTui.Net.sln --no-restore`, plus a successful doctor run with
+  `--write-artifacts --write-manifest --run-benchmarks`.
 
 ## Status
 

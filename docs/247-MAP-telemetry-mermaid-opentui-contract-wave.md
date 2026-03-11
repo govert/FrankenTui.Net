@@ -19,12 +19,17 @@ Landed local surface:
 - `TelemetryConfig` parses the upstream OTEL / FTUI env-var contract, including
   endpoint precedence, protocol choice, span processor, explicit parent trace
   context, and warnings for invalid inputs.
+- `TelemetryConfig.BuildLayer()` and `TelemetryConfig.Install()` now provide a
+  deterministic, no-clobber install surface with explicit subscriber collision
+  handling.
 - `TelemetrySessionLog`, `TelemetryEvent`, and `TelemetryRedactor` provide a
   deterministic local event schema and conservative redaction baseline.
 - `AppRuntime` now emits runtime/update/render/fallback telemetry events when
   telemetry is enabled via policy.
 - doctor and runtime artifact capture now persist telemetry JSON alongside
   replay, trace, diff, and manifest artifacts.
+- PTY verification now covers env-driven telemetry enablement and explicit
+  parent-trace context parsing through the doctor text surface.
 
 Still partial:
 
@@ -56,14 +61,17 @@ Landed local surface:
 
 - local types load and validate the upstream semantic-equivalence and
   transformation-policy contract JSON artifacts
+- local tooling now also loads and persists the upstream confidence-model and
+  licensing/provenance contracts
 - validation checks clause traceability, projection completeness, stable sort,
   and construct coverage
 - doctor artifact capture now persists normalized local copies plus a summary
-  report for the managed upstream basis
+  report and an OpenTUI contract-gate report for the managed upstream basis
 
 Still partial:
 
 - no translator or certification engine consumes these contracts yet
+- the current contract gate is evidence-driven rather than translator-driven
 - no local extension workflow exists yet beyond the upstream-tracked bundle
 - validator outputs are currently summary-oriented rather than full gate reports
 

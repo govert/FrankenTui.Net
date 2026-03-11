@@ -17,11 +17,11 @@ var runId = Parse(args, "--run-id") ?? "doctor-dashboard";
 var benchmarkBaseline = Parse(args, "--benchmark-baseline") ?? PerformanceBenchmarkRunner.DefaultBudgetPath;
 var telemetry = TelemetryConfig.FromEnvironment();
 var mermaid = MermaidConfig.FromEnvironment();
-var openTuiContracts = OpenTuiMigrationContractBundle.TryLoadUpstreamReference();
+var openTuiContracts = OpenTuiContractSet.TryLoadUpstreamReference();
 var report = EnvironmentDoctor.CreateReport(
     telemetry.ToSummary(),
     mermaid.ToSummary(MermaidShowcaseSurface.Catalog().Count),
-    openTuiContracts?.ToSummary() ?? OpenTuiMigrationContractSummary.Missing("Upstream OpenTUI reference contracts are unavailable in .external/frankentui."));
+    openTuiContracts?.Migration.ToSummary() ?? OpenTuiMigrationContractSummary.Missing("Upstream OpenTUI reference contracts are unavailable in .external/frankentui."));
 
 BenchmarkSuiteResult? benchmarkSuite = null;
 IReadOnlyList<string> benchmarkErrors = [];
@@ -87,6 +87,16 @@ if (writeArtifacts || writeManifest || runBenchmarks)
         artifactPaths = new Dictionary<string, string>(manifestResult.ArtifactPaths, StringComparer.Ordinal);
     }
 
+    if (writeManifest && openTuiContracts is not null && artifactPaths.TryGetValue("manifest", out var manifestPath))
+    {
+        var manifest = EvidenceManifest.FromJson(File.ReadAllText(manifestPath));
+        var gateReport = OpenTuiContractGate.Evaluate(runId, openTuiContracts, manifest);
+        foreach (var entry in OpenTuiContractGate.WriteArtifacts(runId, gateReport))
+        {
+            artifactPaths[entry.Key] = entry.Value;
+        }
+    }
+
     report = report with { ArtifactPaths = artifactPaths };
 }
 
@@ -134,7 +144,7 @@ static IReadOnlyDictionary<string, string> WriteContractArtifacts(
     string runId,
     TelemetryConfig telemetry,
     MermaidConfig mermaid,
-    OpenTuiMigrationContractBundle? openTuiContracts)
+    OpenTuiContractSet? openTuiContracts)
 {
     var artifacts = new Dictionary<string, string>(StringComparer.Ordinal);
 

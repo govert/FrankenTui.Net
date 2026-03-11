@@ -143,6 +143,42 @@ public sealed class PtyIntegrationTests
     }
 
     [Fact]
+    public async Task DoctorReportsTelemetryWhenConfiguredByEnvironment()
+    {
+        if (!CanRunPty())
+        {
+            return;
+        }
+
+        var root = RepositoryPaths.FindRepositoryRoot();
+        var doctorProject = Path.Combine(root, "tools", "FrankenTui.Doctor", "FrankenTui.Doctor.csproj");
+
+        var result = await ScriptPtyRunner.RunCommandAsync(
+            "dotnet",
+            [
+                "run",
+                "--project",
+                doctorProject,
+                "--no-restore",
+                "--",
+                "--format",
+                "text"
+            ],
+            environmentVariables: new Dictionary<string, string?>(StringComparer.Ordinal)
+            {
+                ["OTEL_EXPORTER_OTLP_ENDPOINT"] = "http://collector.invalid:4318",
+                ["FTUI_OTEL_SPAN_PROCESSOR"] = "simple",
+                ["OTEL_TRACE_ID"] = "0123456789abcdef0123456789abcdef",
+                ["OTEL_PARENT_SPAN_ID"] = "0123456789abcdef"
+            });
+
+        Assert.True(result.Success, result.Stderr);
+        Assert.Contains("Telemetry: enabled", result.Stdout);
+        Assert.Contains("protocol=http/protobuf", result.Stdout);
+        Assert.Contains("endpoint=http://collector.invalid:4318", result.Stdout);
+    }
+
+    [Fact]
     public async Task ShowcaseInteractiveInlineModeConsumesInputAndExitsOnQuit()
     {
         if (!CanRunPty())

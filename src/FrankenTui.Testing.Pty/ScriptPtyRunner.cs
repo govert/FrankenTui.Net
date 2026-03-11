@@ -9,6 +9,7 @@ public static class ScriptPtyRunner
         string fileName,
         IEnumerable<string> arguments,
         string? stdin = null,
+        IReadOnlyDictionary<string, string?>? environmentVariables = null,
         CancellationToken cancellationToken = default)
     {
         if (!(OperatingSystem.IsLinux() || OperatingSystem.IsMacOS()))
@@ -16,7 +17,7 @@ public static class ScriptPtyRunner
             throw new PlatformNotSupportedException("PTY-backed execution currently relies on the Unix 'script' command.");
         }
 
-        var command = BuildShellCommand(fileName, arguments);
+        var command = BuildShellCommand(fileName, arguments, environmentVariables);
         var startInfo = new ProcessStartInfo("/usr/bin/script")
         {
             RedirectStandardInput = true,
@@ -44,9 +45,30 @@ public static class ScriptPtyRunner
         return new PtyRunResult(process.ExitCode, await stdoutTask.ConfigureAwait(false), await stderrTask.ConfigureAwait(false));
     }
 
-    private static string BuildShellCommand(string fileName, IEnumerable<string> arguments)
+    private static string BuildShellCommand(
+        string fileName,
+        IEnumerable<string> arguments,
+        IReadOnlyDictionary<string, string?>? environmentVariables)
     {
-        var builder = new StringBuilder(ShellEscape(fileName));
+        var builder = new StringBuilder();
+        if (environmentVariables is { Count: > 0 })
+        {
+            builder.Append("env");
+            foreach (var entry in environmentVariables.OrderBy(static item => item.Key, StringComparer.Ordinal))
+            {
+                if (entry.Value is null)
+                {
+                    continue;
+                }
+
+                builder.Append(' ')
+                    .Append(ShellEscape($"{entry.Key}={entry.Value}"));
+            }
+
+            builder.Append(' ');
+        }
+
+        builder.Append(ShellEscape(fileName));
         foreach (var argument in arguments)
         {
             builder.Append(' ').Append(ShellEscape(argument));

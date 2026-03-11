@@ -60,6 +60,24 @@ public sealed class TelemetryContractTests
     }
 
     [Fact]
+    public void TelemetryInstallHonorsNoClobberingRule()
+    {
+        var config = TelemetryConfig.FromEnvironment(
+            new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["OTEL_EXPORTER_OTLP_ENDPOINT"] = "http://collector.invalid:4318"
+            });
+        var registry = new TelemetryRegistry();
+
+        var first = config.Install(registry);
+        var second = config.Install(registry);
+
+        Assert.Equal(TelemetryInstallStatus.Installed, first.Status);
+        Assert.Equal(TelemetryInstallStatus.SubscriberAlreadySet, second.Status);
+        Assert.NotNull(first.Layer);
+    }
+
+    [Fact]
     public async Task RuntimeEmitsTelemetryEventsWhenEnabled()
     {
         var simulator = Ui.CreateSimulator<int, string>(
