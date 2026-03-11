@@ -5,6 +5,7 @@ on:
     branches:
       - main
   pull_request:
+  workflow_dispatch:
 
 jobs:
   build-and-test:
@@ -49,6 +50,30 @@ jobs:
       - name: Refresh doctor artifacts
         if: runner.os == 'Windows'
         run: dotnet run --project tools/FrankenTui.Doctor/FrankenTui.Doctor.csproj --no-build --configuration Release -- --format text --write-artifacts --run-id ci-windows
+
+      - name: Capture Windows host evidence
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force artifacts/replay | Out-Null
+          New-Item -ItemType Directory -Force artifacts/doctor | Out-Null
+          @(
+            "runner_os=$env:RUNNER_OS"
+            "term=$env:TERM"
+            "wt_session=$env:WT_SESSION"
+            "conemu_pid=$env:ConEmuPID"
+            "conpty=$env:ConPty"
+            "ps_module_path=$env:PSModulePath"
+          ) | Set-Content artifacts/doctor/ci-windows-host-evidence.txt
+
+          dotnet run --project tools/FrankenTui.Doctor/FrankenTui.Doctor.csproj --no-build --configuration Release -- --format json --run-id ci-windows `
+            | Tee-Object -FilePath artifacts/doctor/ci-windows-doctor.json
+
+          dotnet run --project apps/FrankenTui.Demo.Showcase/FrankenTui.Demo.Showcase.csproj --no-build --configuration Release -- --inline --width 72 --height 18 --frames 3 --scenario tooling `
+            | Tee-Object -FilePath artifacts/replay/ci-windows-showcase-tooling-inline.txt
+
+          dotnet run --project apps/FrankenTui.Demo.Showcase/FrankenTui.Demo.Showcase.csproj --no-build --configuration Release -- --inline --width 72 --height 18 --frames 3 --scenario extras `
+            | Tee-Object -FilePath artifacts/replay/ci-windows-showcase-extras-inline.txt
 
       - name: Upload hosted artifacts
         if: runner.os == 'Linux'
