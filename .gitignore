@@ -23,3 +23,5 @@ artifacts/**
 !artifacts/benchmarks/.gitkeep
 !artifacts/doctor/
 !artifacts/doctor/.gitkeep
+!artifacts/contracts/
+!artifacts/contracts/.gitkeep

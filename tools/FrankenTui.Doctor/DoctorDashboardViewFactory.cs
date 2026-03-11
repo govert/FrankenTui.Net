@@ -18,7 +18,7 @@ public static class DoctorDashboardViewFactory
                 [
                     (LayoutConstraint.Fixed(1), new TabsWidget
                     {
-                        Tabs = ["Doctor", "Environment", "Parity"],
+                        Tabs = ["Doctor", "Environment", "Contracts"],
                         SelectedIndex = 0,
                         FocusedIndex = 0
                     }),
@@ -54,6 +54,18 @@ public static class DoctorDashboardViewFactory
                                 Label = "Mux",
                                 Value = report.InMux ? "yes" : "no",
                                 IsHealthy = !report.InMux
+                            }),
+                            (LayoutConstraint.Fill(), new StatusWidget
+                            {
+                                Label = "Telemetry",
+                                Value = report.Telemetry?.Enabled == true ? "on" : "off",
+                                IsHealthy = report.Telemetry?.Warnings.Count == 0
+                            }),
+                            (LayoutConstraint.Fill(), new StatusWidget
+                            {
+                                Label = "Contracts",
+                                Value = report.OpenTuiMigration?.Status ?? "missing",
+                                IsHealthy = string.Equals(report.OpenTuiMigration?.Status, "ready", StringComparison.Ordinal)
                             })
                         ])),
                     (LayoutConstraint.Fixed(8), new StackWidget(
@@ -72,7 +84,10 @@ public static class DoctorDashboardViewFactory
                                         new[] { "Validation", report.HostValidationStatus },
                                         new[] { "SIMD", report.SimdEnabled ? "enabled" : report.SimdSupported ? "available" : "off" },
                                         new[] { "Hyperlinks", report.SupportsHyperlinks ? "yes" : "no" },
-                                        new[] { "Sync output", report.SupportsSyncOutput ? "yes" : "no" }
+                                        new[] { "Sync output", report.SupportsSyncOutput ? "yes" : "no" },
+                                        new[] { "Telemetry", report.Telemetry?.EnabledReason ?? "none" },
+                                        new[] { "Mermaid", report.Mermaid?.Status ?? "missing" },
+                                        new[] { "OpenTUI", report.OpenTuiMigration?.Status ?? "missing" }
                                     ],
                                     SelectedRow = 0,
                                     FocusedRow = 0
@@ -89,6 +104,21 @@ public static class DoctorDashboardViewFactory
                                 }
                             })
                         ])),
+                    (LayoutConstraint.Fixed(6), new PanelWidget
+                    {
+                        Title = "Contracts",
+                        Child = new ParagraphWidget(
+                            string.Join(
+                                Environment.NewLine,
+                                [
+                                    $"Telemetry: {(report.Telemetry?.Enabled == true ? "enabled" : "disabled")} {report.Telemetry?.Protocol} {report.Telemetry?.EndpointSource}",
+                                    $"Mermaid: {report.Mermaid?.Status ?? "missing"} glyph={report.Mermaid?.GlyphMode ?? "n/a"} tier={report.Mermaid?.TierOverride ?? "n/a"}",
+                                    $"OpenTUI: {report.OpenTuiMigration?.Status ?? "missing"} clauses={report.OpenTuiMigration?.ClauseCount.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0"} cells={report.OpenTuiMigration?.PolicyCellCount.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0"}",
+                                    $"Warnings: {string.Join(" | ", report.Telemetry?.Warnings ?? [])}",
+                                    $"Mermaid issues: {string.Join(" | ", report.Mermaid?.ValidationIssues ?? [])}",
+                                    $"OpenTUI issues: {string.Join(" | ", report.OpenTuiMigration?.Issues ?? [])}"
+                                ]))
+                    }),
                     (LayoutConstraint.Fill(), new ParagraphWidget(
                         $"Recommendations: {string.Join(" | ", report.Recommendations ?? [])}"))
                 ]),
@@ -106,7 +136,10 @@ public static class DoctorDashboardViewFactory
             {
                 ["host-profile"] = report.HostProfile,
                 ["host-validation-status"] = report.HostValidationStatus,
-                ["operating-system"] = report.OperatingSystem
+                ["operating-system"] = report.OperatingSystem,
+                ["telemetry-enabled"] = report.Telemetry?.Enabled == true ? "true" : "false",
+                ["mermaid-status"] = report.Mermaid?.Status ?? "missing",
+                ["opentui-status"] = report.OpenTuiMigration?.Status ?? "missing"
             });
 
     public static string RenderText(DoctorReport report)
@@ -126,6 +159,12 @@ public static class DoctorDashboardViewFactory
                 $"Hyperlinks: {(report.SupportsHyperlinks ? "yes" : "no")}",
                 $"Sync output: {(report.SupportsSyncOutput ? "yes" : "no")}",
                 $"In mux: {(report.InMux ? "yes" : "no")}",
+                $"Telemetry: {(report.Telemetry?.Enabled == true ? "enabled" : "disabled")} reason={report.Telemetry?.EnabledReason ?? "none"} protocol={report.Telemetry?.Protocol ?? "n/a"} endpoint={report.Telemetry?.Endpoint ?? "(none)"}",
+                $"Telemetry warnings: {string.Join(" | ", report.Telemetry?.Warnings ?? [])}",
+                $"Mermaid: {report.Mermaid?.Status ?? "missing"} glyph={report.Mermaid?.GlyphMode ?? "n/a"} tier={report.Mermaid?.TierOverride ?? "n/a"} samples={report.Mermaid?.SampleCount.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0"}",
+                $"Mermaid issues: {string.Join(" | ", report.Mermaid?.ValidationIssues ?? [])}",
+                $"OpenTUI migration: {report.OpenTuiMigration?.Status ?? "missing"} clauses={report.OpenTuiMigration?.ClauseCount.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0"} cells={report.OpenTuiMigration?.PolicyCellCount.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0"}",
+                $"OpenTUI issues: {string.Join(" | ", report.OpenTuiMigration?.Issues ?? [])}",
                 $"Host evidence: {string.Join(" | ", report.HostEvidenceSources ?? [])}",
                 $"Host divergences: {string.Join(" | ", report.KnownHostDivergences ?? [])}",
                 $"Capability overrides: {string.Join(" | ", report.CapabilityOverrides ?? [])}",

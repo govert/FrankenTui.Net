@@ -1,4 +1,5 @@
 using System.Text.Json;
+using FrankenTui.Extras;
 using FrankenTui.Doctor;
 using FrankenTui.Runtime;
 using FrankenTui.Simd;
@@ -14,20 +15,47 @@ var writeManifest = HasFlag(args, "--write-manifest");
 var runBenchmarks = HasFlag(args, "--run-benchmarks");
 var runId = Parse(args, "--run-id") ?? "doctor-dashboard";
 var benchmarkBaseline = Parse(args, "--benchmark-baseline") ?? PerformanceBenchmarkRunner.DefaultBudgetPath;
+var telemetry = TelemetryConfig.FromEnvironment();
+var mermaid = MermaidConfig.FromEnvironment();
+var openTuiContracts = OpenTuiMigrationContractBundle.TryLoadUpstreamReference();
+var report = EnvironmentDoctor.CreateReport(
+    telemetry.ToSummary(),
+    mermaid.ToSummary(MermaidShowcaseSurface.Catalog().Count),
+    openTuiContracts?.ToSummary() ?? OpenTuiMigrationContractSummary.Missing("Upstream OpenTUI reference contracts are unavailable in .external/frankentui."));
 
-var report = EnvironmentDoctor.CreateReport();
 BenchmarkSuiteResult? benchmarkSuite = null;
 IReadOnlyList<string> benchmarkErrors = [];
 
 if (writeArtifacts || writeManifest || runBenchmarks)
 {
-    var evidence = RenderHarness.CaptureHostedParity(
-        "doctor-dashboard",
-        DoctorDashboardViewFactory.Build(report),
+    var runtimePolicy = RuntimeExecutionPolicy.Default with
+    {
+        EmitTelemetry = telemetry.Enabled,
+        Telemetry = telemetry
+    };
+    var runtimeCapture = await HostedParityRuntimeHarness.CaptureAsync(
+        "doctor-tooling-session",
+        FrankenTui.Extras.HostedParityScenarioId.Tooling,
         width,
         height,
-        options: DoctorDashboardViewFactory.CreateWebOptions(report));
-    var artifactPaths = new Dictionary<string, string>(evidence.WriteArtifacts("doctor"), StringComparer.Ordinal);
+        policy: runtimePolicy);
+    var artifactPaths = new Dictionary<string, string>(runtimeCapture.WriteArtifacts("doctor-runtime"), StringComparer.Ordinal);
+
+    foreach (var entry in RenderHarness.CaptureHostedParity(
+                 "doctor-dashboard",
+                 DoctorDashboardViewFactory.Build(report),
+                 width,
+                 height,
+                 options: DoctorDashboardViewFactory.CreateWebOptions(report))
+             .WriteArtifacts("doctor-dashboard"))
+    {
+        artifactPaths[$"dashboard_{entry.Key}"] = entry.Value;
+    }
+
+    foreach (var entry in WriteContractArtifacts(runId, telemetry, mermaid, openTuiContracts))
+    {
+        artifactPaths[entry.Key] = entry.Value;
+    }
 
     if (runBenchmarks)
     {
@@ -36,8 +64,12 @@ if (writeArtifacts || writeManifest || runBenchmarks)
 
         if (writeManifest)
         {
-            var replayTape = CreateReplay(evidence, report);
-            var manifestResult = EvidenceManifestBuilder.WriteHostedParityManifest(runId, evidence, artifactPaths, replayTape, benchmarkSuite);
+            var manifestResult = EvidenceManifestBuilder.WriteHostedParityManifest(
+                runId,
+                runtimeCapture.Evidence,
+                artifactPaths,
+                runtimeCapture.ReplayTape,
+                benchmarkSuite);
             artifactPaths = new Dictionary<string, string>(manifestResult.ArtifactPaths, StringComparer.Ordinal);
         }
         else
@@ -47,8 +79,11 @@ if (writeArtifacts || writeManifest || runBenchmarks)
     }
     else if (writeManifest)
     {
-        var replayTape = CreateReplay(evidence, report);
-        var manifestResult = EvidenceManifestBuilder.WriteHostedParityManifest(runId, evidence, artifactPaths, replayTape);
+        var manifestResult = EvidenceManifestBuilder.WriteHostedParityManifest(
+            runId,
+            runtimeCapture.Evidence,
+            artifactPaths,
+            runtimeCapture.ReplayTape);
         artifactPaths = new Dictionary<string, string>(manifestResult.ArtifactPaths, StringComparer.Ordinal);
     }
 
@@ -76,18 +111,6 @@ if (benchmarkErrors.Count > 0)
     Environment.ExitCode = 1;
 }
 
-static ReplayTape<string> CreateReplay(HostedParityEvidence evidence, DoctorReport report)
-{
-    var replay = new ReplayTape<string>();
-    replay.Add(
-        0,
-        "doctor-dashboard",
-        [],
-        evidence.Terminal.Text,
-        $"{report.OperatingSystem}|{report.HostProfile}|{report.HostValidationStatus}");
-    return replay;
-}
-
 static ushort ParseUShort(string[] arguments, string name, ushort fallback) =>
     ushort.TryParse(Parse(arguments, name), out var value) ? value : fallback;
 
@@ -105,4 +128,31 @@ static string? Parse(string[] arguments, string name)
     }
 
     return null;
+}
+
+static IReadOnlyDictionary<string, string> WriteContractArtifacts(
+    string runId,
+    TelemetryConfig telemetry,
+    MermaidConfig mermaid,
+    OpenTuiMigrationContractBundle? openTuiContracts)
+{
+    var artifacts = new Dictionary<string, string>(StringComparer.Ordinal);
+
+    var telemetryPath = ArtifactPathBuilder.For("contracts", $"{runId}-telemetry-config.json");
+    File.WriteAllText(telemetryPath, telemetry.ToJson());
+    artifacts["telemetry_config"] = telemetryPath;
+
+    var mermaidPath = ArtifactPathBuilder.For("contracts", $"{runId}-mermaid-config.json");
+    File.WriteAllText(mermaidPath, mermaid.ToJson());
+    artifacts["mermaid_config"] = mermaidPath;
+
+    if (openTuiContracts is not null)
+    {
+        foreach (var entry in openTuiContracts.WriteArtifacts(runId))
+        {
+            artifacts[entry.Key] = entry.Value;
+        }
+    }
+
+    return artifacts;
 }

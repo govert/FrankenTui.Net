@@ -48,7 +48,13 @@ public sealed class TerminalKernelTests
     public async Task TerminalSessionEmitsBalancedLifecycleSequences()
     {
         var backend = new MemoryTerminalBackend(new Size(30, 8));
-        await using var session = new TerminalSession(backend, new TerminalSessionOptions { UseMouseTracking = true });
+        await using var session = new TerminalSession(
+            backend,
+            new TerminalSessionOptions
+            {
+                UseMouseTracking = true,
+                UseKittyKeyboard = true
+            });
 
         await session.EnterAsync();
         var transcript = backend.DrainOutput();
@@ -57,6 +63,7 @@ public sealed class TerminalKernelTests
         Assert.Contains("\u001b[?1004h", transcript);
         Assert.Contains("\u001b[?2004h", transcript);
         Assert.Contains("\u001b[?1003h", transcript);
+        Assert.Contains("\u001b[>15u", transcript);
 
         await session.DisposeAsync();
         var cleanup = backend.DrainOutput();
@@ -65,6 +72,7 @@ public sealed class TerminalKernelTests
         Assert.Contains("\u001b[?1004l", cleanup);
         Assert.Contains("\u001b[?2004l", cleanup);
         Assert.Contains("\u001b[?1006l", cleanup);
+        Assert.Contains("\u001b[<u", cleanup);
     }
 
     [Fact]

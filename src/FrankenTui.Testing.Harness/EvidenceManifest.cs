@@ -333,8 +333,9 @@ public static class EvidenceManifestBuilder
     private static IReadOnlyList<StageSeed> OrderedStageSeeds(IReadOnlyDictionary<string, string> artifactPaths)
     {
         var ordered = new List<StageSeed>();
-        AddSeed("runtime_replay", "303-RTM", ["replay_tape"]);
-        AddSeed("terminal_snapshot", "357-VRF", ["json", "text"]);
+        AddSeed("runtime_replay", "303-RTM", ["replay_tape", "runtime_trace", "event_script"]);
+        AddSeed("diff_decisions", "354-VRF", ["diff_evidence"]);
+        AddSeed("terminal_snapshot", "357-VRF", ["json", "text", "terminal_transcript"]);
         AddSeed("web_snapshot", "356-VRF", ["html"]);
         AddSeed("benchmarks", "358-VRF", ["benchmarks"]);
         return ordered;

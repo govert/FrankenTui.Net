@@ -15,6 +15,8 @@ public sealed record TerminalSessionOptions
 
     public bool UseMouseTracking { get; init; }
 
+    public bool UseKittyKeyboard { get; init; }
+
     public bool UseAlternateScreen => !InlineMode && Modes.HasFlag(TerminalMode.AlternateScreen);
 
     public bool HideCursor => Modes.HasFlag(TerminalMode.HiddenCursor);

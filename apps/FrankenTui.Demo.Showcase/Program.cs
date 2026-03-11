@@ -66,10 +66,6 @@ else
         IWidget view = ShowcaseViewFactory.Build(inlineMode, scenario, frame, language, flowDirection);
         view.Render(new RuntimeRenderContext(current, Rect.FromSize(width, height), theme));
         await session.PresentAsync(current, frame == 0 ? BufferDiff.Full(width, height) : null, cancellationToken: cancellation.Token);
-        if (inlineMode)
-        {
-            await backend.WriteControlAsync(Environment.NewLine, cancellation.Token);
-        }
     }
 }
 
@@ -118,6 +114,8 @@ static async Task RunInteractiveAsync(
         backend,
         new Size(width, height),
         Theme.DefaultTheme);
+    var inputEngine = new HostedParityInputEngine(
+        keybindingConfig: KeybindingConfig.FromEnvironment());
     var program = new ShowcaseInteractiveProgram(
         inlineMode,
         scenario,
@@ -127,91 +125,41 @@ static async Task RunInteractiveAsync(
     var app = new AppSession<ShowcaseDemoState, ShowcaseDemoMessage>(runtime, program);
     await runtime.ResizeAsync(new Size(width, height), cancellationToken);
     await app.RenderCurrentAsync(cancellationToken);
-    if (inlineMode)
-    {
-        await backend.WriteControlAsync(Environment.NewLine, cancellationToken);
-    }
 
-    var knownSize = runtime.Size;
     while (!app.Model.QuitRequested && !cancellationToken.IsCancellationRequested)
     {
-        var consoleSize = ReadConsoleSize();
-        if (consoleSize is { } resized && resized != knownSize)
+        if (!await backend.PollEventAsync(TimeSpan.FromMilliseconds(20), cancellationToken))
         {
-            knownSize = resized;
-            await app.ResizeAsync(
-                resized,
-                static size => new ShowcaseResizeMessage(size),
-                cancellationToken);
-            if (inlineMode)
-            {
-                await backend.WriteControlAsync(Environment.NewLine, cancellationToken);
-            }
+            await ApplyOutcomeAsync(inputEngine.Tick(app.Model.Session, DateTimeOffset.UtcNow), app, cancellationToken);
+            continue;
         }
 
-        var terminalEvent = await ReadConsoleEventAsync(cancellationToken);
+        var terminalEvent = await backend.ReadEventAsync(cancellationToken);
         if (terminalEvent is null)
         {
             continue;
         }
 
-        app.Enqueue(new ShowcaseInputMessage(terminalEvent));
-        var batch = await app.DrainAsync(cancellationToken: cancellationToken);
-        if (inlineMode && batch.Steps.Count > 0)
-        {
-            await backend.WriteControlAsync(Environment.NewLine, cancellationToken);
-        }
+        var outcome = inputEngine.Process(app.Model.Session, terminalEvent);
+        await ApplyOutcomeAsync(outcome, app, cancellationToken);
     }
 }
 
-static Size? ReadConsoleSize()
+static async Task ApplyOutcomeAsync(
+    HostedParityInputOutcome outcome,
+    AppSession<ShowcaseDemoState, ShowcaseDemoMessage> app,
+    CancellationToken cancellationToken)
 {
-    try
+    if (!outcome.HasWork)
     {
-        var width = (ushort)Math.Clamp(Console.BufferWidth, 1, ushort.MaxValue);
-        var height = (ushort)Math.Clamp(Console.BufferHeight, 1, ushort.MaxValue);
-        return new Size(width, height);
-    }
-    catch
-    {
-        return null;
-    }
-}
-
-static async Task<TerminalEvent?> ReadConsoleEventAsync(CancellationToken cancellationToken)
-{
-    while (!cancellationToken.IsCancellationRequested)
-    {
-        if (Console.KeyAvailable)
-        {
-            return MapConsoleKey(Console.ReadKey(intercept: true));
-        }
-
-        await Task.Delay(20, cancellationToken);
+        return;
     }
 
-    return null;
-}
-
-static TerminalEvent MapConsoleKey(ConsoleKeyInfo keyInfo)
-{
-    var modifiers =
-        (keyInfo.Modifiers.HasFlag(ConsoleModifiers.Shift) ? TerminalModifiers.Shift : TerminalModifiers.None) |
-        (keyInfo.Modifiers.HasFlag(ConsoleModifiers.Alt) ? TerminalModifiers.Alt : TerminalModifiers.None) |
-        (keyInfo.Modifiers.HasFlag(ConsoleModifiers.Control) ? TerminalModifiers.Control : TerminalModifiers.None);
-
-    return keyInfo.Key switch
+    if (outcome.ResizeToApply is { } size)
     {
-        ConsoleKey.Tab => TerminalEvent.Key(new KeyGesture(TerminalKey.Tab, modifiers)),
-        ConsoleKey.Enter => TerminalEvent.Key(new KeyGesture(TerminalKey.Enter, modifiers)),
-        ConsoleKey.Escape => TerminalEvent.Key(new KeyGesture(TerminalKey.Escape, modifiers)),
-        ConsoleKey.UpArrow => TerminalEvent.Key(new KeyGesture(TerminalKey.Up, modifiers)),
-        ConsoleKey.DownArrow => TerminalEvent.Key(new KeyGesture(TerminalKey.Down, modifiers)),
-        ConsoleKey.LeftArrow => TerminalEvent.Key(new KeyGesture(TerminalKey.Left, modifiers)),
-        ConsoleKey.RightArrow => TerminalEvent.Key(new KeyGesture(TerminalKey.Right, modifiers)),
-        ConsoleKey.Backspace => TerminalEvent.Key(new KeyGesture(TerminalKey.Backspace, modifiers)),
-        _ when keyInfo.KeyChar != '\0' => TerminalEvent.Key(
-            new KeyGesture(TerminalKey.Character, modifiers, new Rune(keyInfo.KeyChar))),
-        _ => TerminalEvent.Key(new KeyGesture(TerminalKey.Unknown, modifiers))
-    };
+        await app.Runtime.ResizeAsync(size, cancellationToken);
+    }
+
+    app.Enqueue(new ShowcaseOutcomeMessage(outcome));
+    await app.DrainAsync(cancellationToken: cancellationToken);
 }

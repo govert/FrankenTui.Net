@@ -3,6 +3,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\FrankenTui.A11y\FrankenTui.A11y.csproj" />
     <ProjectReference Include="..\..\src\FrankenTui.Core\FrankenTui.Core.csproj" />
+    <ProjectReference Include="..\..\src\FrankenTui.Extras\FrankenTui.Extras.csproj" />
     <ProjectReference Include="..\..\src\FrankenTui.Layout\FrankenTui.Layout.csproj" />
     <ProjectReference Include="..\..\src\FrankenTui.Runtime\FrankenTui.Runtime.csproj" />
     <ProjectReference Include="..\..\src\FrankenTui.Style\FrankenTui.Style.csproj" />

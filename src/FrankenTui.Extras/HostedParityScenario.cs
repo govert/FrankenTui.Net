@@ -1,6 +1,7 @@
 using FrankenTui.A11y;
 using FrankenTui.Core;
 using FrankenTui.I18n;
+using FrankenTui.Runtime;
 using FrankenTui.Widgets;
 
 namespace FrankenTui.Extras;
@@ -35,11 +36,28 @@ public sealed record HostedParitySession(
     int SelectedMetricIndex = 0,
     int SelectedEventIndex = 0,
     int StepCount = 0,
-    IReadOnlyList<TerminalEvent>? AppliedEvents = null)
+    bool OverlayVisible = false,
+    bool ModalOpen = false,
+    bool TaskRunning = false,
+    string InputBuffer = "",
+    IReadOnlyList<TerminalEvent>? AppliedEvents = null,
+    IReadOnlyList<string>? SemanticLog = null,
+    IReadOnlyList<string>? PolicyLog = null,
+    IReadOnlyList<string>? ResizeLog = null)
 {
     private static readonly IReadOnlyList<string> DefaultFocusOrder = ["tabs", "modules", "metrics", "events", "notes"];
 
     public IReadOnlyList<TerminalEvent> AppliedEvents { get; init; } = AppliedEvents ?? [];
+    public IReadOnlyList<string> SemanticLog { get; init; } = SemanticLog ?? [];
+    public IReadOnlyList<string> PolicyLog { get; init; } = PolicyLog ?? [];
+    public IReadOnlyList<string> ResizeLog { get; init; } = ResizeLog ?? [];
+
+    public KeybindingState CreateKeybindingState() =>
+        new(
+            !string.IsNullOrWhiteSpace(InputBuffer),
+            TaskRunning,
+            ModalOpen,
+            OverlayVisible);
 
     public static HostedParitySession Create(
         bool inlineMode,
@@ -73,16 +91,25 @@ public sealed record HostedParitySession(
         return session;
     }
 
-    public HostedParitySession Advance(TerminalEvent terminalEvent)
+    public HostedParitySession Advance(
+        TerminalEvent? terminalEvent,
+        IReadOnlyList<SemanticEvent>? semanticEvents = null,
+        IReadOnlyList<KeybindingDecision>? policyActions = null,
+        ResizeDecision? resizeDecision = null)
     {
-        ArgumentNullException.ThrowIfNull(terminalEvent);
-
-        var nextInput = InputState.Apply(terminalEvent);
+        var nextInput = terminalEvent is null ? InputState : InputState.Apply(terminalEvent);
         var nextScenario = ScenarioId;
         var nextModule = SelectedModuleIndex;
         var nextMetric = SelectedMetricIndex;
         var nextEventIndex = SelectedEventIndex;
         var focusId = nextInput.EffectiveFocusId ?? "tabs";
+        var nextOverlay = OverlayVisible;
+        var nextModal = ModalOpen;
+        var nextTaskRunning = TaskRunning;
+        var nextInputBuffer = InputBuffer;
+        var semanticLog = SemanticLog;
+        var policyLog = PolicyLog;
+        var resizeLog = ResizeLog;
 
         switch (terminalEvent)
         {
@@ -135,11 +162,90 @@ public sealed record HostedParitySession(
                 }
 
                 break;
+            case KeyTerminalEvent keyEvent when keyEvent.Gesture.Key == TerminalKey.Backspace:
+                nextInputBuffer = nextInputBuffer.Length == 0 ? string.Empty : nextInputBuffer[..^1];
+                break;
+            case KeyTerminalEvent keyEvent when keyEvent.Gesture.IsCharacter &&
+                                               keyEvent.Gesture.Character is { } rune &&
+                                               keyEvent.Gesture.Modifiers == TerminalModifiers.None:
+                switch (rune.ToString().ToLowerInvariant())
+                {
+                    case "m":
+                        nextModal = !nextModal;
+                        nextInput = nextInput.Announce(nextModal ? "Modal opened" : "Modal closed");
+                        break;
+                    case "o":
+                        nextOverlay = !nextOverlay;
+                        nextInput = nextInput.Announce(nextOverlay ? "Overlay visible" : "Overlay hidden");
+                        break;
+                    case "t":
+                        nextTaskRunning = !nextTaskRunning;
+                        nextInput = nextInput.Announce(nextTaskRunning ? "Task running" : "Task idle");
+                        break;
+                    default:
+                        nextInputBuffer += rune.ToString();
+                        break;
+                }
+
+                break;
+            case PasteTerminalEvent pasteEvent:
+                nextInputBuffer += pasteEvent.Text.ReplaceLineEndings(" ");
+                break;
+        }
+
+        foreach (var action in policyActions ?? [])
+        {
+            policyLog = Append(policyLog, FormatPolicyAction(action));
+            switch (action.Action)
+            {
+                case KeybindingAction.DismissModal:
+                    nextModal = false;
+                    nextInput = nextInput.Announce("Modal dismissed");
+                    break;
+                case KeybindingAction.ClearInput:
+                    nextInputBuffer = string.Empty;
+                    nextInput = nextInput.Announce("Input cleared");
+                    break;
+                case KeybindingAction.CancelTask:
+                    nextTaskRunning = false;
+                    nextInput = nextInput.Announce("Task cancelled");
+                    break;
+                case KeybindingAction.CloseOverlay:
+                    nextOverlay = false;
+                    nextInput = nextInput.Announce("Overlay closed");
+                    break;
+                case KeybindingAction.ToggleTreeView:
+                    nextOverlay = !nextOverlay;
+                    nextInput = nextInput.Announce(nextOverlay ? "Overlay enabled" : "Overlay disabled");
+                    break;
+                case KeybindingAction.Bell:
+                    nextInput = nextInput.Announce("Bell");
+                    break;
+                case KeybindingAction.Noop:
+                    nextInput = nextInput.Announce("No-op");
+                    break;
+            }
+        }
+
+        foreach (var semanticEvent in semanticEvents ?? [])
+        {
+            semanticLog = Append(semanticLog, FormatSemanticEvent(semanticEvent));
+            nextInput = nextInput.Announce(FormatSemanticAnnouncement(semanticEvent));
+        }
+
+        if (resizeDecision is not null)
+        {
+            resizeLog = Append(resizeLog, FormatResizeDecision(resizeDecision));
         }
 
         var moduleCount = HostedParitySurface.Describe(this with { ScenarioId = nextScenario, InputState = nextInput }).Modules.Count;
         var metricCount = HostedParitySurface.Describe(this with { ScenarioId = nextScenario, InputState = nextInput }).Metrics.Count;
         var eventCount = HostedParitySurface.Describe(this with { ScenarioId = nextScenario, InputState = nextInput }).EventLog.Count;
+        var nextAppliedEvents = terminalEvent is null ? AppliedEvents : AppliedEvents.Concat([terminalEvent]).ToArray();
+        var hasActivity = terminalEvent is not null ||
+            (semanticEvents?.Count ?? 0) > 0 ||
+            (policyActions?.Count ?? 0) > 0 ||
+            resizeDecision is not null;
 
         return this with
         {
@@ -148,8 +254,15 @@ public sealed record HostedParitySession(
             SelectedModuleIndex = Wrap(nextModule, moduleCount),
             SelectedMetricIndex = Wrap(nextMetric, metricCount),
             SelectedEventIndex = Wrap(nextEventIndex, eventCount),
-            StepCount = StepCount + 1,
-            AppliedEvents = AppliedEvents.Concat([terminalEvent]).ToArray()
+            StepCount = hasActivity ? StepCount + 1 : StepCount,
+            OverlayVisible = nextOverlay,
+            ModalOpen = nextModal,
+            TaskRunning = nextTaskRunning,
+            InputBuffer = nextInputBuffer,
+            AppliedEvents = nextAppliedEvents,
+            SemanticLog = semanticLog,
+            PolicyLog = policyLog,
+            ResizeLog = resizeLog
         };
     }
 
@@ -190,6 +303,43 @@ public sealed record HostedParitySession(
         var wrapped = index % count;
         return wrapped < 0 ? wrapped + count : wrapped;
     }
+
+    private static IReadOnlyList<string> Append(IReadOnlyList<string> source, string item) =>
+        source.Concat([item]).TakeLast(12).ToArray();
+
+    private static string FormatSemanticEvent(SemanticEvent semanticEvent) =>
+        semanticEvent switch
+        {
+            ClickSemanticEvent click => $"semantic click {click.Button} {click.Position.Column},{click.Position.Row}",
+            DoubleClickSemanticEvent click => $"semantic double-click {click.Button} {click.Position.Column},{click.Position.Row}",
+            TripleClickSemanticEvent click => $"semantic triple-click {click.Button} {click.Position.Column},{click.Position.Row}",
+            LongPressSemanticEvent longPress => $"semantic long-press {longPress.Position.Column},{longPress.Position.Row} {longPress.Duration.TotalMilliseconds:0}ms",
+            DragStartSemanticEvent dragStart => $"semantic drag-start {dragStart.Position.Column},{dragStart.Position.Row}",
+            DragMoveSemanticEvent dragMove => $"semantic drag-move {dragMove.To.Column},{dragMove.To.Row}",
+            DragEndSemanticEvent dragEnd => $"semantic drag-end {dragEnd.Position.Column},{dragEnd.Position.Row}",
+            DragCancelSemanticEvent dragCancel => $"semantic drag-cancel {dragCancel.Reason}",
+            ChordSemanticEvent chord => $"semantic chord {string.Join('+', chord.Sequence.Select(static key => key.IsCharacter && key.Character is { } rune ? rune.ToString() : key.Key.ToString()))}",
+            _ => semanticEvent.GetType().Name
+        };
+
+    private static string FormatSemanticAnnouncement(SemanticEvent semanticEvent) =>
+        semanticEvent switch
+        {
+            ChordSemanticEvent chord => $"Chord: {string.Join('+', chord.Sequence.Select(static key => key.IsCharacter && key.Character is { } rune ? rune.ToString() : key.Key.ToString()))}",
+            DragStartSemanticEvent => "Drag started",
+            DragEndSemanticEvent => "Drag ended",
+            ClickSemanticEvent => "Click",
+            DoubleClickSemanticEvent => "Double click",
+            TripleClickSemanticEvent => "Triple click",
+            LongPressSemanticEvent => "Long press",
+            _ => "Semantic input"
+        };
+
+    private static string FormatPolicyAction(KeybindingDecision decision) =>
+        $"policy {decision.Action} ({decision.Reason})";
+
+    private static string FormatResizeDecision(ResizeDecision decision) =>
+        $"resize {decision.Action} {decision.Size.Width}x{decision.Size.Height} regime={decision.Regime} reason={decision.Reason}";
 }
 
 public static class HostedParityText

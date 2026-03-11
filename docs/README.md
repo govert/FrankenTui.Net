@@ -22,8 +22,17 @@ repository root documents.
 - [242-MAP-upstream-sync-workflow.md](./242-MAP-upstream-sync-workflow.md):
   upstream basis recording and `.external` refresh/reconciliation workflow
 - [244-MAP-divergence-ledgers.md](./244-MAP-divergence-ledgers.md):
-  maintained index of active divergence ledgers across host, runtime, and web
+  maintained index of active and historical divergence ledgers across host,
+  runtime, and web
   surfaces
+- [245-MAP-divergence-triage-policy.md](./245-MAP-divergence-triage-policy.md):
+  classification and escalation rules for new parity differences and bug triage
+- [246-MAP-upstream-contract-gap-register.md](./246-MAP-upstream-contract-gap-register.md):
+  maintained list of upstream contracts not yet fully ported into
+  FrankenTui.Net
+- [247-MAP-telemetry-mermaid-opentui-contract-wave.md](./247-MAP-telemetry-mermaid-opentui-contract-wave.md):
+  current local baseline and remaining partial depth for the telemetry,
+  Mermaid, and OpenTUI contract wave
 - [294-TXT-shaping-and-hyphenation-evaluation.md](./294-TXT-shaping-and-hyphenation-evaluation.md):
   current .NET text-shaping and hyphenation decision under AOT constraints
 - [304-RTM-determinism-and-evidence.md](./304-RTM-determinism-and-evidence.md):
@@ -31,6 +40,8 @@ repository root documents.
   baseline
 - [335-HST-host-divergence-ledger.md](./335-HST-host-divergence-ledger.md):
   per-platform host validation status, evidence sources, and divergence notes
+- [336-HST-inline-mode-divergence-ledger.md](./336-HST-inline-mode-divergence-ledger.md):
+  historical record of the closed inline-mode parity gap and its verification
 - [371-EXT-extras-classification.md](./371-EXT-extras-classification.md):
   current classification of parity-critical, later, and optional extras
 - [372-EXT-material-extras-slice.md](./372-EXT-material-extras-slice.md):
@@ -39,6 +50,9 @@ repository root documents.
   optional safe optimization surface and hook model for the .NET port
 - [344-WEB-web-boundary.md](./344-WEB-web-boundary.md): in-scope boundary for
   the local web and wasm host surface
+- [357-VRF-shared-sample-comparison-scaffold.md](./357-VRF-shared-sample-comparison-scaffold.md):
+  deterministic cross-implementation sample runner scaffold against the managed
+  upstream workspace
 - [391-DOC-dotnet-implementation-notes.md](./391-DOC-dotnet-implementation-notes.md):
   .NET-specific implementation, verification, and maintainer-orientation notes
 - [EXTERNALS.md](./EXTERNALS.md): inventory of local external repositories and

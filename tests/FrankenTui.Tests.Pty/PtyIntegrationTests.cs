@@ -73,6 +73,8 @@ public sealed class PtyIntegrationTests
 
         Assert.True(result.Success, result.Stderr);
         Assert.DoesNotContain("\u001b[?1049h", result.Stdout);
+        Assert.Contains("\u001b7", result.Stdout);
+        Assert.Contains("\u001b8", result.Stdout);
         Assert.Contains("Interaction", result.Stdout);
         Assert.Contains("Focus", result.Stdout);
     }
@@ -170,7 +172,7 @@ public sealed class PtyIntegrationTests
 
         Assert.True(result.Success, result.Stderr);
         Assert.Contains("Overview", result.Stdout);
-        Assert.Contains("Segments", result.Stdout);
+        Assert.Contains("Overlay", result.Stdout);
         Assert.Contains("Notes", result.Stdout);
     }
 
@@ -205,8 +207,8 @@ public sealed class PtyIntegrationTests
 
         Assert.True(result.Success, result.Stderr);
         Assert.Contains("Extras", result.Stdout);
-        Assert.Contains("Markdown", result.Stdout);
-        Assert.Contains("Validation", result.Stdout);
+        Assert.Contains("Pane Workspace", result.Stdout);
+        Assert.Contains("Command Palette", result.Stdout);
     }
 
     private static bool CanRunPty() => OperatingSystem.IsLinux() || OperatingSystem.IsMacOS();

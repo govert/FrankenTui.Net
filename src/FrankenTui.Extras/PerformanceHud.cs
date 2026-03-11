@@ -1,0 +1,79 @@
+using FrankenTui.Core;
+using FrankenTui.Runtime;
+using FrankenTui.Widgets;
+
+namespace FrankenTui.Extras;
+
+public enum PerformanceHudLevel
+{
+    Hidden,
+    Compact,
+    Full,
+    Minimal
+}
+
+public sealed record PerformanceHudSnapshot(
+    PerformanceHudLevel Level,
+    double TotalMs,
+    double ElapsedMs,
+    int CellsChanged,
+    int RunCount,
+    int BytesEmitted,
+    string DegradationLevel,
+    int DroppedFrames,
+    bool SyncOutput,
+    bool ScrollRegion,
+    bool Hyperlinks)
+{
+    public double RemainingMs => Math.Max(TotalMs - ElapsedMs, 0);
+
+    public static PerformanceHudSnapshot FromSession(HostedParitySession session) =>
+        new(
+            session.OverlayVisible ? PerformanceHudLevel.Full : PerformanceHudLevel.Compact,
+            16.0,
+            Math.Min(4.5 + session.StepCount * 1.2, 24.0),
+            session.AppliedEvents.Count * 8 + 48,
+            Math.Max(session.SemanticLog.Count, 1),
+            512 + session.AppliedEvents.Count * 64,
+            session.StepCount > 10 ? "REDUCED" : "FULL",
+            Math.Max(session.StepCount / 8 - 1, 0),
+            !session.InlineMode,
+            true,
+            true);
+}
+
+public sealed class PerformanceHudWidget : IWidget
+{
+    public PerformanceHudSnapshot Snapshot { get; init; } = new(PerformanceHudLevel.Hidden, 16, 0, 0, 0, 0, "FULL", 0, false, false, false);
+
+    public void Render(RuntimeRenderContext context)
+    {
+        if (Snapshot.Level == PerformanceHudLevel.Hidden)
+        {
+            return;
+        }
+
+        var lines = Snapshot.Level == PerformanceHudLevel.Minimal
+            ? new[]
+            {
+                $"HUD: {Snapshot.ElapsedMs:0.0} / {Snapshot.TotalMs:0.0} ms | Δ {Snapshot.CellsChanged} | {Snapshot.DegradationLevel}"
+            }
+            : new[]
+            {
+                $"Frame:   {Snapshot.ElapsedMs:0.0} / {Snapshot.TotalMs:0.0} ms",
+                $"Budget:  {Snapshot.RemainingMs:0.0} ms remaining",
+                $"Δ Cells: {Snapshot.CellsChanged}  Runs: {Snapshot.RunCount}",
+                $"Bytes:   {Snapshot.BytesEmitted}  Deg: {Snapshot.DegradationLevel}",
+                $"Caps:    sync={BoolFlag(Snapshot.SyncOutput)} scroll={BoolFlag(Snapshot.ScrollRegion)} osc8={BoolFlag(Snapshot.Hyperlinks)}",
+                $"Drops:   {Snapshot.DroppedFrames}"
+            };
+
+        new PanelWidget
+        {
+            Title = "Performance HUD",
+            Child = new ParagraphWidget(string.Join(Environment.NewLine, lines))
+        }.Render(context);
+    }
+
+    private static string BoolFlag(bool value) => value ? "y" : "n";
+}

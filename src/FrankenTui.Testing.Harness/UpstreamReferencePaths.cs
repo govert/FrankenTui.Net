@@ -26,6 +26,12 @@ public static class UpstreamReferencePaths
     public static string EvidenceManifestContractSample() =>
         Path.Combine(FindUpstreamRoot(), "crates", "doctor_frankentui", "contracts", "opentui_evidence_manifest_v1.json");
 
+    public static string OpenTuiSemanticContract() =>
+        Path.Combine(FindUpstreamRoot(), "crates", "doctor_frankentui", "contracts", "opentui_semantic_equivalence_v1.json");
+
+    public static string OpenTuiTransformationPolicy() =>
+        Path.Combine(FindUpstreamRoot(), "crates", "doctor_frankentui", "contracts", "opentui_transformation_policy_v1.json");
+
     public static string RuntimeDeterministicReplayTest() =>
         Path.Combine(FindUpstreamRoot(), "crates", "ftui-runtime", "tests", "deterministic_replay.rs");
 

@@ -24,11 +24,11 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
 ## Current Basis
 
 - Current status basis commit:
-  working tree completing the SIMD optimization batch after `cb31a4a`
+  working tree after telemetry / Mermaid / OpenTUI contract wave
 - Current upstream workspace basis:
   `7a91089366bd4644e086d5a422cb76b052e3de17`
 - Last full verification pass at status update time:
-  `dotnet test FrankenTui.Net.sln --configuration Release`
+  `dotnet test FrankenTui.Net.sln --no-restore`
 
 ## Story So Far
 
@@ -79,6 +79,64 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   baseline path. Current local verification is `65` headless tests, `5` web
   tests, and `6` PTY tests via `dotnet test FrankenTui.Net.sln --configuration
   Release`.
+- bugs-polish-and-sample-comparison working tree after `628492c`
+  Added regression coverage around wide-glyph overwrite cleanup in the
+  presenter path, a reusable command runner for verification helpers, and a
+  generated Rust-backed shared sample comparison scaffold that runs against the
+  managed upstream workspace under `.external/frankentui`. Current local
+  verification is `67` headless tests, `5` web tests, and `6` PTY tests via
+  `dotnet test FrankenTui.Net.sln --no-restore`.
+- inline-mode-divergence investigation working tree after `628492c`
+  Added an explicit divergence-triage policy plus a maintained inline-mode
+  host ledger after confirming that the current .NET inline path does not yet
+  implement the upstream cursor-save/restore and region-clearing contract. The
+  observed messy redraw path is currently classified as a local port gap rather
+  than an upstream bug candidate.
+- upstream-contract-gap audit working tree after `628492c`
+  Added a maintained register of in-scope upstream contracts that are still
+  partial or absent locally, so follow-on parity work can be driven by explicit
+  contract closure rather than by ad hoc memory.
+- terminal-contract parity batch after upstream-contract-gap audit
+  Added the first explicit terminal-facing contract closure batch: inline mode
+  now uses a dedicated writer with DEC save/restore and shrink cleanup, backend
+  polling and `write_log` routing are first-class, sanitize-by-default is
+  enforced at the writer boundary, and the showcase interactive path now uses
+  backend-driven events instead of app-local console polling. Current local
+  verification is `74` headless tests, `5` web tests, and `6` PTY tests via
+  `dotnet test FrankenTui.Net.sln`.
+- diff-evidence-and-routing contract batch after terminal-contract parity batch
+  Added the first runtime-facing contract closure batch after inline-mode
+  parity: `AppRuntime` now drives an explicit diff strategy selector and
+  decision ledger, hosted-parity capture now records replay/trace/diff/runtime
+  artifacts through one shared harness, doctor now emits runtime-driven replay
+  and manifest artifacts instead of a synthetic one-entry tape, subprocess
+  output can now be routed through the one-writer log path, and the upstream
+  sample comparison lane now covers event-driven counter flow plus inline-mode
+  overlay rows. Current local verification is `81` headless tests, `5` web
+  tests, and `6` PTY tests via `dotnet test FrankenTui.Net.sln
+  --configuration Release`, plus a successful doctor run with
+  `--write-artifacts --write-manifest --run-benchmarks`.
+- input-contract closure batch after diff-evidence-and-routing contract batch
+  Added `SemanticEvent`, `GestureRecognizer`, `KeybindingResolver`, and
+  `ResizeCoalescer` baselines, then routed the hosted-parity demo and runtime
+  harness through one shared input engine so policy/gesture/resize behavior is
+  exercised in both the interactive sample and the evidence path. Current local
+  verification is `86` headless tests, `5` web tests, and `6` PTY tests via
+  `dotnet test FrankenTui.Net.sln --no-restore`.
+- operator-surface closure batch after input-contract closure batch
+  Added the first explicit shared pane workspace, command palette, log search,
+  macro recorder, and performance HUD baselines, then integrated them into the
+  hosted-parity extras surface so terminal/web/PTY verification exercises them
+  as visible demo features rather than only as internal helpers. Current local
+  verification is `91` headless tests, `5` web tests, and `6` PTY tests via
+  `dotnet test FrankenTui.Net.sln --no-restore`.
+- telemetry-mermaid-opentui contract wave after operator-surface closure batch
+  Added upstream-shaped telemetry env-var parsing, runtime telemetry event and
+  redaction baselines, Mermaid config/showcase contract scaffolding, OpenTUI
+  semantic/policy contract loading and validation, doctor/runtime contract
+  artifact export, and new headless coverage around all three surfaces. Current
+  local verification is `97` headless tests, `5` web tests, and `6` PTY tests
+  via `dotnet test FrankenTui.Net.sln --no-restore`.
 
 ## Status
 
@@ -101,16 +159,16 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
 | `232-ARC` | `completed` | Package boundaries are live in the solution graph. |
 | `233-ARC` | `completed` | Provenance and divergence recording conventions exist at repo-doc level. |
 | `234-ARC` | `completed` | Current baseline stays NativeAOT-conscious and dependency-light. |
-| `235-ARC` | `completed` | Artifact layout exists under `artifacts/`. |
+| `235-ARC` | `completed` | Artifact layout exists under `artifacts/`, now including the comparison lane. |
 
 ### 240-MAP Provenance And Syncability
 
 | Code | Status | Note |
 | --- | --- | --- |
 | `241-MAP` | `completed` | Module mapping ledger exists. |
-| `242-MAP` | `completed` | Upstream basis recording and refresh rules are now explicit in `242-MAP-upstream-sync-workflow.md`. |
+| `242-MAP` | `completed` | Upstream basis recording, refresh rules, and bug/artifact triage expectations are explicit in `242-MAP-upstream-sync-workflow.md`. |
 | `243-MAP` | `completed` | `.external` refresh and reconciliation workflow is explicit and is exercised in CI by cloning the upstream reference corpus. |
-| `244-MAP` | `completed` | Divergence recording now has explicit ledgers and index docs rather than only batch notes. |
+| `244-MAP` | `completed` | Divergence recording now has explicit ledgers, an index, and a triage policy rather than only batch notes. |
 
 ### 250-KRN Terminal Kernel And Core Primitives
 
@@ -118,8 +176,8 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
 | --- | --- | --- |
 | `251-KRN` | `completed` | Geometry, cursor, capabilities, events, and key/mouse primitives are present. |
 | `252-KRN` | `completed` | Session ownership and cleanup semantics are present; OS-native raw-mode fidelity gap is tracked in the blocker note. |
-| `253-KRN` | `completed` | Inline-mode behavior, event parsing, paste, focus, mouse parsing, and coalescing are implemented at baseline level. |
-| `254-KRN` | `completed` | Backend abstractions and memory/console backends are in place. |
+| `253-KRN` | `completed` | Inline-mode behavior now uses a dedicated writer with DEC save/restore, row clearing, routed inline logs, and backend-driven polling rather than newline-based repainting. |
+| `254-KRN` | `completed` | Backend abstractions now include session configuration, feature toggles, bounded polling, routed log output, and subprocess-forwardable log routing across memory and console backends. |
 | `255-KRN` | `completed` | Capability probing, overrides, semantic hover stabilization, and policy helpers are implemented. |
 
 ### 260-RND Render Kernel
@@ -164,8 +222,8 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
 | --- | --- | --- |
 | `301-RTM` | `completed` | Runtime skeleton, view rendering, and backend presentation path are implemented. |
 | `302-RTM` | `completed` | Queued app sessions, resize-aware flow, cancellation-aware loops, and interactive showcase use of the runtime are now implemented. |
-| `303-RTM` | `completed` | Deterministic runtime trace, replay tape, JSON round-trip, and evidence-manifest integration are implemented and tested. |
-| `304-RTM` | `completed` | Runtime execution policy switches and evidence/baseline decisions are now explicit in code and documented in `304-RTM-determinism-and-evidence.md`. |
+| `303-RTM` | `completed` | Deterministic runtime trace, replay tape, JSON round-trip, hosted-parity runtime capture, and evidence-manifest integration are implemented and tested. |
+| `304-RTM` | `completed` | Runtime execution policy switches, diff-decision evidence, doctor runtime capture, and evidence/baseline decisions are now explicit in code and documented in `304-RTM-determinism-and-evidence.md`. |
 | `305-RTM` | `completed` | App simulator and headless runtime helpers are implemented. |
 
 ### 310-WGT Widget Surface
@@ -193,7 +251,7 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
 | `332-HST` | `completed` | Unix/macOS/Linux host behavior has a working baseline through the console backend and PTY tests. |
 | `333-HST` | `completed` | Windows host contract baseline exists; native Windows evidence remains a documented gap from this workspace. |
 | `334-HST` | `completed` | PTY test-host support is implemented. |
-| `335-HST` | `completed` | Host validation status, known divergences, evidence sources, and capability override policy are maintained in code and in `335-HST-host-divergence-ledger.md`. |
+| `335-HST` | `completed` | Host validation status, remoting classification, known divergences, evidence sources, and capability override policy are maintained in code and in `335-HST-host-divergence-ledger.md`. |
 
 ### 340-WEB Web And WASM Host Surfaces
 
@@ -211,10 +269,10 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
 | `351-VRF` | `completed` | Baseline test and artifact infrastructure is in place. |
 | `352-VRF` | `completed` | Kernel/render headless tests are active and passing. |
 | `353-VRF` | `completed` | Widget/runtime headless tests and simulator checks are active and passing at baseline level. |
-| `354-VRF` | `completed` | Invariant and corpus-backed regression now cover runtime replay, manifest contracts, benchmark fixtures, and host metadata. |
-| `355-VRF` | `completed` | PTY-backed integration tests are active and passing on the current Unix workspace. Cross-platform evidence gaps are documented in the blocker note. |
+| `354-VRF` | `completed` | Invariant and corpus-backed regression now cover runtime replay, diff-decision ledgers, manifest contracts, benchmark fixtures, and host metadata. |
+| `355-VRF` | `completed` | PTY-backed integration tests are active and passing on the current Unix workspace, now including explicit inline save/restore evidence. Cross-platform evidence gaps are documented in the blocker note. |
 | `356-VRF` | `completed` | Hosted web parity tests now include deterministic DOM-level parsing through `WebDomRunner` in addition to render-equivalence checks. |
-| `357-VRF` | `completed` | Evidence manifests, replay artifacts, and contract-shape checks now compare against the managed upstream corpus under `.external/frankentui`. |
+| `357-VRF` | `completed` | Evidence manifests, replay artifacts, contract-shape checks, and the shared sample comparison lane now compare event-driven counter, unicode, wide-overwrite, and inline-overlay samples against the managed upstream corpus under `.external/frankentui`. |
 | `358-VRF` | `completed` | Benchmark runner, tracked budget fixture, doctor gate, and artifact writing are now active. |
 | `359-VRF` | `completed` | GitHub Actions now restores, builds, tests, clones the upstream reference corpus, and refreshes doctor evidence artifacts across Linux and Windows. |
 
@@ -239,7 +297,7 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
 | Code | Status | Note |
 | --- | --- | --- |
 | `381-TOL` | `completed` | Doctor now reports environment state, host validation status, divergence notes, and recommendations. |
-| `382-TOL` | `completed` | Harness and doctor flows now write hosted-parity JSON, text, HTML, replay, benchmark, and manifest artifacts. |
+| `382-TOL` | `completed` | Harness and doctor flows now write hosted-parity JSON, text, HTML, replay, benchmark, manifest, and comparison artifacts. |
 | `383-TOL` | `completed` | Maintainer-facing doctor output now exists in JSON and readable text form with evidence-oriented status details. |
 | `384-TOL` | `completed` | CI now refreshes doctor artifacts, benchmark artifacts, and replay evidence on Linux. |
 

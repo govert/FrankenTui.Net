@@ -34,9 +34,17 @@ public static class AnsiBuilder
 
     public static string ShowCursor() => $"{Escape}[?25h";
 
+    public static string CursorSave() => $"{Escape}7";
+
+    public static string CursorRestore() => $"{Escape}8";
+
     public static string SyncOutputBegin() => $"{Escape}[?2026h";
 
     public static string SyncOutputEnd() => $"{Escape}[?2026l";
+
+    public static string KittyKeyboardEnable() => $"{Escape}[>15u";
+
+    public static string KittyKeyboardDisable() => $"{Escape}[<u";
 
     public static string EraseLine(EraseLineMode mode) => $"{Escape}[{(byte)mode}K";
 

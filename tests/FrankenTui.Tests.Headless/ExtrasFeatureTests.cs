@@ -87,7 +87,8 @@ public sealed class ExtrasFeatureTests
 
         var screen = HeadlessBufferView.ScreenString(buffer);
         Assert.Contains("Extras", screen);
-        Assert.Contains("Markdown", screen);
-        Assert.Contains("Validation", screen);
+        Assert.Contains("Pane Workspace", screen);
+        Assert.Contains("Command Palette", screen);
+        Assert.Contains("Mermaid Showcase", screen);
     }
 }

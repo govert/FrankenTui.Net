@@ -22,6 +22,15 @@ public sealed class AnsiSequencesTests
     }
 
     [Fact]
+    public void BuilderExposesCursorSaveRestoreAndKittyKeyboardSequences()
+    {
+        Assert.Equal("\u001b7", AnsiBuilder.CursorSave());
+        Assert.Equal("\u001b8", AnsiBuilder.CursorRestore());
+        Assert.Equal("\u001b[>15u", AnsiBuilder.KittyKeyboardEnable());
+        Assert.Equal("\u001b[<u", AnsiBuilder.KittyKeyboardDisable());
+    }
+
+    [Fact]
     public void HyperlinkStartRejectsUnsafeOrOverlongUrls()
     {
         var builder = new StringBuilder();

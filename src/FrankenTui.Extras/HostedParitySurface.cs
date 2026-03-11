@@ -187,6 +187,11 @@ public static class HostedParitySurface
                 new HostedParityMetric("Mode", session.InlineMode ? "inline" : "alternate-screen"),
                 new HostedParityMetric("Language", session.InputState.Language),
                 new HostedParityMetric("Direction", direction),
+                new HostedParityMetric("Input", string.IsNullOrEmpty(session.InputBuffer) ? "(empty)" : session.InputBuffer),
+                new HostedParityMetric("Overlay", session.OverlayVisible ? "visible" : "hidden"),
+                new HostedParityMetric("Modal", session.ModalOpen ? "open" : "closed", !session.ModalOpen),
+                new HostedParityMetric("Task", session.TaskRunning ? "running" : "idle", !session.TaskRunning),
+                new HostedParityMetric("Semantic", session.SemanticLog.LastOrDefault() ?? "none"),
                 new HostedParityMetric("Segments", TextSegmenter.Segment(session.InputState.LiveRegionText).Count.ToString(System.Globalization.CultureInfo.InvariantCulture)),
                 new HostedParityMetric("Search", TextSearch.FindAllNormalized(TextDocument.FromString(session.InputState.LiveRegionText), "focus").Count.ToString(System.Globalization.CultureInfo.InvariantCulture)),
                 new HostedParityMetric("Shaping", "aot-safe"),
@@ -205,10 +210,12 @@ public static class HostedParitySurface
             ];
         }
 
-        return session.AppliedEvents
-            .Select(FormatEvent)
+        return session.ResizeLog
+            .Concat(session.PolicyLog)
+            .Concat(session.SemanticLog)
+            .Concat(session.AppliedEvents.Select(FormatEvent))
+            .TakeLast(5)
             .Prepend($"Scenario {label} step {session.StepCount}")
-            .Take(6)
             .ToArray();
     }
 
@@ -305,6 +312,9 @@ public static class HostedParitySurface
         return TextDocument.FromMarkup(
             $"**{description.Label}** {description.Summary}\n" +
             $"_Focus_: {focus ?? "none"}  `segments={TextSegmenter.Segment(description.Summary).Count}`  `direction={description.Direction}`\n" +
-            $"Live: {live}");
+            $"Live: {live}\n" +
+            $"State: overlay={description.Metrics.FirstOrDefault(static metric => metric.Label == "Overlay")?.Value ?? "hidden"} " +
+            $"modal={description.Metrics.FirstOrDefault(static metric => metric.Label == "Modal")?.Value ?? "closed"} " +
+            $"task={description.Metrics.FirstOrDefault(static metric => metric.Label == "Task")?.Value ?? "idle"}");
     }
 }

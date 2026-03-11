@@ -54,7 +54,7 @@ public sealed class WebHostTests
         var page = ShowcasePage.RenderScenario(HostedParityScenarioId.Extras, frame: 2);
 
         Assert.Contains("data-scenario=\"extras\"", page.Html);
-        Assert.Contains("Markdown", page.Text);
-        Assert.Contains("Validation", page.Text);
+        Assert.Contains("Pane Workspace", page.Text);
+        Assert.Contains("Command Palette", page.Text);
     }
 }

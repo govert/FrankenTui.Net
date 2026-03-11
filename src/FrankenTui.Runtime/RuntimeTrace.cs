@@ -16,6 +16,14 @@ public sealed class RuntimeTrace<TMessage>
 
     public string Fingerprint => RuntimeTraceHash.Compute(_entries.Select(static entry => entry.Fingerprint));
 
+    public string ToJson() =>
+        JsonSerializer.Serialize(
+            _entries,
+            new JsonSerializerOptions
+            {
+                WriteIndented = true
+            });
+
     public void Record(
         int stepIndex,
         TMessage message,

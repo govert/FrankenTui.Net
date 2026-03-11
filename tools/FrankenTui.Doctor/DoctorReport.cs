@@ -1,3 +1,7 @@
+using FrankenTui.Extras;
+using FrankenTui.Runtime;
+using FrankenTui.Testing.Harness;
+
 namespace FrankenTui.Doctor;
 
 public sealed record DoctorReport(
@@ -13,6 +17,9 @@ public sealed record DoctorReport(
     bool SupportsSyncOutput,
     bool InMux,
     IReadOnlyList<string> Notes,
+    TelemetryConfigSummary? Telemetry = null,
+    MermaidConfigSummary? Mermaid = null,
+    OpenTuiMigrationContractSummary? OpenTuiMigration = null,
     IReadOnlyList<string>? HostEvidenceSources = null,
     IReadOnlyList<string>? KnownHostDivergences = null,
     IReadOnlyList<string>? CapabilityOverrides = null,

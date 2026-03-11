@@ -22,7 +22,21 @@ public sealed class Presenter
 
     public int FrameByteBudget { get; set; } = int.MaxValue;
 
-    public PresentResult Present(Buffer buffer, BufferDiff diff, IReadOnlyDictionary<uint, string>? links = null)
+    public void Reset()
+    {
+        _currentStyle = DefaultStyle;
+        _currentLinkId = 0;
+        _cursorColumn = null;
+        _cursorRow = null;
+    }
+
+    public PresentResult Present(
+        Buffer buffer,
+        BufferDiff diff,
+        IReadOnlyDictionary<uint, string>? links = null,
+        ushort rowOffset = 0,
+        ushort columnOffset = 0,
+        bool wrapSyncOutput = true)
     {
         ArgumentNullException.ThrowIfNull(buffer);
         ArgumentNullException.ThrowIfNull(diff);
@@ -35,7 +49,7 @@ public sealed class Presenter
         var builder = new StringBuilder();
         var bytesWritten = 0;
         var truncated = false;
-        var usedSyncOutput = Capabilities.UseSyncOutput();
+        var usedSyncOutput = wrapSyncOutput && Capabilities.UseSyncOutput();
         var runs = diff.Runs();
 
         if (usedSyncOutput)
@@ -45,7 +59,9 @@ public sealed class Presenter
 
         foreach (var run in runs)
         {
-            if (!TryAppendMove(builder, run.X0, run.Y, ref bytesWritten))
+            var targetColumn = (ushort)Math.Min(ushort.MaxValue, run.X0 + columnOffset);
+            var targetRow = (ushort)Math.Min(ushort.MaxValue, run.Y + rowOffset);
+            if (!TryAppendMove(builder, targetColumn, targetRow, ref bytesWritten))
             {
                 truncated = true;
                 break;

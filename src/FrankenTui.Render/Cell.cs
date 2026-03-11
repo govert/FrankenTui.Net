@@ -38,6 +38,10 @@ public readonly struct Cell : IEquatable<Cell>
         Background == other.Background &&
         Attributes == other.Attributes;
 
+    public bool SignificantEqual(Cell other) =>
+        Content.Raw == other.Content.Raw &&
+        Attributes.LinkId == other.Attributes.LinkId;
+
     public Cell WithChar(char value) => WithRune(new Rune(value));
 
     public Cell WithRune(Rune value) => new(CellContent.FromRune(value), Foreground, Background, Attributes);

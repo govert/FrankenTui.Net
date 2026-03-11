@@ -104,4 +104,25 @@ public sealed class PresenterTests
             Assert.Contains("\u001b[0m", result.Output, StringComparison.Ordinal);
         }
     }
+
+    [Fact]
+    public void PresenterClearsWideGlyphTailWhenReplacingWithNarrowCell()
+    {
+        var initial = new RenderBuffer(5, 1);
+        initial.Set(0, 0, Cell.FromRune(new Rune(0x1F600)));
+
+        var next = new RenderBuffer(5, 1);
+        next.Set(0, 0, Cell.FromChar('A'));
+
+        var presenter = new Presenter(TerminalCapabilities.Modern());
+        var model = new TerminalModel(5, 1);
+
+        var initialResult = presenter.Present(initial, BufferDiff.Full(initial.Width, initial.Height));
+        model.Process(initialResult.Output);
+
+        var nextResult = presenter.Present(next, BufferDiff.Compute(initial, next));
+        model.Process(nextResult.Output);
+
+        Assert.Equal("A", model.ScreenString());
+    }
 }

@@ -11,7 +11,18 @@ keeps artifact output local by default while preserving these stable buckets:
 - `web/`
 - `replay/`
 - `benchmarks/`
-- `doctor/`
+- `doctor-runtime/`
+- `doctor-dashboard/`
+- `contracts/`
+- `comparison/`
+
+`comparison/` may also contain generated local helper projects used to run the
+managed upstream workspace for parity checks. Those helpers are rebuildable and
+remain local-only.
+
+`contracts/` contains rebuildable local snapshots of telemetry config,
+Mermaid config, and OpenTUI contract artifacts produced by the doctor/tooling
+lane.
 
 Promote small curated baselines intentionally once they become stable review
 assets.

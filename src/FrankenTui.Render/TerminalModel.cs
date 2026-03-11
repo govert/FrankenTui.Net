@@ -16,6 +16,7 @@ public sealed class TerminalModel
     private PackedRgba _currentForeground = PackedRgba.White;
     private PackedRgba _currentBackground = PackedRgba.Transparent;
     private bool _oscSawEscape;
+    private SavedCursorState? _savedCursor;
     private ParseState _state;
 
     public TerminalModel(ushort width, ushort height)
@@ -156,6 +157,29 @@ public sealed class TerminalModel
                 _oscBuffer.Clear();
                 _oscSawEscape = false;
                 _state = ParseState.Osc;
+                return;
+            case '7':
+                _savedCursor = new SavedCursorState(
+                    CursorColumn,
+                    CursorRow,
+                    _currentForeground,
+                    _currentBackground,
+                    _currentAttributes,
+                    ActiveLinkId);
+                _state = ParseState.Ground;
+                return;
+            case '8':
+                if (_savedCursor is { } saved)
+                {
+                    CursorColumn = saved.Column;
+                    CursorRow = saved.Row;
+                    _currentForeground = saved.Foreground;
+                    _currentBackground = saved.Background;
+                    _currentAttributes = saved.Attributes;
+                    ActiveLinkId = saved.LinkId;
+                }
+
+                _state = ParseState.Ground;
                 return;
             default:
                 _state = ParseState.Ground;
@@ -466,4 +490,12 @@ public sealed class TerminalModel
         Csi,
         Osc
     }
+
+    private readonly record struct SavedCursorState(
+        ushort Column,
+        ushort Row,
+        PackedRgba Foreground,
+        PackedRgba Background,
+        CellAttributes Attributes,
+        uint LinkId);
 }

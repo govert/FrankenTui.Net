@@ -16,7 +16,18 @@ public interface ITerminalBackend : IAsyncDisposable
 
     ValueTask InitializeAsync(CancellationToken cancellationToken = default);
 
+    ValueTask ConfigureSessionAsync(
+        TerminalSessionConfiguration configuration,
+        CancellationToken cancellationToken = default);
+
+    ValueTask SetFeaturesAsync(TerminalBackendFeatures features, CancellationToken cancellationToken = default);
+
     ValueTask WriteControlAsync(string sequence, CancellationToken cancellationToken = default);
+
+    ValueTask WriteLogAsync(
+        string text,
+        TerminalLogWriteOptions? options = null,
+        CancellationToken cancellationToken = default);
 
     ValueTask<PresentResult> PresentAsync(
         RenderBuffer buffer,
@@ -25,6 +36,8 @@ public interface ITerminalBackend : IAsyncDisposable
         CancellationToken cancellationToken = default);
 
     ValueTask<TerminalEvent?> ReadEventAsync(CancellationToken cancellationToken = default);
+
+    ValueTask<bool> PollEventAsync(TimeSpan timeout, CancellationToken cancellationToken = default);
 
     ValueTask ResizeAsync(Size size, CancellationToken cancellationToken = default);
 }

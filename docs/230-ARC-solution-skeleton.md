@@ -93,6 +93,7 @@ Generated evidence belongs under `artifacts/` using these tracked buckets:
 - `artifacts/replay/`
 - `artifacts/benchmarks/`
 - `artifacts/doctor/`
+- `artifacts/comparison/`
 
 Generated contents stay ignored by default. Small curated baselines may be
 promoted intentionally later when they become stable review assets.

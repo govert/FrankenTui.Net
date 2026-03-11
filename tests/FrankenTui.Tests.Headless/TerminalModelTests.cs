@@ -36,4 +36,14 @@ public sealed class TerminalModelTests
         Assert.Equal("https://example.test", model.LinkUrl(cell.Attributes.LinkId));
         Assert.Equal(0, model.SyncOutputDepth);
     }
+
+    [Fact]
+    public void TerminalModelRestoresCursorWithDecSaveRestore()
+    {
+        var model = new TerminalModel(6, 2);
+        model.Process("A\u001b7\u001b[2;1HZ\u001b8B");
+
+        Assert.Equal("AB", model.RowText(0));
+        Assert.Equal("Z", model.RowText(1));
+    }
 }

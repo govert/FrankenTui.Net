@@ -16,8 +16,12 @@ This covers `242-MAP` and `243-MAP` from
   `7a91089366bd4644e086d5a422cb76b052e3de17`
 - Primary upstream reference assets currently used by local verification:
   - `tests/baseline.json`
+  - `docs/spec/diff-strategy-contract.md`
   - `docs/spec/opentui-evidence-manifest.md`
+  - `docs/adr/ADR-005-one-writer-rule.md`
+  - `docs/adr/ADR-006-untrusted-output-policy.md`
   - `crates/doctor_frankentui/contracts/opentui_evidence_manifest_v1.json`
+  - `crates/ftui-core/src/inline_mode.rs`
   - `crates/ftui-runtime/tests/deterministic_replay.rs`
   - `crates/ftui-web/tests/wasm_step_program.rs`
 
@@ -28,13 +32,30 @@ For every implementation batch that consults upstream behavior, record:
 1. The exact upstream basis commit used during the batch.
 2. The exact upstream files consulted for the batch.
 3. The local tests, fixtures, or docs added to preserve that basis locally.
-4. Any deliberate divergence in
+4. Any triage decision for newly discovered behavior differences under
+   [`245-MAP-divergence-triage-policy.md`](./245-MAP-divergence-triage-policy.md).
+5. Any deliberate or open divergence in
    [`244-MAP-divergence-ledgers.md`](./244-MAP-divergence-ledgers.md).
-5. Any host-specific effects in
+6. Any host-specific effects in
    [`335-HST-host-divergence-ledger.md`](./335-HST-host-divergence-ledger.md).
 
 Commit messages and batch reports should mention the dominant planning codes for
 the work, but the authoritative basis and refresh rules live here.
+
+## Bug And Artifact Triage Rule
+
+When a behavior bug is discovered after the port lands:
+
+1. capture the local repro command or artifact,
+2. capture the executed host path,
+3. compare against the managed upstream basis,
+4. classify the result using
+   [`245-MAP-divergence-triage-policy.md`](./245-MAP-divergence-triage-policy.md),
+5. record the outcome in the relevant ledger before deciding whether to port
+   locally or file upstream.
+
+This prevents "silent fork drift" where an unported upstream subsystem gets
+misread as an upstream defect.
 
 ## Refresh Workflow
 
@@ -63,8 +84,9 @@ Then reconcile the local repo:
 3. Refresh or re-evaluate local fixtures that intentionally mirror upstream
    contracts, especially:
    - `tests/fixtures/358-vrf-performance-baseline.json`
+   - diff-strategy selector expectations and diff-evidence artifacts
    - evidence-manifest contract assertions
-   - replay and web-reference tests
+   - replay, routed-output, and web-reference tests
 4. Re-run the local verification and artifact workflow:
 
 ```bash

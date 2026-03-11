@@ -14,6 +14,9 @@ public sealed class MemoryTerminalBackend : ITerminalBackend
     private RenderBuffer _previous;
     private Presenter _presenter;
     private TerminalModel _model;
+    private InlineTerminalWriter _inlineWriter;
+    private TerminalSessionConfiguration _sessionConfiguration = new();
+    private TerminalBackendFeatures _features;
 
     public MemoryTerminalBackend(Size size, TerminalCapabilities? capabilities = null, string name = "memory")
     {
@@ -23,6 +26,7 @@ public sealed class MemoryTerminalBackend : ITerminalBackend
         _previous = new RenderBuffer(Size.Width, Size.Height);
         _presenter = new Presenter(Capabilities);
         _model = new TerminalModel(Size.Width, Size.Height);
+        _inlineWriter = new InlineTerminalWriter(Capabilities, Size);
     }
 
     public string Name { get; }
@@ -58,6 +62,41 @@ public sealed class MemoryTerminalBackend : ITerminalBackend
         return ValueTask.CompletedTask;
     }
 
+    public ValueTask ConfigureSessionAsync(
+        TerminalSessionConfiguration configuration,
+        CancellationToken cancellationToken = default)
+    {
+        _sessionConfiguration = configuration ?? new TerminalSessionConfiguration();
+        _previous = new RenderBuffer(Size.Width, Size.Height);
+        _presenter = new Presenter(Capabilities);
+        _inlineWriter.TerminalSize = Size;
+        _inlineWriter.ResetState();
+        _model = new TerminalModel(Size.Width, Size.Height);
+        return ValueTask.CompletedTask;
+    }
+
+    public ValueTask SetFeaturesAsync(
+        TerminalBackendFeatures features,
+        CancellationToken cancellationToken = default)
+    {
+        var next = features.Sanitize(Capabilities);
+        if (next == _features)
+        {
+            return ValueTask.CompletedTask;
+        }
+
+        using var lease = _writerGate.Acquire();
+        var sequence = TerminalFeatureControl.Transition(_features, next);
+        if (sequence.Length > 0)
+        {
+            _output.Append(sequence);
+            _model.Process(sequence);
+        }
+
+        _features = next;
+        return ValueTask.CompletedTask;
+    }
+
     public ValueTask WriteControlAsync(string sequence, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(sequence);
@@ -65,6 +104,31 @@ public sealed class MemoryTerminalBackend : ITerminalBackend
         using var lease = _writerGate.Acquire();
         _output.Append(sequence);
         _model.Process(sequence);
+        return ValueTask.CompletedTask;
+    }
+
+    public ValueTask WriteLogAsync(
+        string text,
+        TerminalLogWriteOptions? options = null,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(text);
+
+        if (!_sessionConfiguration.InlineMode)
+        {
+            return ValueTask.CompletedTask;
+        }
+
+        using var lease = _writerGate.Acquire();
+        _inlineWriter.TerminalSize = Size;
+        var output = _inlineWriter.WriteLog(text, options);
+        if (output.Length == 0)
+        {
+            return ValueTask.CompletedTask;
+        }
+
+        _output.Append(output);
+        _model.Process(output);
         return ValueTask.CompletedTask;
     }
 
@@ -77,24 +141,36 @@ public sealed class MemoryTerminalBackend : ITerminalBackend
         ArgumentNullException.ThrowIfNull(buffer);
 
         using var lease = _writerGate.Acquire();
-        if (_previous.Width != buffer.Width || _previous.Height != buffer.Height)
+        PresentResult result;
+        if (_sessionConfiguration.InlineMode)
         {
-            Size = new Size(buffer.Width, buffer.Height);
-            _previous = new RenderBuffer(buffer.Width, buffer.Height);
-            _presenter = new Presenter(Capabilities);
-            _model = new TerminalModel(buffer.Width, buffer.Height);
+            _inlineWriter.TerminalSize = Size;
+            result = _inlineWriter.Present(buffer, diff, links);
+        }
+        else
+        {
+            if (_previous.Width != buffer.Width || _previous.Height != buffer.Height)
+            {
+                _previous = new RenderBuffer(buffer.Width, buffer.Height);
+                _presenter = new Presenter(Capabilities);
+                _model = new TerminalModel(buffer.Width, buffer.Height);
+            }
+
+            diff ??= BufferDiff.Compute(_previous, buffer);
+            result = _presenter.Present(buffer, diff, links);
+            _previous = buffer.Clone();
         }
 
-        diff ??= BufferDiff.Compute(_previous, buffer);
-        var result = _presenter.Present(buffer, diff, links);
         _output.Append(result.Output);
         _model.Process(result.Output);
-        _previous = buffer.Clone();
         return ValueTask.FromResult(result);
     }
 
     public ValueTask<TerminalEvent?> ReadEventAsync(CancellationToken cancellationToken = default) =>
         ValueTask.FromResult(_events.Count == 0 ? null : _events.Dequeue());
+
+    public ValueTask<bool> PollEventAsync(TimeSpan timeout, CancellationToken cancellationToken = default) =>
+        ValueTask.FromResult(_events.Count > 0);
 
     public ValueTask ResizeAsync(Size size, CancellationToken cancellationToken = default)
     {
@@ -102,6 +178,8 @@ public sealed class MemoryTerminalBackend : ITerminalBackend
         _previous = new RenderBuffer(Size.Width, Size.Height);
         _presenter = new Presenter(Capabilities);
         _model = new TerminalModel(Size.Width, Size.Height);
+        _inlineWriter.TerminalSize = Size;
+        _inlineWriter.ResetState();
         return ValueTask.CompletedTask;
     }
 
