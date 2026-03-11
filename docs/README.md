@@ -33,6 +33,9 @@ repository root documents.
 - [247-MAP-telemetry-mermaid-opentui-contract-wave.md](./247-MAP-telemetry-mermaid-opentui-contract-wave.md):
   current local baseline and remaining partial depth for the telemetry,
   Mermaid, and OpenTUI contract wave
+- [248-MAP-runtime-input-and-proof-wave.md](./248-MAP-runtime-input-and-proof-wave.md):
+  shared runtime-input closure, stronger routed-output/sanitizer proof, wider
+  sample comparison, and OpenTUI planner integration
 - [294-TXT-shaping-and-hyphenation-evaluation.md](./294-TXT-shaping-and-hyphenation-evaluation.md):
   current .NET text-shaping and hyphenation decision under AOT constraints
 - [304-RTM-determinism-and-evidence.md](./304-RTM-determinism-and-evidence.md):

@@ -91,13 +91,32 @@ public sealed record HostedParitySession(
         return session;
     }
 
+    public HostedParitySession Advance(RuntimeInputEnvelope input)
+    {
+        ArgumentNullException.ThrowIfNull(input);
+        return Advance(
+            input.EffectiveEvent,
+            input.SourceEvent,
+            input.SemanticEvents,
+            input.PolicyDecisions,
+            input.ResizeDecision);
+    }
+
     public HostedParitySession Advance(
         TerminalEvent? terminalEvent,
         IReadOnlyList<SemanticEvent>? semanticEvents = null,
         IReadOnlyList<KeybindingDecision>? policyActions = null,
-        ResizeDecision? resizeDecision = null)
+        ResizeDecision? resizeDecision = null) =>
+        Advance(terminalEvent, terminalEvent, semanticEvents, policyActions, resizeDecision);
+
+    private HostedParitySession Advance(
+        TerminalEvent? effectiveEvent,
+        TerminalEvent? recordedEvent,
+        IReadOnlyList<SemanticEvent>? semanticEvents,
+        IReadOnlyList<KeybindingDecision>? policyActions,
+        ResizeDecision? resizeDecision)
     {
-        var nextInput = terminalEvent is null ? InputState : InputState.Apply(terminalEvent);
+        var nextInput = effectiveEvent is null ? InputState : InputState.Apply(effectiveEvent);
         var nextScenario = ScenarioId;
         var nextModule = SelectedModuleIndex;
         var nextMetric = SelectedMetricIndex;
@@ -111,7 +130,7 @@ public sealed record HostedParitySession(
         var policyLog = PolicyLog;
         var resizeLog = ResizeLog;
 
-        switch (terminalEvent)
+        switch (effectiveEvent)
         {
             case KeyTerminalEvent keyEvent when keyEvent.Gesture.Key == TerminalKey.Left:
                 nextScenario = MoveScenario(-1);
@@ -241,8 +260,8 @@ public sealed record HostedParitySession(
         var moduleCount = HostedParitySurface.Describe(this with { ScenarioId = nextScenario, InputState = nextInput }).Modules.Count;
         var metricCount = HostedParitySurface.Describe(this with { ScenarioId = nextScenario, InputState = nextInput }).Metrics.Count;
         var eventCount = HostedParitySurface.Describe(this with { ScenarioId = nextScenario, InputState = nextInput }).EventLog.Count;
-        var nextAppliedEvents = terminalEvent is null ? AppliedEvents : AppliedEvents.Concat([terminalEvent]).ToArray();
-        var hasActivity = terminalEvent is not null ||
+        var nextAppliedEvents = recordedEvent is null ? AppliedEvents : AppliedEvents.Concat([recordedEvent]).ToArray();
+        var hasActivity = effectiveEvent is not null ||
             (semanticEvents?.Count ?? 0) > 0 ||
             (policyActions?.Count ?? 0) > 0 ||
             resizeDecision is not null;

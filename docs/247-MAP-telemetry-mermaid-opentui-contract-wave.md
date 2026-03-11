@@ -24,8 +24,9 @@ Landed local surface:
   handling.
 - `TelemetrySessionLog`, `TelemetryEvent`, and `TelemetryRedactor` provide a
   deterministic local event schema and conservative redaction baseline.
-- `AppRuntime` now emits runtime/update/render/fallback telemetry events when
-  telemetry is enabled via policy.
+- `AppRuntime`, `AppSession`, and `RuntimeInputController` now emit
+  runtime/update/view/subscription/input/reflow/render/flush/fallback telemetry
+  events when telemetry is enabled via policy.
 - doctor and runtime artifact capture now persist telemetry JSON alongside
   replay, trace, diff, and manifest artifacts.
 - PTY verification now covers env-driven telemetry enablement and explicit
@@ -66,12 +67,12 @@ Landed local surface:
 - validation checks clause traceability, projection completeness, stable sort,
   and construct coverage
 - doctor artifact capture now persists normalized local copies plus a summary
-  report and an OpenTUI contract-gate report for the managed upstream basis
+  report, planner/certification findings, and an OpenTUI contract-gate report
+  for the managed upstream basis
 
 Still partial:
 
-- no translator or certification engine consumes these contracts yet
-- the current contract gate is evidence-driven rather than translator-driven
+- no real source translator emits construct-specific findings yet
 - no local extension workflow exists yet beyond the upstream-tracked bundle
 - validator outputs are currently summary-oriented rather than full gate reports
 

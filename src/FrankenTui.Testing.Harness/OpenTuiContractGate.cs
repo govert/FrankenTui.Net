@@ -228,7 +228,8 @@ public static class OpenTuiContractGate
         string runId,
         OpenTuiContractSet contractSet,
         EvidenceManifest manifest,
-        SharedSampleComparisonReport? sampleComparison = null)
+        SharedSampleComparisonReport? sampleComparison = null,
+        OpenTuiPlannerReport? plannerReport = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(runId);
         ArgumentNullException.ThrowIfNull(contractSet);
@@ -291,6 +292,34 @@ public static class OpenTuiContractGate
         else
         {
             stagesFailed.Add("clause_coverage");
+        }
+
+        if (plannerReport is null)
+        {
+            stagesFailed.Add("planner_findings");
+            trace.Add("planner_findings:missing");
+        }
+        else
+        {
+            var actionable = plannerReport.Findings.Count(static finding =>
+                string.Equals(finding.Status, "ready", StringComparison.Ordinal) ||
+                string.Equals(finding.Status, "review", StringComparison.Ordinal) ||
+                string.Equals(finding.Status, "blocked", StringComparison.Ordinal));
+            if (actionable == plannerReport.Findings.Count)
+            {
+                stagesPassed.Add("planner_findings");
+                trace.Add($"planner_findings:ok:{plannerReport.Findings.Count}");
+            }
+            else
+            {
+                stagesFailed.Add("planner_findings");
+                trace.Add($"planner_findings:error:{plannerReport.Findings.Count}");
+            }
+
+            if (plannerReport.Findings.Any(static finding => string.Equals(finding.Status, "review", StringComparison.Ordinal)))
+            {
+                riskFlags.Add("planner_review_required");
+            }
         }
 
         var confidence = ComputeConfidence(contractSet.Confidence, manifest, clauseResults);

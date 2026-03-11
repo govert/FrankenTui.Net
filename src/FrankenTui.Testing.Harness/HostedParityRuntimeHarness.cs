@@ -44,37 +44,26 @@ public static class HostedParityRuntimeHarness
             effectiveSize,
             theme,
             policy);
-        var inputEngine = new HostedParityInputEngine();
         var session = new AppSession<HostedParitySession, HostedParityRuntimeMessage>(
             runtime,
             new HostedParityRuntimeProgram(inlineMode, scenarioId, language, flowDirection));
+        var controller = new RuntimeInputController<HostedParitySession, HostedParityRuntimeMessage>(
+            static model => model.CreateKeybindingState(),
+            static (_, input) => [HostedParityRuntimeMessage.FromInput(input)],
+            static (_, terminalEvent) => HostedParityInputEngine.Translate(terminalEvent));
 
-        await session.DispatchAsync(HostedParityRuntimeMessage.Initial(session.Model), cancellationToken).ConfigureAwait(false);
+        await session.DispatchAsync(HostedParityRuntimeMessage.Initial(), cancellationToken).ConfigureAwait(false);
         foreach (var terminalEvent in eventScript)
         {
-            var outcome = inputEngine.Process(session.Model, terminalEvent);
-            if (outcome.ResizeToApply is { } resizeSize)
-            {
-                await runtime.ResizeAsync(resizeSize, cancellationToken).ConfigureAwait(false);
-            }
-
-            await session.DispatchAsync(HostedParityRuntimeMessage.FromOutcome(outcome), cancellationToken).ConfigureAwait(false);
+            await controller.ProcessAsync(session, terminalEvent, cancellationToken).ConfigureAwait(false);
         }
 
-        var flushOutcome = inputEngine.Tick(
-            session.Model,
+        await controller.TickAsync(
+            session,
             eventScript.Length == 0
                 ? DateTimeOffset.UtcNow
-                : eventScript[^1].Timestamp + TimeSpan.FromMilliseconds(1000));
-        if (flushOutcome.HasWork)
-        {
-            if (flushOutcome.ResizeToApply is { } resizeSize)
-            {
-                await runtime.ResizeAsync(resizeSize, cancellationToken).ConfigureAwait(false);
-            }
-
-            await session.DispatchAsync(HostedParityRuntimeMessage.FromOutcome(flushOutcome), cancellationToken).ConfigureAwait(false);
-        }
+                : eventScript[^1].Timestamp + TimeSpan.FromMilliseconds(1000),
+            cancellationToken).ConfigureAwait(false);
 
         var finalSession = session.Model;
         var finalSize = runtime.Size;
@@ -122,21 +111,22 @@ public static class HostedParityRuntimeHarness
         public UpdateResult<HostedParitySession, HostedParityRuntimeMessage> Update(
             HostedParitySession model,
             HostedParityRuntimeMessage message) =>
-            UpdateResult<HostedParitySession, HostedParityRuntimeMessage>.FromModel(message.Outcome.Session);
+            message.Input is null
+                ? UpdateResult<HostedParitySession, HostedParityRuntimeMessage>.FromModel(model)
+                : UpdateResult<HostedParitySession, HostedParityRuntimeMessage>.FromModel(model.Advance(message.Input));
 
         public IRuntimeView BuildView(HostedParitySession model) =>
             HostedParitySurface.Create(model);
     }
 
-    public sealed record HostedParityRuntimeMessage(string Label, HostedParityInputOutcome Outcome)
+    public sealed record HostedParityRuntimeMessage(string Label, RuntimeInputEnvelope? Input)
     {
-        public static HostedParityRuntimeMessage Initial(HostedParitySession session) =>
-            new("init", new HostedParityInputOutcome(session, null, QuitRequested: false, HasWork: true, Label: "init"));
+        public static HostedParityRuntimeMessage Initial() => new("init", null);
 
-        public static HostedParityRuntimeMessage FromOutcome(HostedParityInputOutcome outcome)
+        public static HostedParityRuntimeMessage FromInput(RuntimeInputEnvelope input)
         {
-            ArgumentNullException.ThrowIfNull(outcome);
-            return new HostedParityRuntimeMessage(outcome.Label, outcome);
+            ArgumentNullException.ThrowIfNull(input);
+            return new HostedParityRuntimeMessage(input.Label, input);
         }
     }
 }

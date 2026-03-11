@@ -21,5 +21,7 @@ public sealed class SampleComparisonTests
         Assert.True(File.Exists(artifacts["report"]));
         Assert.Contains("\"counter_flow\"", report.Local.Json);
         Assert.Contains("\"inline_overlay\"", report.Local.Json);
+        Assert.Contains("\"command_palette\"", report.Local.Json);
+        Assert.Contains("\"log_search\"", report.Local.Json);
     }
 }

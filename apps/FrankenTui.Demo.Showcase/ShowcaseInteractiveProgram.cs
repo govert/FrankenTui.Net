@@ -35,12 +35,12 @@ internal sealed class ShowcaseInteractiveProgram : IAppProgram<ShowcaseDemoState
     public UpdateResult<ShowcaseDemoState, ShowcaseDemoMessage> Update(ShowcaseDemoState model, ShowcaseDemoMessage message) =>
         message switch
         {
-            ShowcaseOutcomeMessage outcome => UpdateResult<ShowcaseDemoState, ShowcaseDemoMessage>.FromModel(
+            ShowcaseInputMessage input => UpdateResult<ShowcaseDemoState, ShowcaseDemoMessage>.FromModel(
                 model with
                 {
-                    Viewport = outcome.Outcome.ResizeToApply ?? model.Viewport,
-                    Session = outcome.Outcome.Session,
-                    QuitRequested = model.QuitRequested || outcome.Outcome.QuitRequested
+                    Viewport = input.Input.ResizeToApply ?? model.Viewport,
+                    Session = model.Session.Advance(input.Input),
+                    QuitRequested = model.QuitRequested || input.Input.QuitRequested
                 }),
             _ => UpdateResult<ShowcaseDemoState, ShowcaseDemoMessage>.FromModel(model)
         };
@@ -54,4 +54,4 @@ internal sealed record ShowcaseDemoState(HostedParitySession Session, Size Viewp
 
 internal abstract record ShowcaseDemoMessage;
 
-internal sealed record ShowcaseOutcomeMessage(HostedParityInputOutcome Outcome) : ShowcaseDemoMessage;
+internal sealed record ShowcaseInputMessage(RuntimeInputEnvelope Input) : ShowcaseDemoMessage;

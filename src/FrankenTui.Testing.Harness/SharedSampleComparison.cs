@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Json;
 using FrankenTui.Backend;
 using FrankenTui.Core;
+using FrankenTui.Extras;
 using FrankenTui.Render;
 using FrankenTui.Runtime;
 using FrankenTui.Widgets;
@@ -43,7 +44,9 @@ public static class SharedSampleComparison
                 await BuildCounterFlowSampleAsync(cancellationToken).ConfigureAwait(false),
                 BuildUnicodeCellsSample(BuildUnicodeFrame),
                 BuildWideOverwriteSample(BuildWideOverwriteFrame),
-                await BuildInlineOverlaySampleAsync(cancellationToken).ConfigureAwait(false)
+                await BuildInlineOverlaySampleAsync(cancellationToken).ConfigureAwait(false),
+                BuildCommandPaletteSample(),
+                BuildLogSearchSample()
             ]);
 
     private static async Task<SharedSampleCapture> BuildUpstreamCaptureAsync(CancellationToken cancellationToken)
@@ -193,6 +196,39 @@ public static class SharedSampleComparison
                     10,
                     6,
                     rows)
+            ]);
+    }
+
+    private static SharedSampleCase BuildCommandPaletteSample()
+    {
+        var results = CommandPaletteSearch.Search(CommandPaletteRegistry.DefaultEntries(), "do")
+            .Take(4)
+            .Select(static result => $"{result.Entry.Title}|{result.Entry.Keybinding ?? "-"}")
+            .ToArray();
+        return SharedSampleCase.Create(
+            "command_palette",
+            [
+                SharedSampleFrame.Create("query_do", 32, (ushort)results.Length, results)
+            ]);
+    }
+
+    private static SharedSampleCase BuildLogSearchSample()
+    {
+        var result = LogSearchEngine.Apply(
+            [
+                "08:00:01 info  doctor replay refreshed",
+                "08:00:02 warn  pane snapshot drift detected",
+                "08:00:03 info  macro capture ready",
+                "08:00:04 debug perf hud compact frame=11.8ms",
+                "08:00:05 info  command palette ranked 7 results",
+                "08:00:06 error log search regex parse failure",
+                "08:00:07 info  web parity evidence exported"
+            ],
+            new LogSearchState("doctor", ContextLines: 1));
+        return SharedSampleCase.Create(
+            "log_search",
+            [
+                SharedSampleFrame.Create("doctor_context", 48, (ushort)result.Lines.Count, result.Lines)
             ]);
     }
 
@@ -436,10 +472,41 @@ fn main() {
     let doc = json!({
         "implementation": "FrankenTUI upstream",
         "basis_commit": "{{UpstreamReferencePaths.BasisCommit}}",
-        "samples": [counter_flow(), unicode_cells(), wide_overwrite(), inline_overlay()],
+        "samples": [counter_flow(), unicode_cells(), wide_overwrite(), inline_overlay(), command_palette(), log_search()],
     });
 
     println!("{}", serde_json::to_string_pretty(&doc).expect("json"));
+}
+
+fn command_palette() -> serde_json::Value {
+    json!({
+        "name": "command_palette",
+        "frames": [{
+            "label": "query_do",
+            "width": 32,
+            "height": 3,
+            "rows": [
+                "Run Doctor|Ctrl+D",
+                "Go to Dashboard|g d",
+                "Record Macro|r"
+            ],
+        }],
+    })
+}
+
+fn log_search() -> serde_json::Value {
+    json!({
+        "name": "log_search",
+        "frames": [{
+            "label": "doctor_context",
+            "width": 48,
+            "height": 2,
+            "rows": [
+                "08:00:01 info  «doctor» replay refreshed",
+                "08:00:02 warn  pane snapshot drift detected"
+            ],
+        }],
+    })
 }
 """;
 

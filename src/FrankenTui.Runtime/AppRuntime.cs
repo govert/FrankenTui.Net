@@ -50,6 +50,8 @@ public sealed class AppRuntime<TModel, TMessage>
 
     public TimeSpan LastPresentLatency => _lastPresentLatency;
 
+    public int CurrentStepIndex => _stepIndex;
+
     public async ValueTask<RuntimeStepResult<TModel, TMessage>> DispatchAsync(
         IAppProgram<TModel, TMessage> program,
         TModel model,
@@ -59,7 +61,10 @@ public sealed class AppRuntime<TModel, TMessage>
         var updateStopwatch = Stopwatch.StartNew();
         var update = program.Update(model, message);
         updateStopwatch.Stop();
-        var presentation = await RenderAsync(program.BuildView(update.Model), cancellationToken).ConfigureAwait(false);
+        var buildViewStopwatch = Stopwatch.StartNew();
+        var view = program.BuildView(update.Model);
+        buildViewStopwatch.Stop();
+        var presentation = await RenderAsync(view, cancellationToken).ConfigureAwait(false);
         var emitted = CollectMessages(update.Commands, update.Subscriptions);
         var screenText = HeadlessBufferView.ScreenString(_current);
         RuntimeTraceEntry<TMessage>? traceEntry = null;
@@ -82,10 +87,28 @@ public sealed class AppRuntime<TModel, TMessage>
                 _stepIndex,
                 [
                     new TelemetryField("cmd_count", update.Commands.Messages.Count.ToString(CultureInfo.InvariantCulture)),
+                    TelemetryRedactor.TypeField("cmd_type", typeof(TMessage), Telemetry.Config.Verbose),
                     new TelemetryField("duration_us", ToMicroseconds(updateStopwatch.Elapsed).ToString(CultureInfo.InvariantCulture)),
                     TelemetryRedactor.TypeField("model_type", typeof(TModel), Telemetry.Config.Verbose),
                     TelemetryRedactor.TypeField("msg_type", message?.GetType(), Telemetry.Config.Verbose),
                     new TelemetryField("subscription_count", update.Subscriptions.Count.ToString(CultureInfo.InvariantCulture))
+                ]);
+            Telemetry.Record(
+                "ftui.program.view",
+                TelemetryEventCategory.RuntimePhase,
+                _stepIndex,
+                [
+                    new TelemetryField("duration_us", ToMicroseconds(buildViewStopwatch.Elapsed).ToString(CultureInfo.InvariantCulture)),
+                    new TelemetryField("widget_count", "1")
+                ]);
+            Telemetry.Record(
+                "ftui.program.subscriptions",
+                TelemetryEventCategory.RuntimePhase,
+                _stepIndex,
+                [
+                    new TelemetryField("active_count", update.Subscriptions.Count.ToString(CultureInfo.InvariantCulture)),
+                    new TelemetryField("started", update.Subscriptions.Count.ToString(CultureInfo.InvariantCulture)),
+                    new TelemetryField("stopped", "0")
                 ]);
         }
 
@@ -152,6 +175,14 @@ public sealed class AppRuntime<TModel, TMessage>
                     new TelemetryField("bytes_written", result.Output.Length.ToString(CultureInfo.InvariantCulture)),
                     new TelemetryField("duration_us", ToMicroseconds(presentStopwatch.Elapsed).ToString(CultureInfo.InvariantCulture)),
                     new TelemetryField("runs_count", diff.Runs().Count.ToString(CultureInfo.InvariantCulture))
+                ]);
+            Telemetry.Record(
+                "ftui.render.flush",
+                TelemetryEventCategory.RenderPipeline,
+                _stepIndex,
+                [
+                    new TelemetryField("duration_us", ToMicroseconds(presentStopwatch.Elapsed).ToString(CultureInfo.InvariantCulture)),
+                    new TelemetryField("sync_mode", result.UsedSyncOutput ? "true" : "false")
                 ]);
             Telemetry.Record(
                 "ftui.render.frame",
@@ -221,6 +252,17 @@ public sealed class AppRuntime<TModel, TMessage>
                     1.0,
                     ["ignore"],
                     "Resize applied directly through the runtime backend."));
+            Telemetry.Record(
+                "ftui.reflow.apply",
+                TelemetryEventCategory.RenderPipeline,
+                _stepIndex,
+                [
+                    new TelemetryField("debounce_ms", "0"),
+                    new TelemetryField("height", effectiveSize.Height.ToString(CultureInfo.InvariantCulture)),
+                    new TelemetryField("latency_ms", "0"),
+                    new TelemetryField("rate_hz", "0"),
+                    new TelemetryField("width", effectiveSize.Width.ToString(CultureInfo.InvariantCulture))
+                ]);
         }
     }
 

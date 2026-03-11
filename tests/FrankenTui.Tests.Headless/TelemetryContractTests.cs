@@ -94,11 +94,16 @@ public sealed class TelemetryContractTests
                     })
             });
 
-        await simulator.DispatchAsync(new ReplayProgram(), 0, "emit");
+        var session = simulator.CreateSession(new ReplayProgram());
+        await session.DispatchAsync("emit");
 
+        Assert.Contains(simulator.Runtime.Telemetry.Events, static item => item.Name == "ftui.program.init");
         Assert.Contains(simulator.Runtime.Telemetry.Events, static item => item.Name == "ftui.program.update");
+        Assert.Contains(simulator.Runtime.Telemetry.Events, static item => item.Name == "ftui.program.view");
+        Assert.Contains(simulator.Runtime.Telemetry.Events, static item => item.Name == "ftui.program.subscriptions");
         Assert.Contains(simulator.Runtime.Telemetry.Events, static item => item.Name == "ftui.render.frame");
         Assert.Contains(simulator.Runtime.Telemetry.Events, static item => item.Name == "ftui.render.present");
+        Assert.Contains(simulator.Runtime.Telemetry.Events, static item => item.Name == "ftui.render.flush");
     }
 
     private sealed class ReplayProgram : IAppProgram<int, string>

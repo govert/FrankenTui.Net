@@ -90,7 +90,13 @@ if (writeArtifacts || writeManifest || runBenchmarks)
     if (writeManifest && openTuiContracts is not null && artifactPaths.TryGetValue("manifest", out var manifestPath))
     {
         var manifest = EvidenceManifest.FromJson(File.ReadAllText(manifestPath));
-        var gateReport = OpenTuiContractGate.Evaluate(runId, openTuiContracts, manifest);
+        var plannerReport = OpenTuiPlanner.Build(runId, openTuiContracts, manifest);
+        foreach (var entry in OpenTuiPlanner.WriteArtifacts(runId, plannerReport))
+        {
+            artifactPaths[entry.Key] = entry.Value;
+        }
+
+        var gateReport = OpenTuiContractGate.Evaluate(runId, openTuiContracts, manifest, plannerReport: plannerReport);
         foreach (var entry in OpenTuiContractGate.WriteArtifacts(runId, gateReport))
         {
             artifactPaths[entry.Key] = entry.Value;

@@ -114,8 +114,6 @@ static async Task RunInteractiveAsync(
         backend,
         new Size(width, height),
         Theme.DefaultTheme);
-    var inputEngine = new HostedParityInputEngine(
-        keybindingConfig: KeybindingConfig.FromEnvironment());
     var program = new ShowcaseInteractiveProgram(
         inlineMode,
         scenario,
@@ -123,6 +121,11 @@ static async Task RunInteractiveAsync(
         flowDirection,
         new Size(width, height));
     var app = new AppSession<ShowcaseDemoState, ShowcaseDemoMessage>(runtime, program);
+    var controller = new RuntimeInputController<ShowcaseDemoState, ShowcaseDemoMessage>(
+        static model => model.Session.CreateKeybindingState(),
+        static (_, input) => [new ShowcaseInputMessage(input)],
+        static (_, terminalEvent) => HostedParityInputEngine.Translate(terminalEvent),
+        keybindingConfig: KeybindingConfig.FromEnvironment());
     await runtime.ResizeAsync(new Size(width, height), cancellationToken);
     await app.RenderCurrentAsync(cancellationToken);
 
@@ -130,7 +133,7 @@ static async Task RunInteractiveAsync(
     {
         if (!await backend.PollEventAsync(TimeSpan.FromMilliseconds(20), cancellationToken))
         {
-            await ApplyOutcomeAsync(inputEngine.Tick(app.Model.Session, DateTimeOffset.UtcNow), app, cancellationToken);
+            await controller.TickAsync(app, DateTimeOffset.UtcNow, cancellationToken);
             continue;
         }
 
@@ -140,26 +143,6 @@ static async Task RunInteractiveAsync(
             continue;
         }
 
-        var outcome = inputEngine.Process(app.Model.Session, terminalEvent);
-        await ApplyOutcomeAsync(outcome, app, cancellationToken);
+        await controller.ProcessAsync(app, terminalEvent, cancellationToken);
     }
-}
-
-static async Task ApplyOutcomeAsync(
-    HostedParityInputOutcome outcome,
-    AppSession<ShowcaseDemoState, ShowcaseDemoMessage> app,
-    CancellationToken cancellationToken)
-{
-    if (!outcome.HasWork)
-    {
-        return;
-    }
-
-    if (outcome.ResizeToApply is { } size)
-    {
-        await app.Runtime.ResizeAsync(size, cancellationToken);
-    }
-
-    app.Enqueue(new ShowcaseOutcomeMessage(outcome));
-    await app.DrainAsync(cancellationToken: cancellationToken);
 }

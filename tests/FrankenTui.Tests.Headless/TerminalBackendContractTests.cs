@@ -3,6 +3,7 @@ using FrankenTui.Core;
 using FrankenTui.Render;
 using FrankenTui.Tty;
 using RenderBuffer = FrankenTui.Render.Buffer;
+using System.Text;
 
 namespace FrankenTui.Tests.Headless;
 
@@ -111,6 +112,54 @@ public sealed class TerminalBackendContractTests
         var sanitized = TerminalOutputSanitizer.Sanitize("safe\u001b]52;c;SGVsbG8=\u001b\\tail\u009dx\n");
 
         Assert.Equal("safetailx\n", sanitized);
+    }
+
+    [Fact]
+    public async Task ConcurrentInlineLogWritesRemainWhole()
+    {
+        var backend = new MemoryTerminalBackend(new Size(20, 8), TerminalCapabilities.Tmux());
+        await backend.InitializeAsync();
+        await backend.ConfigureSessionAsync(new TerminalSessionConfiguration
+        {
+            InlineMode = true
+        });
+        await backend.PresentAsync(BufferFromLines(20, ["UI", "Rows"]), BufferDiff.Full(20, 2));
+        backend.DrainOutput();
+
+        await Task.WhenAll(
+            Enumerable.Range(0, 12)
+                .Select(index => backend.WriteLogAsync($"<entry-{index}>\n").AsTask()));
+
+        var transcript = backend.DrainOutput();
+        for (var index = 0; index < 12; index++)
+        {
+            Assert.Contains($"<entry-{index}>", transcript, StringComparison.Ordinal);
+        }
+    }
+
+    [Fact]
+    public void TerminalOutputSanitizerFuzzNeverLeaksEscapesOrForbiddenControls()
+    {
+        var random = new Random(12345);
+        for (var iteration = 0; iteration < 128; iteration++)
+        {
+            var builder = new StringBuilder(64);
+            for (var index = 0; index < 64; index++)
+            {
+                builder.Append((char)random.Next(0, 256));
+            }
+
+            var sanitized = TerminalOutputSanitizer.Sanitize(builder.ToString());
+            foreach (var ch in sanitized)
+            {
+                Assert.NotEqual('\u001b', ch);
+                Assert.False(
+                    (char.IsControl(ch) && ch is not ('\t' or '\n' or '\r')) ||
+                    ch == '\u007f' ||
+                    ch is >= '\u0080' and <= '\u009f',
+                    $"Unexpected control char U+{(int)ch:X4} in sanitized output.");
+            }
+        }
     }
 
     private static RenderBuffer BufferFromLines(ushort width, string[] lines)

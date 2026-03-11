@@ -23,13 +23,15 @@ public sealed class OpenTuiMigrationContractTests
     {
         var contractSet = OpenTuiContractSet.LoadUpstreamReference();
         var manifest = CreateManifest(contractSet.Migration.SemanticContract.Clauses.Select(static clause => clause.ClauseId).ToArray());
+        var planner = OpenTuiPlanner.Build("gate-test", contractSet, manifest);
 
-        var report = OpenTuiContractGate.Evaluate("gate-test", contractSet, manifest);
+        var report = OpenTuiContractGate.Evaluate("gate-test", contractSet, manifest, plannerReport: planner);
 
         Assert.Equal("accept", report.Verdict);
         Assert.DoesNotContain(report.ClauseResults, static result => result.Status == "fail");
         Assert.Contains("load_contracts", report.StagesPassed);
         Assert.Contains("validate_manifest", report.StagesPassed);
+        Assert.Contains("planner_findings", report.StagesPassed);
     }
 
     [Fact]
@@ -37,12 +39,28 @@ public sealed class OpenTuiMigrationContractTests
     {
         var contractSet = OpenTuiContractSet.LoadUpstreamReference();
         var manifest = CreateManifest(["EO-001"]);
+        var planner = OpenTuiPlanner.Build("gate-fail", contractSet, manifest);
 
-        var report = OpenTuiContractGate.Evaluate("gate-fail", contractSet, manifest);
+        var report = OpenTuiContractGate.Evaluate("gate-fail", contractSet, manifest, plannerReport: planner);
 
         Assert.Equal("reject", report.Verdict);
         Assert.Contains("critical_clause_failure", report.RiskFlags);
         Assert.Contains(report.ClauseResults, static result => result.ClauseId == "ST-001" && result.Status == "fail");
+    }
+
+    [Fact]
+    public void OpenTuiPlannerProjectsPolicyRowsAndFindings()
+    {
+        var contractSet = OpenTuiContractSet.LoadUpstreamReference();
+        var manifest = CreateManifest(contractSet.Migration.SemanticContract.Clauses.Select(static clause => clause.ClauseId).ToArray());
+
+        var planner = OpenTuiPlanner.Build("planner-test", contractSet, manifest);
+
+        Assert.Equal(contractSet.Migration.TransformationPolicy.PolicyCells.Count, planner.PlannerRows.Count);
+        Assert.Equal(contractSet.Migration.TransformationPolicy.PolicyCells.Count, planner.CertificationRows.Count);
+        Assert.Contains(planner.ExecutionTrace, static item => item.StartsWith("planner_rows:", StringComparison.Ordinal));
+        Assert.Contains(planner.Findings, static finding => string.Equals(finding.Status, "ready", StringComparison.OrdinalIgnoreCase) ||
+                                                           string.Equals(finding.Status, "blocked", StringComparison.OrdinalIgnoreCase));
     }
 
     private static EvidenceManifest CreateManifest(IReadOnlyList<string> coveredClaims)

@@ -15,6 +15,19 @@ public sealed class AppSession<TModel, TMessage>
         Runtime = runtime ?? throw new ArgumentNullException(nameof(runtime));
         Program = program ?? throw new ArgumentNullException(nameof(program));
         Model = model is null ? program.Initialize() : model;
+
+        if (Runtime.Policy.EmitTelemetry)
+        {
+            Runtime.Telemetry.Record(
+                "ftui.program.init",
+                TelemetryEventCategory.RuntimePhase,
+                Runtime.CurrentStepIndex,
+                [
+                    TelemetryRedactor.TypeField("model_type", Model?.GetType() ?? typeof(TModel), Runtime.Telemetry.Config.Verbose),
+                    new TelemetryField("cmd_count", "0"),
+                    new TelemetryField("subscription_count", "0")
+                ]);
+        }
     }
 
     public AppRuntime<TModel, TMessage> Runtime { get; }

@@ -24,7 +24,7 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
 ## Current Basis
 
 - Current status basis commit:
-  working tree after telemetry install and OpenTUI contract-gate depth batch
+  working tree after runtime-input/proof and OpenTUI planner depth batch
 - Current upstream workspace basis:
   `7a91089366bd4644e086d5a422cb76b052e3de17`
 - Last full verification pass at status update time:
@@ -144,6 +144,16 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   artifacts from the managed upstream contract set. Current local verification
   is `100` headless tests, `5` web tests, and `7` PTY tests via `dotnet test
   FrankenTui.Net.sln --no-restore`, plus a successful doctor run with
+  `--write-artifacts --write-manifest --run-benchmarks`.
+- runtime-input-and-proof wave after `e8cb8c6`
+  Added a shared runtime input envelope/controller, rewired the showcase and
+  hosted runtime harness through that reusable path, widened telemetry event
+  coverage, added concurrent routed-log and sanitizer-fuzz proof, widened the
+  shared sample comparison suite with command-palette and log-search samples,
+  and added OpenTUI planner/certification projections that now feed doctor and
+  the local contract gate. Current local verification is `103` headless tests,
+  `5` web tests, and `7` PTY tests via `dotnet test FrankenTui.Net.sln
+  --no-restore`, plus a successful doctor run with
   `--write-artifacts --write-manifest --run-benchmarks`.
 
 ## Status
