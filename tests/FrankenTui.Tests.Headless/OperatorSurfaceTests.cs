@@ -32,6 +32,22 @@ public sealed class OperatorSurfaceTests
     }
 
     [Fact]
+    public void PaneWorkspaceSupportsUndoRedoAcrossTimeline()
+    {
+        var start = new DateTimeOffset(2026, 3, 12, 7, 0, 0, TimeSpan.Zero);
+        var state = PaneWorkspaceState.CreateDemo()
+            .Apply(new PaneWorkspaceAction(PaneWorkspaceActionKind.SelectNext, start, "test"))
+            .Apply(new PaneWorkspaceAction(PaneWorkspaceActionKind.GrowPrimary, start + TimeSpan.FromMilliseconds(16), "test"));
+
+        var undone = state.Apply(new PaneWorkspaceAction(PaneWorkspaceActionKind.Undo, start + TimeSpan.FromMilliseconds(32), "test"));
+        var redone = undone.Apply(new PaneWorkspaceAction(PaneWorkspaceActionKind.Redo, start + TimeSpan.FromMilliseconds(48), "test"));
+
+        Assert.Equal(500, undone.PrimaryRatioPermille);
+        Assert.Equal(550, redone.PrimaryRatioPermille);
+        Assert.Equal(state.SnapshotHash(), redone.SnapshotHash());
+    }
+
+    [Fact]
     public void CommandPaletteRanksDeterministically()
     {
         var entries = CommandPaletteRegistry.DefaultEntries();
@@ -41,6 +57,30 @@ public sealed class OperatorSurfaceTests
 
         var fuzzy = CommandPaletteSearch.Search(entries, "hud");
         Assert.Equal("Show Performance HUD", fuzzy[0].Entry.Title);
+    }
+
+    [Fact]
+    public void CommandPaletteExecutesSelectedCommandAndCloses()
+    {
+        var state = CommandPaletteController.Toggle(CommandPaletteState.Closed);
+        var entries = CommandPaletteRegistry.DefaultEntries();
+
+        var filtered = CommandPaletteController.Apply(
+            state,
+            new KeyTerminalEvent(new KeyGesture(TerminalKey.Character, TerminalModifiers.None, new Rune('G')), DateTimeOffset.UtcNow),
+            entries);
+        filtered = CommandPaletteController.Apply(
+            filtered.State,
+            new KeyTerminalEvent(new KeyGesture(TerminalKey.Character, TerminalModifiers.None, new Rune('o')), DateTimeOffset.UtcNow),
+            entries);
+        var executed = CommandPaletteController.Apply(
+            filtered.State,
+            new KeyTerminalEvent(new KeyGesture(TerminalKey.Enter, TerminalModifiers.None), DateTimeOffset.UtcNow),
+            entries);
+
+        Assert.NotNull(executed.Execution);
+        Assert.False(executed.State.IsOpen);
+        Assert.Equal("goto-dashboard", executed.Execution!.CommandId);
     }
 
     [Fact]
@@ -64,6 +104,20 @@ public sealed class OperatorSurfaceTests
     }
 
     [Fact]
+    public void LogSearchHighlightsAllMatchesAndRespectsLiteTier()
+    {
+        var highlighted = LogSearchEngine.Apply(
+            ["doctor doctor doctor"],
+            new LogSearchState("doctor", Tier: LogSearchTier.Full));
+        Assert.Equal("«doctor» «doctor» «doctor»", highlighted.Lines[0]);
+
+        var lite = LogSearchEngine.Apply(
+            Enumerable.Range(0, 600).Select(static index => $"line {index}").ToArray(),
+            new LogSearchState("line", RegexMode: true));
+        Assert.Equal(LogSearchTier.Lite, lite.Tier);
+    }
+
+    [Fact]
     public void MacroRecorderNormalizesReplayPlan()
     {
         var start = new DateTimeOffset(2026, 3, 11, 9, 10, 0, TimeSpan.Zero);
@@ -80,6 +134,24 @@ public sealed class OperatorSurfaceTests
         Assert.Equal(0, replay[0].ScheduledMs);
         Assert.Equal(48, replay[1].ScheduledMs);
         Assert.Contains("Go to dashboard", macro.Description);
+    }
+
+    [Fact]
+    public void MacroRecorderControllerTransitionsThroughRecordPlayAndTick()
+    {
+        var start = new DateTimeOffset(2026, 3, 11, 9, 20, 0, TimeSpan.Zero);
+        var state = MacroRecorderController.ToggleRecording(new MacroRecorderState(), start);
+        state = MacroRecorderController.Capture(
+            state,
+            TerminalEvent.Key(new KeyGesture(TerminalKey.Character, TerminalModifiers.None, new Rune('g')), start + TimeSpan.FromMilliseconds(20)));
+        state = MacroRecorderController.ToggleRecording(state, start + TimeSpan.FromMilliseconds(32));
+        state = MacroRecorderController.TogglePlay(state, start + TimeSpan.FromMilliseconds(48));
+
+        var tick = MacroRecorderController.Tick(state, start + TimeSpan.FromMilliseconds(80));
+
+        Assert.Single(tick.EmittedEvents);
+        Assert.Equal(MacroRecorderMode.Ready, tick.State.Mode);
+        Assert.False(tick.State.Playing);
     }
 
     [Fact]
@@ -101,5 +173,28 @@ public sealed class OperatorSurfaceTests
         Assert.Contains("Performance HUD", screen);
         Assert.Contains("Frame:", screen);
         Assert.Contains("Budget:", screen);
+    }
+
+    [Fact]
+    public void PerformanceHudCanRenderFromRuntimeStats()
+    {
+        var stats = new RuntimeFrameStats(
+            StepIndex: 4,
+            ChangedCells: 120,
+            RunCount: 6,
+            BytesEmitted: 2048,
+            FrameDurationMs: 11.8,
+            PresentDurationMs: 2.4,
+            DiffDurationMs: 0.8,
+            DirtyRows: 5,
+            DegradationLevel: "FULL",
+            SyncOutput: true,
+            Truncated: false);
+
+        var snapshot = PerformanceHudSnapshot.FromRuntime(stats, syncOutput: true, scrollRegion: true, hyperlinks: true);
+
+        Assert.Equal(11.8, snapshot.ElapsedMs);
+        Assert.Equal(120, snapshot.CellsChanged);
+        Assert.True(snapshot.SyncOutput);
     }
 }

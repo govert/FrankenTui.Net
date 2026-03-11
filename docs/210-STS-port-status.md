@@ -24,7 +24,7 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
 ## Current Basis
 
 - Current status basis commit:
-  working tree after runtime-input/proof and OpenTUI planner depth batch
+  working tree after final local contract-closure wave
 - Current upstream workspace basis:
   `7a91089366bd4644e086d5a422cb76b052e3de17`
 - Last full verification pass at status update time:
@@ -155,6 +155,25 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   `5` web tests, and `7` PTY tests via `dotnet test FrankenTui.Net.sln
   --no-restore`, plus a successful doctor run with
   `--write-artifacts --write-manifest --run-benchmarks`.
+- operator-runtime depth closure batch after `c41eef2`
+  Hosted extras/operator surfaces now carry a real command-palette execution
+  loop, live log-search tiering/highlighting, explicit macro
+  record/ready/play/loop state with timer-driven playback, and runtime-fed HUD
+  snapshots. The interactive showcase now feeds runtime frame stats back into
+  the extras surface rather than reconstructing those views from unrelated
+  session flags. Current local verification is `108` headless tests, `5` web
+  tests, and `7` PTY tests via `dotnet test FrankenTui.Net.sln --no-restore`.
+- final local contract-closure wave after `c41eef2`
+  The backend boundary is now explicitly split into lifecycle/output/event
+  facets, pane state and Mermaid state are persistent interactive hosted/demo
+  surfaces, Mermaid has a deterministic parse/render/diagnostic baseline,
+  telemetry has a tested OTLP bridge/export path and stronger redaction/macro
+  coverage, the shared comparison lane now includes pane/macro/Mermaid samples,
+  and Windows CI now refreshes doctor artifacts in addition to Linux. Current
+  local verification is `114` headless tests, `5` web tests, and `7` PTY tests
+  via `dotnet test FrankenTui.Net.sln --no-restore`, with the remaining
+  non-local blocker tracked in
+  `2026-03-12-windows-conpty-evidence-blocker.md`.
 
 ## Status
 
@@ -267,7 +286,7 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
 | --- | --- | --- |
 | `331-HST` | `completed` | Supported terminal matrix and host policy baseline are recorded and implemented. |
 | `332-HST` | `completed` | Unix/macOS/Linux host behavior has a working baseline through the console backend and PTY tests. |
-| `333-HST` | `completed` | Windows host contract baseline exists; native Windows evidence remains a documented gap from this workspace. |
+| `333-HST` | `completed` | Windows host contract baseline exists, Windows CI now refreshes doctor artifacts, and the only remaining non-local evidence blocker is tracked in `2026-03-12-windows-conpty-evidence-blocker.md`. |
 | `334-HST` | `completed` | PTY test-host support is implemented. |
 | `335-HST` | `completed` | Host validation status, remoting classification, known divergences, evidence sources, and capability override policy are maintained in code and in `335-HST-host-divergence-ledger.md`. |
 

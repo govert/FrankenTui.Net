@@ -66,6 +66,16 @@ public static class HostedParityRuntimeHarness
             cancellationToken).ConfigureAwait(false);
 
         var finalSession = session.Model;
+        if (runtime.Policy.EmitTelemetry &&
+            finalSession.Macro.Macro is { } macro)
+        {
+            runtime.Telemetry.RecordMacro(
+                finalSession.StepCount,
+                macro.Id,
+                macro.Events.Count,
+                finalSession.Macro.LastDriftMs);
+        }
+
         var finalSize = runtime.Size;
         var evidence = RenderHarness.CaptureHostedParity(
             name,

@@ -39,8 +39,13 @@ internal sealed class ShowcaseInteractiveProgram : IAppProgram<ShowcaseDemoState
                 model with
                 {
                     Viewport = input.Input.ResizeToApply ?? model.Viewport,
-                    Session = model.Session.Advance(input.Input),
+                    Session = model.Session.Advance(input.Input).WithRuntimeStats(input.RuntimeStats),
                     QuitRequested = model.QuitRequested || input.Input.QuitRequested
+                }),
+            ShowcaseTimerMessage timer => UpdateResult<ShowcaseDemoState, ShowcaseDemoMessage>.FromModel(
+                model with
+                {
+                    Session = model.Session.AdvanceTime(timer.Now).WithRuntimeStats(timer.RuntimeStats)
                 }),
             _ => UpdateResult<ShowcaseDemoState, ShowcaseDemoMessage>.FromModel(model)
         };
@@ -54,4 +59,6 @@ internal sealed record ShowcaseDemoState(HostedParitySession Session, Size Viewp
 
 internal abstract record ShowcaseDemoMessage;
 
-internal sealed record ShowcaseInputMessage(RuntimeInputEnvelope Input) : ShowcaseDemoMessage;
+internal sealed record ShowcaseInputMessage(RuntimeInputEnvelope Input, RuntimeFrameStats RuntimeStats) : ShowcaseDemoMessage;
+
+internal sealed record ShowcaseTimerMessage(DateTimeOffset Now, RuntimeFrameStats RuntimeStats) : ShowcaseDemoMessage;

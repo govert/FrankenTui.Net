@@ -184,7 +184,12 @@ public sealed record TelemetryConfig(
             ParentContext,
             Verbose);
 
-    public TelemetryInstallResult Install(TelemetryRegistry registry)
+    public ITelemetryExporter BuildExporter(HttpClient? httpClient = null) =>
+        !Enabled
+            ? new DisabledTelemetryExporter()
+            : new OtlpBridgeTelemetryExporter(this, httpClient);
+
+    public TelemetryInstallResult Install(TelemetryRegistry registry, HttpClient? httpClient = null)
     {
         ArgumentNullException.ThrowIfNull(registry);
 
@@ -194,7 +199,7 @@ public sealed record TelemetryConfig(
         }
 
         var layer = BuildLayer();
-        if (!registry.TryInstall(layer))
+        if (!registry.TryInstall(layer, BuildExporter(httpClient)))
         {
             return new TelemetryInstallResult(
                 TelemetryInstallStatus.SubscriberAlreadySet,
@@ -463,10 +468,12 @@ public sealed record TelemetryInstallResult(
 public sealed class TelemetryRegistry
 {
     public TelemetryLayerPlan? InstalledLayer { get; private set; }
+    public ITelemetryExporter? Exporter { get; private set; }
 
-    public bool TryInstall(TelemetryLayerPlan layer)
+    public bool TryInstall(TelemetryLayerPlan layer, ITelemetryExporter exporter)
     {
         ArgumentNullException.ThrowIfNull(layer);
+        ArgumentNullException.ThrowIfNull(exporter);
 
         if (InstalledLayer is not null)
         {
@@ -474,6 +481,28 @@ public sealed class TelemetryRegistry
         }
 
         InstalledLayer = layer;
+        Exporter = exporter;
         return true;
+    }
+
+    public Task<TelemetryExportReceipt> ExportAsync(
+        TelemetrySessionLog sessionLog,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(sessionLog);
+
+        if (Exporter is null || InstalledLayer is null)
+        {
+            return Task.FromResult(
+                new TelemetryExportReceipt(
+                    Success: false,
+                    Protocol: "uninstalled",
+                    Endpoint: string.Empty,
+                    EventCount: sessionLog.Events.Count,
+                    StatusCode: null,
+                    Error: "No telemetry exporter is installed."));
+        }
+
+        return Exporter.ExportAsync(sessionLog, cancellationToken);
     }
 }

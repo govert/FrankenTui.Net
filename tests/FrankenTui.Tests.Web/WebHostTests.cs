@@ -55,6 +55,6 @@ public sealed class WebHostTests
 
         Assert.Contains("data-scenario=\"extras\"", page.Html);
         Assert.Contains("Pane Workspace", page.Text);
-        Assert.Contains("Command Palette", page.Text);
+        Assert.Contains("Extras", page.Text);
     }
 }

@@ -40,6 +40,29 @@ public sealed record PerformanceHudSnapshot(
             !session.InlineMode,
             true,
             true);
+
+    public static PerformanceHudSnapshot FromRuntime(
+        RuntimeFrameStats stats,
+        bool syncOutput,
+        bool scrollRegion,
+        bool hyperlinks,
+        PerformanceHudLevel level = PerformanceHudLevel.Full)
+    {
+        ArgumentNullException.ThrowIfNull(stats);
+
+        return new PerformanceHudSnapshot(
+            level,
+            TotalMs: 16.0,
+            ElapsedMs: Math.Round(stats.FrameDurationMs, 2),
+            CellsChanged: stats.ChangedCells,
+            RunCount: stats.RunCount,
+            BytesEmitted: stats.BytesEmitted,
+            DegradationLevel: stats.DegradationLevel,
+            DroppedFrames: Math.Max((int)Math.Ceiling(stats.FrameDurationMs / 16.0) - 1, 0),
+            SyncOutput: syncOutput,
+            ScrollRegion: scrollRegion,
+            Hyperlinks: hyperlinks);
+    }
 }
 
 public sealed class PerformanceHudWidget : IWidget

@@ -123,8 +123,8 @@ static async Task RunInteractiveAsync(
     var app = new AppSession<ShowcaseDemoState, ShowcaseDemoMessage>(runtime, program);
     var controller = new RuntimeInputController<ShowcaseDemoState, ShowcaseDemoMessage>(
         static model => model.Session.CreateKeybindingState(),
-        static (_, input) => [new ShowcaseInputMessage(input)],
-        static (_, terminalEvent) => HostedParityInputEngine.Translate(terminalEvent),
+        (_, input) => [new ShowcaseInputMessage(input, runtime.FrameStats)],
+        static (model, terminalEvent) => HostedParityInputEngine.Translate(model.Session, terminalEvent),
         keybindingConfig: KeybindingConfig.FromEnvironment());
     await runtime.ResizeAsync(new Size(width, height), cancellationToken);
     await app.RenderCurrentAsync(cancellationToken);
@@ -134,6 +134,11 @@ static async Task RunInteractiveAsync(
         if (!await backend.PollEventAsync(TimeSpan.FromMilliseconds(20), cancellationToken))
         {
             await controller.TickAsync(app, DateTimeOffset.UtcNow, cancellationToken);
+            if (app.Model.Session.Macro.Playing || app.Model.Session.HudFrozen)
+            {
+                await app.DispatchAsync(new ShowcaseTimerMessage(DateTimeOffset.UtcNow, runtime.FrameStats), cancellationToken);
+            }
+
             continue;
         }
 
@@ -144,5 +149,9 @@ static async Task RunInteractiveAsync(
         }
 
         await controller.ProcessAsync(app, terminalEvent, cancellationToken);
+        if (app.Model.Session.Macro.Playing)
+        {
+            await app.DispatchAsync(new ShowcaseTimerMessage(DateTimeOffset.UtcNow, runtime.FrameStats), cancellationToken);
+        }
     }
 }

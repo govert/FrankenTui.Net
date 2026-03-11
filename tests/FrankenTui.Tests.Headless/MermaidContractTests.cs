@@ -33,7 +33,11 @@ public sealed class MermaidContractTests
     {
         var session = HostedParitySession.Create(false, HostedParityScenarioId.Extras) with
         {
-            SelectedMetricIndex = 1
+            SelectedModuleIndex = 7,
+            Mermaid = MermaidShowcasePreferences.Default with
+            {
+                SelectedSampleIndex = 1
+            }
         };
         var state = MermaidShowcaseSurface.BuildState(session, 72, 18);
         var buffer = new RenderBuffer(72, 18);
@@ -45,7 +49,46 @@ public sealed class MermaidContractTests
         Assert.Contains("Mermaid Showcase", screen);
         Assert.Contains(state.Sample.Name, screen);
         Assert.Contains("Viewport", screen);
+        Assert.NotEmpty(state.Viewport.Rows);
         Assert.Contains(state.StatusLog, static entry => entry.Event == "render_start");
         Assert.Contains(state.StatusLog, static entry => entry.Event == "render_done");
+    }
+
+    [Fact]
+    public void MermaidShowcaseRespondsToInteractivePreferences()
+    {
+        var session = HostedParitySession.Create(false, HostedParityScenarioId.Extras) with
+        {
+            SelectedModuleIndex = 7,
+            Mermaid = MermaidShowcasePreferences.Default with
+            {
+                SelectedSampleIndex = 2,
+                GlyphMode = MermaidGlyphMode.Ascii,
+                LayoutMode = MermaidLayoutMode.Dense,
+                Fidelity = MermaidTier.Compact,
+                StylesEnabled = false,
+                ControlsVisible = false,
+                MetricsVisible = false
+            }
+        };
+
+        var state = MermaidShowcaseSurface.BuildState(
+            session,
+            60,
+            16,
+            new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["FTUI_MERMAID_ENABLE_LINKS"] = "false",
+                ["FTUI_MERMAID_LINK_MODE"] = "inline"
+            });
+
+        Assert.Equal("State-01", state.Sample.Name);
+        Assert.Equal(MermaidGlyphMode.Ascii, state.GlyphMode);
+        Assert.Equal(MermaidLayoutMode.Dense, state.LayoutMode);
+        Assert.Equal(MermaidTier.Compact, state.Fidelity);
+        Assert.False(state.ControlsVisible);
+        Assert.False(state.MetricsVisible);
+        Assert.NotEmpty(state.ValidationErrors);
+        Assert.Contains("->", string.Join('\n', state.Viewport.Rows));
     }
 }

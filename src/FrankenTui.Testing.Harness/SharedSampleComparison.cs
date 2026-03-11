@@ -4,6 +4,7 @@ using System.Text.Json;
 using FrankenTui.Backend;
 using FrankenTui.Core;
 using FrankenTui.Extras;
+using FrankenTui.Layout;
 using FrankenTui.Render;
 using FrankenTui.Runtime;
 using FrankenTui.Widgets;
@@ -46,7 +47,10 @@ public static class SharedSampleComparison
                 BuildWideOverwriteSample(BuildWideOverwriteFrame),
                 await BuildInlineOverlaySampleAsync(cancellationToken).ConfigureAwait(false),
                 BuildCommandPaletteSample(),
-                BuildLogSearchSample()
+                BuildLogSearchSample(),
+                BuildPaneWorkspaceSample(),
+                BuildMacroReplaySample(),
+                BuildMermaidShowcaseSample()
             ]);
 
     private static async Task<SharedSampleCapture> BuildUpstreamCaptureAsync(CancellationToken cancellationToken)
@@ -229,6 +233,84 @@ public static class SharedSampleComparison
             "log_search",
             [
                 SharedSampleFrame.Create("doctor_context", 48, (ushort)result.Lines.Count, result.Lines)
+            ]);
+    }
+
+    private static SharedSampleCase BuildPaneWorkspaceSample()
+    {
+        var start = new DateTimeOffset(2026, 3, 12, 7, 15, 0, TimeSpan.Zero);
+        var workspace = PaneWorkspaceState.CreateDemo()
+            .Apply(new PaneWorkspaceAction(PaneWorkspaceActionKind.SelectNext, start, "comparison"))
+            .Apply(new PaneWorkspaceAction(PaneWorkspaceActionKind.CycleMode, start + TimeSpan.FromMilliseconds(16), "comparison"))
+            .Apply(new PaneWorkspaceAction(PaneWorkspaceActionKind.GrowPrimary, start + TimeSpan.FromMilliseconds(32), "comparison"));
+
+        return SharedSampleCase.Create(
+            "pane_workspace",
+            [
+                SharedSampleFrame.Create(
+                    "workspace_state",
+                    40,
+                    4,
+                    [
+                        $"selected={workspace.SelectedPaneId}",
+                        $"mode={workspace.Mode.ToString().ToLowerInvariant()}",
+                        $"ratio={workspace.PrimaryRatioPermille}",
+                        $"timeline={workspace.TimelineCursor}"
+                    ])
+            ]);
+    }
+
+    private static SharedSampleCase BuildMacroReplaySample()
+    {
+        var start = new DateTimeOffset(2026, 3, 12, 7, 30, 0, TimeSpan.Zero);
+        var macro = MacroRecorder.FromEvents(
+            "macro-compare",
+            [
+                TerminalEvent.Key(new KeyGesture(TerminalKey.Character, TerminalModifiers.None, new Rune('g')), start),
+                TerminalEvent.Key(new KeyGesture(TerminalKey.Character, TerminalModifiers.None, new Rune('d')), start + TimeSpan.FromMilliseconds(52)),
+                TerminalEvent.Key(new KeyGesture(TerminalKey.Character, TerminalModifiers.None, new Rune('r')), start + TimeSpan.FromMilliseconds(114))
+            ],
+            "Shared comparison macro");
+        var replay = MacroRecorder.ReplayPlan(macro, tickMs: 16);
+
+        return SharedSampleCase.Create(
+            "macro_replay",
+            [
+                SharedSampleFrame.Create(
+                    "macro_plan",
+                    40,
+                    4,
+                    [
+                        $"id={macro.Id}",
+                        $"events={macro.Events.Count}",
+                        $"plan={string.Join(",", replay.Select(static item => item.ScheduledMs))}",
+                        $"state=ready"
+                    ])
+            ]);
+    }
+
+    private static SharedSampleCase BuildMermaidShowcaseSample()
+    {
+        var state = MermaidShowcaseSurface.BuildState(
+            HostedParitySession.Create(false, HostedParityScenarioId.Extras) with
+            {
+                SelectedModuleIndex = 7,
+                Mermaid = MermaidShowcasePreferences.Default with
+                {
+                    SelectedSampleIndex = 0,
+                    GlyphMode = MermaidGlyphMode.Ascii,
+                    Fidelity = MermaidTier.Compact,
+                    StylesEnabled = false
+                }
+            },
+            48,
+            12);
+
+        var rows = state.Viewport.Rows.Take(4).ToArray();
+        return SharedSampleCase.Create(
+            "mermaid_showcase",
+            [
+                SharedSampleFrame.Create("flow_preview", 48, (ushort)rows.Length, rows)
             ]);
     }
 
@@ -472,7 +554,7 @@ fn main() {
     let doc = json!({
         "implementation": "FrankenTUI upstream",
         "basis_commit": "{{UpstreamReferencePaths.BasisCommit}}",
-        "samples": [counter_flow(), unicode_cells(), wide_overwrite(), inline_overlay(), command_palette(), log_search()],
+        "samples": [counter_flow(), unicode_cells(), wide_overwrite(), inline_overlay(), command_palette(), log_search(), pane_workspace(), macro_replay(), mermaid_showcase()],
     });
 
     println!("{}", serde_json::to_string_pretty(&doc).expect("json"));
@@ -504,6 +586,57 @@ fn log_search() -> serde_json::Value {
             "rows": [
                 "08:00:01 info  «doctor» replay refreshed",
                 "08:00:02 warn  pane snapshot drift detected"
+            ],
+        }],
+    })
+}
+
+fn pane_workspace() -> serde_json::Value {
+    json!({
+        "name": "pane_workspace",
+        "frames": [{
+            "label": "workspace_state",
+            "width": 40,
+            "height": 4,
+            "rows": [
+                "selected=logs",
+                "mode=monitor",
+                "ratio=550",
+                "timeline=3"
+            ],
+        }],
+    })
+}
+
+fn macro_replay() -> serde_json::Value {
+    json!({
+        "name": "macro_replay",
+        "frames": [{
+            "label": "macro_plan",
+            "width": 40,
+            "height": 4,
+            "rows": [
+                "id=macro-compare",
+                "events=3",
+                "plan=0,48,112",
+                "state=ready"
+            ],
+        }],
+    })
+}
+
+fn mermaid_showcase() -> serde_json::Value {
+    json!({
+        "name": "mermaid_showcase",
+        "frames": [{
+            "label": "flow_preview",
+            "width": 48,
+            "height": 4,
+            "rows": [
+                "Plan --> Audit",
+                "Audit --> Port",
+                "Port --> Test",
+                "Test --> Ship"
             ],
         }],
     })

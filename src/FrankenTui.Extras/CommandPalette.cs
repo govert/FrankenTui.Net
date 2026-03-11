@@ -28,6 +28,21 @@ public sealed record CommandPaletteSearchResult(
     double Score,
     IReadOnlyList<int> MatchPositions);
 
+public sealed record CommandPaletteState(
+    bool IsOpen = false,
+    string Query = "",
+    int SelectedIndex = 0,
+    bool PreviewFocused = false,
+    string Status = "Type to search...",
+    string? LastExecutedCommandId = null)
+{
+    public static CommandPaletteState Closed { get; } = new();
+}
+
+public sealed record CommandPaletteExecution(
+    string CommandId,
+    string Status);
+
 public static class CommandPaletteRegistry
 {
     public static IReadOnlyList<CommandPaletteEntry> DefaultEntries() =>
@@ -95,13 +110,16 @@ public static class CommandPaletteSearch
         if (contiguous >= 0 || tagMatch)
         {
             var baseScore = contiguous >= 0 ? 0.7 : 0.55;
-            var score = baseScore + (tagMatch ? 0.15 : 0);
+            var score = baseScore
+                        + (tagMatch ? 0.15 : 0)
+                        + PositionBonus(contiguous, title.Length)
+                        + WordBoundaryBonus(title, contiguous);
             return new CommandPaletteSearchResult(entry, score, contiguous >= 0 ? MatchPositions(title, query) : []);
         }
 
         if (TryFuzzyMatch(title, query, out var positions, out var gaps))
         {
-            var score = 0.6 - gaps * 0.02;
+            var score = 0.6 - gaps * 0.02 + PositionBonus(positions[0], title.Length);
             return new CommandPaletteSearchResult(entry, score, positions);
         }
 
@@ -154,6 +172,166 @@ public static class CommandPaletteSearch
 
         positions = matchPositions;
         return true;
+    }
+
+    private static double PositionBonus(int contiguousIndex, int titleLength)
+    {
+        if (contiguousIndex < 0 || titleLength <= 0)
+        {
+            return 0;
+        }
+
+        return Math.Max(0.05 - contiguousIndex / (double)Math.Max(titleLength, 1) * 0.05, 0);
+    }
+
+    private static double WordBoundaryBonus(string title, int contiguousIndex)
+    {
+        if (contiguousIndex <= 0 || contiguousIndex > title.Length - 1)
+        {
+            return contiguousIndex == 0 ? 0.1 : 0;
+        }
+
+        return char.IsWhiteSpace(title[contiguousIndex - 1]) ? 0.1 : 0;
+    }
+}
+
+public static class CommandPaletteController
+{
+    public static IReadOnlyList<CommandPaletteSearchResult> Results(CommandPaletteState state, IReadOnlyList<CommandPaletteEntry> entries)
+    {
+        ArgumentNullException.ThrowIfNull(state);
+        ArgumentNullException.ThrowIfNull(entries);
+
+        return CommandPaletteSearch.Search(entries, state.Query);
+    }
+
+    public static CommandPaletteState Toggle(CommandPaletteState state) =>
+        state.IsOpen
+            ? CommandPaletteState.Closed with { LastExecutedCommandId = state.LastExecutedCommandId }
+            : state with
+            {
+                IsOpen = true,
+                Query = string.Empty,
+                SelectedIndex = 0,
+                PreviewFocused = false,
+                Status = "Type to search..."
+            };
+
+    public static CommandPaletteState Close(CommandPaletteState state, string status = "Palette closed.") =>
+        state with
+        {
+            IsOpen = false,
+            Query = string.Empty,
+            SelectedIndex = 0,
+            PreviewFocused = false,
+            Status = status
+        };
+
+    public static (CommandPaletteState State, CommandPaletteExecution? Execution) Apply(
+        CommandPaletteState state,
+        KeyTerminalEvent keyEvent,
+        IReadOnlyList<CommandPaletteEntry> entries)
+    {
+        ArgumentNullException.ThrowIfNull(state);
+        ArgumentNullException.ThrowIfNull(keyEvent);
+        ArgumentNullException.ThrowIfNull(entries);
+
+        var results = Results(state, entries);
+        var selectedIndex = results.Count == 0
+            ? -1
+            : Math.Clamp(state.SelectedIndex, 0, results.Count - 1);
+        var gesture = keyEvent.Gesture;
+        if (gesture.Key == TerminalKey.Escape && gesture.Modifiers == TerminalModifiers.None)
+        {
+            if (!string.IsNullOrEmpty(state.Query))
+            {
+                return (state with { Query = string.Empty, SelectedIndex = 0, Status = "Query cleared." }, null);
+            }
+
+            return (Close(state), null);
+        }
+
+        if (gesture.Key == TerminalKey.Enter && gesture.Modifiers == TerminalModifiers.None)
+        {
+            if (selectedIndex < 0 || selectedIndex >= results.Count)
+            {
+                return (state with { Status = "No command selected." }, null);
+            }
+
+            var selected = results[selectedIndex].Entry;
+            return (
+                Close(state with
+                {
+                    LastExecutedCommandId = selected.Id,
+                    Status = $"Executed {selected.Title}."
+                }, $"Executed {selected.Title}."),
+                new CommandPaletteExecution(selected.Id, $"Executed {selected.Title}."));
+        }
+
+        if (gesture.Key == TerminalKey.Tab && gesture.Modifiers == TerminalModifiers.None)
+        {
+            return (state with { PreviewFocused = !state.PreviewFocused }, null);
+        }
+
+        if (gesture.Key == TerminalKey.Up && gesture.Modifiers == TerminalModifiers.None)
+        {
+            return (state with { SelectedIndex = Move(selectedIndex, results.Count, -1) }, null);
+        }
+
+        if (gesture.Key == TerminalKey.Down && gesture.Modifiers == TerminalModifiers.None)
+        {
+            return (state with { SelectedIndex = Move(selectedIndex, results.Count, 1) }, null);
+        }
+
+        if (gesture.Key == TerminalKey.PageUp && gesture.Modifiers == TerminalModifiers.None)
+        {
+            return (state with { SelectedIndex = Move(selectedIndex, results.Count, -10) }, null);
+        }
+
+        if (gesture.Key == TerminalKey.PageDown && gesture.Modifiers == TerminalModifiers.None)
+        {
+            return (state with { SelectedIndex = Move(selectedIndex, results.Count, 10) }, null);
+        }
+
+        if (gesture.Key == TerminalKey.Home && gesture.Modifiers == TerminalModifiers.None)
+        {
+            return (state with { SelectedIndex = 0 }, null);
+        }
+
+        if (gesture.Key == TerminalKey.End && gesture.Modifiers == TerminalModifiers.None)
+        {
+            return (state with { SelectedIndex = Math.Max(results.Count - 1, 0) }, null);
+        }
+
+        if (gesture.Key == TerminalKey.Backspace && gesture.Modifiers == TerminalModifiers.None)
+        {
+            var query = state.Query.Length == 0 ? string.Empty : state.Query[..^1];
+            return (state with { Query = query, SelectedIndex = 0 }, null);
+        }
+
+        if (gesture.IsCharacter && gesture.Character is { } rune && gesture.Modifiers == TerminalModifiers.None)
+        {
+            var query = state.Query;
+            if (rune.Value == '\u0001')
+            {
+                return (state with { SelectedIndex = 0 }, null);
+            }
+
+            query += rune.ToString();
+            return (state with { Query = query, SelectedIndex = 0 }, null);
+        }
+
+        return (state, null);
+    }
+
+    private static int Move(int index, int count, int delta)
+    {
+        if (count <= 0)
+        {
+            return 0;
+        }
+
+        return Math.Clamp((index < 0 ? 0 : index) + delta, 0, count - 1);
     }
 }
 

@@ -263,6 +263,9 @@ public sealed record MermaidStatusLogEntry(
 public sealed record MermaidShowcaseState(
     MermaidConfig Config,
     MermaidSample Sample,
+    MermaidDiagram Diagram,
+    MermaidViewport Viewport,
+    MermaidShowcasePreferences Preferences,
     MermaidLayoutMode LayoutMode,
     MermaidTier Fidelity,
     MermaidGlyphMode GlyphMode,
@@ -272,7 +275,8 @@ public sealed record MermaidShowcaseState(
     bool ControlsVisible,
     MermaidRenderSummary Summary,
     IReadOnlyList<MermaidStatusLogEntry> StatusLog,
-    IReadOnlyList<MermaidConfigError> ValidationErrors);
+    IReadOnlyList<MermaidConfigError> ValidationErrors,
+    IReadOnlyList<MermaidDiagnostic> Diagnostics);
 
 public static class MermaidShowcaseSurface
 {
@@ -394,27 +398,62 @@ public static class MermaidShowcaseSurface
         ArgumentNullException.ThrowIfNull(session);
 
         var config = MermaidConfig.FromEnvironment(environment);
-        var sample = Samples[Math.Abs(session.SelectedMetricIndex) % Samples.Count];
-        var layoutMode = session.OverlayVisible ? MermaidLayoutMode.Dense : session.ModalOpen ? MermaidLayoutMode.Spacious : MermaidLayoutMode.Auto;
-        var fidelity = config.TierOverride == MermaidTier.Auto
+        var preferences = session.Mermaid with
+        {
+            LayoutMode = session.Mermaid.LayoutMode == MermaidLayoutMode.Auto && session.OverlayVisible
+                ? MermaidLayoutMode.Dense
+                : session.Mermaid.LayoutMode == MermaidLayoutMode.Auto && session.ModalOpen
+                    ? MermaidLayoutMode.Spacious
+                    : session.Mermaid.LayoutMode,
+            Fidelity = session.Mermaid.Fidelity == MermaidTier.Auto && config.TierOverride != MermaidTier.Auto
+                ? config.TierOverride
+                : session.Mermaid.Fidelity,
+            GlyphMode = session.Mermaid.GlyphMode == MermaidGlyphMode.Unicode && config.GlyphMode == MermaidGlyphMode.Ascii
+                ? MermaidGlyphMode.Ascii
+                : session.Mermaid.GlyphMode,
+            WrapMode = session.Mermaid.WrapMode == MermaidWrapMode.WordChar ? config.WrapMode : session.Mermaid.WrapMode,
+            StylesEnabled = session.Mermaid.StylesEnabled && config.EnableStyles
+        };
+
+        var sample = Samples[Math.Abs(preferences.SelectedSampleIndex) % Samples.Count];
+        var diagram = MermaidEngine.Parse(sample, config with
+        {
+            EnableStyles = preferences.StylesEnabled
+        });
+        var viewport = MermaidEngine.Render(
+            diagram,
+            config with
+            {
+                EnableStyles = preferences.StylesEnabled
+            },
+            preferences,
+            width,
+            height);
+        var layoutMode = preferences.LayoutMode;
+        var fidelity = preferences.Fidelity == MermaidTier.Auto
             ? sample.NodeCount > 6 ? MermaidTier.Normal : MermaidTier.Rich
-            : config.TierOverride;
-        var glyphMode = config.GlyphMode;
-        var summary = BuildSummary(sample, config, layoutMode, fidelity, width, height);
-        var statusLog = BuildStatusLog(sample, session, layoutMode, fidelity, width, height, config, summary);
+            : preferences.Fidelity;
+        var glyphMode = preferences.GlyphMode;
+        var summary = BuildSummary(sample, diagram, viewport, config, layoutMode, fidelity, width, height);
+        var statusLog = BuildStatusLog(sample, session, layoutMode, fidelity, width, height, config, diagram, viewport, summary);
+        var validation = config.Validate();
         return new MermaidShowcaseState(
             config,
             sample,
+            diagram,
+            viewport,
+            preferences,
             layoutMode,
             fidelity,
             glyphMode,
-            config.WrapMode,
-            config.EnableStyles,
-            MetricsVisible: true,
-            ControlsVisible: true,
+            preferences.WrapMode,
+            preferences.StylesEnabled,
+            preferences.MetricsVisible,
+            preferences.ControlsVisible,
             summary,
             statusLog,
-            config.Validate());
+            validation,
+            viewport.Diagnostics);
     }
 
     public static MermaidConfigSummary CreateSummary(IReadOnlyDictionary<string, string?>? environment = null) =>
@@ -434,13 +473,13 @@ public static class MermaidShowcaseSurface
                     [
                         (LayoutConstraint.Percentage(24), new PanelWidget
                         {
-                            Title = "Library",
-                            Child = new ListWidget
-                            {
-                                Items = Samples.Select(static sample => $"{sample.Name} [{sample.Category}]").ToArray(),
-                                SelectedIndex = Array.FindIndex(Samples.ToArray(), sample => string.Equals(sample.Id, state.Sample.Id, StringComparison.Ordinal))
-                            }
-                        }),
+                                Title = "Library",
+                                Child = new ListWidget
+                                {
+                                    Items = Samples.Select(static sample => $"{sample.Name} [{sample.Category}]").ToArray(),
+                                    SelectedIndex = Array.FindIndex(Samples.ToArray(), sample => string.Equals(sample.Id, state.Sample.Id, StringComparison.Ordinal))
+                                }
+                            }),
                         (LayoutConstraint.Percentage(46), new PanelWidget
                         {
                             Title = "Viewport",
@@ -449,12 +488,12 @@ public static class MermaidShowcaseSurface
                         (LayoutConstraint.Fill(), new StackWidget(
                             LayoutDirection.Vertical,
                             [
-                                (LayoutConstraint.Fixed(7), new PanelWidget
+                                (LayoutConstraint.Fixed((ushort)(state.ControlsVisible ? 7 : 3)), new PanelWidget
                                 {
                                     Title = "Controls",
                                     Child = new ParagraphWidget(BuildControls(state))
                                 }),
-                                (LayoutConstraint.Fixed(7), new PanelWidget
+                                (LayoutConstraint.Fixed((ushort)(state.MetricsVisible ? 7 : 3)), new PanelWidget
                                 {
                                     Title = "Metrics",
                                     Child = new ParagraphWidget(BuildMetricsText(state))
@@ -478,7 +517,8 @@ public static class MermaidShowcaseSurface
             new HostedParityMetric("MermaidTier", state.Fidelity.ToString().ToLowerInvariant()),
             new HostedParityMetric("MermaidGlyph", state.GlyphMode.ToString().ToLowerInvariant()),
             new HostedParityMetric("MermaidNodes", state.Sample.NodeCount.ToString(System.Globalization.CultureInfo.InvariantCulture)),
-            new HostedParityMetric("MermaidStatus", state.Summary.Status, state.ValidationErrors.Count == 0)
+            new HostedParityMetric("MermaidEdges", state.Diagram.Edges.Count.ToString(System.Globalization.CultureInfo.InvariantCulture)),
+            new HostedParityMetric("MermaidStatus", state.Summary.Status, state.ValidationErrors.Count == 0 && state.Diagnostics.All(static item => item.Severity is not MermaidDiagnosticSeverity.Error))
         ];
     }
 
@@ -486,19 +526,26 @@ public static class MermaidShowcaseSurface
 
     private static MermaidRenderSummary BuildSummary(
         MermaidSample sample,
+        MermaidDiagram diagram,
+        MermaidViewport viewport,
         MermaidConfig config,
         MermaidLayoutMode layoutMode,
         MermaidTier fidelity,
         ushort width,
         ushort height)
     {
-        var parseMs = Math.Round(sample.Source.Length / 32.0, 2);
-        var layoutMs = Math.Round(Math.Min(config.LayoutIterationBudget, sample.NodeCount * sample.EdgeCount) / 18.0, 2);
-        var renderMs = Math.Round((width + height + sample.EdgeCount) / 40.0, 2);
-        var iterations = Math.Min(config.LayoutIterationBudget, Math.Max(sample.NodeCount * 4, 1));
-        var objective = Math.Round(sample.EdgeCount / 2.5 + (layoutMode == MermaidLayoutMode.Dense ? 1.2 : layoutMode == MermaidLayoutMode.Spacious ? 0.8 : 1.0), 2);
-        var violations = config.Validate().Count;
-        var status = violations == 0 && config.Enabled ? "ok" : violations > 0 ? "err" : "warn";
+        var parseMs = Math.Round(sample.Source.Length / 28.0 + diagram.Diagnostics.Count * 0.1, 2);
+        var layoutMs = Math.Round(Math.Min(config.LayoutIterationBudget, Math.Max(diagram.Nodes.Count * Math.Max(diagram.Edges.Count, 1), 1)) / 18.0, 2);
+        var renderMs = Math.Round((width + height + viewport.Rows.Sum(static row => row.Length)) / 64.0, 2);
+        var iterations = Math.Min(config.LayoutIterationBudget, Math.Max(diagram.Nodes.Count * 4, 1));
+        var objective = Math.Round(
+            diagram.Edges.Count / 2.5 +
+            (layoutMode == MermaidLayoutMode.Dense ? 1.4 : layoutMode == MermaidLayoutMode.Spacious ? 0.8 : 1.0) +
+            (fidelity == MermaidTier.Compact ? 0.2 : fidelity == MermaidTier.Rich ? 0.5 : 0.35),
+            2);
+        var violations = config.Validate().Count + diagram.Diagnostics.Count(static item => item.Severity == MermaidDiagnosticSeverity.Error);
+        var warnings = diagram.Diagnostics.Count(static item => item.Severity == MermaidDiagnosticSeverity.Warn);
+        var status = violations == 0 && warnings == 0 && config.Enabled ? "ok" : violations > 0 ? "err" : "warn";
         return new MermaidRenderSummary(
             parseMs,
             layoutMs,
@@ -518,6 +565,8 @@ public static class MermaidShowcaseSurface
         ushort width,
         ushort height,
         MermaidConfig config,
+        MermaidDiagram diagram,
+        MermaidViewport viewport,
         MermaidRenderSummary summary)
     {
         var entries = new List<MermaidStatusLogEntry>
@@ -543,51 +592,70 @@ public static class MermaidShowcaseSurface
                 fidelity.ToString().ToLowerInvariant(),
                 "render_done",
                 summary.Status == "ok" ? "ok" : "warn",
-                $"Rendered {sample.NodeCount} nodes / {sample.EdgeCount} edges.")
+                $"Rendered {diagram.Nodes.Count} nodes / {diagram.Edges.Count} edges.")
         };
+
+        if (!summary.Status.Equals("ok", StringComparison.Ordinal))
+        {
+            entries.Add(new MermaidStatusLogEntry(
+                "mermaid-statuslog-v1",
+                (ulong)(session.StepCount * 100 + 24),
+                sample.Name,
+                session.InlineMode ? "inline" : "altscreen",
+                $"{width}x{height}",
+                layoutMode.ToString().ToLowerInvariant(),
+                fidelity.ToString().ToLowerInvariant(),
+                "fallback_used",
+                summary.Status == "err" ? "error" : "warn",
+                $"Fidelity {summary.FallbackTier}; diagnostics={viewport.Diagnostics.Count}."));
+        }
 
         if (!config.EnableStyles)
         {
-            entries.Add(
-                new MermaidStatusLogEntry(
-                    "mermaid-statuslog-v1",
-                    (ulong)(session.StepCount * 100 + 24),
-                    sample.Name,
-                    session.InlineMode ? "inline" : "altscreen",
-                    $"{width}x{height}",
-                    layoutMode.ToString().ToLowerInvariant(),
-                    fidelity.ToString().ToLowerInvariant(),
-                    "fallback_used",
-                    "warn",
-                    "Styles disabled; rendering with structural preview only."));
+            entries.Add(new MermaidStatusLogEntry(
+                "mermaid-statuslog-v1",
+                (ulong)(session.StepCount * 100 + 28),
+                sample.Name,
+                session.InlineMode ? "inline" : "altscreen",
+                $"{width}x{height}",
+                layoutMode.ToString().ToLowerInvariant(),
+                fidelity.ToString().ToLowerInvariant(),
+                "layout_warning",
+                "warn",
+                "Styles disabled; structural rendering only."));
         }
 
-        if (config.Validate().Count > 0)
+        var nextOffset = 32UL;
+        foreach (var issue in config.Validate()
+                     .Select(error => new MermaidDiagnostic("mermaid/config/error", MermaidDiagnosticSeverity.Error, error.Message))
+                     .Concat(diagram.Diagnostics)
+                     .Take(4))
         {
-            entries.Add(
-                new MermaidStatusLogEntry(
-                    "mermaid-statuslog-v1",
-                    (ulong)(session.StepCount * 100 + 32),
-                    sample.Name,
-                    session.InlineMode ? "inline" : "altscreen",
-                    $"{width}x{height}",
-                    layoutMode.ToString().ToLowerInvariant(),
-                    fidelity.ToString().ToLowerInvariant(),
-                    "error",
-                    "error",
-                    config.Validate()[0].Message));
+            entries.Add(new MermaidStatusLogEntry(
+                "mermaid-statuslog-v1",
+                (ulong)(session.StepCount * 100) + nextOffset,
+                sample.Name,
+                session.InlineMode ? "inline" : "altscreen",
+                $"{width}x{height}",
+                layoutMode.ToString().ToLowerInvariant(),
+                fidelity.ToString().ToLowerInvariant(),
+                issue.Severity == MermaidDiagnosticSeverity.Error ? "error" : "route_warning",
+                issue.Severity == MermaidDiagnosticSeverity.Error ? "error" : "warn",
+                issue.Message));
+            nextOffset += 8;
         }
 
         return entries;
     }
 
     private static string BuildViewport(MermaidShowcaseState state) =>
-        state.GlyphMode == MermaidGlyphMode.Unicode ? state.Sample.UnicodePreview : state.Sample.AsciiPreview;
+        string.Join(Environment.NewLine, state.Viewport.Rows);
 
     private static string BuildControls(MermaidShowcaseState state) =>
         string.Join(
             Environment.NewLine,
             [
+                $"Sample: {state.Sample.Name}",
                 $"Glyph: {state.GlyphMode.ToString().ToLowerInvariant()}",
                 $"Layout: {state.LayoutMode.ToString().ToLowerInvariant()}",
                 $"Tier: {state.Fidelity.ToString().ToLowerInvariant()}",
@@ -607,7 +675,8 @@ public static class MermaidShowcaseSurface
                 $"Iter: {state.Summary.LayoutIterations}",
                 $"Score: {state.Summary.ObjectiveScore:0.00}",
                 $"Violations: {state.Summary.ConstraintViolations}",
-                $"Fallback: {state.Summary.FallbackTier}"
+                $"Fallback: {state.Summary.FallbackTier}",
+                $"Diag: {state.Diagnostics.Count}"
             ]);
 
     private static string FormatStatusLog(MermaidStatusLogEntry entry) =>

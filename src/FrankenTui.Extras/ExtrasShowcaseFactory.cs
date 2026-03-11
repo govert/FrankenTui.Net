@@ -52,13 +52,11 @@ internal static class ExtrasShowcaseFactory
         var validation = FormValidator.Validate(DemoFields, DemoValidators);
         var markdown = MarkdownDocumentBuilder.Parse(MarkdownSample);
         var workspace = BuildPaneWorkspace(session);
-        var paletteResults = CommandPaletteSearch.Search(
-            CommandPaletteRegistry.DefaultEntries(),
-            EffectiveQuery(session));
-        var searchState = new LogSearchState(EffectiveQuery(session), RegexMode: session.OverlayVisible, ContextLines: session.TaskRunning ? 1 : 0);
-        var searchResult = LogSearchEngine.Apply(DemoLogLines, searchState);
-        var macro = MacroRecorder.FromEvents("extras-demo", session.AppliedEvents, "Hosted parity extras sample");
-        var hud = PerformanceHudSnapshot.FromSession(session);
+        var paletteResults = CommandPaletteController.Results(session.CommandPalette with { Query = EffectiveQuery(session) }, CommandPaletteRegistry.DefaultEntries());
+        var searchState = EffectiveSearchState(session);
+        var searchResult = LogSearchEngine.Apply(LogLines(session), searchState);
+        var macro = session.Macro.Macro ?? MacroRecorder.FromEvents("extras-demo", session.AppliedEvents, "Hosted parity extras sample");
+        var hud = BuildHud(session);
         var mermaid = MermaidShowcaseSurface.BuildState(session);
         var export = BufferExport.Capture(
             new ParagraphWidget(string.Empty)
@@ -74,7 +72,7 @@ internal static class ExtrasShowcaseFactory
             new HostedParityMetric("Module", ModuleLabels()[Math.Min(session.SelectedModuleIndex, ModuleLabels().Length - 1)]),
             new HostedParityMetric("PaneHash", workspace.SnapshotHash()),
             new HostedParityMetric("Palette", paletteResults.Count.ToString(System.Globalization.CultureInfo.InvariantCulture)),
-            new HostedParityMetric("LogSearch", searchResult.MatchCount.ToString(System.Globalization.CultureInfo.InvariantCulture), string.IsNullOrWhiteSpace(searchResult.Error)),
+            new HostedParityMetric("LogSearch", $"{searchResult.MatchCount} ({searchResult.Tier.ToString().ToLowerInvariant()})", string.IsNullOrWhiteSpace(searchResult.Error)),
             new HostedParityMetric("Macro", macro.Events.Count.ToString(System.Globalization.CultureInfo.InvariantCulture)),
             new HostedParityMetric("HUD", hud.DegradationLevel),
             new HostedParityMetric("Markdown", markdown.Lines.Count.ToString(System.Globalization.CultureInfo.InvariantCulture)),
@@ -123,13 +121,13 @@ internal static class ExtrasShowcaseFactory
 
     private static IWidget BuildCommandPaletteDetail(HostedParitySession session)
     {
-        var query = EffectiveQuery(session);
-        var results = CommandPaletteSearch.Search(CommandPaletteRegistry.DefaultEntries(), query);
+        var state = session.CommandPalette with { Query = EffectiveQuery(session) };
+        var results = CommandPaletteController.Results(state, CommandPaletteRegistry.DefaultEntries());
         return new CommandPaletteWidget
         {
-            Query = query,
+            Query = state.Query,
             Results = results,
-            SelectedIndex = Math.Min(session.SelectedMetricIndex, Math.Max(results.Count - 1, 0)),
+            SelectedIndex = Math.Min(state.SelectedIndex, Math.Max(results.Count - 1, 0)),
             ShowPreview = true
         };
     }
@@ -137,30 +135,23 @@ internal static class ExtrasShowcaseFactory
     private static IWidget BuildLogSearchDetail(HostedParitySession session) =>
         new LogSearchWidget
         {
-            State = new LogSearchState(
-                EffectiveQuery(session),
-                RegexMode: session.OverlayVisible,
-                CaseSensitive: session.ModalOpen,
-                ContextLines: session.TaskRunning ? 1 : 0),
-            SourceLines = DemoLogLines
+            State = EffectiveSearchState(session),
+            SourceLines = LogLines(session)
         };
 
     private static IWidget BuildMacroRecorderDetail(HostedParitySession session) =>
         new MacroRecorderWidget
         {
-            State = new MacroRecorderState(
-                Recording: session.TaskRunning,
-                Playing: session.OverlayVisible,
-                Loop: session.ModalOpen,
-                Speed: session.InlineMode ? 1.0 : 2.0,
-                Macro: MacroRecorder.FromEvents("extras-demo", session.AppliedEvents, "Hosted parity extras sample"),
-                Status: session.TaskRunning ? "Recording... (Esc to stop)" : "Macro ready")
+            State = session.Macro with
+            {
+                Macro = session.Macro.Macro ?? MacroRecorder.FromEvents("extras-demo", session.AppliedEvents, "Hosted parity extras sample")
+            }
         };
 
     private static IWidget BuildPerformanceHudDetail(HostedParitySession session) =>
         new PerformanceHudWidget
         {
-            Snapshot = PerformanceHudSnapshot.FromSession(session)
+            Snapshot = BuildHud(session)
         };
 
     private static IWidget BuildMarkdownExportDetail()
@@ -252,23 +243,43 @@ internal static class ExtrasShowcaseFactory
 
     private static PaneWorkspaceState BuildPaneWorkspace(HostedParitySession session)
     {
-        var actions = new List<PaneWorkspaceAction>();
-        for (var index = 0; index < session.StepCount; index++)
+        return session.PaneWorkspace;
+    }
+
+    private static LogSearchState EffectiveSearchState(HostedParitySession session) =>
+        session.LogSearch with
         {
-            actions.Add(new PaneWorkspaceAction(
-                (index % 3) switch
-                {
-                    0 => PaneWorkspaceActionKind.SelectNext,
-                    1 => PaneWorkspaceActionKind.CycleMode,
-                    _ => index % 2 == 0 ? PaneWorkspaceActionKind.GrowPrimary : PaneWorkspaceActionKind.ShrinkPrimary
-                },
-                DateTimeOffset.UnixEpoch + TimeSpan.FromMilliseconds(index * 32),
-                "extras-demo"));
+            Query = string.IsNullOrWhiteSpace(session.LogSearch.Query) ? EffectiveQuery(session) : session.LogSearch.Query
+        };
+
+    private static IReadOnlyList<string> LogLines(HostedParitySession session) =>
+        LogSearchController.MergeLiveLines(DemoLogLines, session.LiveLogLines);
+
+    private static PerformanceHudSnapshot BuildHud(HostedParitySession session)
+    {
+        if (session.HudFrozen && session.FrozenHudSnapshot is not null)
+        {
+            return session.FrozenHudSnapshot;
         }
 
-        return PaneWorkspaceState.CreateDemo().Replay(actions);
+        if (session.RuntimeStats is not null)
+        {
+            return PerformanceHudSnapshot.FromRuntime(
+                session.RuntimeStats,
+                session.RuntimeStats.SyncOutput,
+                scrollRegion: true,
+                hyperlinks: true,
+                session.HudLevel);
+        }
+
+        return PerformanceHudSnapshot.FromSession(session) with
+        {
+            Level = session.HudLevel
+        };
     }
 
     private static string EffectiveQuery(HostedParitySession session) =>
-        string.IsNullOrWhiteSpace(session.InputBuffer) ? "do" : session.InputBuffer;
+        string.IsNullOrWhiteSpace(session.CommandPalette.Query)
+            ? string.IsNullOrWhiteSpace(session.InputBuffer) ? "do" : session.InputBuffer
+            : session.CommandPalette.Query;
 }

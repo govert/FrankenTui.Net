@@ -46,6 +46,10 @@ jobs:
         if: runner.os == 'Linux'
         run: dotnet run --project tools/FrankenTui.Doctor/FrankenTui.Doctor.csproj --no-build --configuration Release -- --format text --write-artifacts --write-manifest --run-benchmarks --run-id ci-linux
 
+      - name: Refresh doctor artifacts
+        if: runner.os == 'Windows'
+        run: dotnet run --project tools/FrankenTui.Doctor/FrankenTui.Doctor.csproj --no-build --configuration Release -- --format text --write-artifacts --run-id ci-windows
+
       - name: Upload hosted artifacts
         if: runner.os == 'Linux'
         uses: actions/upload-artifact@v4
@@ -56,3 +60,13 @@ jobs:
             artifacts/benchmarks/
             artifacts/replay/
             artifacts/web/
+
+      - name: Upload Windows doctor artifacts
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-doctor-artifacts
+          path: |
+            artifacts/contracts/
+            artifacts/doctor/
+            artifacts/replay/

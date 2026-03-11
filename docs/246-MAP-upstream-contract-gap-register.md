@@ -34,8 +34,8 @@ tracks contracts that are either:
 
 - `partial`: a local baseline exists, but the upstream contract is not fully
   carried yet
-- `absent`: no meaningful local implementation of the contract surface was
-  found during the audit
+- `blocked`: remaining work is real, but cannot be fully closed from the
+  current workspace alone
 - `reference-only`: excluded from this register by current scope rules
 
 ## Scope Exclusions
@@ -50,30 +50,16 @@ adopts them explicitly later:
 - SDK-specific contracts that are not part of the current FrankenTui.Net
   implementation surface
 
-## Partial Contracts In Already-Adopted Surfaces
+## Active Remaining Gaps
 
 | Contract Family | Upstream Basis | Local Status | Why It Is Not Fully Ported Yet | Closure Direction |
 | --- | --- | --- | --- | --- |
-| Terminal backend lifecycle and boundary | `docs/adr/ADR-003-terminal-backend.md`, `docs/adr/ADR-008-terminal-backend-strategy.md`, `crates/ftui-backend/src/lib.rs` | `partial` | Local backends now expose session configuration, feature toggles, bounded polling, and a `write_log` route, but the boundary still does not mirror the upstream event-source/presenter split as separate types and still lacks stronger native raw-mode lifecycle evidence. | Continue refining the boundary toward the upstream split and add native raw-mode and event-source validation. |
-| Windows ConPTY host contract | `docs/adr/ADR-004-windows-v1-scope.md`, `docs/WINDOWS.md` | `partial` | Windows is treated as a supported host, but the primary Linux workspace still does not produce native ConPTY execution evidence and PTY assertions remain Unix-heavy. | Add native Windows host validation and tighten Windows-specific evidence. |
-| One-writer rule and routed output | `docs/adr/ADR-005-one-writer-rule.md`, `crates/ftui-backend/src/lib.rs` | `partial` | The shared writer gate now carries routed subprocess output, inline logging, and a concurrent inline-log stress lane, but the remaining proof is still repo-local rather than a higher-contention live-terminal host matrix. | Keep the routed patterns documented and add native host contention evidence where available. |
-| Untrusted output policy | `docs/adr/ADR-006-untrusted-output-policy.md` | `partial` | Writer-level sanitize-by-default now covers routed log output, inline logs, subprocess-forwarded output, and a deterministic sanitizer fuzz lane, but the attack-oriented PTY lane is still thinner than the upstream ideal. | Add more adversarial PTY coverage and keep widening safe-text helpers around non-log content paths. |
-| Shared sample parity lane | `crates/ftui-runtime/tests/deterministic_replay.rs`, `crates/ftui-web/tests/wasm_step_program.rs` | `partial` | The local upstream comparison scaffold now covers counter flow, resize progression, unicode cells, wide-cell cleanup, inline overlay rows, command-palette ranking, and log-search highlighting, but it is still not a full hosted-parity/showcase oracle. | Keep widening the suite toward richer hosted session flows and representative widget interactions. |
-| Pane parity engine | `docs/spec/pane-parity-contract-and-program.md` | `partial` | `PaneWorkspaceState`, deterministic replay/snapshot helpers, and a shared pane workspace widget now exist and are exercised through the extras/hosted-parity surface, but the broader dashboard/host integration matrix and richer interaction semantics are still much thinner than upstream. | Keep moving pane semantics into broader demo/web surfaces and extend replay parity beyond the current shared snapshot/replay baseline. |
-| Command palette | `docs/spec/command-palette.md` | `partial` | `CommandPaletteEntry`, deterministic search ranking, preview rendering, and a hosted extras surface now exist, but command execution still stops at showcase/demo presentation rather than acting as the shared command-dispatch layer across the app. | Promote the palette into broader runtime/demo command dispatch and add richer keyboard E2E coverage. |
-| Log search | `docs/spec/log-search.md` | `partial` | Literal/regex filtering, context merging, error handling, and a log-search widget now exist in the extras surface, but live-stream integration, richer highlighting, and budget-tier logic are still only a thin baseline. | Wire the search model into a fuller live log stream and add more adversarial regex/highlight verification. |
-| Macro recorder | `docs/spec/macro-recorder.md` | `partial` | End-user facing macro definition, deterministic replay-plan normalization, and a recorder widget now exist, but capture/playback is still derived from the hosted session evidence stream rather than being a full interactive record/playback state machine. | Move macro control deeper into the runtime/demo loop and add PTY exercise around record/play/loop controls. |
-| Performance HUD | `docs/spec/performance-hud.md` | `partial` | A visible HUD snapshot and widget now exist, and the extras surface exercises compact/full rendering with stable rows, but the metrics are still a hosted-session baseline rather than direct runtime/presenter budget plumbing. | Feed the HUD from broader runtime/present statistics and add explicit over-budget/degraded telemetry. |
-| Telemetry env-var contract | `docs/spec/telemetry.md` | `partial` | `TelemetryConfig` now parses the OTEL / FTUI env-var contract, exposes deterministic `BuildLayer` / `Install` APIs, and has PTY-backed env evidence through doctor, but there is still no real OTLP exporter bridge behind the install plan. | Runtime + tooling |
-| Telemetry event schema and redaction | `docs/spec/telemetry-events.md` | `partial` | `TelemetrySessionLog`, event categories, conservative redaction helpers, and PTY/headless evidence now exist, and the runtime now emits init/update/view/subscription/input/reflow/render/flush events, but there is still no macro-specific telemetry event and fuzz-style redaction proof is still lighter than the upstream ideal. | Runtime + tooling |
-| Mermaid engine config | `docs/spec/mermaid-config.md` | `partial` | `MermaidConfig` now parses and validates the deterministic config/env surface and doctor artifacts persist config snapshots, but the real parse/layout/render engine and diagnostics lane are still absent. | Extras |
-| Mermaid showcase | `docs/spec/mermaid-showcase.md` | `partial` | `MermaidShowcaseSurface` now provides a deterministic sample catalog, viewport, metrics panel, and status-log schema inside the extras/demo/web surface, but it remains a read-only contract scaffold rather than the full interactive upstream screen. | Demo + extras + web |
+| Windows ConPTY host contract | `docs/adr/ADR-004-windows-v1-scope.md`, `docs/WINDOWS.md` | `blocked` | The Windows backend, host matrix, CI matrix, and Windows doctor-artifact lane are in place, but the primary Linux workspace still cannot produce native interactive ConPTY execution evidence directly. | Close via a native Windows host run and update the blocker note `2026-03-12-windows-conpty-evidence-blocker.md`. |
 
 ## In-Scope Contract Surfaces Still Fully Absent Locally
 
 At the current audit level, no in-scope contract surface remains completely
-absent. The remaining work is depth, propagation, and richer verification
-inside the `partial` rows above.
+absent.
 
 ## Contracts Reviewed But Not Registered As Current Gaps
 
@@ -110,6 +96,47 @@ items in this register:
   Local tooling now validates the upstream semantic/policy bundle, materializes
   planner/certification projections, and feeds planner findings into the local
   contract gate and doctor artifact set.
+- `docs/spec/command-palette.md`
+  The hosted extras/runtime surface now carries a real open/query/select/execute
+  palette loop with deterministic ranking, preview state, command execution,
+  and PTY/headless coverage.
+- `docs/spec/log-search.md`
+  The hosted extras/runtime surface now carries live-stream integration,
+  full-vs-lite tiering, context merging, all-match highlighting, and interactive
+  toggle/edit behavior with headless verification.
+- `docs/spec/macro-recorder.md`
+  The hosted extras/runtime surface now carries explicit record/ready/play/loop
+  state, normalized replay timing, timer-driven playback, and PTY/headless
+  coverage rather than only deriving a macro from evidence logs after the fact.
+- `docs/spec/performance-hud.md`
+  The HUD can now consume runtime frame statistics directly, the interactive
+  showcase feeds those stats back into the extras surface, and headless/PTY
+  coverage verifies the runtime-fed path.
+- `docs/adr/ADR-003-terminal-backend.md`,
+  `docs/adr/ADR-005-one-writer-rule.md`, and
+  `docs/adr/ADR-006-untrusted-output-policy.md`
+  The backend boundary is now explicitly split into lifecycle, output-sink, and
+  event-source facets; routed subprocess output stays behind the writer gate;
+  and sanitize-by-default proof includes fuzz and PTY coverage.
+- `docs/spec/pane-parity-contract-and-program.md`
+  Pane state now persists through the hosted/demo path, supports timeline
+  undo/redo, and is exercised directly in headless/web/PTY coverage instead of
+  being rebuilt as a view-only snapshot.
+- `docs/spec/telemetry.md`
+  The env-var/install surface now has a tested OTLP bridge/export path rather
+  than only a configuration plan.
+- `docs/spec/telemetry-events.md`
+  Macro playback evidence and stronger redaction proof are now carried in the
+  telemetry surface and tests.
+- `docs/spec/mermaid-config.md` and `docs/spec/mermaid-showcase.md`
+  The Mermaid surface now has a deterministic parse/render/diagnostic baseline
+  plus interactive showcase preferences, rather than only a static preview
+  scaffold.
+- `crates/ftui-runtime/tests/deterministic_replay.rs` and
+  `crates/ftui-web/tests/wasm_step_program.rs`
+  The shared comparison scaffold now includes pane, macro, and Mermaid cases in
+  addition to the earlier render/runtime sample set, so representative hosted
+  surfaces are covered by the cross-implementation lane.
 - `docs/spec/cache-and-layout.md`
   The local kernel already uses 16-byte cell-friendly value types and row-major
   buffers; no distinct open contract gap is currently recorded here.
@@ -120,16 +147,9 @@ items in this register:
 If later evidence shows one of these is still materially incomplete, promote it
 to an active row in this register.
 
-## Recommended Execution Order
+## Next Step
 
-If the goal is "close the remaining parity story" rather than "add any feature
-that looks interesting", the next order should be:
-
-1. backend boundary + native lifecycle + one-writer/log routing
-2. untrusted output policy
-3. pane parity + operator-surface depth/propagation
-4. telemetry exporter/subscriber integration plus richer PTY/evidence depth
-5. Mermaid real-engine/rendering depth plus deeper translator/certification validators
-
-That order keeps correctness and syncability ahead of breadth-only feature
-inventory.
+The only remaining explicit blocker in this register is native Windows ConPTY
+evidence capture from a real Windows host. All other previously active local
+contract-gap rows have been closed into reviewed surfaces and should only be
+re-opened if fresh divergence evidence appears.

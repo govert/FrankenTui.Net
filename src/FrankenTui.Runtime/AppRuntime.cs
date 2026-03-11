@@ -17,6 +17,7 @@ public sealed class AppRuntime<TModel, TMessage>
     private TimeSpan _lastPresentLatency;
     private bool _resizePending;
     private int _stepIndex;
+    private RuntimeFrameStats _frameStats = RuntimeFrameStats.Empty;
 
     public AppRuntime(
         ITerminalBackend backend,
@@ -51,6 +52,8 @@ public sealed class AppRuntime<TModel, TMessage>
     public TimeSpan LastPresentLatency => _lastPresentLatency;
 
     public int CurrentStepIndex => _stepIndex;
+
+    public RuntimeFrameStats FrameStats => _frameStats;
 
     public async ValueTask<RuntimeStepResult<TModel, TMessage>> DispatchAsync(
         IAppProgram<TModel, TMessage> program,
@@ -155,6 +158,24 @@ public sealed class AppRuntime<TModel, TMessage>
         _diffSelector.Observe(selection, diff.Count, _lastPresentLatency);
         _current.CopyFrom(_next);
         _resizePending = false;
+        _frameStats = new RuntimeFrameStats(
+            _stepIndex,
+            diff.Count,
+            diff.Runs().Count,
+            result.ByteCount,
+            frameStopwatch.Elapsed.TotalMilliseconds,
+            presentStopwatch.Elapsed.TotalMilliseconds,
+            diffStopwatch.Elapsed.TotalMilliseconds,
+            dirtyRows,
+            selection.Regime switch
+            {
+                DiffRegime.DegradedTerminal => "REDUCED",
+                DiffRegime.ResizeRegime => "MINIMAL",
+                DiffRegime.BurstyChange => "FULL",
+                _ => "FULL"
+            },
+            result.UsedSyncOutput,
+            result.Truncated);
 
         if (Policy.EmitTelemetry)
         {

@@ -34,7 +34,10 @@ public sealed class TerminalSession : IAsyncDisposable
         await _backend.ConfigureSessionAsync(
             new TerminalSessionConfiguration
             {
-                InlineMode = _options.InlineMode
+                InlineMode = _options.InlineMode,
+                CaptureInput = _options.Modes.HasFlag(TerminalMode.RawInput),
+                ClaimConsoleModes = _options.Modes != TerminalMode.None,
+                HostEvidenceTag = _options.InlineMode ? "inline" : "alternate"
             },
             cancellationToken).ConfigureAwait(false);
         CleanupPlan = BuildCleanupPlan(_options);

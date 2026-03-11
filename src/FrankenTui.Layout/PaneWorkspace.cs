@@ -24,7 +24,9 @@ public enum PaneWorkspaceActionKind
     SelectPrevious,
     CycleMode,
     GrowPrimary,
-    ShrinkPrimary
+    ShrinkPrimary,
+    Undo,
+    Redo
 }
 
 public sealed record PaneWorkspaceAction(PaneWorkspaceActionKind Kind, DateTimeOffset Timestamp, string Reason);
@@ -84,41 +86,52 @@ public sealed record PaneWorkspaceState(
     {
         ArgumentNullException.ThrowIfNull(action);
 
+        if (action.Kind == PaneWorkspaceActionKind.Undo)
+        {
+            return Restore(Timeline, Math.Max(TimelineCursor - 1, 0));
+        }
+
+        if (action.Kind == PaneWorkspaceActionKind.Redo)
+        {
+            return Restore(Timeline, Math.Min(TimelineCursor + 1, Timeline.Count));
+        }
+
         var leaves = FlattenLeaves();
         var selectedIndex = Array.FindIndex(leaves.ToArray(), leaf => string.Equals(leaf.Id, SelectedPaneId, StringComparison.Ordinal));
         selectedIndex = selectedIndex < 0 ? 0 : selectedIndex;
+        var activeTimeline = Timeline.Take(TimelineCursor).ToArray();
 
         return action.Kind switch
         {
             PaneWorkspaceActionKind.SelectNext => this with
             {
                 SelectedPaneId = leaves[(selectedIndex + 1) % leaves.Count].Id,
-                Timeline = Append(Timeline, action),
-                TimelineCursor = TimelineCursor + 1
+                Timeline = Append(activeTimeline, action),
+                TimelineCursor = activeTimeline.Length + 1
             },
             PaneWorkspaceActionKind.SelectPrevious => this with
             {
                 SelectedPaneId = leaves[(selectedIndex - 1 + leaves.Count) % leaves.Count].Id,
-                Timeline = Append(Timeline, action),
-                TimelineCursor = TimelineCursor + 1
+                Timeline = Append(activeTimeline, action),
+                TimelineCursor = activeTimeline.Length + 1
             },
             PaneWorkspaceActionKind.CycleMode => this with
             {
                 Mode = NextMode(Mode),
-                Timeline = Append(Timeline, action),
-                TimelineCursor = TimelineCursor + 1
+                Timeline = Append(activeTimeline, action),
+                TimelineCursor = activeTimeline.Length + 1
             },
             PaneWorkspaceActionKind.GrowPrimary => this with
             {
                 PrimaryRatioPermille = Math.Clamp(PrimaryRatioPermille + 50, 250, 750),
-                Timeline = Append(Timeline, action),
-                TimelineCursor = TimelineCursor + 1
+                Timeline = Append(activeTimeline, action),
+                TimelineCursor = activeTimeline.Length + 1
             },
             PaneWorkspaceActionKind.ShrinkPrimary => this with
             {
                 PrimaryRatioPermille = Math.Clamp(PrimaryRatioPermille - 50, 250, 750),
-                Timeline = Append(Timeline, action),
-                TimelineCursor = TimelineCursor + 1
+                Timeline = Append(activeTimeline, action),
+                TimelineCursor = activeTimeline.Length + 1
             },
             _ => this
         };
@@ -168,6 +181,17 @@ public sealed record PaneWorkspaceState(
 
     private static IReadOnlyList<PaneWorkspaceAction> Append(IReadOnlyList<PaneWorkspaceAction> timeline, PaneWorkspaceAction action) =>
         timeline.Concat([action]).TakeLast(24).ToArray();
+
+    private static PaneWorkspaceState Restore(IReadOnlyList<PaneWorkspaceAction> timeline, int cursor)
+    {
+        var effectiveCursor = Math.Clamp(cursor, 0, timeline.Count);
+        var restored = CreateDemo().Replay(timeline.Take(effectiveCursor));
+        return restored with
+        {
+            Timeline = timeline,
+            TimelineCursor = effectiveCursor
+        };
+    }
 
     private static PaneWorkspaceMode NextMode(PaneWorkspaceMode mode) => mode switch
     {

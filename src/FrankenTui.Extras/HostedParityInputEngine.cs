@@ -40,6 +40,25 @@ public sealed class HostedParityInputEngine
         return new HostedParityInputOutcome(input.HasWork ? session.Advance(input) : session, input);
     }
 
+    public static RuntimeInputTranslation Translate(HostedParitySession session, TerminalEvent terminalEvent)
+    {
+        ArgumentNullException.ThrowIfNull(session);
+        ArgumentNullException.ThrowIfNull(terminalEvent);
+
+        if (session.CommandPalette.IsOpen || session.LogSearch.SearchOpen || session.Macro.Mode is MacroRecorderMode.Recording or MacroRecorderMode.Playing)
+        {
+            return new RuntimeInputTranslation(terminalEvent, terminalEvent, Label: Describe(terminalEvent));
+        }
+
+        if (session.ScenarioId == HostedParityScenarioId.Extras &&
+            session.SelectedModuleIndex is 3 or 4 or 7)
+        {
+            return new RuntimeInputTranslation(terminalEvent, terminalEvent, Label: Describe(terminalEvent));
+        }
+
+        return Translate(terminalEvent);
+    }
+
     public static RuntimeInputTranslation Translate(TerminalEvent terminalEvent)
     {
         if (terminalEvent is not KeyTerminalEvent keyEvent ||

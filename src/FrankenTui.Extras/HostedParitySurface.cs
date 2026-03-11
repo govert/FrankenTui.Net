@@ -210,7 +210,8 @@ public static class HostedParitySurface
             ];
         }
 
-        return session.ResizeLog
+        return session.LiveLogLines
+            .Concat(session.ResizeLog)
             .Concat(session.PolicyLog)
             .Concat(session.SemanticLog)
             .Concat(session.AppliedEvents.Select(FormatEvent))

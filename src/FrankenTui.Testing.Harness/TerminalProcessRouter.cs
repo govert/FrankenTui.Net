@@ -5,7 +5,7 @@ namespace FrankenTui.Testing.Harness;
 public static class TerminalProcessRouter
 {
     public static Task<ProcessRunResult> RunAsync(
-        ITerminalBackend backend,
+        ITerminalOutputSink output,
         string fileName,
         IEnumerable<string> arguments,
         TerminalLogWriteOptions? options = null,
@@ -14,7 +14,7 @@ public static class TerminalProcessRouter
         string? stdin = null,
         CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(backend);
+        ArgumentNullException.ThrowIfNull(output);
 
         return ProcessCommandRunner.RunStreamingAsync(
             fileName,
@@ -26,7 +26,7 @@ public static class TerminalProcessRouter
                     return;
                 }
 
-                await backend.WriteLogAsync(chunk.Text, options, token).ConfigureAwait(false);
+                await output.WriteLogAsync(chunk.Text, options, token).ConfigureAwait(false);
             },
             workingDirectory,
             environmentVariables,

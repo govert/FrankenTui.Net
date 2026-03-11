@@ -36,6 +36,12 @@ repository root documents.
 - [248-MAP-runtime-input-and-proof-wave.md](./248-MAP-runtime-input-and-proof-wave.md):
   shared runtime-input closure, stronger routed-output/sanitizer proof, wider
   sample comparison, and OpenTUI planner integration
+- [249-MAP-operator-runtime-depth-wave.md](./249-MAP-operator-runtime-depth-wave.md):
+  runtime-driven operator-surface closure for command palette, log search,
+  macro playback, and HUD stats
+- [250-MAP-final-contract-closure-wave.md](./250-MAP-final-contract-closure-wave.md):
+  final local upstream-contract closure wave across backend proof, shared
+  samples, telemetry, pane state, and Mermaid
 - [294-TXT-shaping-and-hyphenation-evaluation.md](./294-TXT-shaping-and-hyphenation-evaluation.md):
   current .NET text-shaping and hyphenation decision under AOT constraints
 - [304-RTM-determinism-and-evidence.md](./304-RTM-determinism-and-evidence.md):
@@ -64,6 +70,8 @@ repository root documents.
   blockers and remaining gaps from the hosted parity batch
 - [2026-03-09-big-batch-blockers.md](./2026-03-09-big-batch-blockers.md):
   blockers and remaining gaps from the base-port batch
+- [2026-03-12-windows-conpty-evidence-blocker.md](./2026-03-12-windows-conpty-evidence-blocker.md):
+  explicit remaining non-local blocker for native Windows ConPTY evidence
 
 ## Root Documents
 

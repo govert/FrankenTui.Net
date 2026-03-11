@@ -92,6 +92,24 @@ public sealed class TelemetrySessionLog
                 WriteIndented = true
             });
 
+    public void RecordMacro(
+        int stepIndex,
+        string macroId,
+        int eventCount,
+        long driftMs)
+    {
+        Record(
+            "ftui.input.macro",
+            TelemetryEventCategory.Input,
+            stepIndex,
+            [
+                new TelemetryField("drift_ms", driftMs.ToString(System.Globalization.CultureInfo.InvariantCulture)),
+                new TelemetryField("event_count", eventCount.ToString(System.Globalization.CultureInfo.InvariantCulture)),
+                new TelemetryField("macro_id", macroId),
+                new TelemetryField("state", "playing")
+            ]);
+    }
+
     private IReadOnlyList<TelemetryField> BuildCommonFields() =>
         [
             new TelemetryField("ftui.schema_version", SchemaVersion),
@@ -145,4 +163,27 @@ public static class TelemetryRedactor
 
     public static TelemetryField TextField(string key, string? value) =>
         new(key, RedactUserInput(value), TelemetryFieldSensitivity.HardRedacted);
+
+    public static string RedactArbitraryText(string? value)
+    {
+        if (string.IsNullOrEmpty(value))
+        {
+            return string.Empty;
+        }
+
+        var builder = new System.Text.StringBuilder(value.Length);
+        foreach (var ch in value)
+        {
+            if (char.IsLetterOrDigit(ch))
+            {
+                builder.Append('x');
+            }
+            else if (ch is '\n' or '\r' or '\t' or ' ')
+            {
+                builder.Append(ch);
+            }
+        }
+
+        return builder.ToString();
+    }
 }
