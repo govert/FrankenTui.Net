@@ -23,10 +23,10 @@ This covers `244-MAP` from
 
 | Surface | Primary Record | Current Divergence Baseline |
 | --- | --- | --- |
-| Terminal hosts | [335-HST-host-divergence-ledger.md](./335-HST-host-divergence-ledger.md) | Linux PTY evidence is local; macOS and Windows remain contract-backed from this workspace. |
+| Terminal hosts | [335-HST-host-divergence-ledger.md](./335-HST-host-divergence-ledger.md) | Linux PTY evidence is local; macOS remains contract-backed; Windows now has CI doctor/showcase evidence but still lacks an interactive ConPTY transcript from outside a redirected runner console. |
 | Runtime replay and evidence | [304-RTM-determinism-and-evidence.md](./304-RTM-determinism-and-evidence.md) | Runtime-driven replay, trace, diff-evidence, and manifest artifacts are first-class; the remaining deliberate limit is that doctor pairs a tooling-scenario runtime capture with a separate static dashboard artifact set. |
 | Web verification | [304-RTM-determinism-and-evidence.md](./304-RTM-determinism-and-evidence.md) | Deterministic DOM parsing uses AngleSharp rather than a full browser engine in the repo-local gate. |
-| Benchmark regression gate | [304-RTM-determinism-and-evidence.md](./304-RTM-determinism-and-evidence.md) | Budgets are tracked in a local fixture aligned to upstream keys where possible, with .NET-specific additions for runtime and web document cases. |
+| Benchmark regression gate | [304-RTM-determinism-and-evidence.md](./304-RTM-determinism-and-evidence.md) | Budgets are tracked in a local fixture aligned to upstream keys where possible, with .NET-specific additions for runtime and web document cases; GitHub-hosted CI treats overruns as advisory unless strict mode is requested. |
 | Repo/runtime notes | [391-DOC-dotnet-implementation-notes.md](./391-DOC-dotnet-implementation-notes.md) | The repo is a coherent .NET port, not an asset-level fork of the upstream workspace. |
 
 ## Resolved Historical Ledgers

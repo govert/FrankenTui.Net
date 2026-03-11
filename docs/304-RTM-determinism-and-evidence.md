@@ -124,6 +124,10 @@ The tracked fixture aligns with upstream benchmark keys where direct local
 equivalents exist and adds .NET-specific cases for runtime dispatch and web
 document rendering.
 
+On GitHub-hosted CI, benchmark overruns are treated as advisory by default so
+shared-runner noise does not block doctor/evidence refreshes. Strict benchmark
+failure can still be forced with `FTUI_STRICT_BENCHMARKS=1`.
+
 ## Maintainer Commands
 
 Run the full local baseline:
@@ -135,11 +139,10 @@ dotnet run --project tools/FrankenTui.Doctor/FrankenTui.Doctor.csproj -- --forma
 
 Key artifact outputs:
 
-- `artifacts/doctor-runtime/`
-- `artifacts/doctor-dashboard/`
 - `artifacts/replay/`
 - `artifacts/web/`
 - `artifacts/benchmarks/`
+- `artifacts/contracts/`
 - `artifacts/comparison/`
 
 ## Current Deliberate Limits

@@ -24,7 +24,7 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
 ## Current Basis
 
 - Current status basis commit:
-  working tree after final local contract-closure wave
+  working tree after CI evidence stabilization and Windows host-artifact review
 - Current upstream workspace basis:
   `7a91089366bd4644e086d5a422cb76b052e3de17`
 - Last full verification pass at status update time:
@@ -174,6 +174,14 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   via `dotnet test FrankenTui.Net.sln --no-restore`, with the remaining
   non-local blocker tracked in
   `2026-03-12-windows-conpty-evidence-blocker.md`.
+- CI evidence stabilization and Windows host-artifact review after `90e71de`
+  Cross-platform subprocess contract tests now use a portable shell helper,
+  hosted CI benchmark overruns are advisory by default rather than hard-failing
+  doctor/evidence refreshes, the PTY doctor artifact test now matches the clean
+  runner artifact layout, and Windows CI now captures usable doctor/inline
+  evidence. That evidence narrows the last gap to interactive ConPTY proof
+  specifically, because the current runner is still a redirected Windows
+  console rather than a captured Windows Terminal/SSH session.
 
 ## Status
 

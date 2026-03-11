@@ -136,7 +136,7 @@ public sealed class PtyIntegrationTests
         Assert.Contains("FrankenTui.Net Doctor", result.Stdout);
         Assert.Contains("Artifacts:", result.Stdout);
         Assert.DoesNotContain("Benchmark gate:", result.Stdout);
-        Assert.True(File.Exists(Path.Combine(root, "artifacts", "doctor", "doctor-dashboard.json")));
+        Assert.True(File.Exists(Path.Combine(root, "artifacts", "replay", "doctor-runtime-runtime-trace.json")));
         Assert.True(File.Exists(Path.Combine(root, "artifacts", "benchmarks", "pty-doctor-benchmark-suite.json")));
         Assert.True(File.Exists(Path.Combine(root, "artifacts", "replay", "pty-doctor-manifest.json")));
         Assert.True(File.Exists(Path.Combine(root, "artifacts", "web", "doctor-dashboard.html")));

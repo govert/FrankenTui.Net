@@ -37,7 +37,7 @@ public sealed class BenchmarkRunnerTests
         Assert.Equal(budgets.Count, suite.Measurements.Count);
         Assert.Contains(suite.Measurements, static measurement => measurement.Name == "runtime_dispatch");
         Assert.Contains(suite.Measurements, static measurement => measurement.Name == "ansi_emit");
-        if (PerformanceBenchmarkRunner.ShouldFailOnBudgetErrors())
+        if (PerformanceBenchmarkRunner.ShouldEnforceStrictBudgetValidation())
         {
             Assert.Empty(errors);
         }

@@ -11,10 +11,12 @@ keeps artifact output local by default while preserving these stable buckets:
 - `web/`
 - `replay/`
 - `benchmarks/`
-- `doctor-runtime/`
-- `doctor-dashboard/`
 - `contracts/`
 - `comparison/`
+
+Doctor runs currently materialize their runtime evidence in `replay/`, rendered
+dashboard output in `web/`, benchmark output in `benchmarks/`, and contract
+snapshots in `contracts/`.
 
 `comparison/` may also contain generated local helper projects used to run the
 managed upstream workspace for parity checks. Those helpers are rebuildable and

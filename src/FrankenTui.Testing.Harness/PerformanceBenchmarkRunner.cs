@@ -181,6 +181,9 @@ public static class PerformanceBenchmarkRunner
     public static bool ShouldFailOnBudgetErrors() =>
         IsStrictBenchmarkValidationRequested() || !IsHostedCiEnvironment();
 
+    public static bool ShouldEnforceStrictBudgetValidation() =>
+        IsStrictBenchmarkValidationRequested();
+
     private static bool IsStrictBenchmarkValidationRequested()
     {
         var value = Environment.GetEnvironmentVariable("FTUI_STRICT_BENCHMARKS");
