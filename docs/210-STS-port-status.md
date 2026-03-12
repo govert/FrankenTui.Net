@@ -24,7 +24,7 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
 ## Current Basis
 
 - Current status basis commit:
-  working tree after CI evidence stabilization and Windows host-artifact review
+  working tree after external Windows evidence closure
 - Current upstream workspace basis:
   `7a91089366bd4644e086d5a422cb76b052e3de17`
 - Last full verification pass at status update time:
@@ -182,6 +182,12 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   evidence. That evidence narrows the last gap to interactive ConPTY proof
   specifically, because the current runner is still a redirected Windows
   console rather than a captured Windows Terminal/SSH session.
+- external Windows evidence closure after `d39b32e`
+  A real Windows host run now provides successful build/doctor output plus
+  tooling/extras inline transcripts and an interactive showcase transcript.
+  Windows is therefore no longer only `validated-ci`; it is now treated as
+  `validated-external`, and the former ConPTY blocker is retained only as a
+  historical closure record.
 
 ## Status
 

@@ -52,9 +52,7 @@ adopts them explicitly later:
 
 ## Active Remaining Gaps
 
-| Contract Family | Upstream Basis | Local Status | Why It Is Not Fully Ported Yet | Closure Direction |
-| --- | --- | --- | --- | --- |
-| Windows ConPTY host contract | `docs/adr/ADR-004-windows-v1-scope.md`, `docs/WINDOWS.md` | `blocked` | The Windows backend, host matrix, CI matrix, Windows doctor-artifact lane, and Windows inline transcript capture are in place, but the primary Linux workspace still cannot produce native interactive ConPTY execution evidence directly. Current CI evidence is from a redirected Windows runner console rather than an interactive Windows Terminal/SSH session. | Close via a native Windows host run that captures an interactive ConPTY session and update the blocker note `2026-03-12-windows-conpty-evidence-blocker.md`. |
+At the current audit level, no active in-scope contract gap remains open.
 
 ## In-Scope Contract Surfaces Still Fully Absent Locally
 
@@ -143,13 +141,17 @@ items in this register:
 - `docs/spec/state-machines.md`
   The local runtime and render pipeline have clear state boundaries and tests,
   even though individual subcontracts above remain open.
+- `docs/adr/ADR-004-windows-v1-scope.md` and `docs/WINDOWS.md`
+  Windows is no longer an active contract-gap row: CI doctor/showcase evidence
+  is supplemented by an external local Windows interactive transcript, so the
+  host surface is now treated as `validated-external`. The retained closure
+  record is `2026-03-12-windows-conpty-evidence-blocker.md`.
 
 If later evidence shows one of these is still materially incomplete, promote it
 to an active row in this register.
 
 ## Next Step
 
-The only remaining explicit blocker in this register is interactive Windows
-ConPTY evidence capture from a real Windows host. All other previously active
-local contract-gap rows have been closed into reviewed surfaces and should only
-be re-opened if fresh divergence evidence appears.
+This register is now in maintenance mode. Re-open a gap row only if fresh
+divergence evidence appears from parity testing, host validation, or upstream
+contract drift.

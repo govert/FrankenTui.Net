@@ -1,54 +1,34 @@
-# 2026-03-12 Windows ConPTY Evidence Blocker
+# 2026-03-12 Windows ConPTY Evidence Closure Record
 
 ## Context
 
 FrankenTui.Net now carries a Windows terminal backend, a Windows host profile,
-and Windows CI execution for restore/build/test. Doctor artifact generation is
-also wired into the Windows CI lane.
+Windows CI execution for restore/build/test, and Windows doctor/showcase
+artifact capture.
 
-## Remaining Blocker
+## Closure Outcome
 
-The primary development workspace for this batch is Linux over SSH, so it still
-cannot produce native interactive ConPTY execution evidence directly from the
-authoring machine.
+The original blocker is now closed.
 
-That leaves one honest remaining gap:
+The closure evidence set consists of:
 
-- no locally-collected Windows ConPTY transcript/evidence run for the current
-  closure batch
+- a successful external local Windows build and doctor run
+- local Windows inline showcase transcripts for the tooling and extras scenarios
+- a local Windows interactive showcase transcript captured from PowerShell
+- the pre-existing green Windows CI doctor/evidence lane
 
-## Current Mitigation
+This moves Windows from `validated-ci` to `validated-external` in the maintained
+host matrix. The primary Linux workspace still cannot execute native Windows
+terminals directly, but the contract gap is no longer open because interactive
+Windows host evidence now exists outside that workspace.
 
-- Windows-specific code paths are exercised in the CI matrix.
-- Doctor artifacts are now generated on Windows in CI.
-- Windows CI now captures host evidence plus inline showcase transcripts under
-  the `windows-doctor-artifacts` bundle.
-- The host matrix and divergence ledgers continue to treat Windows as
-  `validated-ci`, not `validated-local`.
+## Evidence Notes
 
-## Current Evidence State
-
-The current Windows CI lane proves that:
-
-- the Windows build/test lane is green
-- the Windows doctor/tooling lane runs and writes replay/contract artifacts
-- inline showcase samples execute on a Windows host and produce terminal
-  transcripts
-
-It also proves what is still missing:
-
-- `ci-windows-host-evidence.txt` currently shows blank `WT_SESSION`, `ConPty`,
-  and `TERM` values
-- the runner evidence therefore reflects a redirected Windows CI console, not a
-  captured interactive Windows Terminal or SSH/ConPTY session
-
-So the remaining blocker is no longer "any Windows evidence"; it is specifically
-"interactive ConPTY evidence outside a redirected CI console".
-
-## Exit Criteria
-
-This blocker can be closed when a native Windows host run captures at least:
-
-- a doctor artifact refresh
-- an interactive demo/showcase transcript
-- a host evidence update confirming the current interactive ConPTY path
+- The Windows CI lane remains useful, but its host evidence is still a
+  redirected runner console with blank `WT_SESSION`, `ConPty`, and `TERM`
+  values.
+- The external local Windows run is the evidence that closes the interactive
+  ConPTY gap, because it includes an actual user-hosted interactive transcript
+  rather than only redirected CI output.
+- This record is retained so the closure basis stays explicit rather than being
+  buried in commit history.

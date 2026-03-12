@@ -34,12 +34,12 @@ public static class TerminalHostMatrix
             "windows",
             "conpty",
             TerminalCapabilities.WindowsConsole(),
-            "Windows host profile; implementation present but not executable in this Linux workspace.",
-            "validated-ci",
-            ["headless", "ci-windows"],
+            "Windows host profile validated through CI plus external local Windows evidence; still not executable directly from the primary Linux workspace.",
+            "validated-external",
+            ["headless", "ci-windows", "windows-local-doctor", "windows-local-inline", "windows-local-interactive"],
             [
-                "No local ConPTY execution evidence is produced from this Linux workspace.",
-                "PTY transcript assertions are currently Unix-only."
+                "The primary Linux workspace still cannot execute native Windows terminals directly.",
+                "In-repo PTY transcript assertions remain Unix-only; Windows transcript refreshes currently come from external hosts and CI."
             ],
             ["Prefer Windows console capability set and avoid Unix-only toggles unless explicitly supported."])
     ];

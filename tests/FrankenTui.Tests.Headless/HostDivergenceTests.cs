@@ -26,6 +26,10 @@ public sealed class HostDivergenceTests
 
         Assert.Equal("unix-tty", linux.Host);
         Assert.Equal("conpty", windows.Host);
-        Assert.Contains("PTY transcript assertions are currently Unix-only.", windows.KnownDivergences);
+        Assert.Equal("validated-external", windows.ValidationStatus);
+        Assert.Contains("windows-local-interactive", windows.EvidenceSources);
+        Assert.Contains(
+            "In-repo PTY transcript assertions remain Unix-only; Windows transcript refreshes currently come from external hosts and CI.",
+            windows.KnownDivergences);
     }
 }
