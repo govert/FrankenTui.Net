@@ -42,6 +42,49 @@ public sealed class DiffAndHeadlessTests
     }
 
     [Fact]
+    public void CertifiedDiffSkipProducesNoChanges()
+    {
+        var oldBuffer = new RenderBuffer(4, 2);
+        var newBuffer = new RenderBuffer(4, 2);
+
+        var diff = BufferDiff.ComputeCertified(oldBuffer, newBuffer, DiffSkipHint.SkipDiff);
+
+        Assert.True(diff.IsEmpty);
+        Assert.True(DiffSkipHint.SkipDiff.SkipsWork);
+        Assert.Equal("skip-diff", DiffSkipHint.SkipDiff.Label);
+    }
+
+    [Fact]
+    public void CertifiedDiffCanNarrowWorkToSpecificRows()
+    {
+        var oldBuffer = new RenderBuffer(4, 3);
+        var newBuffer = new RenderBuffer(4, 3);
+        newBuffer.ClearDirty();
+        newBuffer.Set(1, 0, Cell.FromChar('A'));
+        newBuffer.Set(2, 2, Cell.FromChar('B'));
+
+        var diff = BufferDiff.ComputeCertified(oldBuffer, newBuffer, DiffSkipHint.NarrowToRows([2]));
+
+        Assert.Equal([new CellPosition(2, 2)], diff.Changes);
+        Assert.True(DiffSkipHint.NarrowToRows([2]).SkipsWork);
+        Assert.Equal("narrow-to-rows", DiffSkipHint.NarrowToRows([2]).Label);
+    }
+
+    [Fact]
+    public void CollectDirtyRowsReturnsOnlyChangedRows()
+    {
+        var oldBuffer = new RenderBuffer(4, 3);
+        var newBuffer = new RenderBuffer(4, 3);
+        newBuffer.ClearDirty();
+        newBuffer.Set(0, 1, Cell.FromChar('X'));
+        newBuffer.Set(3, 2, Cell.FromChar('Y'));
+
+        var rows = BufferDiff.CollectDirtyRows(oldBuffer, newBuffer);
+
+        Assert.Equal([1, 2], rows);
+    }
+
+    [Fact]
     public void HeadlessBufferViewTrimsTrailingSpacesAndSkipsContinuations()
     {
         var buffer = new RenderBuffer(5, 2);

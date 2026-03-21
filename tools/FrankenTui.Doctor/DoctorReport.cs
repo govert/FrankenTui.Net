@@ -24,4 +24,15 @@ public sealed record DoctorReport(
     IReadOnlyList<string>? KnownHostDivergences = null,
     IReadOnlyList<string>? CapabilityOverrides = null,
     IReadOnlyList<string>? Recommendations = null,
-    IReadOnlyDictionary<string, string>? ArtifactPaths = null);
+    IReadOnlyDictionary<string, string>? ArtifactPaths = null,
+    ArtifactManifestSummary? ArtifactManifest = null,
+    FailureLogSummary? FailureSignatures = null,
+    CostReport? CostProfile = null,
+    DoctorWorkflowSummary? Workflow = null,
+    DoctorBootstrapSummary? Bootstrap = null,
+    DoctorSuiteReport? Suite = null,
+    DoctorRunMeta? RunMeta = null,
+    DoctorSuiteManifest? SuiteManifest = null,
+    DoctorSeedPlan? SeedPlan = null,
+    DoctorSeedExecution? SeedExecution = null,
+    DoctorSuiteAggregate? SuiteAggregate = null);

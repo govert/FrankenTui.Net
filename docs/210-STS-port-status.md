@@ -24,9 +24,9 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
 ## Current Basis
 
 - Current status basis commit:
-  working tree after external Windows evidence closure
+  working tree after first `f612df2b` upstream-sync wave
 - Current upstream workspace basis:
-  `7a91089366bd4644e086d5a422cb76b052e3de17`
+  `f612df2b9346e3001a854c89ef017e91edd9cf5d`
 - Last full verification pass at status update time:
   `dotnet test FrankenTui.Net.sln --no-restore`
 
@@ -188,6 +188,106 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   Windows is therefore no longer only `validated-ci`; it is now treated as
   `validated-external`, and the former ConPTY blocker is retained only as a
   historical closure record.
+- first upstream-sync wave after `f612df2b`
+  Refreshed the managed upstream workspace to `f612df2b9346e3001a854c89ef017e91edd9cf5d`,
+  ported render-side certified diff hints into `BufferDiff` and `AppRuntime`,
+  added deterministic pane-workspace replay checkpoints/diagnostics, and
+  refreshed headless coverage around both surfaces. Current local verification
+  is `120` headless tests, `5` web tests, and `7` PTY tests via `dotnet test
+  FrankenTui.Net.sln --no-restore`. Remaining upstream drift from the same
+  range is now tracked explicitly in `246-MAP-upstream-contract-gap-register.md`.
+- render-gauntlet catch-up wave after first `f612df2b` sync batch
+  Added a local `FrankenTui.Testing.Harness` render gauntlet, presenter
+  equivalence comparer, and layout-reuse contract helper so the repo now has an
+  explicit harness baseline for the upstream render-equivalence slice rather
+  than only ad hoc render tests and benchmarks. Current local verification is
+  `124` headless tests via `dotnet test tests/FrankenTui.Tests.Headless/FrankenTui.Tests.Headless.csproj --no-restore`.
+- runtime-effect catch-up wave after render-gauntlet catch-up wave
+  Added a local runtime effect-system baseline with command/subscription
+  counters, queue telemetry, reconcile accounting, optional effect labels on
+  `AppCommand` and `Subscription`, and runtime/session wiring that records the
+  effect and queue signals without changing the public update/program model.
+  Current local verification is `127` headless tests via `dotnet test
+  tests/FrankenTui.Tests.Headless/FrankenTui.Tests.Headless.csproj --no-restore`.
+- doctor-operator contract catch-up wave after runtime-effect catch-up wave
+  Added explicit artifact-manifest taxonomy/validation and failure-signature
+  contract helpers, then wired the doctor `--write-manifest` path to emit those
+  summaries alongside the existing replay/benchmark/contract artifacts. Current
+  local verification is `132` headless tests via `dotnet test
+  tests/FrankenTui.Tests.Headless/FrankenTui.Tests.Headless.csproj --no-restore`.
+- fixture-suite catch-up wave after doctor-operator contract catch-up wave
+  Added a local fixture registry, deterministic baseline-capture model,
+  bounded fixture runner, and rollout scorecard baseline so the harness now
+  carries explicit fixture-suite / baseline-capture / rollout-evidence depth
+  rather than only the earlier render gauntlet and benchmark gate slices.
+  Current local verification is `136` headless tests via `dotnet test
+  tests/FrankenTui.Tests.Headless/FrankenTui.Tests.Headless.csproj --no-restore`.
+- doctor-cost-profile catch-up wave after fixture-suite catch-up wave
+  Added a local doctor workflow cost-profile baseline plus explicit workflow
+  summary artifacts/report fields so the doctor path now emits structured
+  cost, stage, and orchestration evidence instead of only the aggregate
+  environment report plus replay/benchmark artifacts. Current local
+  verification is `138` headless tests plus the doctor PTY artifact path via
+  `dotnet test tests/FrankenTui.Tests.Headless/FrankenTui.Tests.Headless.csproj --no-restore`
+  and `dotnet test tests/FrankenTui.Tests.Pty/FrankenTui.Tests.Pty.csproj --no-restore --filter DoctorCanWriteArtifactsAndTextSummary`.
+- doctor-bootstrap-and-suite catch-up wave after doctor-cost-profile catch-up wave
+  Added explicit bootstrap-summary and suite-report artifacts/report fields so
+  the current local doctor flow now records basis/bootstrap stages and a
+  machine-readable single-run suite aggregate instead of leaving that
+  orchestration depth implicit. Current local verification is `139` headless
+  tests plus the doctor PTY artifact path via `dotnet test
+  tests/FrankenTui.Tests.Headless/FrankenTui.Tests.Headless.csproj --no-restore`
+  and `dotnet test tests/FrankenTui.Tests.Pty/FrankenTui.Tests.Pty.csproj --no-restore --filter DoctorCanWriteArtifactsAndTextSummary`.
+- doctor-runmeta catch-up wave after doctor-bootstrap-and-suite catch-up wave
+  Added explicit local `run_meta` and `suite_manifest` artifacts/report fields
+  so the current doctor flow now records a concrete run-level contract and a
+  machine-readable suite-manifest aggregate rather than only higher-level
+  summaries. Current local verification is `140` headless tests plus the doctor
+  PTY artifact path via `dotnet test
+  tests/FrankenTui.Tests.Headless/FrankenTui.Tests.Headless.csproj --no-restore`
+  and `dotnet test tests/FrankenTui.Tests.Pty/FrankenTui.Tests.Pty.csproj --no-restore --filter DoctorCanWriteArtifactsAndTextSummary`.
+- doctor-seed-plan catch-up wave after doctor-runmeta catch-up wave
+  Added an explicit local seed-plan artifact/report field with upstream-shaped
+  endpoint, retry, timeout, and stage defaults so the doctor bootstrap policy
+  is recorded as a concrete contract rather than by convention. Current local
+  verification is `141` headless tests plus the doctor PTY artifact path via
+  `dotnet test tests/FrankenTui.Tests.Headless/FrankenTui.Tests.Headless.csproj --no-restore`
+  and `dotnet test tests/FrankenTui.Tests.Pty/FrankenTui.Tests.Pty.csproj --no-restore --filter DoctorCanWriteArtifactsAndTextSummary`.
+- doctor-seed-execution catch-up wave after doctor-seed-plan catch-up wave
+  Added a deterministic seed-execution artifact plus a reusable suite-aggregate
+  summary over local `run_meta` entries, so the current doctor flow now records
+  bootstrap execution results and aggregate suite state rather than only static
+  seed policy plus single-run summaries. Current local verification is `142`
+  headless tests plus the doctor PTY artifact path via `dotnet test
+  tests/FrankenTui.Tests.Headless/FrankenTui.Tests.Headless.csproj --no-restore`
+  and `dotnet test tests/FrankenTui.Tests.Pty/FrankenTui.Tests.Pty.csproj --no-restore --filter DoctorCanWriteArtifactsAndTextSummary`.
+- doctor-suite-report catch-up wave after doctor-seed-execution catch-up wave
+  Added a stable doctor-suite workspace under `artifacts/replay/doctor-suite`,
+  persisted each local `run_meta` into that suite directory, and rebuilt the
+  suite manifest, suite aggregate, JSON suite report, and HTML suite index from
+  the collected suite-run corpus rather than only from the current run. Current
+  local verification is `143` headless tests, `5` web tests, and `7` PTY tests
+  via `dotnet test FrankenTui.Net.sln --no-restore`.
+- doctor-actual-seed catch-up wave after doctor-suite-report catch-up wave
+  Added an optional real JSON-RPC doctor seed runner behind `--seed-mode actual`
+  with retry, poll, and stage logging against the configured MCP endpoint, while
+  keeping simulation as the default local doctor path. Current local
+  verification is `145` headless tests, `5` web tests, and `7` PTY tests via
+  `dotnet test FrankenTui.Net.sln --no-restore`.
+- asupersync-evidence catch-up wave after doctor-actual-seed catch-up wave
+  Added an explicit orchestration-only Asupersync evidence artifact with lane,
+  fallback, and correlation fields so the local runtime/doctor stack now emits
+  the newer lane-selection contract instead of only implicit legacy behavior.
+  Current local verification is `146` headless tests, `5` web tests, and `7`
+  PTY tests via `dotnet test FrankenTui.Net.sln --no-restore`.
+- runtime-fault-and-lifecycle catch-up wave after asupersync-evidence catch-up wave
+  Extended the local runtime effect-system baseline with command/subscription
+  cancellation and failure accounting plus declared subscription start/stop
+  lifecycle telemetry, so the remaining upstream `effect_system` /
+  `subscription` row is now treated as an execution-model divergence rather
+  than an open missing contract. Current local verification is `148` headless
+  tests, `5` web tests, and `7` PTY tests via `dotnet test FrankenTui.Net.sln
+  --no-restore`.
 
 ## Status
 

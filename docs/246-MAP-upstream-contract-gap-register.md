@@ -52,12 +52,15 @@ adopts them explicitly later:
 
 ## Active Remaining Gaps
 
-At the current audit level, no active in-scope contract gap remains open.
+At the current audit level, no post-`f612df2b` upstream contract is still
+registered here as an active remaining gap.
 
 ## In-Scope Contract Surfaces Still Fully Absent Locally
 
-At the current audit level, no in-scope contract surface remains completely
-absent.
+At the current audit level, no newly reviewed in-scope surface from the
+`f612df2b...` range is classified as completely absent. The remaining items are
+partial because FrankenTui.Net already has adjacent baselines for the same
+domains.
 
 ## Contracts Reviewed But Not Registered As Current Gaps
 
@@ -110,6 +113,40 @@ items in this register:
   The HUD can now consume runtime frame statistics directly, the interactive
   showcase feeds those stats back into the extras surface, and headless/PTY
   coverage verifies the runtime-fed path.
+- `crates/ftui-harness/src/render_gauntlet.rs`,
+  `crates/ftui-harness/src/presenter_equivalence.rs`,
+  `crates/ftui-harness/src/layout_reuse.rs`, `src/fixture_suite.rs`,
+  `src/baseline_capture.rs`, and `src/rollout_scorecard.rs`
+  The local harness now carries render gauntlet, presenter equivalence,
+  layout-reuse, fixture-suite, rollout-scorecard, doctor cost-profile, and
+  suite-report/index depth, so this slice is no longer tracked as an active
+  post-`f612df2b` gap.
+- `crates/doctor_frankentui/src/capture.rs`, `src/doctor.rs`,
+  `src/report.rs`, `src/seed.rs`, and the new harness cost-profile modules
+  The local doctor surface now carries artifact-manifest/failure-signature
+  validation, workflow/bootstrap summaries, `run_meta` / `suite_manifest`,
+  seed-plan and seed-execution artifacts, a stable `doctor-suite` workspace,
+  and an optional actual JSON-RPC seed/bootstrap path behind `--seed-mode
+  actual`, so this slice is no longer tracked as an active post-`f612df2b`
+  gap.
+- `docs/adr/ADR-010-asupersync-targeted-adoption.md`,
+  `docs/spec/asupersync-frankentui-seam-inventory.md`, and
+  `docs/spec/asupersync-frankentui-invariants-metrics-evidence.md`
+  The local runtime/doctor stack now emits an explicit orchestration-only
+  Asupersync evidence artifact with lane, fallback, divergence, and
+  correlation fields, so this row is no longer tracked as an active evidence
+  contract gap even though the deeper runtime executor/orchestration work
+  remains open separately.
+- `crates/ftui-runtime/src/effect_system.rs` and the expanded
+  `crates/ftui-runtime/src/subscription.rs` surface from `bd377ca4`
+  The local runtime now carries effect counters, queue/reconcile snapshots,
+  optional effect labels, cancellation/failure accounting for command and
+  subscription execution, and declared subscription lifecycle start/stop
+  telemetry. FrankenTui.Net still does not mirror the upstream background
+  subscription-thread and bounded join implementation one-to-one, but that is
+  now treated as an execution-model divergence rather than an untracked missing
+  operator contract because the local synchronous runtime has explicit
+  lifecycle/fault evidence and no hidden background thread manager.
 - `docs/adr/ADR-003-terminal-backend.md`,
   `docs/adr/ADR-005-one-writer-rule.md`, and
   `docs/adr/ADR-006-untrusted-output-policy.md`

@@ -1,5 +1,44 @@
 namespace FrankenTui.Render;
 
+public enum DiffSkipHintKind
+{
+    FullDiff,
+    SkipDiff,
+    NarrowToRows
+}
+
+public sealed class DiffSkipHint
+{
+    private DiffSkipHint(DiffSkipHintKind kind, IReadOnlyList<ushort>? rows = null)
+    {
+        Kind = kind;
+        Rows = rows ?? Array.Empty<ushort>();
+    }
+
+    public DiffSkipHintKind Kind { get; }
+
+    public IReadOnlyList<ushort> Rows { get; }
+
+    public bool SkipsWork => Kind is not DiffSkipHintKind.FullDiff;
+
+    public string Label => Kind switch
+    {
+        DiffSkipHintKind.FullDiff => "full-diff",
+        DiffSkipHintKind.SkipDiff => "skip-diff",
+        _ => "narrow-to-rows"
+    };
+
+    public static DiffSkipHint FullDiff { get; } = new(DiffSkipHintKind.FullDiff);
+
+    public static DiffSkipHint SkipDiff { get; } = new(DiffSkipHintKind.SkipDiff);
+
+    public static DiffSkipHint NarrowToRows(IEnumerable<ushort> rows)
+    {
+        ArgumentNullException.ThrowIfNull(rows);
+        return new DiffSkipHint(DiffSkipHintKind.NarrowToRows, rows.Distinct().Order().ToArray());
+    }
+}
+
 public sealed class BufferDiff
 {
     private readonly List<CellPosition> _changes = [];
@@ -47,6 +86,15 @@ public sealed class BufferDiff
         return diff;
     }
 
+    public static BufferDiff ComputeCertified(Buffer oldBuffer, Buffer newBuffer, DiffSkipHint hint)
+    {
+        ArgumentNullException.ThrowIfNull(hint);
+
+        var diff = new BufferDiff();
+        diff.ComputeCertifiedInto(oldBuffer, newBuffer, hint);
+        return diff;
+    }
+
     public static BufferDiff ComputeSignificantDirty(Buffer oldBuffer, Buffer newBuffer)
     {
         var diff = new BufferDiff();
@@ -77,6 +125,38 @@ public sealed class BufferDiff
         }
     }
 
+    public void ComputeCertifiedInto(Buffer oldBuffer, Buffer newBuffer, DiffSkipHint hint)
+    {
+        ArgumentNullException.ThrowIfNull(hint);
+        EnsureCompatible(oldBuffer, newBuffer);
+        _changes.Clear();
+
+        switch (hint.Kind)
+        {
+            case DiffSkipHintKind.FullDiff:
+                ComputeDirtyInto(oldBuffer, newBuffer);
+                return;
+            case DiffSkipHintKind.SkipDiff:
+                return;
+            case DiffSkipHintKind.NarrowToRows:
+                foreach (var row in hint.Rows)
+                {
+                    if (row >= newBuffer.Height)
+                    {
+                        continue;
+                    }
+
+                    var oldRow = oldBuffer.GetRow(row);
+                    var newRow = newBuffer.GetRow(row);
+                    AppendRowChanges(oldRow, newRow, row, _changes);
+                }
+
+                return;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(hint));
+        }
+    }
+
     public static int CountDirtyRows(Buffer oldBuffer, Buffer newBuffer)
     {
         EnsureCompatible(oldBuffer, newBuffer);
@@ -91,6 +171,22 @@ public sealed class BufferDiff
         }
 
         return count;
+    }
+
+    public static IReadOnlyList<ushort> CollectDirtyRows(Buffer oldBuffer, Buffer newBuffer)
+    {
+        EnsureCompatible(oldBuffer, newBuffer);
+
+        var rows = new List<ushort>();
+        for (ushort y = 0; y < newBuffer.Height; y++)
+        {
+            if (!oldBuffer.GetRow(y).SequenceEqual(newBuffer.GetRow(y)))
+            {
+                rows.Add(y);
+            }
+        }
+
+        return rows;
     }
 
     public IReadOnlyList<ChangeRun> Runs()

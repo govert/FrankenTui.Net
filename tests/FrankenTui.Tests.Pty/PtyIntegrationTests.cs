@@ -138,7 +138,20 @@ public sealed class PtyIntegrationTests
         Assert.DoesNotContain("Benchmark gate:", result.Stdout);
         Assert.True(File.Exists(Path.Combine(root, "artifacts", "replay", "doctor-runtime-runtime-trace.json")));
         Assert.True(File.Exists(Path.Combine(root, "artifacts", "benchmarks", "pty-doctor-benchmark-suite.json")));
+        Assert.True(File.Exists(Path.Combine(root, "artifacts", "benchmarks", "pty-doctor-doctor-cost-profile.json")));
         Assert.True(File.Exists(Path.Combine(root, "artifacts", "replay", "pty-doctor-manifest.json")));
+        Assert.True(File.Exists(Path.Combine(root, "artifacts", "replay", "pty-doctor-artifact-manifest-summary.json")));
+        Assert.True(File.Exists(Path.Combine(root, "artifacts", "replay", "pty-doctor-bootstrap-summary.json")));
+        Assert.True(File.Exists(Path.Combine(root, "artifacts", "replay", "pty-doctor-failure-signatures.json")));
+        Assert.True(File.Exists(Path.Combine(root, "artifacts", "replay", "pty-doctor-run-meta.json")));
+        Assert.True(File.Exists(Path.Combine(root, "artifacts", "replay", "pty-doctor-seed-plan.json")));
+        Assert.True(File.Exists(Path.Combine(root, "artifacts", "replay", "pty-doctor-seed-execution.json")));
+        Assert.True(File.Exists(Path.Combine(root, "artifacts", "replay", "pty-doctor-suite-aggregate.json")));
+        Assert.True(File.Exists(Path.Combine(root, "artifacts", "replay", "pty-doctor-suite-index.html")));
+        Assert.True(File.Exists(Path.Combine(root, "artifacts", "replay", "pty-doctor-suite-manifest.json")));
+        Assert.True(File.Exists(Path.Combine(root, "artifacts", "replay", "pty-doctor-suite-report.json")));
+        Assert.True(File.Exists(Path.Combine(root, "artifacts", "replay", "doctor-suite", "pty-doctor", "run_meta.json")));
+        Assert.True(File.Exists(Path.Combine(root, "artifacts", "replay", "pty-doctor-workflow-summary.json")));
         Assert.True(File.Exists(Path.Combine(root, "artifacts", "web", "doctor-dashboard.html")));
     }
 

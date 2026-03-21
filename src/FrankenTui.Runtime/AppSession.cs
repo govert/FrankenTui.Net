@@ -42,7 +42,14 @@ public sealed class AppSession<TModel, TMessage>
 
     public IReadOnlyList<TMessage> PendingMessages => _pending.ToArray();
 
-    public void Enqueue(TMessage message) => _pending.Enqueue(message);
+    public void Enqueue(TMessage message, bool trackEffectQueue = true)
+    {
+        _pending.Enqueue(message);
+        if (trackEffectQueue)
+        {
+            EffectSystem.RecordQueueEnqueue(_pending.Count);
+        }
+    }
 
     public void EnqueueRange(IEnumerable<TMessage> messages)
     {
@@ -50,11 +57,15 @@ public sealed class AppSession<TModel, TMessage>
 
         foreach (var message in messages)
         {
-            _pending.Enqueue(message);
+            Enqueue(message);
         }
     }
 
-    public void ClearPending() => _pending.Clear();
+    public void ClearPending()
+    {
+        EffectSystem.RecordQueueDrop(_pending.Count);
+        _pending.Clear();
+    }
 
     public async ValueTask<PresentResult> RenderCurrentAsync(CancellationToken cancellationToken = default) =>
         await Runtime.RenderAsync(Program.BuildView(Model), cancellationToken).ConfigureAwait(false);
@@ -85,7 +96,9 @@ public sealed class AppSession<TModel, TMessage>
         while (_pending.Count > 0 && results.Count < maxSteps)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            results.Add(await DispatchAsync(_pending.Dequeue(), cancellationToken).ConfigureAwait(false));
+            var next = _pending.Dequeue();
+            EffectSystem.RecordQueueProcessed(_pending.Count);
+            results.Add(await DispatchAsync(next, cancellationToken).ConfigureAwait(false));
         }
 
         return new RuntimeBatchResult<TModel, TMessage>(Model, results, _pending.Count > 0);

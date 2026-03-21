@@ -42,45 +42,113 @@ public sealed record PaneWorkspaceNode(
     public bool IsLeaf => Children.Count == 0;
 }
 
+public sealed record PaneWorkspaceSnapshot(
+    PaneWorkspaceNode Root,
+    string SelectedPaneId,
+    PaneWorkspaceMode Mode,
+    int PrimaryRatioPermille);
+
+public sealed record PaneWorkspaceCheckpoint(int AppliedCount, PaneWorkspaceSnapshot Snapshot);
+
+public sealed record PaneWorkspaceReplayDiagnostics(
+    int EntryCount,
+    int Cursor,
+    int CheckpointCount,
+    int CheckpointInterval,
+    bool CheckpointHit,
+    int ReplayStartIndex,
+    int ReplayDepth);
+
+public sealed record PaneWorkspaceCheckpointDecision(
+    int CheckpointInterval,
+    long EstimatedSnapshotCostNs,
+    long EstimatedReplayStepCostNs,
+    long EstimatedReplayDepthNs);
+
 public sealed record PaneWorkspaceState(
     PaneWorkspaceNode Root,
     string SelectedPaneId,
     PaneWorkspaceMode Mode,
     int PrimaryRatioPermille = 500,
     IReadOnlyList<PaneWorkspaceAction>? Timeline = null,
-    int TimelineCursor = 0)
+    int TimelineCursor = 0,
+    PaneWorkspaceSnapshot? Baseline = null,
+    IReadOnlyList<PaneWorkspaceCheckpoint>? Checkpoints = null,
+    int CheckpointInterval = 16)
 {
+    private const int MaxTimelineEntries = 24;
+    private const int DefaultCheckpointInterval = 16;
+
     public IReadOnlyList<PaneWorkspaceAction> Timeline { get; init; } = Timeline ?? [];
 
-    public static PaneWorkspaceState CreateDemo() =>
-        new(
-            new PaneWorkspaceNode(
-                "root",
-                "Workspace",
-                PaneSplitDirection.Horizontal,
-                [
-                    new PaneWorkspaceNode(
-                        "editor-shell",
-                        "Editor Shell",
-                        PaneSplitDirection.Vertical,
-                        [
-                            new PaneWorkspaceNode("files", "Files"),
-                            new PaneWorkspaceNode("editor", "Editor")
-                        ]),
-                    new PaneWorkspaceNode(
-                        "observer-shell",
-                        "Observer Shell",
-                        PaneSplitDirection.Vertical,
-                        [
-                            new PaneWorkspaceNode("logs", "Logs"),
-                            new PaneWorkspaceNode("hud", "HUD")
-                        ])
-                ]),
-            "editor",
-            PaneWorkspaceMode.Compare);
+    public PaneWorkspaceSnapshot Baseline { get; init; } = Baseline ?? new PaneWorkspaceSnapshot(Root, SelectedPaneId, Mode, PrimaryRatioPermille);
+
+    public IReadOnlyList<PaneWorkspaceCheckpoint> Checkpoints { get; init; } = Checkpoints ?? [];
+
+    public static PaneWorkspaceState CreateDemo()
+    {
+        var root = new PaneWorkspaceNode(
+            "root",
+            "Workspace",
+            PaneSplitDirection.Horizontal,
+            [
+                new PaneWorkspaceNode(
+                    "editor-shell",
+                    "Editor Shell",
+                    PaneSplitDirection.Vertical,
+                    [
+                        new PaneWorkspaceNode("files", "Files"),
+                        new PaneWorkspaceNode("editor", "Editor")
+                    ]),
+                new PaneWorkspaceNode(
+                    "observer-shell",
+                    "Observer Shell",
+                    PaneSplitDirection.Vertical,
+                    [
+                        new PaneWorkspaceNode("logs", "Logs"),
+                        new PaneWorkspaceNode("hud", "HUD")
+                    ])
+            ]);
+        var baseline = new PaneWorkspaceSnapshot(root, "editor", PaneWorkspaceMode.Compare, 500);
+        return FromSnapshot(baseline, baseline, [], 0, [], DefaultCheckpointInterval);
+    }
 
     public IReadOnlyList<PaneWorkspaceNode> FlattenLeaves() =>
         Flatten(Root).Where(static node => node.IsLeaf).ToArray();
+
+    public PaneWorkspaceReplayDiagnostics ReplayDiagnostics()
+    {
+        var checkpoint = Checkpoints.LastOrDefault(candidate => candidate.AppliedCount <= TimelineCursor);
+        var replayStartIndex = checkpoint?.AppliedCount ?? 0;
+        return new PaneWorkspaceReplayDiagnostics(
+            Timeline.Count,
+            TimelineCursor,
+            Checkpoints.Count,
+            CheckpointInterval,
+            checkpoint is not null,
+            replayStartIndex,
+            Math.Max(TimelineCursor - replayStartIndex, 0));
+    }
+
+    public static PaneWorkspaceCheckpointDecision CheckpointDecision(long snapshotCostNs, long replayStepCostNs)
+    {
+        if (snapshotCostNs <= 0 || replayStepCostNs <= 0)
+        {
+            return new PaneWorkspaceCheckpointDecision(
+                DefaultCheckpointInterval,
+                snapshotCostNs,
+                replayStepCostNs,
+                Math.Max(replayStepCostNs, 0) * DefaultCheckpointInterval / 2);
+        }
+
+        var ratio = Math.Max((snapshotCostNs * 2L) / replayStepCostNs, 1L);
+        var interval = (int)Math.Max(1, Math.Floor(Math.Sqrt(ratio)));
+        return new PaneWorkspaceCheckpointDecision(
+            interval,
+            snapshotCostNs,
+            replayStepCostNs,
+            replayStepCostNs * interval / 2);
+    }
 
     public PaneWorkspaceState Apply(PaneWorkspaceAction action)
     {
@@ -88,67 +156,40 @@ public sealed record PaneWorkspaceState(
 
         if (action.Kind == PaneWorkspaceActionKind.Undo)
         {
-            return Restore(Timeline, Math.Max(TimelineCursor - 1, 0));
+            return Restore(Timeline, Checkpoints, Math.Max(TimelineCursor - 1, 0), Baseline, CheckpointInterval);
         }
 
         if (action.Kind == PaneWorkspaceActionKind.Redo)
         {
-            return Restore(Timeline, Math.Min(TimelineCursor + 1, Timeline.Count));
+            return Restore(Timeline, Checkpoints, Math.Min(TimelineCursor + 1, Timeline.Count), Baseline, CheckpointInterval);
         }
 
-        var leaves = FlattenLeaves();
-        var selectedIndex = Array.FindIndex(leaves.ToArray(), leaf => string.Equals(leaf.Id, SelectedPaneId, StringComparison.Ordinal));
-        selectedIndex = selectedIndex < 0 ? 0 : selectedIndex;
         var activeTimeline = Timeline.Take(TimelineCursor).ToArray();
-
-        return action.Kind switch
-        {
-            PaneWorkspaceActionKind.SelectNext => this with
-            {
-                SelectedPaneId = leaves[(selectedIndex + 1) % leaves.Count].Id,
-                Timeline = Append(activeTimeline, action),
-                TimelineCursor = activeTimeline.Length + 1
-            },
-            PaneWorkspaceActionKind.SelectPrevious => this with
-            {
-                SelectedPaneId = leaves[(selectedIndex - 1 + leaves.Count) % leaves.Count].Id,
-                Timeline = Append(activeTimeline, action),
-                TimelineCursor = activeTimeline.Length + 1
-            },
-            PaneWorkspaceActionKind.CycleMode => this with
-            {
-                Mode = NextMode(Mode),
-                Timeline = Append(activeTimeline, action),
-                TimelineCursor = activeTimeline.Length + 1
-            },
-            PaneWorkspaceActionKind.GrowPrimary => this with
-            {
-                PrimaryRatioPermille = Math.Clamp(PrimaryRatioPermille + 50, 250, 750),
-                Timeline = Append(activeTimeline, action),
-                TimelineCursor = activeTimeline.Length + 1
-            },
-            PaneWorkspaceActionKind.ShrinkPrimary => this with
-            {
-                PrimaryRatioPermille = Math.Clamp(PrimaryRatioPermille - 50, 250, 750),
-                Timeline = Append(activeTimeline, action),
-                TimelineCursor = activeTimeline.Length + 1
-            },
-            _ => this
-        };
+        var combinedTimeline = activeTimeline.Concat([action]).ToArray();
+        var dropCount = Math.Max(combinedTimeline.Length - MaxTimelineEntries, 0);
+        var baseline = dropCount == 0
+            ? Baseline
+            : ReplaySnapshot(Baseline, combinedTimeline.Take(dropCount));
+        var retainedTimeline = combinedTimeline.Skip(dropCount).ToArray();
+        var current = ReplaySnapshot(baseline, retainedTimeline);
+        var checkpoints = BuildCheckpoints(baseline, retainedTimeline, CheckpointInterval);
+        return FromSnapshot(current, baseline, retainedTimeline, retainedTimeline.Length, checkpoints, CheckpointInterval);
     }
 
     public PaneWorkspaceState Replay(IEnumerable<PaneWorkspaceAction> actions)
     {
         ArgumentNullException.ThrowIfNull(actions);
 
-        var replayed = this with { Timeline = [], TimelineCursor = 0 };
+        var state = FromSnapshot(Baseline, Baseline, [], 0, [], CheckpointInterval);
         foreach (var action in actions)
         {
-            replayed = replayed.Apply(action);
+            state = state.Apply(action);
         }
 
-        return replayed;
+        return state;
     }
+
+    public PaneWorkspaceSnapshot ToSnapshot() => new(Root, SelectedPaneId, Mode, PrimaryRatioPermille);
 
     public string SnapshotHash()
     {
@@ -170,28 +211,127 @@ public sealed record PaneWorkspaceState(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(json);
 
-        return JsonSerializer.Deserialize<PaneWorkspaceState>(
-                   json,
-                   new JsonSerializerOptions
-                   {
-                       PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
-                   }) ??
-               throw new InvalidOperationException("Could not deserialize pane workspace state.");
+        var state = JsonSerializer.Deserialize<PaneWorkspaceState>(
+                        json,
+                        new JsonSerializerOptions
+                        {
+                            PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
+                        }) ??
+                    throw new InvalidOperationException("Could not deserialize pane workspace state.");
+
+        return Restore(
+            state.Timeline,
+            state.Checkpoints.Count == 0
+                ? BuildCheckpoints(state.Baseline, state.Timeline, state.CheckpointInterval)
+                : state.Checkpoints,
+            state.TimelineCursor,
+            state.Baseline,
+            state.CheckpointInterval);
     }
 
-    private static IReadOnlyList<PaneWorkspaceAction> Append(IReadOnlyList<PaneWorkspaceAction> timeline, PaneWorkspaceAction action) =>
-        timeline.Concat([action]).TakeLast(24).ToArray();
-
-    private static PaneWorkspaceState Restore(IReadOnlyList<PaneWorkspaceAction> timeline, int cursor)
+    private static PaneWorkspaceState Restore(
+        IReadOnlyList<PaneWorkspaceAction> timeline,
+        IReadOnlyList<PaneWorkspaceCheckpoint> checkpoints,
+        int cursor,
+        PaneWorkspaceSnapshot baseline,
+        int checkpointInterval)
     {
         var effectiveCursor = Math.Clamp(cursor, 0, timeline.Count);
-        var restored = CreateDemo().Replay(timeline.Take(effectiveCursor));
-        return restored with
+        var replayCheckpoint = checkpoints
+            .Where(checkpoint => checkpoint.AppliedCount <= effectiveCursor)
+            .LastOrDefault();
+        var replayStartIndex = replayCheckpoint?.AppliedCount ?? 0;
+        var replayBaseline = replayCheckpoint?.Snapshot ?? baseline;
+        var current = ReplaySnapshot(replayBaseline, timeline.Skip(replayStartIndex).Take(effectiveCursor - replayStartIndex));
+        return FromSnapshot(current, baseline, timeline, effectiveCursor, checkpoints, checkpointInterval);
+    }
+
+    private static PaneWorkspaceSnapshot ReplaySnapshot(
+        PaneWorkspaceSnapshot baseline,
+        IEnumerable<PaneWorkspaceAction> actions)
+    {
+        var snapshot = baseline;
+        foreach (var action in actions)
         {
-            Timeline = timeline,
-            TimelineCursor = effectiveCursor
+            snapshot = ApplyToSnapshot(snapshot, action);
+        }
+
+        return snapshot;
+    }
+
+    private static IReadOnlyList<PaneWorkspaceCheckpoint> BuildCheckpoints(
+        PaneWorkspaceSnapshot baseline,
+        IReadOnlyList<PaneWorkspaceAction> timeline,
+        int checkpointInterval)
+    {
+        if (checkpointInterval <= 0 || timeline.Count == 0)
+        {
+            return [];
+        }
+
+        var checkpoints = new List<PaneWorkspaceCheckpoint>();
+        var snapshot = baseline;
+        for (var index = 0; index < timeline.Count; index++)
+        {
+            snapshot = ApplyToSnapshot(snapshot, timeline[index]);
+            if ((index + 1) % checkpointInterval == 0)
+            {
+                checkpoints.Add(new PaneWorkspaceCheckpoint(index + 1, snapshot));
+            }
+        }
+
+        return checkpoints;
+    }
+
+    private static PaneWorkspaceSnapshot ApplyToSnapshot(PaneWorkspaceSnapshot snapshot, PaneWorkspaceAction action)
+    {
+        var leaves = Flatten(snapshot.Root).Where(static node => node.IsLeaf).ToArray();
+        var selectedIndex = Array.FindIndex(leaves, leaf => string.Equals(leaf.Id, snapshot.SelectedPaneId, StringComparison.Ordinal));
+        selectedIndex = selectedIndex < 0 ? 0 : selectedIndex;
+
+        return action.Kind switch
+        {
+            PaneWorkspaceActionKind.SelectNext => snapshot with
+            {
+                SelectedPaneId = leaves[(selectedIndex + 1) % leaves.Length].Id
+            },
+            PaneWorkspaceActionKind.SelectPrevious => snapshot with
+            {
+                SelectedPaneId = leaves[(selectedIndex - 1 + leaves.Length) % leaves.Length].Id
+            },
+            PaneWorkspaceActionKind.CycleMode => snapshot with
+            {
+                Mode = NextMode(snapshot.Mode)
+            },
+            PaneWorkspaceActionKind.GrowPrimary => snapshot with
+            {
+                PrimaryRatioPermille = Math.Clamp(snapshot.PrimaryRatioPermille + 50, 250, 750)
+            },
+            PaneWorkspaceActionKind.ShrinkPrimary => snapshot with
+            {
+                PrimaryRatioPermille = Math.Clamp(snapshot.PrimaryRatioPermille - 50, 250, 750)
+            },
+            _ => snapshot
         };
     }
+
+    private static PaneWorkspaceState FromSnapshot(
+        PaneWorkspaceSnapshot snapshot,
+        PaneWorkspaceSnapshot baseline,
+        IReadOnlyList<PaneWorkspaceAction> timeline,
+        int timelineCursor,
+        IReadOnlyList<PaneWorkspaceCheckpoint> checkpoints,
+        int checkpointInterval) =>
+        new(
+            snapshot.Root,
+            snapshot.SelectedPaneId,
+            snapshot.Mode,
+            snapshot.PrimaryRatioPermille,
+            timeline,
+            timelineCursor,
+            baseline,
+            checkpoints,
+            checkpointInterval);
 
     private static PaneWorkspaceMode NextMode(PaneWorkspaceMode mode) => mode switch
     {

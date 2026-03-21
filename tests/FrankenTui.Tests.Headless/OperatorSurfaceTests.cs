@@ -48,6 +48,66 @@ public sealed class OperatorSurfaceTests
     }
 
     [Fact]
+    public void PaneWorkspaceRecordsReplayCheckpointsAndDiagnostics()
+    {
+        var start = new DateTimeOffset(2026, 3, 12, 7, 30, 0, TimeSpan.Zero);
+        var state = PaneWorkspaceState.CreateDemo();
+
+        for (var index = 0; index < 16; index++)
+        {
+            state = state.Apply(
+                new PaneWorkspaceAction(
+                    index % 2 == 0 ? PaneWorkspaceActionKind.SelectNext : PaneWorkspaceActionKind.GrowPrimary,
+                    start + TimeSpan.FromMilliseconds(index * 16),
+                    "checkpoint"));
+        }
+
+        var diagnostics = state.ReplayDiagnostics();
+
+        Assert.Single(state.Checkpoints);
+        Assert.Equal(16, state.Checkpoints[0].AppliedCount);
+        Assert.True(diagnostics.CheckpointHit);
+        Assert.Equal(16, diagnostics.ReplayStartIndex);
+        Assert.Equal(0, diagnostics.ReplayDepth);
+    }
+
+    [Fact]
+    public void PaneWorkspaceDiscardsStaleCheckpointsWhenBranchingAfterUndo()
+    {
+        var start = new DateTimeOffset(2026, 3, 12, 8, 0, 0, TimeSpan.Zero);
+        var state = PaneWorkspaceState.CreateDemo();
+
+        for (var index = 0; index < 20; index++)
+        {
+            state = state.Apply(
+                new PaneWorkspaceAction(
+                    index % 3 == 0 ? PaneWorkspaceActionKind.CycleMode : PaneWorkspaceActionKind.SelectNext,
+                    start + TimeSpan.FromMilliseconds(index * 16),
+                    "timeline"));
+        }
+
+        Assert.Single(state.Checkpoints);
+
+        state = state.Apply(new PaneWorkspaceAction(PaneWorkspaceActionKind.Undo, start + TimeSpan.FromSeconds(1), "timeline"));
+        state = state.Apply(new PaneWorkspaceAction(PaneWorkspaceActionKind.Undo, start + TimeSpan.FromSeconds(1.1), "timeline"));
+        state = state.Apply(new PaneWorkspaceAction(PaneWorkspaceActionKind.GrowPrimary, start + TimeSpan.FromSeconds(1.2), "timeline"));
+
+        Assert.Equal(state.Timeline.Count, state.TimelineCursor);
+        Assert.Single(state.Checkpoints);
+        Assert.Equal(16, state.Checkpoints[0].AppliedCount);
+    }
+
+    [Fact]
+    public void PaneWorkspaceCheckpointDecisionPrefersShorterIntervalsForExpensiveReplay()
+    {
+        var slowerReplay = PaneWorkspaceState.CheckpointDecision(10_000, 2_500);
+        var cheaperReplay = PaneWorkspaceState.CheckpointDecision(10_000, 100);
+
+        Assert.True(slowerReplay.CheckpointInterval < cheaperReplay.CheckpointInterval);
+        Assert.True(slowerReplay.EstimatedReplayDepthNs > 0);
+    }
+
+    [Fact]
     public void CommandPaletteRanksDeterministically()
     {
         var entries = CommandPaletteRegistry.DefaultEntries();

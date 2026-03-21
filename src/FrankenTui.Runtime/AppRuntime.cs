@@ -4,6 +4,7 @@ using FrankenTui.Render;
 using FrankenTui.Style;
 using System.Diagnostics;
 using System.Globalization;
+using System.Collections.Generic;
 using RenderBuffer = FrankenTui.Render.Buffer;
 
 namespace FrankenTui.Runtime;
@@ -18,6 +19,7 @@ public sealed class AppRuntime<TModel, TMessage>
     private bool _resizePending;
     private int _stepIndex;
     private RuntimeFrameStats _frameStats = RuntimeFrameStats.Empty;
+    private HashSet<string> _activeSubscriptionKeys = [];
 
     public AppRuntime(
         ITerminalBackend backend,
@@ -55,6 +57,10 @@ public sealed class AppRuntime<TModel, TMessage>
 
     public RuntimeFrameStats FrameStats => _frameStats;
 
+    public QueueTelemetry QueueTelemetry => EffectSystem.SnapshotQueueTelemetry();
+
+    public RuntimeDynamics RuntimeDynamics => EffectSystem.SnapshotRuntimeDynamics();
+
     public async ValueTask<RuntimeStepResult<TModel, TMessage>> DispatchAsync(
         IAppProgram<TModel, TMessage> program,
         TModel model,
@@ -84,6 +90,8 @@ public sealed class AppRuntime<TModel, TMessage>
 
         if (Policy.EmitTelemetry)
         {
+            var dynamics = EffectSystem.SnapshotRuntimeDynamics();
+            var queue = EffectSystem.SnapshotQueueTelemetry();
             Telemetry.Record(
                 "ftui.program.update",
                 TelemetryEventCategory.RuntimePhase,
@@ -94,7 +102,10 @@ public sealed class AppRuntime<TModel, TMessage>
                     new TelemetryField("duration_us", ToMicroseconds(updateStopwatch.Elapsed).ToString(CultureInfo.InvariantCulture)),
                     TelemetryRedactor.TypeField("model_type", typeof(TModel), Telemetry.Config.Verbose),
                     TelemetryRedactor.TypeField("msg_type", message?.GetType(), Telemetry.Config.Verbose),
-                    new TelemetryField("subscription_count", update.Subscriptions.Count.ToString(CultureInfo.InvariantCulture))
+                    new TelemetryField("subscription_count", update.Subscriptions.Count.ToString(CultureInfo.InvariantCulture)),
+                    new TelemetryField("command_effects_total", dynamics.CommandEffects.ToString(CultureInfo.InvariantCulture)),
+                    new TelemetryField("command_cancellations_total", dynamics.CommandCancellations.ToString(CultureInfo.InvariantCulture)),
+                    new TelemetryField("command_failures_total", dynamics.CommandFailures.ToString(CultureInfo.InvariantCulture))
                 ]);
             Telemetry.Record(
                 "ftui.program.view",
@@ -110,8 +121,23 @@ public sealed class AppRuntime<TModel, TMessage>
                 _stepIndex,
                 [
                     new TelemetryField("active_count", update.Subscriptions.Count.ToString(CultureInfo.InvariantCulture)),
-                    new TelemetryField("started", update.Subscriptions.Count.ToString(CultureInfo.InvariantCulture)),
-                    new TelemetryField("stopped", "0")
+                    new TelemetryField("started", dynamics.SubscriptionStarts.ToString(CultureInfo.InvariantCulture)),
+                    new TelemetryField("stopped", dynamics.SubscriptionStops.ToString(CultureInfo.InvariantCulture)),
+                    new TelemetryField("subscription_effects_total", dynamics.SubscriptionEffects.ToString(CultureInfo.InvariantCulture)),
+                    new TelemetryField("subscription_cancellations_total", dynamics.SubscriptionCancellations.ToString(CultureInfo.InvariantCulture)),
+                    new TelemetryField("subscription_failures_total", dynamics.SubscriptionFailures.ToString(CultureInfo.InvariantCulture)),
+                    new TelemetryField("subscription_messages_total", dynamics.SubscriptionMessages.ToString(CultureInfo.InvariantCulture))
+                ]);
+            Telemetry.Record(
+                "ftui.effect.queue",
+                TelemetryEventCategory.RuntimePhase,
+                _stepIndex,
+                [
+                    new TelemetryField("enqueued_total", queue.Enqueued.ToString(CultureInfo.InvariantCulture)),
+                    new TelemetryField("processed_total", queue.Processed.ToString(CultureInfo.InvariantCulture)),
+                    new TelemetryField("dropped_total", queue.Dropped.ToString(CultureInfo.InvariantCulture)),
+                    new TelemetryField("high_water", queue.HighWater.ToString(CultureInfo.InvariantCulture)),
+                    new TelemetryField("in_flight", queue.InFlight.ToString(CultureInfo.InvariantCulture))
                 ]);
         }
 
@@ -140,12 +166,13 @@ public sealed class AppRuntime<TModel, TMessage>
         var dirtyRows = resized ? _next.Height : BufferDiff.CountDirtyRows(_current, _next);
         var diffStopwatch = Stopwatch.StartNew();
         var selection = _diffSelector.Select(_next.Width, _next.Height, dirtyRows, resized, _lastPresentLatency);
+        var certifiedHint = CreateDiffSkipHint(selection, resized, dirtyRows);
         var diff = selection.Strategy switch
         {
             DiffStrategy.Full => BufferDiff.ComputeFull(_current, _next),
             DiffStrategy.FullRedraw => BufferDiff.Full(_next.Width, _next.Height),
             DiffStrategy.SignificantDirtyRows => BufferDiff.ComputeSignificantDirty(_current, _next),
-            _ => BufferDiff.ComputeDirty(_current, _next)
+            _ => BufferDiff.ComputeCertified(_current, _next, certifiedHint)
         };
         diffStopwatch.Stop();
 
@@ -291,15 +318,42 @@ public sealed class AppRuntime<TModel, TMessage>
         AppCommand<TMessage> commands,
         IReadOnlyList<Subscription<TMessage>> subscriptions)
     {
-        var messages = new List<TMessage>(commands.Messages);
+        var reconcileStopwatch = Stopwatch.StartNew();
+        var commandMessages = EffectSystem.TraceCommandEffect(
+            commands.EffectKind,
+            () => commands.Messages.ToArray());
+        var currentKeys = subscriptions.Select(static item => item.Key).ToHashSet(StringComparer.Ordinal);
+        var started = currentKeys.Except(_activeSubscriptionKeys, StringComparer.Ordinal).Count();
+        var stopped = _activeSubscriptionKeys.Except(currentKeys, StringComparer.Ordinal).Count();
+        EffectSystem.RecordSubscriptionStart(started);
+        EffectSystem.RecordSubscriptionStop(stopped);
+        var messages = new List<TMessage>(commandMessages);
         foreach (var subscription in subscriptions)
         {
-            messages.AddRange(subscription.Invoke());
+            messages.AddRange(EffectSystem.TraceSubscriptionEffect(subscription));
         }
+        reconcileStopwatch.Stop();
+        EffectSystem.RecordReconcile(reconcileStopwatch.Elapsed);
+        _activeSubscriptionKeys = currentKeys;
 
         return messages;
     }
 
     private static long ToMicroseconds(TimeSpan duration) =>
         (long)Math.Round(duration.TotalMilliseconds * 1000.0, MidpointRounding.AwayFromZero);
+
+    private DiffSkipHint CreateDiffSkipHint(DiffStrategySelection selection, bool resized, int dirtyRows)
+    {
+        if (resized || selection.Strategy is DiffStrategy.Full or DiffStrategy.FullRedraw)
+        {
+            return DiffSkipHint.FullDiff;
+        }
+
+        if (dirtyRows == 0)
+        {
+            return DiffSkipHint.SkipDiff;
+        }
+
+        return DiffSkipHint.NarrowToRows(BufferDiff.CollectDirtyRows(_current, _next));
+    }
 }
