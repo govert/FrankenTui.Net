@@ -29,8 +29,8 @@ public sealed class PtyIntegrationTests
             "16",
             "--frames",
             "2",
-            "--scenario",
-            "tooling"
+            "--screen",
+            "14"
         ]);
 
         Assert.True(result.Success, result.Stderr);
@@ -38,8 +38,8 @@ public sealed class PtyIntegrationTests
         Assert.Contains("\u001b[?1049l", result.Stdout);
         Assert.Contains("\u001b[?25l", result.Stdout);
         Assert.Contains("\u001b[?25h", result.Stdout);
-        Assert.Contains("Tooling", result.Stdout);
-        Assert.Contains("Hosted parity", result.Stdout);
+        Assert.Contains("Performance", result.Stdout);
+        Assert.Contains("Metric", result.Stdout);
     }
 
     [Fact]
@@ -67,16 +67,16 @@ public sealed class PtyIntegrationTests
             "16",
             "--frames",
             "3",
-            "--scenario",
-            "interaction"
+            "--screen",
+            "6"
         ]);
 
         Assert.True(result.Success, result.Stderr);
         Assert.DoesNotContain("\u001b[?1049h", result.Stdout);
         Assert.Contains("\u001b7", result.Stdout);
         Assert.Contains("\u001b8", result.Stdout);
-        Assert.Contains("Interaction", result.Stdout);
-        Assert.Contains("Focus", result.Stdout);
+        Assert.Contains("Layout", result.Stdout);
+        Assert.Contains("Workspace", result.Stdout);
     }
 
     [Fact]
@@ -212,17 +212,18 @@ public sealed class PtyIntegrationTests
                 "--",
                 "--inline",
                 "--interactive",
+                "--screen",
+                "5",
                 "--width",
                 "60",
                 "--height",
                 "16"
             ],
-            stdin: "\tjlq");
+            stdin: "q");
 
         Assert.True(result.Success, result.Stderr);
-        Assert.Contains("Overview", result.Stdout);
-        Assert.Contains("Overlay", result.Stdout);
-        Assert.Contains("Notes", result.Stdout);
+        Assert.Contains("Widget", result.Stdout);
+        Assert.Contains("render completeness", result.Stdout);
     }
 
     [Fact]
@@ -250,14 +251,13 @@ public sealed class PtyIntegrationTests
             "18",
             "--frames",
             "2",
-            "--scenario",
-            "extras"
+            "--screen",
+            "16"
         ]);
 
         Assert.True(result.Success, result.Stderr);
-        Assert.Contains("Extras", result.Stdout);
-        Assert.Contains("Pane Workspace", result.Stdout);
-        Assert.Contains("Command Palette", result.Stdout);
+        Assert.Contains("Mermaid", result.Stdout);
+        Assert.Contains("Controls", result.Stdout);
     }
 
     private static bool CanRunPty() => OperatingSystem.IsLinux() || OperatingSystem.IsMacOS();

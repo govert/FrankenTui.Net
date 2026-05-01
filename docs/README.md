@@ -62,6 +62,12 @@ repository root documents.
 - [357-VRF-shared-sample-comparison-scaffold.md](./357-VRF-shared-sample-comparison-scaffold.md):
   deterministic cross-implementation sample runner scaffold against the managed
   upstream workspace
+- [364-DEM-full-showcase-parity-plan.md](./364-DEM-full-showcase-parity-plan.md):
+  follow-on plan for reaching full practical parity with upstream
+  `ftui-demo-showcase`
+- [365-DEM-showcase-comparison-harness.md](./365-DEM-showcase-comparison-harness.md):
+  automated 80x24 showcase snapshot comparison harness against upstream
+  `ftui-demo-showcase`
 - [391-DOC-dotnet-implementation-notes.md](./391-DOC-dotnet-implementation-notes.md):
   .NET-specific implementation, verification, and maintainer-orientation notes
 - [EXTERNALS.md](./EXTERNALS.md): inventory of local external repositories and

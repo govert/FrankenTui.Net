@@ -65,6 +65,18 @@ public sealed record PaneWorkspaceCheckpointDecision(
     long EstimatedReplayStepCostNs,
     long EstimatedReplayDepthNs);
 
+public sealed record PaneWorkspaceJsonMigrationResult(
+    PaneWorkspaceState State,
+    string FromVersion,
+    string ToVersion,
+    bool MigrationApplied,
+    IReadOnlyList<string> Warnings)
+{
+    public string Decision => MigrationApplied ? "migrated" : "current_schema";
+
+    public string StateChecksum => State.SnapshotHash();
+}
+
 public sealed record PaneWorkspaceState(
     PaneWorkspaceNode Root,
     string SelectedPaneId,
@@ -78,6 +90,13 @@ public sealed record PaneWorkspaceState(
 {
     private const int MaxTimelineEntries = 24;
     private const int DefaultCheckpointInterval = 16;
+    public const string CurrentJsonSchemaVersion = "pane-workspace-state-v1";
+
+    private static readonly JsonSerializerOptions CanonicalJsonOptions = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
+        WriteIndented = true
+    };
 
     public IReadOnlyList<PaneWorkspaceAction> Timeline { get; init; } = Timeline ?? [];
 
@@ -201,25 +220,107 @@ public sealed record PaneWorkspaceState(
     public string ToJson() =>
         JsonSerializer.Serialize(
             this,
-            new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
-                WriteIndented = true
-            });
+            CanonicalJsonOptions);
+
+    public string ToCanonicalJson()
+    {
+        var sourceIssues = Validate();
+        if (sourceIssues.Count > 0)
+        {
+            throw new InvalidOperationException($"Pane workspace snapshot invalid: {string.Join("; ", sourceIssues)}");
+        }
+
+        var restored = Restore(
+            Timeline,
+            Checkpoints.Count == 0
+                ? BuildCheckpoints(Baseline, Timeline, CheckpointInterval)
+                : Checkpoints,
+            TimelineCursor,
+            Baseline,
+            CheckpointInterval);
+        var issues = restored.Validate();
+        if (issues.Count > 0)
+        {
+            throw new InvalidOperationException($"Pane workspace snapshot invalid: {string.Join("; ", issues)}");
+        }
+
+        return restored.ToJson();
+    }
+
+    public IReadOnlyList<string> Validate()
+    {
+        var issues = new List<string>();
+        var nodes = Flatten(Root).ToArray();
+        if (nodes.Length == 0)
+        {
+            issues.Add("root tree must contain at least one pane");
+        }
+
+        if (nodes.Any(static node => string.IsNullOrWhiteSpace(node.Id)))
+        {
+            issues.Add("pane ids must be non-empty");
+        }
+
+        if (nodes.GroupBy(static node => node.Id, StringComparer.Ordinal).Any(static group => group.Count() > 1))
+        {
+            issues.Add("pane ids must be unique");
+        }
+
+        var leaves = nodes.Where(static node => node.IsLeaf).ToArray();
+        if (leaves.Length == 0)
+        {
+            issues.Add("root tree must contain at least one leaf pane");
+        }
+
+        if (leaves.Length > 0 && !leaves.Any(leaf => string.Equals(leaf.Id, SelectedPaneId, StringComparison.Ordinal)))
+        {
+            issues.Add($"selected pane '{SelectedPaneId}' was not found in leaf panes");
+        }
+
+        if (PrimaryRatioPermille is < 250 or > 750)
+        {
+            issues.Add("primary ratio must be between 250 and 750 permille");
+        }
+
+        if (TimelineCursor < 0 || TimelineCursor > Timeline.Count)
+        {
+            issues.Add($"timeline cursor {TimelineCursor} out of range for {Timeline.Count} entries");
+        }
+
+        if (CheckpointInterval <= 0)
+        {
+            issues.Add("checkpoint interval must be positive");
+        }
+
+        if (Checkpoints.Any(checkpoint => checkpoint.AppliedCount < 0 || checkpoint.AppliedCount > Timeline.Count))
+        {
+            issues.Add("checkpoint applied count is outside the timeline");
+        }
+
+        return issues;
+    }
 
     public static PaneWorkspaceState FromJson(string json)
+    {
+        return DecodeJson(json).State;
+    }
+
+    public static PaneWorkspaceJsonMigrationResult DecodeJson(string json)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(json);
 
         var state = JsonSerializer.Deserialize<PaneWorkspaceState>(
                         json,
-                        new JsonSerializerOptions
-                        {
-                            PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
-                        }) ??
+                        CanonicalJsonOptions) ??
                     throw new InvalidOperationException("Could not deserialize pane workspace state.");
 
-        return Restore(
+        var sourceIssues = state.Validate();
+        if (sourceIssues.Count > 0)
+        {
+            throw new InvalidOperationException($"Pane workspace snapshot invalid: {string.Join("; ", sourceIssues)}");
+        }
+
+        var restored = Restore(
             state.Timeline,
             state.Checkpoints.Count == 0
                 ? BuildCheckpoints(state.Baseline, state.Timeline, state.CheckpointInterval)
@@ -227,6 +328,18 @@ public sealed record PaneWorkspaceState(
             state.TimelineCursor,
             state.Baseline,
             state.CheckpointInterval);
+        var issues = restored.Validate();
+        if (issues.Count > 0)
+        {
+            throw new InvalidOperationException($"Pane workspace snapshot invalid: {string.Join("; ", issues)}");
+        }
+
+        return new PaneWorkspaceJsonMigrationResult(
+            restored,
+            CurrentJsonSchemaVersion,
+            CurrentJsonSchemaVersion,
+            MigrationApplied: false,
+            Warnings: []);
     }
 
     private static PaneWorkspaceState Restore(

@@ -23,7 +23,16 @@ public sealed record PerformanceHudSnapshot(
     int DroppedFrames,
     bool SyncOutput,
     bool ScrollRegion,
-    bool Hyperlinks)
+    bool Hyperlinks,
+    string LoadGovernorAction = "stay",
+    string LoadGovernorReason = "initial",
+    double LoadGovernorPidOutput = 0,
+    double LoadGovernorEProcessValue = 1,
+    double LoadGovernorPidGateMargin = 0,
+    double LoadGovernorEvidenceMargin = 0,
+    bool LoadGovernorInWarmup = true,
+    ulong LoadGovernorTransitionSeq = 0,
+    ulong LoadGovernorTransitionCorrelationId = 0)
 {
     public double RemainingMs => Math.Max(TotalMs - ElapsedMs, 0);
 
@@ -61,7 +70,16 @@ public sealed record PerformanceHudSnapshot(
             DroppedFrames: Math.Max((int)Math.Ceiling(stats.FrameDurationMs / 16.0) - 1, 0),
             SyncOutput: syncOutput,
             ScrollRegion: scrollRegion,
-            Hyperlinks: hyperlinks);
+            Hyperlinks: hyperlinks,
+            LoadGovernorAction: stats.LoadGovernorAction,
+            LoadGovernorReason: stats.LoadGovernorReason,
+            LoadGovernorPidOutput: stats.LoadGovernorPidOutput,
+            LoadGovernorEProcessValue: stats.LoadGovernorEProcessValue,
+            LoadGovernorPidGateMargin: stats.LoadGovernorPidGateMargin,
+            LoadGovernorEvidenceMargin: stats.LoadGovernorEvidenceMargin,
+            LoadGovernorInWarmup: stats.LoadGovernorEProcessInWarmup,
+            LoadGovernorTransitionSeq: stats.LoadGovernorTransitionSeq,
+            LoadGovernorTransitionCorrelationId: stats.LoadGovernorTransitionCorrelationId);
     }
 }
 
@@ -87,6 +105,10 @@ public sealed class PerformanceHudWidget : IWidget
                 $"Budget:  {Snapshot.RemainingMs:0.0} ms remaining",
                 $"Δ Cells: {Snapshot.CellsChanged}  Runs: {Snapshot.RunCount}",
                 $"Bytes:   {Snapshot.BytesEmitted}  Deg: {Snapshot.DegradationLevel}",
+                $"Gov:     {Snapshot.LoadGovernorAction}/{Snapshot.LoadGovernorReason} warmup={BoolFlag(Snapshot.LoadGovernorInWarmup)}",
+                $"PID/E:   u={Snapshot.LoadGovernorPidOutput:0.###} e={Snapshot.LoadGovernorEProcessValue:0.###}",
+                $"Margins: pid={Snapshot.LoadGovernorPidGateMargin:0.###} evidence={Snapshot.LoadGovernorEvidenceMargin:0.###}",
+                $"Trans:   seq={Snapshot.LoadGovernorTransitionSeq} corr={Snapshot.LoadGovernorTransitionCorrelationId}",
                 $"Caps:    sync={BoolFlag(Snapshot.SyncOutput)} scroll={BoolFlag(Snapshot.ScrollRegion)} osc8={BoolFlag(Snapshot.Hyperlinks)}",
                 $"Drops:   {Snapshot.DroppedFrames}"
             };

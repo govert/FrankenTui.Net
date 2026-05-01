@@ -91,4 +91,28 @@ public sealed class TerminalKernelTests
         Assert.Contains(TerminalHostMatrix.Profiles, static profile => profile.Platform == "macos");
         Assert.Contains(TerminalHostMatrix.Profiles, static profile => profile.Platform == "windows");
     }
+
+    [Fact]
+    public void ConsoleTerminalBackendPrefersViewportDimensionsOverScrollbackBuffer()
+    {
+        var size = ConsoleTerminalBackend.ReadConsoleSize(
+            static () => 120,
+            static () => 40,
+            static () => 120,
+            static () => 9001);
+
+        Assert.Equal(new Size(120, 40), size);
+    }
+
+    [Fact]
+    public void ConsoleTerminalBackendFallsBackToBufferDimensionsWhenViewportUnavailable()
+    {
+        var size = ConsoleTerminalBackend.ReadConsoleSize(
+            static () => throw new InvalidOperationException("no viewport"),
+            static () => 0,
+            static () => 132,
+            static () => 43);
+
+        Assert.Equal(new Size(132, 43), size);
+    }
 }

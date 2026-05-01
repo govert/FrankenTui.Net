@@ -1,6 +1,7 @@
 using System.Runtime.CompilerServices;
 using System.Text;
 using FrankenTui.Render;
+using FrankenTui.Simd;
 using RenderBuffer = FrankenTui.Render.Buffer;
 
 namespace FrankenTui.Tests.Headless;
@@ -88,6 +89,51 @@ public sealed class RenderPrimitivesTests
 
         Assert.Equal("😀", HeadlessBufferView.RowText(buffer, 0));
         Assert.True(buffer.Get(1, 0)!.Value.IsContinuation);
+    }
+
+    [Fact]
+    public void BufferSetTextPreservesMultiCodepointGraphemeText()
+    {
+        var buffer = new RenderBuffer(6, 1);
+
+        buffer.SetText(0, 0, "e\u0301", Cell.FromChar('x'));
+        buffer.SetText(1, 0, "🧑🏽\u200D💻", Cell.FromChar('x'));
+
+        Assert.Equal("e\u0301🧑🏽\u200D💻", HeadlessBufferView.RowText(buffer, 0));
+        Assert.True(buffer.Get(2, 0)!.Value.IsContinuation);
+    }
+
+    [Fact]
+    public void BufferDiffTreatsEqualGraphemeTextAsStableAcrossLocalRegistryIds()
+    {
+        var previousEnabled = SimdAccelerators.IsEnabled;
+        SimdAccelerators.EnableIfSupported();
+
+        try
+        {
+        var oldBuffer = new RenderBuffer(6, 1);
+        oldBuffer.SetText(0, 0, "e\u0301", Cell.FromChar('x'));
+        oldBuffer.SetText(2, 0, "🧑🏽\u200D💻", Cell.FromChar('x'));
+
+        var newBuffer = new RenderBuffer(6, 1);
+        newBuffer.SetText(2, 0, "🧑🏽\u200D💻", Cell.FromChar('x'));
+        newBuffer.SetText(0, 0, "e\u0301", Cell.FromChar('x'));
+
+        var diff = BufferDiff.Compute(oldBuffer, newBuffer);
+
+        Assert.True(diff.IsEmpty);
+        }
+        finally
+        {
+            if (previousEnabled)
+            {
+                SimdAccelerators.EnableIfSupported();
+            }
+            else
+            {
+                SimdAccelerators.Disable();
+            }
+        }
     }
 
     [Fact]

@@ -20,6 +20,10 @@ public sealed class AppRuntime<TModel, TMessage>
     private int _stepIndex;
     private RuntimeFrameStats _frameStats = RuntimeFrameStats.Empty;
     private HashSet<string> _activeSubscriptionKeys = [];
+    private readonly RuntimeLoadGovernor _loadGovernor;
+    private readonly RuntimeDegradationCascade _degradationCascade;
+    private readonly bool _cascadeRenderGateEnabled;
+    private DiffStrategy _lastDiffStrategy = DiffStrategy.Full;
 
     public AppRuntime(
         ITerminalBackend backend,
@@ -35,6 +39,9 @@ public sealed class AppRuntime<TModel, TMessage>
         Theme = theme ?? Theme.DefaultTheme;
         Policy = policy ?? RuntimeExecutionPolicy.Default;
         Telemetry = new TelemetrySessionLog(Policy.Telemetry ?? TelemetryConfig.Disabled);
+        _loadGovernor = new RuntimeLoadGovernor(Policy.EffectiveLoadGovernor);
+        _degradationCascade = new RuntimeDegradationCascade(Policy.EffectiveDegradationCascade);
+        _cascadeRenderGateEnabled = Policy.PolicyConfig is not null;
     }
 
     public Size Size { get; private set; }
@@ -158,9 +165,51 @@ public sealed class AppRuntime<TModel, TMessage>
         ArgumentNullException.ThrowIfNull(view);
 
         var frameStopwatch = Stopwatch.StartNew();
+        var cascadeKey = RuntimeConformalBucketKey.FromContext(
+            inlineMode: false,
+            inlineAuto: false,
+            _lastDiffStrategy,
+            (ushort)Math.Clamp((int)Size.Width, 0, (int)ushort.MaxValue),
+            (ushort)Math.Clamp((int)Size.Height, 0, (int)ushort.MaxValue));
+        var cascadeEvidence = _degradationCascade.PreRender(
+            Policy.EffectiveLoadGovernor.EffectiveBudgetController.TargetFrameTime,
+            cascadeKey);
+
+        var renderLevel = _cascadeRenderGateEnabled ? cascadeEvidence.LevelAfter : RuntimeDegradationLevel.Full;
+        if (renderLevel == RuntimeDegradationLevel.SkipFrame)
+        {
+            frameStopwatch.Stop();
+            var skipped = new PresentResult(string.Empty, 0, 0, 0, UsedSyncOutput: false, Truncated: false);
+            var skippedLoadDecision = _loadGovernor.Observe(TimeSpan.Zero);
+            _frameStats = CreateFrameStats(
+                skipped,
+                frameStopwatch.Elapsed,
+                presentDuration: TimeSpan.Zero,
+                diffDuration: TimeSpan.Zero,
+                dirtyRows: 0,
+                skippedLoadDecision,
+                cascadeEvidence,
+                cascadeKey);
+            RecordRenderTelemetry(
+                skipped,
+                frameStopwatch.Elapsed,
+                presentDuration: TimeSpan.Zero,
+                diffDuration: TimeSpan.Zero,
+                dirtyRows: 0,
+                skippedLoadDecision,
+                cascadeEvidence,
+                cascadeKey,
+                selection: null);
+            return skipped;
+        }
+
         _next.Clear();
         var viewStopwatch = Stopwatch.StartNew();
-        view.Render(new RuntimeRenderContext(_next, Rect.FromSize(_next.Width, _next.Height), Theme));
+        view.Render(new RuntimeRenderContext(
+            _next,
+            Rect.FromSize(_next.Width, _next.Height),
+            Theme,
+                renderLevel));
         viewStopwatch.Stop();
         var resized = _resizePending || _current.Width != _next.Width || _current.Height != _next.Height;
         var dirtyRows = resized ? _next.Height : BufferDiff.CountDirtyRows(_current, _next);
@@ -181,89 +230,214 @@ public sealed class AppRuntime<TModel, TMessage>
         presentStopwatch.Stop();
         frameStopwatch.Stop();
 
+        _degradationCascade.Observe(frameStopwatch.Elapsed, cascadeKey);
+        var loadDecision = _loadGovernor.Observe(frameStopwatch.Elapsed);
         _lastPresentLatency = presentStopwatch.Elapsed;
         _diffSelector.Observe(selection, diff.Count, _lastPresentLatency);
+        _lastDiffStrategy = selection.Strategy;
         _current.CopyFrom(_next);
         _resizePending = false;
-        _frameStats = new RuntimeFrameStats(
-            _stepIndex,
-            diff.Count,
-            diff.Runs().Count,
-            result.ByteCount,
-            frameStopwatch.Elapsed.TotalMilliseconds,
-            presentStopwatch.Elapsed.TotalMilliseconds,
-            diffStopwatch.Elapsed.TotalMilliseconds,
+        _frameStats = CreateFrameStats(
+            result,
+            frameStopwatch.Elapsed,
+            presentStopwatch.Elapsed,
+            diffStopwatch.Elapsed,
             dirtyRows,
-            selection.Regime switch
-            {
-                DiffRegime.DegradedTerminal => "REDUCED",
-                DiffRegime.ResizeRegime => "MINIMAL",
-                DiffRegime.BurstyChange => "FULL",
-                _ => "FULL"
-            },
-            result.UsedSyncOutput,
-            result.Truncated);
+            loadDecision,
+            cascadeEvidence,
+            cascadeKey);
 
-        if (Policy.EmitTelemetry)
-        {
-            Telemetry.Record(
-                "ftui.render.diff",
-                TelemetryEventCategory.RenderPipeline,
-                _stepIndex,
-                [
-                    new TelemetryField("changes_count", diff.Count.ToString(CultureInfo.InvariantCulture)),
-                    new TelemetryField("duration_us", ToMicroseconds(diffStopwatch.Elapsed).ToString(CultureInfo.InvariantCulture)),
-                    new TelemetryField("rows_skipped", Math.Max(_next.Height - dirtyRows, 0).ToString(CultureInfo.InvariantCulture))
-                ]);
-            Telemetry.Record(
-                "ftui.render.present",
-                TelemetryEventCategory.RenderPipeline,
-                _stepIndex,
-                [
-                    new TelemetryField("bytes_written", result.Output.Length.ToString(CultureInfo.InvariantCulture)),
-                    new TelemetryField("duration_us", ToMicroseconds(presentStopwatch.Elapsed).ToString(CultureInfo.InvariantCulture)),
-                    new TelemetryField("runs_count", diff.Runs().Count.ToString(CultureInfo.InvariantCulture))
-                ]);
-            Telemetry.Record(
-                "ftui.render.flush",
-                TelemetryEventCategory.RenderPipeline,
-                _stepIndex,
-                [
-                    new TelemetryField("duration_us", ToMicroseconds(presentStopwatch.Elapsed).ToString(CultureInfo.InvariantCulture)),
-                    new TelemetryField("sync_mode", result.UsedSyncOutput ? "true" : "false")
-                ]);
-            Telemetry.Record(
-                "ftui.render.frame",
-                TelemetryEventCategory.RenderPipeline,
-                _stepIndex,
-                [
-                    new TelemetryField("duration_us", ToMicroseconds(frameStopwatch.Elapsed).ToString(CultureInfo.InvariantCulture)),
-                    new TelemetryField("height", _next.Height.ToString(CultureInfo.InvariantCulture)),
-                    new TelemetryField("width", _next.Width.ToString(CultureInfo.InvariantCulture))
-                ]);
-
-            if (selection.TransitionReason is not null || selection.Regime is not DiffRegime.StableFrame)
-            {
-                Telemetry.Record(
-                    "ftui.decision.fallback",
-                    TelemetryEventCategory.Decision,
-                    _stepIndex,
-                    [
-                        new TelemetryField("capability", "diff_strategy"),
-                        new TelemetryField("fallback_to", selection.Strategy.ToString().ToLowerInvariant()),
-                        new TelemetryField("reason", selection.TransitionReason ?? selection.Regime.ToString().ToLowerInvariant())
-                    ],
-                    new TelemetryDecisionEvidence(
-                        "diff-regime-selector",
-                        $"dirty_rows={selection.DirtyRows};total_cells={selection.TotalCells}",
-                        selection.Strategy.ToString().ToLowerInvariant(),
-                        selection.Confidence,
-                        [DiffStrategy.DirtyRows.ToString().ToLowerInvariant(), DiffStrategy.Full.ToString().ToLowerInvariant()],
-                        $"Diff regime {selection.Regime.ToString().ToLowerInvariant()} selected {selection.Strategy.ToString().ToLowerInvariant()}."));
-            }
-        }
+        RecordRenderTelemetry(
+            result,
+            frameStopwatch.Elapsed,
+            presentStopwatch.Elapsed,
+            diffStopwatch.Elapsed,
+            dirtyRows,
+            loadDecision,
+            cascadeEvidence,
+            cascadeKey,
+            selection);
 
         return result;
+    }
+
+    private RuntimeFrameStats CreateFrameStats(
+        PresentResult result,
+        TimeSpan frameDuration,
+        TimeSpan presentDuration,
+        TimeSpan diffDuration,
+        int dirtyRows,
+        LoadGovernorDecision loadDecision,
+        RuntimeCascadeEvidence cascadeEvidence,
+        RuntimeConformalBucketKey cascadeKey)
+    {
+        var effectiveLevel = _cascadeRenderGateEnabled
+            ? MoreDegraded(loadDecision.LevelAfter, cascadeEvidence.LevelAfter)
+            : loadDecision.LevelAfter;
+        return new RuntimeFrameStats(
+            _stepIndex,
+            result.ChangedCells,
+            result.RunCount,
+            result.ByteCount,
+            frameDuration.TotalMilliseconds,
+            presentDuration.TotalMilliseconds,
+            diffDuration.TotalMilliseconds,
+            dirtyRows,
+            effectiveLevel.Label(),
+            result.UsedSyncOutput,
+            result.Truncated,
+            LoadGovernorAction: loadDecision.Action,
+            LoadGovernorReason: loadDecision.Reason,
+            LoadGovernorPidOutput: loadDecision.PidOutput,
+            LoadGovernorPidP: loadDecision.PidP,
+            LoadGovernorPidI: loadDecision.PidI,
+            LoadGovernorPidD: loadDecision.PidD,
+            LoadGovernorEProcessValue: loadDecision.EProcessValue,
+            LoadGovernorEProcessSigmaMs: loadDecision.EProcessSigmaMs,
+            LoadGovernorFramesObserved: loadDecision.FramesObserved,
+            LoadGovernorFramesSinceChange: loadDecision.FramesSinceChange,
+            LoadGovernorPidGateThreshold: loadDecision.PidGateThreshold,
+            LoadGovernorPidGateMargin: loadDecision.PidGateMargin,
+            LoadGovernorEvidenceThreshold: loadDecision.EvidenceThreshold,
+            LoadGovernorEvidenceMargin: loadDecision.EvidenceMargin,
+            LoadGovernorEProcessInWarmup: loadDecision.EProcessInWarmup,
+            LoadGovernorTransitionSeq: loadDecision.TransitionSeq,
+            LoadGovernorTransitionCorrelationId: loadDecision.TransitionCorrelationId,
+            CascadeDecision: RuntimeCascadeEvidence.DecisionLabel(cascadeEvidence.Decision),
+            CascadeLevelBefore: cascadeEvidence.LevelBefore.Label(),
+            CascadeLevelAfter: cascadeEvidence.LevelAfter.Label(),
+            CascadeGuardState: RuntimeP99Prediction.StateLabel(cascadeEvidence.GuardState),
+            ConformalBucketKey: cascadeKey.ToString(),
+            ConformalUpperMicroseconds: cascadeEvidence.Prediction.UpperMicroseconds,
+            ConformalBudgetMicroseconds: cascadeEvidence.BudgetMicroseconds,
+            ConformalCalibrationSize: cascadeEvidence.Prediction.CalibrationSize,
+            ConformalFallbackLevel: cascadeEvidence.Prediction.FallbackLevel,
+            ConformalIntervalWidthMicroseconds: cascadeEvidence.Prediction.IntervalWidthMicroseconds,
+            CascadeRecoveryStreak: cascadeEvidence.RecoveryStreak,
+            CascadeRecoveryThreshold: cascadeEvidence.RecoveryThreshold);
+    }
+
+    private void RecordRenderTelemetry(
+        PresentResult result,
+        TimeSpan frameDuration,
+        TimeSpan presentDuration,
+        TimeSpan diffDuration,
+        int dirtyRows,
+        LoadGovernorDecision loadDecision,
+        RuntimeCascadeEvidence cascadeEvidence,
+        RuntimeConformalBucketKey cascadeKey,
+        DiffStrategySelection? selection)
+    {
+        if (!Policy.EmitTelemetry)
+        {
+            return;
+        }
+
+        Telemetry.Record(
+            "ftui.render.diff",
+            TelemetryEventCategory.RenderPipeline,
+            _stepIndex,
+            [
+                new TelemetryField("changes_count", result.ChangedCells.ToString(CultureInfo.InvariantCulture)),
+                new TelemetryField("duration_us", ToMicroseconds(diffDuration).ToString(CultureInfo.InvariantCulture)),
+                new TelemetryField("rows_skipped", Math.Max(_next.Height - dirtyRows, 0).ToString(CultureInfo.InvariantCulture))
+            ]);
+        Telemetry.Record(
+            "ftui.render.present",
+            TelemetryEventCategory.RenderPipeline,
+            _stepIndex,
+            [
+                new TelemetryField("bytes_written", result.Output.Length.ToString(CultureInfo.InvariantCulture)),
+                new TelemetryField("duration_us", ToMicroseconds(presentDuration).ToString(CultureInfo.InvariantCulture)),
+                new TelemetryField("runs_count", result.RunCount.ToString(CultureInfo.InvariantCulture))
+            ]);
+        Telemetry.Record(
+            "ftui.render.flush",
+            TelemetryEventCategory.RenderPipeline,
+            _stepIndex,
+            [
+                new TelemetryField("duration_us", ToMicroseconds(presentDuration).ToString(CultureInfo.InvariantCulture)),
+                new TelemetryField("sync_mode", result.UsedSyncOutput ? "true" : "false")
+            ]);
+        Telemetry.Record(
+            "ftui.render.frame",
+            TelemetryEventCategory.RenderPipeline,
+            _stepIndex,
+            [
+                new TelemetryField("duration_us", ToMicroseconds(frameDuration).ToString(CultureInfo.InvariantCulture)),
+                new TelemetryField("height", _next.Height.ToString(CultureInfo.InvariantCulture)),
+                new TelemetryField("width", _next.Width.ToString(CultureInfo.InvariantCulture))
+            ]);
+        Telemetry.Record(
+            "ftui.decision.degradation",
+            TelemetryEventCategory.Decision,
+            _stepIndex,
+            [
+                new TelemetryField("action", loadDecision.Action),
+                new TelemetryField("reason", loadDecision.Reason),
+                new TelemetryField("level_before", loadDecision.LevelBefore.Label()),
+                new TelemetryField(
+                    "level_after",
+                    (_cascadeRenderGateEnabled
+                        ? MoreDegraded(loadDecision.LevelAfter, cascadeEvidence.LevelAfter)
+                        : loadDecision.LevelAfter).Label()),
+                new TelemetryField("frame_duration_ms", loadDecision.FrameDurationMs.ToString("0.###", CultureInfo.InvariantCulture)),
+                new TelemetryField("target_frame_ms", loadDecision.TargetFrameMs.ToString("0.###", CultureInfo.InvariantCulture)),
+                new TelemetryField("normalized_error", RuntimeLoadGovernor.FormatNormalizedError(loadDecision.NormalizedError)),
+                new TelemetryField("pid_output", loadDecision.PidOutput.ToString("0.###", CultureInfo.InvariantCulture)),
+                new TelemetryField("pid_p", loadDecision.PidP.ToString("0.###", CultureInfo.InvariantCulture)),
+                new TelemetryField("pid_i", loadDecision.PidI.ToString("0.###", CultureInfo.InvariantCulture)),
+                new TelemetryField("pid_d", loadDecision.PidD.ToString("0.###", CultureInfo.InvariantCulture)),
+                new TelemetryField("e_value", loadDecision.EProcessValue.ToString("0.###", CultureInfo.InvariantCulture)),
+                new TelemetryField("eprocess_sigma_ms", loadDecision.EProcessSigmaMs.ToString("0.###", CultureInfo.InvariantCulture)),
+                new TelemetryField("frames_observed", loadDecision.FramesObserved.ToString(CultureInfo.InvariantCulture)),
+                new TelemetryField("frames_since_change", loadDecision.FramesSinceChange.ToString(CultureInfo.InvariantCulture)),
+                new TelemetryField("pid_gate_threshold", loadDecision.PidGateThreshold.ToString("0.###", CultureInfo.InvariantCulture)),
+                new TelemetryField("pid_gate_margin", loadDecision.PidGateMargin.ToString("0.###", CultureInfo.InvariantCulture)),
+                new TelemetryField("evidence_threshold", loadDecision.EvidenceThreshold.ToString("0.###", CultureInfo.InvariantCulture)),
+                new TelemetryField("evidence_margin", loadDecision.EvidenceMargin.ToString("0.###", CultureInfo.InvariantCulture)),
+                new TelemetryField("in_warmup", loadDecision.EProcessInWarmup ? "true" : "false"),
+                new TelemetryField("transition_seq", loadDecision.TransitionSeq.ToString(CultureInfo.InvariantCulture)),
+                new TelemetryField("transition_correlation_id", loadDecision.TransitionCorrelationId.ToString(CultureInfo.InvariantCulture)),
+                new TelemetryField("cascade_decision", RuntimeCascadeEvidence.DecisionLabel(cascadeEvidence.Decision)),
+                new TelemetryField("cascade_level_before", cascadeEvidence.LevelBefore.Label()),
+                new TelemetryField("cascade_level_after", cascadeEvidence.LevelAfter.Label()),
+                new TelemetryField("cascade_guard_state", RuntimeP99Prediction.StateLabel(cascadeEvidence.GuardState)),
+                new TelemetryField("conformal_bucket", cascadeKey.ToString()),
+                new TelemetryField("conformal_upper_us", cascadeEvidence.Prediction.UpperMicroseconds.ToString("0.#", CultureInfo.InvariantCulture)),
+                new TelemetryField("conformal_budget_us", cascadeEvidence.BudgetMicroseconds.ToString("0.#", CultureInfo.InvariantCulture)),
+                new TelemetryField("conformal_calibration_size", cascadeEvidence.Prediction.CalibrationSize.ToString(CultureInfo.InvariantCulture)),
+                new TelemetryField("conformal_fallback_level", cascadeEvidence.Prediction.FallbackLevel.ToString(CultureInfo.InvariantCulture)),
+                new TelemetryField("conformal_interval_width_us", cascadeEvidence.Prediction.IntervalWidthMicroseconds.ToString("0.#", CultureInfo.InvariantCulture))
+            ],
+            new TelemetryDecisionEvidence(
+                "runtime.load_governor",
+                $"frame_ms={loadDecision.FrameDurationMs:0.###};target_ms={loadDecision.TargetFrameMs:0.###}",
+                loadDecision.Action,
+                Math.Clamp(Math.Abs(loadDecision.NormalizedError), 0, 1),
+                ["stay", "degrade", "upgrade"],
+                $"Load governor {loadDecision.Action} with reason {loadDecision.Reason}."));
+
+        if (selection is not null &&
+            (selection.TransitionReason is not null || selection.Regime is not DiffRegime.StableFrame))
+        {
+            Telemetry.Record(
+                "ftui.decision.fallback",
+                TelemetryEventCategory.Decision,
+                _stepIndex,
+                [
+                    new TelemetryField("capability", "diff_strategy"),
+                    new TelemetryField("fallback_to", selection.Strategy.ToString().ToLowerInvariant()),
+                    new TelemetryField("reason", selection.TransitionReason ?? selection.Regime.ToString().ToLowerInvariant())
+                ],
+                new TelemetryDecisionEvidence(
+                    "diff-regime-selector",
+                    $"dirty_rows={selection.DirtyRows};total_cells={selection.TotalCells}",
+                    selection.Strategy.ToString().ToLowerInvariant(),
+                    selection.Confidence,
+                    [DiffStrategy.DirtyRows.ToString().ToLowerInvariant(), DiffStrategy.Full.ToString().ToLowerInvariant()],
+                    $"Diff regime {selection.Regime.ToString().ToLowerInvariant()} selected {selection.Strategy.ToString().ToLowerInvariant()}."));
+        }
     }
 
     public async ValueTask ResizeAsync(Size size, CancellationToken cancellationToken = default)
@@ -341,6 +515,11 @@ public sealed class AppRuntime<TModel, TMessage>
 
     private static long ToMicroseconds(TimeSpan duration) =>
         (long)Math.Round(duration.TotalMilliseconds * 1000.0, MidpointRounding.AwayFromZero);
+
+    private static RuntimeDegradationLevel MoreDegraded(
+        RuntimeDegradationLevel left,
+        RuntimeDegradationLevel right) =>
+        left >= right ? left : right;
 
     private DiffSkipHint CreateDiffSkipHint(DiffStrategySelection selection, bool resized, int dirtyRows)
     {

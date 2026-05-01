@@ -4,6 +4,7 @@ obj/
 .idea/
 .DS_Store
 .external/
+.tmp/
 TestResults/
 *.user
 *.suo

@@ -7,6 +7,17 @@ public static class TerminalTextWidth
 {
     public static int CharWidth(char value) => RuneWidth(new Rune(value));
 
+    public static IEnumerable<string> EnumerateTextElements(string text)
+    {
+        ArgumentNullException.ThrowIfNull(text);
+
+        var enumerator = StringInfo.GetTextElementEnumerator(text);
+        while (enumerator.MoveNext())
+        {
+            yield return (string)enumerator.Current!;
+        }
+    }
+
     public static int RuneWidth(Rune value)
     {
         if (value.Value is '\t' or '\n' or '\r')
@@ -33,9 +44,22 @@ public static class TerminalTextWidth
         ArgumentNullException.ThrowIfNull(text);
 
         var width = 0;
-        foreach (var rune in text.EnumerateRunes())
+        foreach (var textElement in EnumerateTextElements(text))
         {
-            width += RuneWidth(rune);
+            width += TextElementWidth(textElement);
+        }
+
+        return width;
+    }
+
+    public static int TextElementWidth(string textElement)
+    {
+        ArgumentNullException.ThrowIfNull(textElement);
+
+        var width = 0;
+        foreach (var rune in textElement.EnumerateRunes())
+        {
+            width = Math.Max(width, RuneWidth(rune));
         }
 
         return width;

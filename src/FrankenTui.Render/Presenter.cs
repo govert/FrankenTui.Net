@@ -8,6 +8,7 @@ public sealed class Presenter
     private static readonly StyleState DefaultStyle = new(PackedRgba.White, PackedRgba.Transparent, CellStyleFlags.None);
 
     private readonly Encoding _encoding = Encoding.UTF8;
+    private readonly bool _hyperlinksEnabled;
     private StyleState _currentStyle = DefaultStyle;
     private uint _currentLinkId;
     private ushort? _cursorColumn;
@@ -16,6 +17,7 @@ public sealed class Presenter
     public Presenter(TerminalCapabilities capabilities)
     {
         Capabilities = capabilities ?? throw new ArgumentNullException(nameof(capabilities));
+        _hyperlinksEnabled = capabilities.UseHyperlinks();
     }
 
     public TerminalCapabilities Capabilities { get; }
@@ -77,7 +79,7 @@ public sealed class Presenter
                 {
                     if (!TryApplyHyperlink(builder, cell, links, ref bytesWritten) ||
                         !TryApplyStyle(builder, cell, ref bytesWritten) ||
-                        !TryAppendContent(builder, cell, ref bytesWritten))
+                        !TryAppendContent(builder, buffer, cell, ref bytesWritten))
                     {
                         truncated = true;
                         break;
@@ -182,12 +184,23 @@ public sealed class Presenter
         IReadOnlyDictionary<uint, string>? links,
         ref int bytesWritten)
     {
-        var desiredLinkId = cell.Attributes.LinkId;
-        if (!Capabilities.UseHyperlinks())
+        if (!_hyperlinksEnabled)
         {
-            desiredLinkId = CellAttributes.LinkIdNone;
+            if (_currentLinkId == 0)
+            {
+                return true;
+            }
+
+            if (!TryAppend(builder, AnsiBuilder.HyperlinkEnd(), ref bytesWritten))
+            {
+                return false;
+            }
+
+            _currentLinkId = 0;
+            return true;
         }
 
+        var desiredLinkId = cell.Attributes.LinkId;
         if (desiredLinkId == _currentLinkId)
         {
             return true;
@@ -223,28 +236,34 @@ public sealed class Presenter
         return true;
     }
 
-    private bool TryAppendContent(StringBuilder builder, Cell cell, ref int bytesWritten)
+    private bool TryAppendContent(StringBuilder builder, Buffer buffer, Cell cell, ref int bytesWritten)
     {
-        var content = RenderContent(cell);
+        var content = RenderContent(buffer, cell);
         return TryAppend(builder, content, ref bytesWritten);
     }
 
-    private string RenderContent(Cell cell)
+    private string RenderContent(Buffer buffer, Cell cell)
     {
         if (cell.IsEmpty)
         {
             return " ";
         }
 
-        if (cell.Content.IsGrapheme)
+        if (cell.Content.Width() == 0)
         {
-            return "\u25A1";
+            return "\uFFFD";
         }
 
-        var rune = cell.Content.AsRune();
-        return rune is null
-            ? " "
-            : AnsiBuilder.SanitizeText(rune.Value.ToString());
+        var resolved = buffer.ResolveText(cell);
+        if (string.IsNullOrEmpty(resolved))
+        {
+            return new string('?', Math.Max(cell.Content.Width(), 1));
+        }
+
+        var sanitized = AnsiBuilder.SanitizeText(resolved);
+        return TerminalTextWidth.DisplayWidth(sanitized) == Math.Max(cell.Content.Width(), 1)
+            ? sanitized
+            : new string('?', Math.Max(cell.Content.Width(), 1));
     }
 
     private bool TryAppend(StringBuilder builder, string fragment, ref int bytesWritten)

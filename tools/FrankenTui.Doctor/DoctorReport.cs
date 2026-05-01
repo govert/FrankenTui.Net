@@ -35,4 +35,5 @@ public sealed record DoctorReport(
     DoctorSuiteManifest? SuiteManifest = null,
     DoctorSeedPlan? SeedPlan = null,
     DoctorSeedExecution? SeedExecution = null,
-    DoctorSuiteAggregate? SuiteAggregate = null);
+    DoctorSuiteAggregate? SuiteAggregate = null,
+    PerformanceHudSnapshot? RuntimePerformance = null);

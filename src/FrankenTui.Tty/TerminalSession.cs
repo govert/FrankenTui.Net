@@ -23,6 +23,8 @@ public sealed class TerminalSession : IAsyncDisposable
 
     public TerminalCapabilities Capabilities => _backend.Capabilities;
 
+    public TerminalBackendFeatures Features => _features;
+
     public async ValueTask EnterAsync(CancellationToken cancellationToken = default)
     {
         if (IsEntered)
@@ -70,6 +72,18 @@ public sealed class TerminalSession : IAsyncDisposable
         TerminalLogWriteOptions? options = null,
         CancellationToken cancellationToken = default) =>
         _backend.WriteLogAsync(text, options, cancellationToken);
+
+    public async ValueTask SetMouseCaptureAsync(bool enabled, CancellationToken cancellationToken = default)
+    {
+        var next = (_features with { MouseCapture = enabled }).Sanitize(_backend.Capabilities);
+        if (next == _features)
+        {
+            return;
+        }
+
+        await _backend.SetFeaturesAsync(next, cancellationToken).ConfigureAwait(false);
+        _features = next;
+    }
 
     public async ValueTask DisposeAsync()
     {

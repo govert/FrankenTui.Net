@@ -52,7 +52,7 @@ public static class Ui
     public static ParagraphWidget Markdown(string markdown) =>
         new(string.Empty)
         {
-            Document = MarkdownDocumentBuilder.Parse(markdown)
+            Document = MarkdownDocumentBuilder.ParseCached(markdown)
         };
 
     public static PanelWidget Panel(string title, IWidget child) => new() { Title = title, Child = child };

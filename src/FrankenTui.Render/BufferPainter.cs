@@ -15,15 +15,15 @@ public static class BufferPainter
         ArgumentNullException.ThrowIfNull(text);
 
         var column = x;
-        foreach (var rune in text.EnumerateRunes())
+        foreach (var textElement in TerminalTextWidth.EnumerateTextElements(text))
         {
-            var width = Math.Max(TerminalTextWidth.RuneWidth(rune), 1);
+            var width = Math.Max(TerminalTextWidth.TextElementWidth(textElement), 1);
             if (column >= buffer.Width)
             {
                 break;
             }
 
-            buffer.Set(column, y, template.WithRune(rune));
+            buffer.SetText(column, y, textElement, template);
             if (column > ushort.MaxValue - width)
             {
                 break;

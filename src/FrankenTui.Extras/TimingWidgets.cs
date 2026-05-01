@@ -26,6 +26,7 @@ public sealed class CountdownWidget : IWidget
     public void Render(RuntimeRenderContext context)
     {
         var style = Snapshot.IsExpired ? context.Theme.Danger : context.Theme.Accent;
+        WidgetRenderHelpers.ClearTextRow(context, 0, style);
         BufferPainter.WriteText(
             context.Buffer,
             context.Bounds.X,
@@ -40,10 +41,16 @@ public sealed class StopwatchWidget : IWidget
     public StopwatchSnapshot Snapshot { get; init; } = new("Stopwatch", TimeSpan.Zero);
 
     public void Render(RuntimeRenderContext context) =>
+        RenderValue(context);
+
+    private void RenderValue(RuntimeRenderContext context)
+    {
+        WidgetRenderHelpers.ClearTextRow(context, 0, context.Theme.Success);
         BufferPainter.WriteText(
             context.Buffer,
             context.Bounds.X,
             context.Bounds.Y,
             $"{Snapshot.Label}: {Snapshot.Display}",
             context.Theme.Success.ToCell());
+    }
 }

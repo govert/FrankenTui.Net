@@ -13,7 +13,7 @@ This covers `242-MAP` and `243-MAP` from
 
 - Managed upstream workspace: `.external/frankentui`
 - Current basis commit:
-  `f612df2b9346e3001a854c89ef017e91edd9cf5d`
+  `40c98246f27f9d174b3923c8df841ba325247dd4`
 - Primary upstream reference assets currently used by local verification:
   - `tests/baseline.json`
   - `docs/spec/diff-strategy-contract.md`
@@ -71,7 +71,7 @@ sequence:
 ```bash
 mkdir -p .external
 git clone https://github.com/Dicklesworthstone/frankentui.git .external/frankentui
-git -C .external/frankentui checkout f612df2b9346e3001a854c89ef017e91edd9cf5d
+git -C .external/frankentui checkout 40c98246f27f9d174b3923c8df841ba325247dd4
 ```
 
 To move to a newer basis:
@@ -253,3 +253,454 @@ required outcome is:
 If a local surface no longer matches the upstream reference basis closely
 enough, record that first and only then choose whether to port, defer, or
 reclassify the surface.
+
+## 2026-04-14 Selective Sync Wave
+
+Batch basis:
+
+- managed upstream workspace inspected at `be5f67289e862fd823af1548811d431cccea4ffb`
+  on branch `fix/windows-demo-crossterm-fallback`
+- fetched upstream head reviewed at `origin/main`
+  `2d25a03dd453c4384287df2271dc8fdcf3247c06`
+- dominant upstream commits reviewed:
+  - `a48d33ee` `fix(parser): flatten colon-separated SGR sub-parameters instead of discarding them`
+  - `59d7709e` `refactor(render): introduce PreparedContent enum and optimize presenter hot paths`
+  - `10c341f5` `perf(render): quad-cell diff skip, same-row CUP elimination, ASCII PreparedContent fast path, and cached hyperlink policy`
+
+Local landings in this selective wave:
+
+- `src/FrankenTui.Render/TerminalModel.cs`
+  now flattens colon-separated CSI/SGR subparameters so headless ANSI model
+  parsing preserves ITU T.416-style truecolor forms like
+  `ESC[38:2:255:128:0m`, matching the upstream parser fix at the local
+  verification boundary.
+- `src/FrankenTui.Render/BufferDiff.cs`
+  now skips unchanged four-cell blocks before checking individual cells, which
+  ports the safe local subset of the upstream row-scan optimization without
+  changing the existing accelerator seam.
+- `src/FrankenTui.Render/Presenter.cs` and
+  `src/FrankenTui.Render/AnsiBuilder.cs`
+  now carry the directly applicable presenter subset from the reviewed
+  upstream render commits: same-row cursor planning now avoids `CUP` when
+  `CHA` or relative moves dominate, hyperlink-disable policy is cached per
+  presenter instance, grapheme fallback output now preserves the encoded cell
+  width, and standalone zero-width content is replaced with a width-1 visible
+  placeholder to keep terminal cursor state aligned.
+- `tests/FrankenTui.Tests.Headless/TerminalModelTests.cs` and
+  `tests/FrankenTui.Tests.Headless/DiffAndHeadlessTests.cs`,
+  `tests/FrankenTui.Tests.Headless/PresenterTests.cs`, and
+  `tests/FrankenTui.Tests.Headless/AnsiSequencesTests.cs`
+  now preserve the colon-parameter truecolor contract, the late-change
+  quad-skip regression, and the width-safe presenter fallback behavior
+  locally.
+
+Selective adoption note:
+
+- The upstream `PreparedContent` / presenter hot-path commits were reviewed but
+  only partially applicable. The Rust implementation now relies on a grapheme
+  pool-backed content preparation path that the current .NET port does not yet
+  expose. The local presenter already covered the same-row cursor-move and
+  hyperlink-disabled behavioral cases, so this wave ports the directly
+  applicable parser and diff deltas while leaving the larger presenter
+  refactor as an explicit future adoption candidate rather than an implicit
+  drift.
+
+## 2026-04-15 Widget Clearing Sync Wave
+
+Batch basis:
+
+- fetched upstream head reviewed at `origin/main`
+  `2d25a03dd453c4384287df2271dc8fdcf3247c06`
+- dominant upstream commits reviewed:
+  - `2b59ac89` `feat(widgets): add clear_text_row helper + apply it to paginator/stopwatch/timer NoStyling paths`
+  - `13c71d4b` `fix(widgets/validation_error,decision_card,drift): clear separator cells + tidy last NoStyling paths`
+  - `c00c740e` `fix(widgets): generalize clear_text_row → clear_text_area and apply across the entire widget set`
+
+Local landings in this widget-clearing wave:
+
+- `src/FrankenTui.Widgets/WidgetRenderHelpers.cs`
+  now provides shared `ClearTextArea` and `ClearTextRow` helpers so widgets can
+  wipe owned text regions before rendering shorter follow-on frames.
+- `src/FrankenTui.Widgets/ParagraphWidget.cs`,
+  `src/FrankenTui.Widgets/ListWidget.cs`,
+  `src/FrankenTui.Widgets/StatusWidget.cs`,
+  `src/FrankenTui.Widgets/TabsWidget.cs`,
+  `src/FrankenTui.Widgets/TextAreaWidget.cs`,
+  `src/FrankenTui.Widgets/TreeWidget.cs`,
+  `src/FrankenTui.Widgets/ProgressWidget.cs`, and
+  `src/FrankenTui.Widgets/InspectorWidgets.cs`
+  now clear their owned text area or row before drawing, closing the stale
+  suffix / stale row leakage path when a later render is shorter than the
+  previous frame.
+- `src/FrankenTui.Extras/HelpWidgets.cs` and
+  `src/FrankenTui.Extras/TimingWidgets.cs`
+  now carry the same owned-area clearing contract on the local extras surface.
+- `tests/FrankenTui.Tests.Headless/WidgetClearContractTests.cs`
+  preserves the contract explicitly by rendering long-then-short widget frames
+  into the same buffer and asserting that no old glyphs survive.
+
+Selective adoption note:
+
+- The upstream widget-clearing wave spans dozens of widgets and degradation
+  modes that do not all exist one-to-one in FrankenTui.Net. This batch ports
+  the same clearing contract to the current local widget inventory instead of
+  copying crate-local implementation details that have no .NET counterpart.
+
+## 2026-04-15 Grapheme Registry Sync Wave
+
+Batch basis:
+
+- fetched upstream head reviewed at `origin/main`
+  `2d25a03dd453c4384287df2271dc8fdcf3247c06`
+- dominant upstream commit reviewed:
+  - `59d7709e` `refactor(render): introduce PreparedContent enum and optimize presenter hot paths`
+
+Local landings in this grapheme-registry wave:
+
+- `src/FrankenTui.Core/TerminalTextWidth.cs`
+  now measures display width by Unicode text element instead of by scalar rune,
+  so combining clusters and ZWJ emoji sequences follow the same cell-budget
+  contract expected by the upstream render path.
+- `src/FrankenTui.Render/GraphemeRegistry.cs` and
+  `src/FrankenTui.Render/Buffer.cs`
+  now provide a buffer-owned grapheme registry plus `SetText` / `CreateTextCell`
+  helpers, allowing multi-codepoint grapheme clusters to survive as real cell
+  content instead of immediately collapsing to placeholder output.
+- `src/FrankenTui.Render/BufferPainter.cs`,
+  `src/FrankenTui.Text/TextRenderer.cs`,
+  `src/FrankenTui.Text/TextWrapper.cs`,
+  `src/FrankenTui.Backend/InlineTerminalWriter.cs`, and
+  `src/FrankenTui.Testing.Harness/SharedSampleComparison.cs`
+  now iterate text elements for width and placement, aligning local write and
+  wrap behavior with the upstream grapheme-aware preparation intent.
+- `src/FrankenTui.Render/BufferDiff.cs`
+  now compares resolved grapheme text rather than raw grapheme IDs, so two
+  visually identical frames do not churn diff output just because their local
+  buffer registries interned graphemes in different slot orders.
+- `src/FrankenTui.Render/Presenter.cs`,
+  `src/FrankenTui.Render/HeadlessBufferView.cs`, and
+  `src/FrankenTui.Web/WebHost.cs`
+  now resolve registered grapheme text on output surfaces instead of always
+  degrading to box or question-mark placeholders.
+- `tests/FrankenTui.Tests.Headless/CorePrimitivesTests.cs`,
+  `tests/FrankenTui.Tests.Headless/RenderPrimitivesTests.cs`,
+  `tests/FrankenTui.Tests.Headless/PresenterTests.cs`, and
+  `tests/FrankenTui.Tests.Web/WebHostTests.cs`
+  now preserve the local contract for combining-sequence width, ZWJ width,
+  resolved grapheme output, and diff stability across buffer-local grapheme IDs.
+
+Selective adoption note:
+
+- This is intentionally not a line-for-line copy of the Rust `GraphemePool` /
+  `PreparedContent` implementation. The local shape stays buffer-owned and .NET
+  idiomatic, but it now closes the behavioral gap that previously forced the
+  .NET presenter, headless, and web surfaces to degrade registered grapheme
+  cells to placeholders.
+
+## 2026-04-15 Focus State Sync Wave
+
+Batch basis:
+
+- fetched upstream head reviewed at `origin/main`
+  `2d25a03dd453c4384287df2271dc8fdcf3247c06`
+- dominant upstream commits reviewed:
+  - `f61cd2a9` `feat(focus): add host_focused state tracking for correct blur/restore behavior when terminal loses focus`
+  - `741c4446` `feat(focus): expand tab navigation, host-focus guard paths, and focus recovery`
+  - `6e629137` `feat(focus): unify deferred focus targeting when host is blurred`
+  - `a50d1aee` `feat(focus,modal): collapsed focus trap specs, empty-trap recovery, and remove_group_without_repair`
+  - `d240f48f` `feat(modal): harden focus trap lifecycle, mid-stack removal, and return-focus retargeting`
+  - `e1d846dd` `feat(focus,modal): extend focus manager and modal integration from concurrent development`
+
+Local landings in this focus-state wave:
+
+- `src/FrankenTui.Widgets/WidgetInputState.cs`
+  now carries host-focus state, deferred focus targeting, a local focus-trap
+  stack, active-focus-order resolution, and push/pop trap helpers, so blur,
+  restore, and modal-constrained traversal are now explicit local state
+  contracts instead of being implicit side effects of a single `FocusedId`.
+- `src/FrankenTui.Extras/HostedParityScenario.cs`
+  now routes the hosted-parity modal toggle and modal-dismiss actions through
+  the new focus-trap helpers, making the local extras surface exercise real
+  modal focus confinement and restoration behavior.
+- `tests/FrankenTui.Tests.Headless/HostedParityStateTests.cs`
+  now preserves the local contract for deferred focus across host blur/restore,
+  focus-trap cycling and restore-on-pop, and hosted modal trap survival across
+  blur plus dismissal back to the base focus target.
+- `src/FrankenTui.Widgets/WidgetInputState.cs`
+  now also preserves per-trap selected focus and supports inactive trap
+  removal with upper restore-chain retargeting, which closes the local
+  stale-restore class where a nested top trap could pop back to an old lower
+  target instead of the latest surviving lower selection.
+- `src/FrankenTui.Widgets/WidgetInputState.cs`
+  also now supports trap-order updates that collapse empty traps and repair
+  upper restore targets when a lower trap's allowed focus set changes, which is
+  the local analogue of the upstream focus-graph-driven empty-trap repair path.
+- `src/FrankenTui.Widgets/WidgetFocusGraph.cs`,
+  `src/FrankenTui.Widgets/WidgetFocusManager.cs`, and
+  `src/FrankenTui.Widgets/WidgetModalStack.cs`
+  now provide a first-class local focus graph, graph-backed focus manager, and
+  focus-aware modal stack. This closes the deeper remaining parity area from
+  the upstream `FocusManager` / `FocusAwareModalStack` wave by carrying
+  focusability through a shared graph, preserving modal return targets through
+  non-top modal removal, and repairing trap return paths when modal focusable
+  sets mutate while nested modals are open.
+- `tests/FrankenTui.Tests.Headless/FocusCoordinatorTests.cs`
+  now preserves the graph-backed focus contract explicitly, including tab-chain
+  behavior, host blur/restore with an active modal trap, non-LIFO modal
+  removal, and return-focus repair after live modal focus-set changes.
+
+Selective adoption note:
+
+- This wave is still not a line-for-line translation of the Rust widgets crate.
+  FrankenTui.Net keeps the earlier lightweight `WidgetInputState` surface for
+  hosted parity and simple widget-facing state, but the reusable local
+  graph/manager/modal abstractions now cover the upstream focus-manager and
+  modal-focus coordination contract that had remained open after the earlier
+  deferred-focus and trap-stack batches.
+
+## 2026-05-01 Upstream Refresh And Showcase Inventory
+
+Batch basis:
+
+- managed upstream workspace refreshed to `origin/main`
+  `40c98246f27f9d174b3923c8df841ba325247dd4`
+- previous reviewed upstream head was
+  `2d25a03dd453c4384287df2271dc8fdcf3247c06`
+- local external inventory updated in [`EXTERNALS.md`](./EXTERNALS.md)
+- dominant upstream surfaces reviewed:
+  - `crates/ftui-demo-showcase/src/screens/mod.rs`
+  - `crates/ftui-demo-showcase/src/cli.rs`
+  - `crates/ftui-demo-showcase/src/app.rs`
+  - `crates/ftui-demo-showcase/src/chrome.rs`
+  - `crates/ftui-demo-showcase/src/tour.rs`
+  - `crates/ftui-showcase-wasm/src/runner_core.rs`
+
+Local landing in this refresh:
+
+- [`364-DEM-full-showcase-parity-plan.md`](./364-DEM-full-showcase-parity-plan.md)
+  now carries the `364-DEM-A` basis inventory for the current upstream
+  showcase: all 45 upstream screen ids, slugs, source files, current local
+  owners, and current local parity status, plus the app/control-plane contract
+  ledger.
+- [`246-MAP-upstream-contract-gap-register.md`](./246-MAP-upstream-contract-gap-register.md)
+  now reopens explicit active gaps for the fresh `2d25a03d..40c98246`
+  upstream range: full showcase screen parity, demo control-plane parity,
+  adaptive load governance, pane workspace persistence, visual-effects canvas
+  harness parity, and wasm showcase runner alignment.
+- `src/FrankenTui.Runtime/LoadGovernor.cs`,
+  `src/FrankenTui.Runtime/RuntimeExecutionPolicy.cs`,
+  `src/FrankenTui.Runtime/RuntimeFrameStats.cs`, and
+  `src/FrankenTui.Runtime/AppRuntime.cs`
+  now provide a local `LoadGovernorConfig` baseline with target frame time,
+  upstream-shaped PID gains, anytime-valid e-process settings, hysteresis
+  thresholds, cooldown, degradation floor, frame-stat decision fields, and
+  `ftui.decision.degradation` telemetry including PID term, e-process, gate
+  threshold/margin, warmup, and transition-correlation fields.
+- `tests/FrankenTui.Tests.Headless/LoadGovernorTests.cs`
+  preserves the local default, disabled, e-process warmup, degradation-floor,
+  transition, and telemetry behavior.
+- `apps/FrankenTui.Demo.Showcase/ShowcaseEvidenceJsonlWriter.cs` and
+  `tests/FrankenTui.Tests.Headless/ShowcaseShellTests.cs` now thread those
+  load-governor PID/e-process fields through generic showcase frame evidence.
+- `src/FrankenTui.Extras/PerformanceHud.cs` now promotes the same
+  load-governor action/reason, PID/e-process, gate-margin, warmup, and
+  transition-correlation fields into the reusable operator HUD snapshot and
+  widget.
+- `src/FrankenTui.Testing.Harness/HostedParityRuntimeHarness.cs` now keeps the
+  final `RuntimeFrameStats` in runtime captures, and
+  `tools/FrankenTui.Doctor` uses that to include a runtime performance snapshot
+  plus a text/dashboard load-governor summary in doctor runs.
+- `src/FrankenTui.Runtime/DegradationCascade.cs` now carries local
+  `RuntimeConformalPredictor` and `RuntimeDegradationCascade` baselines
+  corresponding to upstream `conformal_predictor.rs`, `conformal_frame_guard.rs`,
+  and `degradation_cascade.rs`: upstream-shaped mode/diff/size bucket keys,
+  exact / mode+diff / mode / global / default residual fallback hierarchy, n+1
+  conformal quantiles, bounded per-bucket windows, reset counters, EMA and
+  rolling nonconformity tracking, warmup/calibrated/at-risk guard state, p99
+  budget prediction, recovery streaks, degradation-floor clamping,
+  upstream-shaped `conformal-v1`, `conformal-frame-guard-v1`, and
+  `degradation-cascade-v1` JSONL field names, and essential-widget filtering.
+- `src/FrankenTui.Runtime/RuntimePolicyConfig.cs` now carries the upstream-shaped
+  policy-config conversion seam for conformal, frame guard, cascade, PID,
+  e-process budget, and budget-controller policy records. `RuntimeExecutionPolicy`
+  consumes that aggregate for effective load-governor and cascade defaults while
+  preserving explicit `LoadGovernor` overrides.
+- `tests/FrankenTui.Tests.Headless/DegradationCascadeTests.cs` covers the local
+  predictor n+1 quantile, fallback hierarchy, window/reset behavior, cascade
+  initial state, p99-driven degradation, recovery, JSONL schema fields, and
+  essential-widget filtering.
+- `src/FrankenTui.Render/BufferDiff.cs` now bypasses raw SIMD row comparison
+  for rows containing registered grapheme cells, preserving semantic equality
+  across buffer-local grapheme registry ids.
+- `tests/FrankenTui.Tests.Headless/RenderPrimitivesTests.cs` now exercises the
+  equal-grapheme diff contract with SIMD enabled so this remains covered
+  regardless of test ordering.
+- `apps/FrankenTui.Demo.Showcase/ShowcaseCliOptions.cs` now provides a
+  testable local parser for the upstream-shaped showcase launch baseline:
+  `--screen-mode=alt|inline|inline-auto`, inline height/min/max controls,
+  screen and guided-tour env overrides, `--mouse` / `--no-mouse` policy,
+  deterministic seed/mode parsing, tick cadence, generic auto-exit controls,
+  pane-workspace path selection, and generic evidence JSONL path selection.
+- `ShowcaseCliOptions` now also carries the upstream-shaped VFX and Mermaid
+  harness launch options: harness toggles, tick cadence, forced size, seeds,
+  JSONL paths, run ids, VFX frame count, VFX perf, and VFX exit-after-ms.
+  Enabled harnesses now also apply local launch defaults: VFX forces the Visual
+  Effects screen, forced size, tick cadence, and scripted frame count when
+  provided; Mermaid forces the Mermaid screen, forced size, tick cadence, and
+  mouse-off policy.
+- `apps/FrankenTui.Demo.Showcase/ShowcaseHarnessJsonlWriter.cs` now writes
+  local harness-specific JSONL records for scripted VFX and Mermaid harness
+  runs, including stable per-frame input checksums and rendered-buffer checksums
+  when the scripted render path supplies a frame buffer. VFX launch records now
+  use the upstream `vfx_harness_start` event name and expose `hash_key`, `cols`,
+  `rows`, and `perf` aliases. VFX frame records also expose upstream-style
+  `vfx_frame`, `frame_idx`, numeric `hash`, `cols`, `rows`, and `time` fields
+  for the local harness extractor lane. When `--vfx-perf` is enabled, local VFX
+  runs now emit upstream-shaped `vfx_perf_frame` records and a closing
+  `vfx_perf_summary` record with phase percentile fields. Doom/Quake scripted
+  VFX runs now also emit the upstream FPS input script as `vfx_input` records
+  (`w_down`, `d_down`, mouse look/fire, releases, etc.) with shared `hash_key`
+  correlation fields across launch, input, frame, and perf records.
+- Mermaid harness records now use upstream-style `mermaid_harness_start`,
+  `mermaid_frame`, and `mermaid_harness_done` event names locally, with
+  `hash_key`, `cols`, `rows`, numeric frame `hash`, `sample_idx`, and local
+  Mermaid sample identity aliases. Mermaid frame records also derive local
+  tier/glyph/cache/config-hash/link and parse/layout/route/render timing fields
+  from `MermaidShowcaseSurface.BuildState`; launch records expose an
+  upstream-compatible `env` object and done records carry `run_id`. Full upstream
+  Mermaid recompute and renderer telemetry remains broader than the local
+  harness shape.
+- `apps/FrankenTui.Demo.Showcase/ShowcaseVfxGoldenRegistry.cs` now provides a
+  local VFX hash-vector helper for deterministic harness runs: scenario naming
+  from parsed harness options, hash-vector save/load, actual-versus-expected
+  comparison results, optional update behavior, and numeric `vfx_frame.hash`
+  extraction from JSONL. `ShowcaseCliOptions` and `Program.cs` now thread
+  `--vfx-golden` / `FTUI_DEMO_VFX_GOLDEN` and
+  `--vfx-update-golden` / `FTUI_DEMO_VFX_UPDATE_GOLDEN` so scripted VFX runs can
+  fail on missing/mismatched local golden hash vectors or refresh them
+  intentionally.
+- `apps/FrankenTui.Demo.Showcase/ShowcaseVfxEffects.cs` now centralizes the
+  current upstream `EffectType::ALL` key set and aliases, keeping local CLI
+  parsing, screen labels, harness JSONL, golden scenario names, and deterministic
+  canvas pattern selection on the same canonical effect keys.
+- `apps/FrankenTui.Demo.Showcase/ShowcaseCliHelp.cs` now centralizes the local
+  showcase CLI `--help` surface and explicitly lists the parsed VFX run-id,
+  perf, exit-after, seed/size, local golden/update, and Mermaid run-id/seed/size
+  harness controls so operator guidance tracks the current parser/enforcement
+  surface.
+- `src/FrankenTui.Extras/CanvasPrimitives.cs` now carries the first local
+  canvas primitive parity layer for VFX: `CanvasMode`,
+  `CanvasPixelRect.FromCellIntersection`, and Braille
+  `CanvasPainter.RenderExcluding`, including the upstream overlay-exclusion
+  coordinate conversion semantics.
+- `apps/FrankenTui.Demo.Showcase/ShowcaseSurface.cs` now renders screen 18
+  through a deterministic frame-driven Braille canvas widget instead of the
+  previous static text-art placeholder; scripted rendering threads parsed
+  `--vfx-effect` names into distinct local canvas patterns for every current
+  upstream effect key so rendered-buffer checksums vary by effect.
+- `apps/FrankenTui.Demo.Showcase/ShowcasePaneWorkspacePersistence.cs` now
+  provides the local showcase persistence lifecycle baseline for
+  `--pane-workspace` / `FTUI_DEMO_PANE_WORKSPACE`: load/save a versioned local
+  pane workspace envelope, migrate raw-v1 local workspace snapshots, preserve
+  invalid snapshots, and report schema/migration state through generic evidence.
+- `apps/FrankenTui.Demo.Showcase/Program.cs` now drives terminal inline mode,
+  mouse tracking, interactive tick cadence, and generic auto-exit from that
+  parser instead of hard-coded local defaults, and emits generic launch/frame
+  evidence when `FTUI_DEMO_EVIDENCE_JSONL` or `FTUI_HARNESS_EVIDENCE_JSONL`
+  is set.
+- `apps/FrankenTui.Demo.Showcase/ShowcaseInteractiveProgram.cs` now carries
+  upstream-shaped guided-tour landing keyboard controls: Up/Down or h/j/k/l
+  translation can change the starting screen, `+`/`-` tunes speed, `r` resets,
+  and Enter/Space starts from the selected landing state. Active tours also
+  support Space pause/resume, Left/Right or n/p step changes, `+`/`-` speed
+  changes, and Escape exit. Its local overlay dismissal path now preserves
+  command-palette-before-evidence/debug/help, evidence-before-perf, and
+  debug-before-help Escape precedence. Ctrl+I toggles a local evidence ledger
+  overlay that summarizes screen, frame, pane, tour, palette, and overlay state.
+  F12 toggles a local debug overlay carrying screen, viewport, tour, palette,
+  pane, and runtime-frame counters. Ctrl+P toggles a local performance HUD
+  overlay, and Shift+A toggles a local A11y panel with Shift+H/M/L controls for
+  high contrast, reduced motion, and large text flags. F6 or `m` toggles the
+  local mouse-capture state, and the local bottom status row exposes mouse
+  toggle zones for help, palette, A11y, perf HUD, debug, evidence, and mouse
+  capture when no overlay is covering it. Interactive mouse-capture changes now
+  call the terminal session feature transition so the backend emits SGR mouse
+  enable/disable controls instead of only changing local state. Shift+H and
+  Shift+L now route to previous/next screen and stop active tours like upstream
+  when the A11y panel is not consuming those keys. The help overlay lists the
+  implemented local control-plane shortcuts.
+- `apps/FrankenTui.Demo.Showcase/ShowcaseTourStoryboard.cs` adds a local
+  upstream-shaped tour storyboard baseline with callout title/body/hint and
+  highlight percentages for the current upstream cinematic tour stops. Active
+  tour rendering now shows a callout panel, active tour navigation advances
+  through storyboard step indexes rather than plain screen numbers, and frame
+  evidence carries the step index/count plus callout id/title/body/hint/highlight
+  fields and a locally resolved highlight rectangle against the current
+  showcase body area.
+- `src/FrankenTui.Extras/HostedParityScenario.cs` now accepts the upstream
+  advertised Ctrl+K command-palette shortcut while retaining the earlier local
+  Ctrl+P alias.
+- `src/FrankenTui.Extras/CommandPalette.cs` now carries a local command-entry
+  favorite list and favorites-only filter, wired to the upstream-shaped
+  Ctrl+F/Ctrl+Shift+F palette shortcuts through the shared hosted input path.
+  It also carries a local command-category filter wired to Ctrl+0/Ctrl+1..N.
+- `apps/FrankenTui.Demo.Showcase/ShowcaseEvidenceJsonlWriter.cs` provides the
+  local JSONL writer used by scripted and interactive showcase runs, including
+  pane-workspace load/recovery/migration/schema fields in launch records when a
+  workspace path is configured and interactive tour/overlay/current-screen/pane
+  snapshot fields in frame records, including the local evidence/perf/debug/A11y overlay
+  visibility bits, A11y flag state, and mouse-capture state. It also emits local
+  `tour_event` records when tour activity, pause state, speed, start screen, or
+  current screen changes during interactive input/tick processing, and local
+  `palette_event` records when palette open, query, selection, favorite, filter,
+  preview, or execution state changes.
+- `tests/FrankenTui.Tests.Headless/ShowcaseShellTests.cs` now verifies the
+  upstream-style env defaults and command-line override behavior for the launch
+  and deterministic automation controls, VFX/Mermaid harness option parsing,
+  pane persistence, pane recovery evidence, guided-tour landing and active-tour
+  keyboard controls, interactive tour-state evidence, local tour-event evidence,
+  local palette-event evidence, Ctrl+K command-palette launch,
+  Ctrl+F/Ctrl+Shift+F palette favorite controls, Ctrl+0/Ctrl+1..N palette
+  category controls, Ctrl+I evidence ledger toggling, Ctrl+P perf HUD toggling,
+  F6/`m` mouse-capture toggling, local status-row mouse toggle zones, F12 debug
+  overlay toggling, Shift+A A11y panel toggling and panel-local Shift+H/M/L
+  flags, Shift+H/Shift+L navigation, guided-tour landing mouse wheel/click
+  controls, active-tour mouse-overlay exit, category-tab and visible
+  screen-tab mouse routing, tab-wheel screen cycling, palette priority over
+  chrome routing, local dashboard highlight pane-link routing,
+  screen-ID command-palette entries/favorites/category filtering/execution plus
+  upstream-shaped command-palette match-kind scoring and compact ranking
+  evidence, a local screen-39 Command Palette Evidence Lab surface with
+  the upstream `cmd:*` sample action set, upstream-shaped two-column render
+  geometry, screen-local match-filter controls, `b`-toggled deterministic
+  bench-query evidence, and palette-area wheel/click mouse handling plus
+  HintRanker-style EU/net/VOI evidence,
+  palette/evidence/perf/debug/help/A11y Escape precedence, help-overlay
+  shortcut coverage, local `mouse_event` evidence records with upstream-compatible
+  field aliases, local `mouse_capture_toggle` records, and the generic evidence
+  JSONL shape with upstream-style `seq`, `run_id`, `seed`, `screen_mode`, and
+  `upstream_schema_version` context aliases. It also covers the local VFX golden
+  hash registry save/load/verify/update path, JSONL hash extraction, VFX effect-key
+  catalog/alias normalization, Doom/Quake scripted VFX input JSONL records, and
+  upstream-style Mermaid harness start/frame/done event names plus hash/sample
+  and local telemetry aliases.
+
+Selective adoption note:
+
+- This refresh intentionally does not claim implementation closure. The
+  current local catalog matches upstream ordering and metadata, but most
+  screen bodies are still reduced local compositions. The work is now basis
+  locked so the next implementation waves can close gaps screen-by-screen and
+  feature-by-feature with traceable evidence.
+- The load-governor landing ports the upstream control seam but not the full
+  Rust PID/e-process implementation. That remaining depth stays open under
+  `GAP-304-LOAD-GOVERNOR` until either the deeper controller is ported or the
+  threshold controller is accepted as an explicit local divergence.
+- The showcase control-plane landing is still a practical launch baseline, not
+  full app parity. Upstream-equivalent VFX canvas output, full Mermaid
+  recompute/render harness behavior, screen-level deterministic fixture seeding, broader
+  pane-workspace upstream corpus coverage, upstream-specific diagnostics JSONL streams, and
+  the remaining upstream overlay stack, full upstream frame hit registry,
+  generalized pane hit routing, richer evidence/debug/perf/a11y surfaces, and
+  full chrome/screen routing precedence remain open under
+  `GAP-364-DEMO-CONTROL-PLANE`.

@@ -57,6 +57,7 @@ public sealed record HostedParitySession(
     MermaidShowcasePreferences? Mermaid = null)
 {
     private static readonly IReadOnlyList<string> DefaultFocusOrder = ["tabs", "modules", "metrics", "events", "notes"];
+    private static readonly IReadOnlyList<string> ModalFocusOrder = ["modal.primary", "modal.dismiss"];
 
     public IReadOnlyList<TerminalEvent> AppliedEvents { get; init; } = AppliedEvents ?? [];
     public IReadOnlyList<string> SemanticLog { get; init; } = SemanticLog ?? [];
@@ -409,7 +410,9 @@ public sealed record HostedParitySession(
                 {
                     case "m":
                         nextModal = !nextModal;
-                        nextInput = nextInput.Announce(nextModal ? "Modal opened" : "Modal closed");
+                        nextInput = nextModal
+                            ? nextInput.PushFocusTrap(ModalFocusOrder, "modal.primary").Announce("Modal opened")
+                            : nextInput.PopFocusTrap().Announce("Modal closed");
                         break;
                     case "o":
                         nextOverlay = !nextOverlay;
@@ -437,7 +440,7 @@ public sealed record HostedParitySession(
             {
                 case KeybindingAction.DismissModal:
                     nextModal = false;
-                    nextInput = nextInput.Announce("Modal dismissed");
+                    nextInput = nextInput.PopFocusTrap().Announce("Modal dismissed");
                     break;
                 case KeybindingAction.ClearInput:
                     nextInputBuffer = string.Empty;
@@ -583,7 +586,8 @@ public sealed record HostedParitySession(
     private static bool IsPaletteToggle(KeyGesture gesture) =>
         gesture.IsCharacter &&
         gesture.Character is { } rune &&
-        string.Equals(rune.ToString(), "p", StringComparison.OrdinalIgnoreCase) &&
+        (string.Equals(rune.ToString(), "k", StringComparison.OrdinalIgnoreCase) ||
+         string.Equals(rune.ToString(), "p", StringComparison.OrdinalIgnoreCase)) &&
         gesture.Modifiers.HasFlag(TerminalModifiers.Control);
 
     private static bool ShouldOpenLogSearch(KeyGesture gesture) =>

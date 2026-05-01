@@ -97,4 +97,17 @@ public sealed class DiffAndHeadlessTests
         Assert.Equal("😀", HeadlessBufferView.RowText(buffer, 1));
         Assert.Equal($"Hi{Environment.NewLine}😀", HeadlessBufferView.ScreenString(buffer));
     }
+
+    [Fact]
+    public void BufferDiffDetectsLateChangeAfterEqualQuad()
+    {
+        var oldBuffer = new RenderBuffer(8, 1);
+        var newBuffer = new RenderBuffer(8, 1);
+        newBuffer.ClearDirty();
+        newBuffer.Set(7, 0, Cell.FromChar('X'));
+
+        var diff = BufferDiff.Compute(oldBuffer, newBuffer);
+
+        Assert.Equal([new CellPosition(7, 0)], diff.Changes);
+    }
 }

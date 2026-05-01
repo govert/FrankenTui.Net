@@ -39,18 +39,18 @@ public static class TextWrapper
         {
             var current = string.Empty;
             var currentWidth = 0;
-            foreach (var rune in text.EnumerateRunes())
+            foreach (var textElement in TerminalTextWidth.EnumerateTextElements(text))
             {
-                var runeWidth = Math.Max(TerminalTextWidth.RuneWidth(rune), 1);
-                if (currentWidth + runeWidth > width && current.Length > 0)
+                var textElementWidth = Math.Max(TerminalTextWidth.TextElementWidth(textElement), 1);
+                if (currentWidth + textElementWidth > width && current.Length > 0)
                 {
                     result.Add(current);
                     current = string.Empty;
                     currentWidth = 0;
                 }
 
-                current += rune.ToString();
-                currentWidth += runeWidth;
+                current += textElement;
+                currentWidth += textElementWidth;
             }
 
             if (current.Length > 0)

@@ -141,16 +141,16 @@ public sealed class InlineTerminalWriter
 
         var builder = new StringBuilder();
         var width = 0;
-        foreach (var rune in firstLine.EnumerateRunes())
+        foreach (var textElement in TerminalTextWidth.EnumerateTextElements(firstLine))
         {
-            var runeWidth = Math.Max(TerminalTextWidth.RuneWidth(rune), 1);
-            if (width > terminalWidth - runeWidth)
+            var textElementWidth = Math.Max(TerminalTextWidth.TextElementWidth(textElement), 1);
+            if (width > terminalWidth - textElementWidth)
             {
                 break;
             }
 
-            builder.Append(rune.ToString());
-            width += runeWidth;
+            builder.Append(textElement);
+            width += textElementWidth;
         }
 
         return builder.ToString();

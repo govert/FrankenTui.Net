@@ -64,6 +64,15 @@ if (writeArtifacts || writeManifest || runBenchmarks)
         height,
         policy: runtimePolicy);
     var artifactPaths = new Dictionary<string, string>(runtimeCapture.WriteArtifacts("doctor-runtime"), StringComparer.Ordinal);
+    report = report with
+    {
+        RuntimePerformance = PerformanceHudSnapshot.FromRuntime(
+            runtimeCapture.FrameStats,
+            runtimeCapture.FrameStats.SyncOutput,
+            scrollRegion: true,
+            hyperlinks: true,
+            PerformanceHudLevel.Full)
+    };
 
     foreach (var entry in RenderHarness.CaptureHostedParity(
                  "doctor-dashboard",

@@ -13,11 +13,11 @@ The initial .NET workspace baseline is now in place under
 [FrankenTui.Net.sln](./FrankenTui.Net.sln) with the SDK pinned in
 [global.json](./global.json).
 
-The current sample surface is the hosted-parity showcase under
-`apps/FrankenTui.Demo.Showcase`, which now supports both scripted frame output
-and a small interactive terminal mode. The showcase also now includes an
-`extras` scenario that exercises markdown, validation, help, export, and
-traceback-oriented surfaces. Optional safe acceleration now lives in
+The current terminal sample surface is an upstream-shaped showcase shell under
+`apps/FrankenTui.Demo.Showcase`, with the upstream screen catalog, guided-tour
+entrypoint, and interactive terminal navigation over the shared managed widget
+and extras surfaces. Hosted-parity views remain available as reusable shared
+rendering/test surfaces. Optional safe acceleration now lives in
 `src/FrankenTui.Simd` and is used by the local benchmark, demo, and doctor
 surfaces.
 

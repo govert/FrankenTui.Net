@@ -41,6 +41,7 @@ public sealed class DiffSkipHint
 
 public sealed class BufferDiff
 {
+    private const int QuadSize = 4;
     private readonly List<CellPosition> _changes = [];
 
     public static IBufferDiffAccelerator? Accelerator { get; set; }
@@ -121,7 +122,7 @@ public sealed class BufferDiff
         {
             var oldRow = oldBuffer.GetRow(y);
             var newRow = newBuffer.GetRow(y);
-            AppendFullRowChanges(oldRow, newRow, y, _changes);
+            AppendFullRowChanges(oldBuffer, newBuffer, oldRow, newRow, y, _changes);
         }
     }
 
@@ -148,7 +149,7 @@ public sealed class BufferDiff
 
                     var oldRow = oldBuffer.GetRow(row);
                     var newRow = newBuffer.GetRow(row);
-                    AppendRowChanges(oldRow, newRow, row, _changes);
+                    AppendRowChanges(oldBuffer, newBuffer, oldRow, newRow, row, _changes);
                 }
 
                 return;
@@ -164,7 +165,7 @@ public sealed class BufferDiff
         var count = 0;
         for (ushort y = 0; y < newBuffer.Height; y++)
         {
-            if (!oldBuffer.GetRow(y).SequenceEqual(newBuffer.GetRow(y)))
+            if (!RowsBitsEqual(oldBuffer, newBuffer, y))
             {
                 count++;
             }
@@ -180,7 +181,7 @@ public sealed class BufferDiff
         var rows = new List<ushort>();
         for (ushort y = 0; y < newBuffer.Height; y++)
         {
-            if (!oldBuffer.GetRow(y).SequenceEqual(newBuffer.GetRow(y)))
+            if (!RowsBitsEqual(oldBuffer, newBuffer, y))
             {
                 rows.Add(y);
             }
@@ -225,39 +226,37 @@ public sealed class BufferDiff
     public void Clear() => _changes.Clear();
 
     internal static void AppendRowChanges(
+        Buffer oldBuffer,
+        Buffer newBuffer,
         ReadOnlySpan<Cell> oldRow,
         ReadOnlySpan<Cell> newRow,
         ushort y,
         List<CellPosition> changes)
     {
-        if (oldRow.SequenceEqual(newRow))
+        if (RowsBitsEqual(oldBuffer, newBuffer, y))
         {
             return;
         }
 
-        for (ushort x = 0; x < newRow.Length; x++)
-        {
-            if (!oldRow[x].BitsEqual(newRow[x]))
-            {
-                changes.Add(new CellPosition(x, y));
-            }
-        }
+        AppendBitsRowChanges(oldBuffer, newBuffer, oldRow, newRow, y, changes);
     }
 
     internal static void AppendSignificantRowChanges(
+        Buffer oldBuffer,
+        Buffer newBuffer,
         ReadOnlySpan<Cell> oldRow,
         ReadOnlySpan<Cell> newRow,
         ushort y,
         List<CellPosition> changes)
     {
-        if (RowsEqualBySignificance(oldRow, newRow))
+        if (RowsEqualBySignificance(oldBuffer, newBuffer, oldRow, newRow))
         {
             return;
         }
 
         for (ushort x = 0; x < newRow.Length; x++)
         {
-            if (!oldRow[x].SignificantEqual(newRow[x]))
+            if (!CellsSignificantEqual(oldBuffer, newBuffer, oldRow[x], newRow[x]))
             {
                 changes.Add(new CellPosition(x, y));
             }
@@ -265,18 +264,14 @@ public sealed class BufferDiff
     }
 
     internal static void AppendFullRowChanges(
+        Buffer oldBuffer,
+        Buffer newBuffer,
         ReadOnlySpan<Cell> oldRow,
         ReadOnlySpan<Cell> newRow,
         ushort y,
         List<CellPosition> changes)
     {
-        for (ushort x = 0; x < newRow.Length; x++)
-        {
-            if (!oldRow[x].BitsEqual(newRow[x]))
-            {
-                changes.Add(new CellPosition(x, y));
-            }
-        }
+        AppendBitsRowChanges(oldBuffer, newBuffer, oldRow, newRow, y, changes);
     }
 
     private void ComputeRowsInto(Buffer oldBuffer, Buffer newBuffer, bool significantOnly, bool dirtyOnly)
@@ -286,34 +281,37 @@ public sealed class BufferDiff
 
         for (ushort y = 0; y < newBuffer.Height; y++)
         {
-            if (dirtyOnly && oldBuffer.GetRow(y).SequenceEqual(newBuffer.GetRow(y)))
+            if (dirtyOnly && RowsBitsEqual(oldBuffer, newBuffer, y))
             {
                 continue;
             }
 
             var oldRow = oldBuffer.GetRow(y);
             var newRow = newBuffer.GetRow(y);
-            if (!significantOnly && Accelerator?.TryAppendRowChanges(oldRow, newRow, y, _changes) == true)
+            if (!significantOnly &&
+                !RowContainsGrapheme(oldRow) &&
+                !RowContainsGrapheme(newRow) &&
+                Accelerator?.TryAppendRowChanges(oldRow, newRow, y, _changes) == true)
             {
                 continue;
             }
 
             if (significantOnly)
             {
-                AppendSignificantRowChanges(oldRow, newRow, y, _changes);
+                AppendSignificantRowChanges(oldBuffer, newBuffer, oldRow, newRow, y, _changes);
             }
             else
             {
-                AppendRowChanges(oldRow, newRow, y, _changes);
+                AppendRowChanges(oldBuffer, newBuffer, oldRow, newRow, y, _changes);
             }
         }
     }
 
-    private static bool RowsEqualBySignificance(ReadOnlySpan<Cell> oldRow, ReadOnlySpan<Cell> newRow)
+    private static bool RowsEqualBySignificance(Buffer oldBuffer, Buffer newBuffer, ReadOnlySpan<Cell> oldRow, ReadOnlySpan<Cell> newRow)
     {
         for (var index = 0; index < newRow.Length; index++)
         {
-            if (!oldRow[index].SignificantEqual(newRow[index]))
+            if (!CellsSignificantEqual(oldBuffer, newBuffer, oldRow[index], newRow[index]))
             {
                 return false;
             }
@@ -322,11 +320,121 @@ public sealed class BufferDiff
         return true;
     }
 
+    private static bool RowContainsGrapheme(ReadOnlySpan<Cell> row)
+    {
+        for (var index = 0; index < row.Length; index++)
+        {
+            if (row[index].Content.IsGrapheme)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private static void EnsureCompatible(Buffer oldBuffer, Buffer newBuffer)
     {
         if (oldBuffer.Width != newBuffer.Width || oldBuffer.Height != newBuffer.Height)
         {
             throw new ArgumentException("Buffers must have identical dimensions.");
         }
+    }
+
+    private static void AppendBitsRowChanges(
+        Buffer oldBuffer,
+        Buffer newBuffer,
+        ReadOnlySpan<Cell> oldRow,
+        ReadOnlySpan<Cell> newRow,
+        ushort y,
+        List<CellPosition> changes)
+    {
+        var quadBlocks = newRow.Length / QuadSize;
+        for (var blockIndex = 0; blockIndex < quadBlocks; blockIndex++)
+        {
+            var baseIndex = blockIndex * QuadSize;
+            if (CellsQuadBitsEqual(oldBuffer, newBuffer, oldRow, newRow, baseIndex))
+            {
+                continue;
+            }
+
+            for (var offset = 0; offset < QuadSize; offset++)
+            {
+                var index = baseIndex + offset;
+                if (!CellsBitsEqual(oldBuffer, newBuffer, oldRow[index], newRow[index]))
+                {
+                    changes.Add(new CellPosition((ushort)index, y));
+                }
+            }
+        }
+
+        for (var index = quadBlocks * QuadSize; index < newRow.Length; index++)
+        {
+            if (!CellsBitsEqual(oldBuffer, newBuffer, oldRow[index], newRow[index]))
+            {
+                changes.Add(new CellPosition((ushort)index, y));
+            }
+        }
+    }
+
+    private static bool CellsQuadBitsEqual(Buffer oldBuffer, Buffer newBuffer, ReadOnlySpan<Cell> oldRow, ReadOnlySpan<Cell> newRow, int baseIndex) =>
+        CellsBitsEqual(oldBuffer, newBuffer, oldRow[baseIndex], newRow[baseIndex]) &&
+        CellsBitsEqual(oldBuffer, newBuffer, oldRow[baseIndex + 1], newRow[baseIndex + 1]) &&
+        CellsBitsEqual(oldBuffer, newBuffer, oldRow[baseIndex + 2], newRow[baseIndex + 2]) &&
+        CellsBitsEqual(oldBuffer, newBuffer, oldRow[baseIndex + 3], newRow[baseIndex + 3]);
+
+    private static bool RowsBitsEqual(Buffer oldBuffer, Buffer newBuffer, ushort y)
+    {
+        var oldRow = oldBuffer.GetRow(y);
+        var newRow = newBuffer.GetRow(y);
+        for (var index = 0; index < newRow.Length; index++)
+        {
+            if (!CellsBitsEqual(oldBuffer, newBuffer, oldRow[index], newRow[index]))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static bool CellsBitsEqual(Buffer oldBuffer, Buffer newBuffer, Cell oldCell, Cell newCell)
+    {
+        if (oldCell.BitsEqual(newCell))
+        {
+            return true;
+        }
+
+        return oldCell.Foreground == newCell.Foreground &&
+            oldCell.Background == newCell.Background &&
+            oldCell.Attributes == newCell.Attributes &&
+            CellsContentEqual(oldBuffer, newBuffer, oldCell, newCell);
+    }
+
+    private static bool CellsSignificantEqual(Buffer oldBuffer, Buffer newBuffer, Cell oldCell, Cell newCell)
+    {
+        if (oldCell.SignificantEqual(newCell))
+        {
+            return true;
+        }
+
+        return oldCell.Attributes.LinkId == newCell.Attributes.LinkId &&
+            CellsContentEqual(oldBuffer, newBuffer, oldCell, newCell);
+    }
+
+    private static bool CellsContentEqual(Buffer oldBuffer, Buffer newBuffer, Cell oldCell, Cell newCell)
+    {
+        if (oldCell.IsEmpty || newCell.IsEmpty)
+        {
+            return oldCell.IsEmpty && newCell.IsEmpty;
+        }
+
+        if (oldCell.IsContinuation || newCell.IsContinuation)
+        {
+            return oldCell.IsContinuation && newCell.IsContinuation;
+        }
+
+        return oldCell.Content.Width() == newCell.Content.Width() &&
+            string.Equals(oldBuffer.ResolveText(oldCell), newBuffer.ResolveText(newCell), StringComparison.Ordinal);
     }
 }

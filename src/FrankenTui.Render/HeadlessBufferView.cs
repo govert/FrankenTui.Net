@@ -28,17 +28,7 @@ public static class HeadlessBufferView
                 continue;
             }
 
-            if (cell.Content.IsGrapheme)
-            {
-                builder.Append('\u25A1');
-                continue;
-            }
-
-            var rune = cell.Content.AsRune();
-            if (rune is not null)
-            {
-                builder.Append(rune.Value.ToString());
-            }
+            builder.Append(buffer.ResolveText(cell) ?? "\u25A1");
         }
 
         return builder.ToString().TrimEnd();

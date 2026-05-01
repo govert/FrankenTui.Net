@@ -255,9 +255,7 @@ public sealed class TerminalModel
     {
         var privateMode = payload.StartsWith('?');
         var arguments = privateMode ? payload[1..] : payload;
-        var parameters = arguments.Length == 0
-            ? [0]
-            : arguments.Split(';').Select(static part => int.TryParse(part, out var value) ? value : 0).ToArray();
+        var parameters = ParseCsiParameters(arguments);
 
         switch (final)
         {
@@ -459,6 +457,11 @@ public sealed class TerminalModel
 
     private static bool HasTrueColor(IReadOnlyList<int> parameters, int index) =>
         index + 4 < parameters.Count && parameters[index + 1] == 2;
+
+    private static int[] ParseCsiParameters(string arguments) =>
+        arguments.Length == 0
+            ? [0]
+            : arguments.Split([';', ':']).Select(static part => int.TryParse(part, out var value) ? value : 0).ToArray();
 
     private static int GetParameter(IReadOnlyList<int> parameters, int index, int defaultValue) =>
         index < parameters.Count && parameters[index] != 0 ? parameters[index] : defaultValue;

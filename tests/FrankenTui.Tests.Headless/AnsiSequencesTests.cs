@@ -45,4 +45,14 @@ public sealed class AnsiSequencesTests
     {
         Assert.Equal("A B", AnsiBuilder.SanitizeText("A\u001bB"));
     }
+
+    [Fact]
+    public void BestCursorMoveOnSameRowDoesNotEmitCup()
+    {
+        var builder = new StringBuilder();
+
+        AnsiBuilder.AppendBestCursorMove(builder, currentColumn: 5, currentRow: 3, targetColumn: 50, targetRow: 3);
+
+        Assert.DoesNotContain("H", builder.ToString(), StringComparison.Ordinal);
+    }
 }

@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\apps\FrankenTui.Demo.Showcase\FrankenTui.Demo.Showcase.csproj" />
     <ProjectReference Include="..\..\src\FrankenTui\FrankenTui.csproj" />
     <ProjectReference Include="..\..\src\FrankenTui.Backend\FrankenTui.Backend.csproj" />
     <ProjectReference Include="..\..\src\FrankenTui.Simd\FrankenTui.Simd.csproj" />

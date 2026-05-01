@@ -72,7 +72,7 @@ public static class WebHost
             builder.Append("<span class=\"ft-row\" data-row=\"")
                 .Append(rowIndex)
                 .Append("\">");
-            AppendRow(builder, buffer.GetRow(rowIndex));
+            AppendRow(builder, buffer, buffer.GetRow(rowIndex));
             builder.Append("</span>");
         }
 
@@ -102,7 +102,7 @@ public static class WebHost
         return builder.ToString();
     }
 
-    private static void AppendRow(StringBuilder builder, ReadOnlySpan<Cell> cells)
+    private static void AppendRow(StringBuilder builder, RenderBuffer buffer, ReadOnlySpan<Cell> cells)
     {
         if (cells.IsEmpty)
         {
@@ -122,7 +122,7 @@ public static class WebHost
             }
 
             hasOutput = true;
-            var cellText = GetCellText(cell);
+            var cellText = GetCellText(buffer, cell);
             if (runText.Length == 0)
             {
                 runStyle = cell;
@@ -287,20 +287,14 @@ public static class WebHost
         left.Background == right.Background &&
         left.Attributes == right.Attributes;
 
-    private static string GetCellText(Cell cell)
+    private static string GetCellText(RenderBuffer buffer, Cell cell)
     {
         if (cell.IsEmpty)
         {
             return " ";
         }
 
-        if (cell.Content.IsGrapheme)
-        {
-            return "\u25A1";
-        }
-
-        var rune = cell.Content.AsRune();
-        return rune?.ToString() ?? " ";
+        return buffer.ResolveText(cell) ?? "\u25A1";
     }
 
     private static string ToCssColor(PackedRgba color) =>

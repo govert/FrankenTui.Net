@@ -76,4 +76,18 @@ public sealed class CorePrimitivesTests
         Assert.Equal(2, TerminalTextWidth.RuneWidth(new Rune(0x1F600)));
         Assert.Equal(4, TerminalTextWidth.DisplayWidth("A😀B"));
     }
+
+    [Fact]
+    public void TerminalTextWidthTreatsCombiningSequenceAsSingleCell()
+    {
+        Assert.Equal(1, TerminalTextWidth.TextElementWidth("e\u0301"));
+        Assert.Equal(3, TerminalTextWidth.DisplayWidth("Ae\u0301B"));
+    }
+
+    [Fact]
+    public void TerminalTextWidthTreatsZwJSequenceAsWideSingleElement()
+    {
+        Assert.Equal(2, TerminalTextWidth.TextElementWidth("🧑🏽\u200D💻"));
+        Assert.Equal(4, TerminalTextWidth.DisplayWidth("A🧑🏽\u200D💻B"));
+    }
 }

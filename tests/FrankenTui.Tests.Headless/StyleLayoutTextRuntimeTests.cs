@@ -60,11 +60,14 @@ public sealed class StyleLayoutTextRuntimeTests
     [Fact]
     public void DashboardWidgetRendersMeaningfulSnapshot()
     {
+        MarkdownDocumentBuilder.ClearCaches();
         var snapshot = RenderHarness.Render(DashboardSurface.CreateDefault("Main", ["One", "Two", "Three"]), 50, 12);
 
         Assert.Contains("Main", snapshot.Text);
         Assert.Contains("One", snapshot.Text);
         Assert.Contains("Port baseline", snapshot.Text);
+        Assert.Contains("Dashboard", snapshot.Text);
+        Assert.True(MarkdownDocumentBuilder.CachedDocumentCount >= 1);
     }
 
     private sealed class CounterProgram : IAppProgram<int, string>

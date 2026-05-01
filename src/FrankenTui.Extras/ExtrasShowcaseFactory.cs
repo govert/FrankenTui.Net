@@ -50,7 +50,7 @@ internal static class ExtrasShowcaseFactory
     public static IReadOnlyList<HostedParityMetric> BuildMetrics(HostedParitySession session)
     {
         var validation = FormValidator.Validate(DemoFields, DemoValidators);
-        var markdown = MarkdownDocumentBuilder.Parse(MarkdownSample);
+        var markdown = MarkdownDocumentBuilder.ParseCached(MarkdownSample);
         var workspace = BuildPaneWorkspace(session);
         var paletteResults = CommandPaletteController.Results(session.CommandPalette with { Query = EffectiveQuery(session) }, CommandPaletteRegistry.DefaultEntries());
         var searchState = EffectiveSearchState(session);
@@ -156,7 +156,7 @@ internal static class ExtrasShowcaseFactory
 
     private static IWidget BuildMarkdownExportDetail()
     {
-        var document = MarkdownDocumentBuilder.Parse(MarkdownSample);
+        var document = MarkdownDocumentBuilder.ParseCached(MarkdownSample);
         var export = BufferExport.Capture(
             new ParagraphWidget(string.Empty)
             {

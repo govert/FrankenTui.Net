@@ -31,6 +31,52 @@ public sealed class ExtrasFeatureTests
     }
 
     [Fact]
+    public void MarkdownBuilderCachesDocumentsAndMathConversions()
+    {
+        MarkdownDocumentBuilder.ClearCaches();
+        const string markdown = "Inline $\\alpha + \\beta$ and $\\alpha + \\beta$.\n\n$$\\sqrt{x}$$";
+
+        var first = MarkdownDocumentBuilder.ParseCached(markdown);
+        var second = MarkdownDocumentBuilder.ParseCached(markdown);
+
+        Assert.Same(first, second);
+        Assert.True(MarkdownDocumentBuilder.CachedDocumentCount >= 1);
+        Assert.True(MarkdownDocumentBuilder.CachedMathCount >= 2);
+        Assert.Contains("α + β", first.PlainText);
+        Assert.Contains("√x", first.PlainText);
+    }
+
+    [Fact]
+    public void PublicMarkdownHelperUsesCachedParsePath()
+    {
+        MarkdownDocumentBuilder.ClearCaches();
+        const string markdown = "# Public\n- cached";
+
+        var first = FrankenTui.Ui.Markdown(markdown);
+        var second = FrankenTui.Ui.Markdown(markdown);
+
+        Assert.Same(first.Document, second.Document);
+        Assert.Contains("Public", first.Document.PlainText);
+        Assert.True(MarkdownDocumentBuilder.CachedDocumentCount >= 1);
+    }
+
+    [Fact]
+    public void MarkdownBuilderPreservesInlineStylingInsideTableCells()
+    {
+        var document = MarkdownDocumentBuilder.Parse(
+            """
+            | Feature | Link |
+            | --- | --- |
+            | **Docs** | [guide](https://example.invalid/guide) |
+            """);
+
+        var row = Assert.Single(document.Lines, static line => line.PlainText.Contains("guide", StringComparison.Ordinal));
+        Assert.Contains(row.Spans, static span => span.Text == "Docs" && span.Style == UiStyle.Accent);
+        Assert.Contains(row.Spans, static span => span.Text == "guide" && span.Style == UiStyle.Accent.WithFlags(CellStyleFlags.Underline));
+        Assert.Contains(row.Spans, static span => span.Text == " <https://example.invalid/guide>" && span.Style == UiStyle.Muted);
+    }
+
+    [Fact]
     public void BufferExportAndConsoleTextExposeVisibleContent()
     {
         var buffer = new RenderBuffer(24, 4);

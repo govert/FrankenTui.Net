@@ -44,6 +44,8 @@ public readonly struct Cell : IEquatable<Cell>
 
     public Cell WithChar(char value) => WithRune(new Rune(value));
 
+    public Cell WithContent(CellContent content) => new(content, Foreground, Background, Attributes);
+
     public Cell WithRune(Rune value) => new(CellContent.FromRune(value), Foreground, Background, Attributes);
 
     public Cell WithForeground(PackedRgba foreground) => new(Content, foreground, Background, Attributes);

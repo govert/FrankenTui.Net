@@ -257,6 +257,11 @@ it is ordered by enabling dependencies rather than by dates or release phases.
 - `363-DEM` Align terminal and web showcase runners so they exercise the same
   core semantics and parity corpus.
   Depends on: `343-WEB`, `362-DEM`, `357-VRF`
+- `364-DEM` Deepen the local showcase from shell-level parity to full practical
+  screen, chrome, control-plane, verification, and host parity with upstream
+  `ftui-demo-showcase`.
+  Depends on: `302-RTM`, `315-WGT`, `333-HST`, `343-WEB`, `357-VRF`, `362-DEM`,
+  `363-DEM`
 
 ## 370-EXT Extras And Optional Optimization Surface
 

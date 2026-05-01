@@ -39,9 +39,10 @@ public static class TerminalHostMatrix
             ["headless", "ci-windows", "windows-local-doctor", "windows-local-inline", "windows-local-interactive"],
             [
                 "The primary Linux workspace still cannot execute native Windows terminals directly.",
-                "In-repo PTY transcript assertions remain Unix-only; Windows transcript refreshes currently come from external hosts and CI."
+                "In-repo PTY transcript assertions remain Unix-only; Windows transcript refreshes currently come from external hosts and CI.",
+                "Upstream marks native tty backend entry points as Unix-only and points Windows users at crossterm-compat; the .NET port follows that intent by selecting the managed Windows console backend instead of Unix-native paths."
             ],
-            ["Prefer Windows console capability set and avoid Unix-only toggles unless explicitly supported."])
+            ["Prefer Windows console capability set and avoid Unix-only toggles unless explicitly supported; do not route Windows showcase runs through Unix-native backend assumptions."])
     ];
 
     public static TerminalHostProfile ForCurrentPlatform()

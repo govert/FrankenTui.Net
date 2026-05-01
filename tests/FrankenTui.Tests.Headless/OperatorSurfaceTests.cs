@@ -108,6 +108,60 @@ public sealed class OperatorSurfaceTests
     }
 
     [Fact]
+    public void PaneWorkspaceCanonicalJsonCorpusRoundTripsByteStably()
+    {
+        var start = new DateTimeOffset(2026, 5, 1, 0, 0, 0, TimeSpan.Zero);
+        var cases = new Dictionary<string, PaneWorkspaceState>
+        {
+            ["default"] = PaneWorkspaceState.CreateDemo(),
+            ["mode-and-ratio"] = PaneWorkspaceState.CreateDemo()
+                .Apply(new PaneWorkspaceAction(PaneWorkspaceActionKind.CycleMode, start, "corpus"))
+                .Apply(new PaneWorkspaceAction(PaneWorkspaceActionKind.GrowPrimary, start + TimeSpan.FromMilliseconds(16), "corpus")),
+            ["undo-redo-cursor"] = PaneWorkspaceState.CreateDemo()
+                .Apply(new PaneWorkspaceAction(PaneWorkspaceActionKind.SelectNext, start, "corpus"))
+                .Apply(new PaneWorkspaceAction(PaneWorkspaceActionKind.SelectPrevious, start + TimeSpan.FromMilliseconds(16), "corpus"))
+                .Apply(new PaneWorkspaceAction(PaneWorkspaceActionKind.Undo, start + TimeSpan.FromMilliseconds(32), "corpus"))
+                .Apply(new PaneWorkspaceAction(PaneWorkspaceActionKind.Redo, start + TimeSpan.FromMilliseconds(48), "corpus"))
+        };
+
+        foreach (var (name, state) in cases)
+        {
+            var firstJson = state.ToCanonicalJson();
+            var first = PaneWorkspaceState.DecodeJson(firstJson);
+            var secondJson = first.State.ToCanonicalJson();
+            var second = PaneWorkspaceState.DecodeJson(secondJson);
+
+            Assert.Equal(PaneWorkspaceState.CurrentJsonSchemaVersion, first.FromVersion);
+            Assert.Equal(PaneWorkspaceState.CurrentJsonSchemaVersion, first.ToVersion);
+            Assert.False(first.MigrationApplied);
+            Assert.Equal("current_schema", first.Decision);
+            Assert.Empty(first.Warnings);
+            Assert.Equal(first.StateChecksum, second.StateChecksum);
+            Assert.Equal(firstJson, secondJson);
+            Assert.Equal(state.SnapshotHash(), first.State.SnapshotHash());
+        }
+    }
+
+    [Fact]
+    public void PaneWorkspaceCanonicalJsonRejectsInvalidCorpusCases()
+    {
+        var missingSelection = PaneWorkspaceState.CreateDemo() with
+        {
+            SelectedPaneId = "missing-pane"
+        };
+        var badCursor = PaneWorkspaceState.CreateDemo() with
+        {
+            TimelineCursor = 99
+        };
+
+        var missingSelectionError = Assert.Throws<InvalidOperationException>(() => missingSelection.ToCanonicalJson());
+        var badCursorError = Assert.Throws<InvalidOperationException>(() => badCursor.ToCanonicalJson());
+
+        Assert.Contains("selected pane", missingSelectionError.Message);
+        Assert.Contains("timeline cursor", badCursorError.Message);
+    }
+
+    [Fact]
     public void CommandPaletteRanksDeterministically()
     {
         var entries = CommandPaletteRegistry.DefaultEntries();
@@ -117,6 +171,24 @@ public sealed class OperatorSurfaceTests
 
         var fuzzy = CommandPaletteSearch.Search(entries, "hud");
         Assert.Equal("Show Performance HUD", fuzzy[0].Entry.Title);
+    }
+
+    [Fact]
+    public void CommandPaletteRanksWordStartPrefixesAheadOfFuzzyMatches()
+    {
+        var entries = new[]
+        {
+            new CommandPaletteEntry("fuzzy", "Gadget Panel", "fuzzy candidate", CommandPaletteCategory.Navigation, ["gd"]),
+            new CommandPaletteEntry("word-start", "Go to Dashboard", "word-start candidate", CommandPaletteCategory.Navigation, [])
+        };
+
+        var results = CommandPaletteSearch.Search(entries, "gd");
+
+        Assert.Equal("word-start", results[0].Entry.Id);
+        Assert.Equal(CommandPaletteMatchKind.WordStart, results[0].MatchKind);
+        Assert.Equal([0, 6], results[0].MatchPositions);
+        Assert.Contains(results[0].Evidence, entry => entry.Kind == "match_type" && entry.Description == "wordstart match");
+        Assert.Contains(results[0].Evidence, entry => entry.Kind == "word_boundary");
     }
 
     [Fact]
@@ -249,12 +321,37 @@ public sealed class OperatorSurfaceTests
             DirtyRows: 5,
             DegradationLevel: "FULL",
             SyncOutput: true,
-            Truncated: false);
+            Truncated: false,
+            LoadGovernorAction: "degrade",
+            LoadGovernorReason: "overload_evidence_passed",
+            LoadGovernorPidOutput: 0.75,
+            LoadGovernorEProcessValue: 21,
+            LoadGovernorPidGateMargin: 0.45,
+            LoadGovernorEvidenceMargin: 1,
+            LoadGovernorEProcessInWarmup: false,
+            LoadGovernorTransitionSeq: 2,
+            LoadGovernorTransitionCorrelationId: 8589934604);
 
         var snapshot = PerformanceHudSnapshot.FromRuntime(stats, syncOutput: true, scrollRegion: true, hyperlinks: true);
 
         Assert.Equal(11.8, snapshot.ElapsedMs);
         Assert.Equal(120, snapshot.CellsChanged);
         Assert.True(snapshot.SyncOutput);
+        Assert.Equal("degrade", snapshot.LoadGovernorAction);
+        Assert.Equal("overload_evidence_passed", snapshot.LoadGovernorReason);
+        Assert.Equal(0.75, snapshot.LoadGovernorPidOutput);
+        Assert.Equal(21, snapshot.LoadGovernorEProcessValue);
+        Assert.False(snapshot.LoadGovernorInWarmup);
+
+        var buffer = new RenderBuffer(72, 12);
+        new PerformanceHudWidget
+        {
+            Snapshot = snapshot
+        }.Render(new RuntimeRenderContext(buffer, Rect.FromSize(72, 12), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("Gov:", screen);
+        Assert.Contains("PID/E:", screen);
+        Assert.Contains("Trans:", screen);
     }
 }

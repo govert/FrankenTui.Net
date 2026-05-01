@@ -5,6 +5,7 @@ namespace FrankenTui.Render;
 public sealed class Buffer
 {
     private readonly Cell[] _cells;
+    private readonly GraphemeRegistry _graphemes;
     private readonly List<Rect> _scissorStack;
     private readonly List<float> _opacityStack;
     private readonly bool[] _dirtyRows;
@@ -15,6 +16,7 @@ public sealed class Buffer
         Height = Math.Max(height, (ushort)1);
         _cells = new Cell[Width * Height];
         Array.Fill(_cells, Cell.Empty);
+        _graphemes = new GraphemeRegistry();
         _scissorStack = [Rect.FromSize(Width, Height)];
         _opacityStack = [1f];
         _dirtyRows = Enumerable.Repeat(true, Height).ToArray();
@@ -34,6 +36,8 @@ public sealed class Buffer
 
     public float CurrentOpacity => _opacityStack[^1];
 
+    public GraphemeRegistry Graphemes => _graphemes;
+
     public int DirtyRowCount => _dirtyRows.Count(static row => row);
 
     public ReadOnlySpan<Cell> GetRow(ushort y)
@@ -49,6 +53,49 @@ public sealed class Buffer
 
     public Cell? Get(ushort x, ushort y) =>
         TryIndex(x, y, out var index) ? _cells[index] : null;
+
+    public string? ResolveText(Cell cell)
+    {
+        if (cell.IsContinuation)
+        {
+            return null;
+        }
+
+        if (cell.IsEmpty)
+        {
+            return " ";
+        }
+
+        if (cell.Content.IsGrapheme)
+        {
+            return cell.Content.GraphemeId is { } id ? _graphemes.Resolve(id) : null;
+        }
+
+        return cell.Content.AsRune()?.ToString();
+    }
+
+    public Cell CreateTextCell(string textElement, Cell template)
+    {
+        ArgumentNullException.ThrowIfNull(textElement);
+
+        if (textElement.Length == 0)
+        {
+            return template.WithChar(' ');
+        }
+
+        var runes = textElement.EnumerateRunes().ToArray();
+        if (runes.Length == 1)
+        {
+            return template.WithRune(runes[0]);
+        }
+
+        var width = (byte)Math.Clamp(Math.Max(TerminalTextWidth.TextElementWidth(textElement), 1), 0, GraphemeId.MaxWidth);
+        var id = _graphemes.Intern(textElement, width);
+        return template.WithContent(CellContent.FromGrapheme(id));
+    }
+
+    public void SetText(ushort x, ushort y, string textElement, Cell template) =>
+        Set(x, y, CreateTextCell(textElement, template));
 
     public Buffer Clone()
     {
@@ -66,12 +113,14 @@ public sealed class Buffer
             throw new ArgumentException("Buffers must have identical dimensions.", nameof(other));
         }
 
+        _graphemes.Clear();
+
         for (ushort y = 0; y < Height; y++)
         {
             var row = other.GetRow(y);
             for (ushort x = 0; x < Width; x++)
             {
-                _cells[IndexUnchecked(x, y)] = row[x];
+                _cells[IndexUnchecked(x, y)] = ImportCell(row[x], other);
             }
         }
 
@@ -97,7 +146,9 @@ public sealed class Buffer
                 spanEnd = Math.Max(spanEnd, overlap.End);
             }
 
-            var existingBackground = _cells[index].Background;
+            var existingCell = _cells[index];
+            var existingBackground = existingCell.Background;
+            ReleaseCellIfNeeded(existingCell);
             var finalCell = ApplyOpacity(cell);
             finalCell = finalCell.WithBackground(finalCell.Background.Over(existingBackground));
             _cells[index] = finalCell;
@@ -136,8 +187,10 @@ public sealed class Buffer
         }
 
         var headIndex = IndexUnchecked(x, y);
+        var existingHead = _cells[headIndex];
         var finalWideCell = ApplyOpacity(cell);
-        finalWideCell = finalWideCell.WithBackground(finalWideCell.Background.Over(_cells[headIndex].Background));
+        finalWideCell = finalWideCell.WithBackground(finalWideCell.Background.Over(existingHead.Background));
+        ReleaseCellIfNeeded(existingHead);
         _cells[headIndex] = finalWideCell;
         for (var i = 1; i < width; i++)
         {
@@ -168,6 +221,7 @@ public sealed class Buffer
             }
         }
 
+        ReleaseCellIfNeeded(_cells[index]);
         _cells[index] = cell;
         MarkDirtySpan(y, spanStart, spanEnd);
         if (!rawWideHead)
@@ -196,6 +250,7 @@ public sealed class Buffer
     public void Clear()
     {
         Array.Fill(_cells, Cell.Empty);
+        _graphemes.Clear();
         MarkAllDirty();
     }
 
@@ -311,6 +366,7 @@ public sealed class Buffer
                 if (backX + width > x)
                 {
                     _cells[headIndex] = Cell.Empty;
+                    ReleaseCellIfNeeded(headCell);
                     touched = true;
                     minX = Math.Min(minX, backX);
                     maxX = Math.Max(maxX, backX);
@@ -375,6 +431,34 @@ public sealed class Buffer
     {
         var sum = left + right;
         return sum >= ushort.MaxValue ? ushort.MaxValue : (ushort)sum;
+    }
+
+    private Cell ImportCell(Cell cell, Buffer other)
+    {
+        if (!cell.Content.IsGrapheme || cell.Content.GraphemeId is not { } id)
+        {
+            return cell;
+        }
+
+        var text = other.ResolveText(cell);
+        if (string.IsNullOrEmpty(text))
+        {
+            return cell;
+        }
+
+        var width = (byte)Math.Clamp(cell.Content.Width(), 0, GraphemeId.MaxWidth);
+        var importedId = _graphemes.Intern(text, width);
+        return cell.WithContent(CellContent.FromGrapheme(importedId));
+    }
+
+    private void ReleaseCellIfNeeded(Cell cell)
+    {
+        if (!cell.Content.IsGrapheme || cell.Content.GraphemeId is not { } id)
+        {
+            return;
+        }
+
+        _graphemes.Release(id);
     }
 
     private static float ClampOpacity(float opacity)

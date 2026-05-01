@@ -22,11 +22,27 @@ public sealed class ParagraphWidget : IWidget
 
     public void Render(RuntimeRenderContext context)
     {
-        var style = Style ?? context.Theme.Default;
-        var lines = TextRenderer.Layout(
-            Document,
-            context.Bounds.Width,
-            RenderOptions ?? new TextRenderOptions(WrapMode));
+        var style = WidgetRenderHelpers.ApplyStyling(context)
+            ? Style ?? context.Theme.Default
+            : context.Theme.Default;
+        WidgetRenderHelpers.ClearTextArea(context, style);
+        if (!WidgetRenderHelpers.RenderContent(context))
+        {
+            return;
+        }
+
+        var options = RenderOptions ?? new TextRenderOptions(WrapMode);
+        var lines = options.FirstVisualLine > 0 || options.MaxVisualLines is not null
+            ? TextRenderer.LayoutViewport(
+                Document,
+                context.Bounds.Width,
+                options.FirstVisualLine,
+                Math.Min(options.MaxVisualLines ?? context.Bounds.Height, context.Bounds.Height),
+                options)
+            : TextRenderer.Layout(
+                Document,
+                context.Bounds.Width,
+                options);
         for (var row = 0; row < Math.Min(lines.Count, context.Bounds.Height); row++)
         {
             TextRenderer.Write(context.Buffer, context.Bounds.X, (ushort)(context.Bounds.Y + row), lines[row], style);

@@ -31,5 +31,11 @@ public sealed class HostDivergenceTests
         Assert.Contains(
             "In-repo PTY transcript assertions remain Unix-only; Windows transcript refreshes currently come from external hosts and CI.",
             windows.KnownDivergences);
+        Assert.Contains(
+            windows.KnownDivergences,
+            static divergence => divergence.Contains("crossterm-compat", StringComparison.Ordinal));
+        Assert.Contains(
+            windows.CapabilityOverrides,
+            static policy => policy.Contains("Unix-native backend assumptions", StringComparison.Ordinal));
     }
 }

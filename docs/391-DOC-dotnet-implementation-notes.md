@@ -39,11 +39,12 @@ that the shared hosted-parity surfaces produce.
 The terminal showcase likewise now has two local modes:
 
 - scripted frame output for deterministic evidence and PTY coverage
-- a small interactive mode that stays inside the same core runtime/widget path
+- an upstream-shaped interactive shell with screen-based navigation, guided-tour
+  launch flow, and shared runtime/widget plumbing
 
-The hosted showcase also now carries a dedicated extras scenario, so higher
-level optional surfaces remain visible in the same testable terminal/web path
-instead of drifting into unverified helper code.
+The hosted showcase surface still carries the reusable hosted-parity and extras
+views used by web/tests, but the terminal app is no longer limited to that
+dashboard shell.
 
 ## Extras Packaging Choice
 

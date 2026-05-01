@@ -488,12 +488,12 @@ public static class MermaidShowcaseSurface
                         (LayoutConstraint.Fill(), new StackWidget(
                             LayoutDirection.Vertical,
                             [
-                                (LayoutConstraint.Fixed((ushort)(state.ControlsVisible ? 7 : 3)), new PanelWidget
+                                (LayoutConstraint.Fixed((ushort)(state.ControlsVisible ? 12 : 4)), new PanelWidget
                                 {
                                     Title = "Controls",
                                     Child = new ParagraphWidget(BuildControls(state))
                                 }),
-                                (LayoutConstraint.Fixed((ushort)(state.MetricsVisible ? 7 : 3)), new PanelWidget
+                                (LayoutConstraint.Fixed((ushort)(state.MetricsVisible ? 10 : 4)), new PanelWidget
                                 {
                                     Title = "Metrics",
                                     Child = new ParagraphWidget(BuildMetricsText(state))
@@ -595,6 +595,18 @@ public static class MermaidShowcaseSurface
                 $"Rendered {diagram.Nodes.Count} nodes / {diagram.Edges.Count} edges.")
         };
 
+        entries.Add(new MermaidStatusLogEntry(
+            "mermaid-statuslog-v1",
+            (ulong)(session.StepCount * 100 + 20),
+            sample.Name,
+            session.InlineMode ? "inline" : "altscreen",
+            $"{width}x{height}",
+            layoutMode.ToString().ToLowerInvariant(),
+            fidelity.ToString().ToLowerInvariant(),
+            "mermaid_render",
+            summary.Status,
+            $"palette=default guard=default zoom=100% viewport={width}x{height}."));
+
         if (!summary.Status.Equals("ok", StringComparison.Ordinal))
         {
             entries.Add(new MermaidStatusLogEntry(
@@ -657,12 +669,18 @@ public static class MermaidShowcaseSurface
             [
                 $"Sample: {state.Sample.Name}",
                 $"Glyph: {state.GlyphMode.ToString().ToLowerInvariant()}",
+                "Render: adaptive",
+                "Palette: default",
+                "Guard: default",
+                "Zoom: 100%  Pan: 0,0",
+                "Viewport override: off",
                 $"Layout: {state.LayoutMode.ToString().ToLowerInvariant()}",
                 $"Tier: {state.Fidelity.ToString().ToLowerInvariant()}",
                 $"Wrap: {state.WrapMode.ToString().ToLowerInvariant()}",
                 $"Styles: {(state.StylesEnabled ? "on" : "off")}",
                 $"Links: {state.Config.LinkMode.ToString().ToLowerInvariant()}",
-                $"Cache: {(state.Config.CacheEnabled ? "on" : "off")}"
+                $"Cache: {(state.Config.CacheEnabled ? "on" : "off")}",
+                "m metrics | c controls | i status | p palette | g guard"
             ]);
 
     private static string BuildMetricsText(MermaidShowcaseState state) =>
@@ -675,6 +693,9 @@ public static class MermaidShowcaseSurface
                 $"Iter: {state.Summary.LayoutIterations}",
                 $"Score: {state.Summary.ObjectiveScore:0.00}",
                 $"Violations: {state.Summary.ConstraintViolations}",
+                $"Crossings: {Math.Max(0, state.Diagram.Edges.Count - state.Diagram.Nodes.Count / 2)}",
+                $"Symmetry: {Math.Min(1.0, state.Diagram.Nodes.Count == 0 ? 0.0 : 1.0 / Math.Max(1, Math.Abs(state.Diagram.Nodes.Count - state.Diagram.Edges.Count))):0.00}",
+                $"Compactness: {Math.Min(1.0, state.Diagram.Nodes.Count / 20.0):0.00}",
                 $"Fallback: {state.Summary.FallbackTier}",
                 $"Diag: {state.Diagnostics.Count}"
             ]);

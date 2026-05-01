@@ -97,6 +97,30 @@ public sealed class TerminalBackendContractTests
     }
 
     [Fact]
+    public async Task TerminalSessionCanReconfigureMouseCaptureAfterEnter()
+    {
+        var backend = new MemoryTerminalBackend(new Size(20, 4), TerminalCapabilities.Modern());
+        await using var session = new TerminalSession(backend);
+
+        await session.EnterAsync();
+        backend.DrainOutput();
+
+        await session.SetMouseCaptureAsync(true);
+        var enabled = backend.DrainOutput();
+
+        Assert.True(session.Features.MouseCapture);
+        Assert.Contains("\u001b[?1003h", enabled);
+        Assert.Contains("\u001b[?1006h", enabled);
+
+        await session.SetMouseCaptureAsync(false);
+        var disabled = backend.DrainOutput();
+
+        Assert.False(session.Features.MouseCapture);
+        Assert.Contains("\u001b[?1003l", disabled);
+        Assert.Contains("\u001b[?1006l", disabled);
+    }
+
+    [Fact]
     public async Task PollEventReturnsQueuedEvents()
     {
         var backend = new MemoryTerminalBackend(new Size(10, 4));

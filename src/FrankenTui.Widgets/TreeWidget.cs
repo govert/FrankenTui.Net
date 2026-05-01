@@ -9,6 +9,12 @@ public sealed class TreeWidget : IWidget
 
     public void Render(RuntimeRenderContext context)
     {
+        WidgetRenderHelpers.ClearTextArea(context, context.Theme.Default);
+        if (!WidgetRenderHelpers.RenderContent(context))
+        {
+            return;
+        }
+
         var row = 0;
         foreach (var node in Flatten(Nodes, 0))
         {
@@ -17,7 +23,10 @@ public sealed class TreeWidget : IWidget
                 break;
             }
 
-            var prefix = new string(' ', node.Depth * 2) + "└ ";
+            WidgetRenderHelpers.ClearTextRow(context, (ushort)row, context.Theme.Default);
+            var prefix = WidgetRenderHelpers.RenderDecorative(context)
+                ? new string(' ', node.Depth * 2) + BranchPrefix(context)
+                : string.Empty;
             BufferPainter.WriteText(
                 context.Buffer,
                 context.Bounds.X,
@@ -27,6 +36,9 @@ public sealed class TreeWidget : IWidget
             row++;
         }
     }
+
+    private static string BranchPrefix(RuntimeRenderContext context) =>
+        context.DegradationLevel >= RuntimeDegradationLevel.SimpleBorders ? "+ " : "└ ";
 
     private static IEnumerable<(TreeNode Node, int Depth)> Flatten(IEnumerable<TreeNode> nodes, int depth)
     {

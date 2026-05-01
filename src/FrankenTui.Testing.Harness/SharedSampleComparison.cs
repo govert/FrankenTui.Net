@@ -320,15 +320,15 @@ public static class SharedSampleComparison
         ArgumentNullException.ThrowIfNull(text);
 
         var x = 0;
-        foreach (var rune in text.EnumerateRunes())
+        foreach (var textElement in TerminalTextWidth.EnumerateTextElements(text))
         {
             if (x >= buffer.Width)
             {
                 break;
             }
 
-            buffer.Set((ushort)x, row, Cell.FromRune(rune));
-            x += Math.Max(TerminalTextWidth.RuneWidth(rune), 1);
+            buffer.SetText((ushort)x, row, textElement, Cell.Empty.WithForeground(PackedRgba.White));
+            x += Math.Max(TerminalTextWidth.TextElementWidth(textElement), 1);
         }
     }
 

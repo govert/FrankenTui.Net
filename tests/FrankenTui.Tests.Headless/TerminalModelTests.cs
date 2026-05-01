@@ -46,4 +46,15 @@ public sealed class TerminalModelTests
         Assert.Equal("AB", model.RowText(0));
         Assert.Equal("Z", model.RowText(1));
     }
+
+    [Fact]
+    public void TerminalModelParsesColonSeparatedTrueColorSgr()
+    {
+        var model = new TerminalModel(4, 1);
+        model.Process("\u001b[38:2:255:128:0mA");
+
+        var cell = model.Cell(0, 0)!.Value;
+        Assert.Equal("A", cell.Text);
+        Assert.Equal(PackedRgba.Rgb(255, 128, 0), cell.Foreground);
+    }
 }

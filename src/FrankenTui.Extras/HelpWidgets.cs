@@ -15,10 +15,12 @@ public sealed class HelpWidget : IWidget
 
     public void Render(RuntimeRenderContext context)
     {
+        WidgetRenderHelpers.ClearTextArea(context, context.Theme.Default);
         for (var row = 0; row < Math.Min(Entries.Count, context.Bounds.Height); row++)
         {
             var entry = Entries[row];
             var style = row == HighlightedIndex ? context.Theme.Selection : context.Theme.Default;
+            WidgetRenderHelpers.ClearTextRow(context, (ushort)row, style);
             BufferPainter.WriteText(
                 context.Buffer,
                 context.Bounds.X,

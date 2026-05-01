@@ -72,13 +72,8 @@ public static class AnsiBuilder
             return;
         }
 
-        var cup = CursorPosition(targetRow, targetColumn);
         var cha = ColumnPosition(targetColumn);
-        var best = cup;
-        if (cha.Length < best.Length)
-        {
-            best = cha;
-        }
+        var best = cha;
 
         if (targetColumn > currentColumn.Value)
         {

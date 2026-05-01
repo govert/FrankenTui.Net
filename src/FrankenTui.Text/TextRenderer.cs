@@ -25,6 +25,61 @@ public static class TextRenderer
         return result;
     }
 
+    public static IReadOnlyList<RenderedTextLine> LayoutViewport(
+        TextDocument document,
+        ushort width,
+        int firstVisualLine,
+        int maxVisualLines,
+        TextRenderOptions? options = null)
+    {
+        ArgumentNullException.ThrowIfNull(document);
+
+        if (maxVisualLines <= 0)
+        {
+            return [];
+        }
+
+        var effectiveOptions = options ?? TextRenderOptions.Default;
+        var normalizedOptions = effectiveOptions with { FirstVisualLine = 0, MaxVisualLines = null };
+        var maxWidth = Math.Max(width, (ushort)1);
+        var start = Math.Max(firstVisualLine, 0);
+        var end = start + maxVisualLines;
+        var visualLine = 0;
+        var result = new List<RenderedTextLine>(maxVisualLines);
+
+        foreach (var line in document.Lines)
+        {
+            if (visualLine >= end)
+            {
+                break;
+            }
+
+            var laidOut = LayoutLine(line, maxWidth, normalizedOptions);
+            if (visualLine + laidOut.Count <= start)
+            {
+                visualLine += laidOut.Count;
+                continue;
+            }
+
+            foreach (var rendered in laidOut)
+            {
+                if (visualLine >= end)
+                {
+                    break;
+                }
+
+                if (visualLine >= start)
+                {
+                    result.Add(rendered);
+                }
+
+                visualLine++;
+            }
+        }
+
+        return result;
+    }
+
     public static void Write(
         RenderBuffer buffer,
         ushort x,
@@ -39,15 +94,15 @@ public static class TextRenderer
         foreach (var run in line.Runs)
         {
             var style = run.Style ?? fallbackStyle;
-            foreach (var rune in run.Text.EnumerateRunes())
+            foreach (var textElement in TerminalTextWidth.EnumerateTextElements(run.Text))
             {
-                var width = Math.Max(TerminalTextWidth.RuneWidth(rune), 1);
+                var width = Math.Max(TerminalTextWidth.TextElementWidth(textElement), 1);
                 if (column >= buffer.Width)
                 {
                     return;
                 }
 
-                buffer.Set(column, y, style.ToCell().WithRune(rune));
+                buffer.SetText(column, y, textElement, style.ToCell());
                 if (column > ushort.MaxValue - width)
                 {
                     return;
@@ -82,30 +137,29 @@ public static class TextRenderer
     private static IReadOnlyList<RenderedTextLine> WrapByCharacter(IReadOnlyList<RenderedTextRun> runs, ushort width)
     {
         var lines = new List<RenderedTextLine>();
-        var current = new List<RenderedTextRun>();
-        var currentText = new List<(Rune Rune, UiStyle? Style)>();
+        var currentText = new List<(string TextElement, UiStyle? Style)>();
         var currentWidth = 0;
 
         foreach (var run in runs)
         {
-            foreach (var rune in run.Text.EnumerateRunes())
+            foreach (var textElement in TerminalTextWidth.EnumerateTextElements(run.Text))
             {
-                var runeWidth = Math.Max(TerminalTextWidth.RuneWidth(rune), 1);
-                if (currentWidth + runeWidth > width && currentText.Count > 0)
+                var textElementWidth = Math.Max(TerminalTextWidth.TextElementWidth(textElement), 1);
+                if (currentWidth + textElementWidth > width && currentText.Count > 0)
                 {
-                    lines.Add(new RenderedTextLine(MergeRunes(currentText)));
+                    lines.Add(new RenderedTextLine(MergeTextElements(currentText)));
                     currentText.Clear();
                     currentWidth = 0;
                 }
 
-                currentText.Add((rune, run.Style));
-                currentWidth += runeWidth;
+                currentText.Add((textElement, run.Style));
+                currentWidth += textElementWidth;
             }
         }
 
         if (currentText.Count > 0 || lines.Count == 0)
         {
-            lines.Add(new RenderedTextLine(MergeRunes(currentText)));
+            lines.Add(new RenderedTextLine(MergeTextElements(currentText)));
         }
 
         return lines;
@@ -173,41 +227,42 @@ public static class TextRenderer
     private static IReadOnlyList<Token> Tokenize(IReadOnlyList<RenderedTextRun> runs)
     {
         var tokens = new List<Token>();
-        var currentRunes = new List<(Rune Rune, UiStyle? Style)>();
+        var currentTextElements = new List<(string TextElement, UiStyle? Style)>();
         bool? whitespace = null;
 
         foreach (var run in runs)
         {
-            foreach (var rune in run.Text.EnumerateRunes())
+            foreach (var textElement in TerminalTextWidth.EnumerateTextElements(run.Text))
             {
-                var isWhitespace = Rune.IsWhiteSpace(rune);
+                var firstRune = textElement.EnumerateRunes().FirstOrDefault();
+                var isWhitespace = firstRune.Value != 0 && Rune.IsWhiteSpace(firstRune);
                 if (whitespace is not null && whitespace != isWhitespace)
                 {
-                    tokens.Add(new Token(MergeRunes(currentRunes), whitespace.Value));
-                    currentRunes.Clear();
+                    tokens.Add(new Token(MergeTextElements(currentTextElements), whitespace.Value));
+                    currentTextElements.Clear();
                 }
 
-                currentRunes.Add((rune, run.Style));
+                currentTextElements.Add((textElement, run.Style));
                 whitespace = isWhitespace;
             }
         }
 
-        if (currentRunes.Count > 0 && whitespace is not null)
+        if (currentTextElements.Count > 0 && whitespace is not null)
         {
-            tokens.Add(new Token(MergeRunes(currentRunes), whitespace.Value));
+            tokens.Add(new Token(MergeTextElements(currentTextElements), whitespace.Value));
         }
 
         return tokens;
     }
 
-    private static IReadOnlyList<RenderedTextRun> MergeRunes(IReadOnlyList<(Rune Rune, UiStyle? Style)> runes)
+    private static IReadOnlyList<RenderedTextRun> MergeTextElements(IReadOnlyList<(string TextElement, UiStyle? Style)> textElements)
     {
         var result = new List<RenderedTextRun>();
         UiStyle? currentStyle = null;
         var builder = new StringBuilder();
         var hasStyle = false;
 
-        foreach (var (rune, style) in runes)
+        foreach (var (textElement, style) in textElements)
         {
             if (builder.Length > 0 && (!Equals(currentStyle, style) || hasStyle != (style is not null)))
             {
@@ -215,7 +270,7 @@ public static class TextRenderer
                 builder.Clear();
             }
 
-            builder.Append(rune.ToString());
+            builder.Append(textElement);
             currentStyle = style;
             hasStyle = style is not null;
         }

@@ -65,6 +65,39 @@ public sealed class RuntimeLayoutTextDepthTests
     }
 
     [Fact]
+    public void TextRendererViewportMatchesFullLayoutVisibleSlice()
+    {
+        var document = new TextDocument(
+        [
+            new TextLine([new TextSpan("alpha beta gamma delta", FrankenTui.Style.UiStyle.Accent)]),
+            new TextLine([new TextSpan("tail", FrankenTui.Style.UiStyle.Warning)])
+        ]);
+        var options = new TextRenderOptions(TextWrapMode.Word);
+
+        var full = TextRenderer.Layout(document, 8, options);
+        var viewport = TextRenderer.LayoutViewport(document, 8, firstVisualLine: 1, maxVisualLines: 2, options);
+
+        Assert.Equal(full.Skip(1).Take(2).Select(static line => line.PlainText), viewport.Select(static line => line.PlainText));
+        Assert.All(viewport.SelectMany(static line => line.Runs), static run => Assert.NotNull(run.Style));
+        Assert.Equal(FrankenTui.Style.UiStyle.Accent, viewport[0].Runs[0].Style);
+    }
+
+    [Fact]
+    public void ParagraphWidgetRendersRequestedVisualViewport()
+    {
+        var buffer = new RenderBuffer(12, 2);
+        var widget = new ParagraphWidget("alpha beta gamma delta tail")
+        {
+            RenderOptions = new TextRenderOptions(TextWrapMode.Word, FirstVisualLine: 1, MaxVisualLines: 2)
+        };
+
+        widget.Render(new RuntimeRenderContext(buffer, Rect.FromSize(12, 2), Ui.Theme));
+
+        Assert.Equal("gamma delta", HeadlessBufferView.RowText(buffer, 0));
+        Assert.Equal("tail", HeadlessBufferView.RowText(buffer, 1));
+    }
+
+    [Fact]
     public async Task AppSessionDrainsQueuedMessagesAndHandlesResize()
     {
         var simulator = Ui.CreateSimulator<int, string>(32, 10);

@@ -125,4 +125,56 @@ public sealed class PresenterTests
 
         Assert.Equal("A", model.ScreenString());
     }
+
+    [Fact]
+    public void PresenterUsesWidthMatchedPlaceholdersForGraphemeFallback()
+    {
+        var buffer = new RenderBuffer(5, 1);
+        var grapheme = new Cell(
+            CellContent.FromGrapheme(new GraphemeId(1, 0, 2)),
+            PackedRgba.White,
+            PackedRgba.Transparent,
+            CellAttributes.None);
+        buffer.Set(0, 0, grapheme);
+        buffer.Set(2, 0, Cell.FromChar('A'));
+
+        var presenter = new Presenter(TerminalCapabilities.Modern());
+        var result = presenter.Present(buffer, BufferDiff.Full(buffer.Width, buffer.Height));
+        var model = new TerminalModel(5, 1);
+        model.Process(result.Output);
+
+        Assert.Equal("??A", model.ScreenString());
+    }
+
+    [Fact]
+    public void PresenterRendersResolvedGraphemeTextWithoutFallbackPlaceholders()
+    {
+        var buffer = new RenderBuffer(5, 1);
+        buffer.SetText(0, 0, "e\u0301", Cell.FromChar('x'));
+        buffer.Set(1, 0, Cell.FromChar('A'));
+
+        var presenter = new Presenter(TerminalCapabilities.Modern());
+        var result = presenter.Present(buffer, BufferDiff.Full(buffer.Width, buffer.Height));
+        var model = new TerminalModel(5, 1);
+        model.Process(result.Output);
+
+        Assert.Equal("e\u0301A", model.ScreenString());
+        Assert.Contains("e\u0301A", result.Output, StringComparison.Ordinal);
+        Assert.DoesNotContain("??", result.Output, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void PresenterReplacesStandaloneZeroWidthRuneToPreserveGridAlignment()
+    {
+        var buffer = new RenderBuffer(5, 1);
+        buffer.SetRaw(0, 0, Cell.FromRune(new Rune(0x0301)));
+        buffer.Set(1, 0, Cell.FromChar('A'));
+
+        var presenter = new Presenter(TerminalCapabilities.Modern());
+        var result = presenter.Present(buffer, BufferDiff.Full(buffer.Width, buffer.Height));
+        var model = new TerminalModel(5, 1);
+        model.Process(result.Output);
+
+        Assert.Equal("\uFFFDA", model.ScreenString());
+    }
 }

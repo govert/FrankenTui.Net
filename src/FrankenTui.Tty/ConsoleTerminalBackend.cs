@@ -11,6 +11,7 @@ public class ConsoleTerminalBackend : ITerminalBackend
     private readonly TextWriter _writer;
     private readonly Queue<TerminalEvent> _events = [];
     private readonly SingleWriterGate _writerGate = new();
+    private readonly Func<Size?> _sizeReader;
 
     private RenderBuffer _previous;
     private Presenter _presenter;
@@ -23,7 +24,8 @@ public class ConsoleTerminalBackend : ITerminalBackend
         Name = name;
         Capabilities = capabilities;
         _writer = writer ?? Console.Out;
-        Size = ReadConsoleSize() ?? new Size(80, 25);
+        _sizeReader = ReadConsoleSize;
+        Size = _sizeReader() ?? new Size(80, 25);
         _previous = new RenderBuffer(Size.Width, Size.Height);
         _presenter = new Presenter(capabilities);
         _inlineWriter = new InlineTerminalWriter(capabilities, Size);
@@ -47,7 +49,7 @@ public class ConsoleTerminalBackend : ITerminalBackend
 
     public ValueTask InitializeAsync(CancellationToken cancellationToken = default)
     {
-        Size = ReadConsoleSize() ?? Size;
+        Size = _sizeReader() ?? Size;
         _inlineWriter.TerminalSize = Size;
         State = TerminalLifecycleState.Initialized;
         return ValueTask.CompletedTask;
@@ -105,7 +107,7 @@ public class ConsoleTerminalBackend : ITerminalBackend
         }
 
         using var lease = _writerGate.Acquire();
-        _inlineWriter.TerminalSize = ReadConsoleSize() ?? Size;
+        _inlineWriter.TerminalSize = _sizeReader() ?? Size;
         var output = _inlineWriter.WriteLog(text, options);
         if (output.Length == 0)
         {
@@ -123,7 +125,7 @@ public class ConsoleTerminalBackend : ITerminalBackend
         CancellationToken cancellationToken = default)
     {
         using var lease = _writerGate.Acquire();
-        var terminalSize = ReadConsoleSize() ?? Size;
+        var terminalSize = _sizeReader() ?? Size;
         Size = terminalSize;
 
         PresentResult result;
@@ -204,7 +206,7 @@ public class ConsoleTerminalBackend : ITerminalBackend
     {
         var captured = false;
 
-        if (ReadConsoleSize() is { } size && size != Size)
+        if (_sizeReader() is { } size && size != Size)
         {
             Size = size;
             _inlineWriter.TerminalSize = size;
@@ -221,13 +223,39 @@ public class ConsoleTerminalBackend : ITerminalBackend
         return captured;
     }
 
-    private static Size? ReadConsoleSize()
+    internal static Size? ReadConsoleSize()
+    {
+        return ReadConsoleSize(
+            static () => Console.WindowWidth,
+            static () => Console.WindowHeight,
+            static () => Console.BufferWidth,
+            static () => Console.BufferHeight);
+    }
+
+    internal static Size? ReadConsoleSize(
+        Func<int> windowWidthReader,
+        Func<int> windowHeightReader,
+        Func<int> bufferWidthReader,
+        Func<int> bufferHeightReader)
+    {
+        var width = ReadConsoleDimension(windowWidthReader) ?? ReadConsoleDimension(bufferWidthReader);
+        var height = ReadConsoleDimension(windowHeightReader) ?? ReadConsoleDimension(bufferHeightReader);
+        if (width is null || height is null)
+        {
+            return null;
+        }
+
+        return new Size(
+            (ushort)Math.Clamp(width.Value, 1, ushort.MaxValue),
+            (ushort)Math.Clamp(height.Value, 1, ushort.MaxValue));
+    }
+
+    private static int? ReadConsoleDimension(Func<int> reader)
     {
         try
         {
-            var width = (ushort)Math.Clamp(Console.BufferWidth, 1, ushort.MaxValue);
-            var height = (ushort)Math.Clamp(Console.BufferHeight, 1, ushort.MaxValue);
-            return new Size(width, height);
+            var value = reader();
+            return value > 0 ? value : null;
         }
         catch
         {

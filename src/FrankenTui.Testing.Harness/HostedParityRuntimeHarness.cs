@@ -92,6 +92,7 @@ public static class HostedParityRuntimeHarness
             runtime.Trace,
             runtime.Telemetry,
             runtime.DiffEvidence,
+            runtime.FrameStats,
             eventScript,
             backend.DrainOutput());
     }
@@ -148,6 +149,7 @@ public sealed record HostedParityRuntimeCapture(
     RuntimeTrace<HostedParityRuntimeHarness.HostedParityRuntimeMessage> Trace,
     TelemetrySessionLog Telemetry,
     DiffEvidenceLedger DiffEvidence,
+    RuntimeFrameStats FrameStats,
     IReadOnlyList<TerminalEvent> Events,
     string TerminalTranscript)
 {

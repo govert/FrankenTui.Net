@@ -21,12 +21,35 @@ public sealed record CommandPaletteEntry(
     string Description,
     CommandPaletteCategory Category,
     IReadOnlyList<string> Tags,
-    string? Keybinding = null);
+    string? Keybinding = null,
+    int? ScreenNumber = null,
+    string? ScreenSlug = null,
+    string? ScreenCategory = null);
+
+public enum CommandPaletteMatchKind
+{
+    NoMatch,
+    Fuzzy,
+    Substring,
+    WordStart,
+    Prefix,
+    Exact
+}
+
+public sealed record CommandPaletteEvidenceEntry(
+    string Kind,
+    double Factor,
+    string Description);
 
 public sealed record CommandPaletteSearchResult(
     CommandPaletteEntry Entry,
     double Score,
-    IReadOnlyList<int> MatchPositions);
+    IReadOnlyList<int> MatchPositions,
+    CommandPaletteMatchKind MatchKind = CommandPaletteMatchKind.NoMatch,
+    IReadOnlyList<CommandPaletteEvidenceEntry>? Evidence = null)
+{
+    public IReadOnlyList<CommandPaletteEvidenceEntry> Evidence { get; init; } = Evidence ?? [];
+}
 
 public sealed record CommandPaletteState(
     bool IsOpen = false,
@@ -34,7 +57,10 @@ public sealed record CommandPaletteState(
     int SelectedIndex = 0,
     bool PreviewFocused = false,
     string Status = "Type to search...",
-    string? LastExecutedCommandId = null)
+    string? LastExecutedCommandId = null,
+    IReadOnlyList<string>? FavoriteEntryIds = null,
+    bool FavoritesOnly = false,
+    CommandPaletteCategory? CategoryFilter = null)
 {
     public static CommandPaletteState Closed { get; } = new();
 }
@@ -71,7 +97,12 @@ public static class CommandPaletteSearch
             return entries
                 .OrderBy(static entry => entry.Category)
                 .ThenBy(static entry => entry.Title, StringComparer.OrdinalIgnoreCase)
-                .Select(static entry => new CommandPaletteSearchResult(entry, 0, []))
+                .Select(static entry => new CommandPaletteSearchResult(
+                    entry,
+                    ScoreEmpty(entry.Title),
+                    [],
+                    CommandPaletteMatchKind.NoMatch,
+                    [new CommandPaletteEvidenceEntry("match_type", 1.0, "empty query matches all")]))
                 .ToArray();
         }
 
@@ -89,52 +120,78 @@ public static class CommandPaletteSearch
     private static CommandPaletteSearchResult? Score(CommandPaletteEntry entry, string query)
     {
         var title = entry.Title;
-        if (title.Equals(query, StringComparison.OrdinalIgnoreCase))
+        var normalizedQuery = query.Trim();
+        var titleLower = title.ToLowerInvariant();
+        var queryLower = normalizedQuery.ToLowerInvariant();
+        var match = DetectMatch(titleLower, queryLower);
+        if (match.Kind == CommandPaletteMatchKind.NoMatch)
         {
-            return new CommandPaletteSearchResult(entry, 1.0, MatchPositions(title, query));
+            return null;
         }
 
-        if (title.StartsWith(query, StringComparison.OrdinalIgnoreCase))
+        var scored = BayesianScore(match.Kind, match.Positions, queryLower.Length, titleLower);
+        var score = scored.Score;
+        var evidence = scored.Evidence.ToList();
+        if (entry.Tags.Any(tag => tag.Contains(queryLower, StringComparison.OrdinalIgnoreCase)) &&
+            score is > 0 and < 1)
         {
-            return new CommandPaletteSearchResult(entry, 0.9, MatchPositions(title, query));
+            var odds = score / (1.0 - score);
+            score = odds * 3.0 / (1.0 + odds * 3.0);
+            evidence.Add(new CommandPaletteEvidenceEntry("tag_match", 3.0, "query matches tag"));
         }
 
-        if (title.Split(' ', StringSplitOptions.RemoveEmptyEntries)
-            .Any(word => word.StartsWith(query, StringComparison.OrdinalIgnoreCase)))
-        {
-            return new CommandPaletteSearchResult(entry, 0.8, MatchPositions(title, query));
-        }
-
-        var contiguous = title.IndexOf(query, StringComparison.OrdinalIgnoreCase);
-        var tagMatch = entry.Tags.Any(tag => tag.Contains(query, StringComparison.OrdinalIgnoreCase));
-        if (contiguous >= 0 || tagMatch)
-        {
-            var baseScore = contiguous >= 0 ? 0.7 : 0.55;
-            var score = baseScore
-                        + (tagMatch ? 0.15 : 0)
-                        + PositionBonus(contiguous, title.Length)
-                        + WordBoundaryBonus(title, contiguous);
-            return new CommandPaletteSearchResult(entry, score, contiguous >= 0 ? MatchPositions(title, query) : []);
-        }
-
-        if (TryFuzzyMatch(title, query, out var positions, out var gaps))
-        {
-            var score = 0.6 - gaps * 0.02 + PositionBonus(positions[0], title.Length);
-            return new CommandPaletteSearchResult(entry, score, positions);
-        }
-
-        return null;
+        return new CommandPaletteSearchResult(entry, score, match.Positions, match.Kind, evidence);
     }
 
-    private static IReadOnlyList<int> MatchPositions(string title, string query)
+    private static (CommandPaletteMatchKind Kind, IReadOnlyList<int> Positions) DetectMatch(
+        string titleLower,
+        string queryLower)
     {
-        var index = title.IndexOf(query, StringComparison.OrdinalIgnoreCase);
-        if (index < 0)
+        if (queryLower == titleLower)
         {
-            return [];
+            return (CommandPaletteMatchKind.Exact, Enumerable.Range(0, titleLower.Length).ToArray());
         }
 
-        return Enumerable.Range(index, query.Length).ToArray();
+        if (titleLower.StartsWith(queryLower, StringComparison.Ordinal))
+        {
+            return (CommandPaletteMatchKind.Prefix, Enumerable.Range(0, queryLower.Length).ToArray());
+        }
+
+        if (TryWordStartMatch(titleLower, queryLower, out var wordStartPositions))
+        {
+            return (CommandPaletteMatchKind.WordStart, wordStartPositions);
+        }
+
+        var contiguous = titleLower.IndexOf(queryLower, StringComparison.Ordinal);
+        if (contiguous >= 0)
+        {
+            return (CommandPaletteMatchKind.Substring, Enumerable.Range(contiguous, queryLower.Length).ToArray());
+        }
+
+        if (TryFuzzyMatch(titleLower, queryLower, out var fuzzyPositions, out _))
+        {
+            return (CommandPaletteMatchKind.Fuzzy, fuzzyPositions);
+        }
+
+        return (CommandPaletteMatchKind.NoMatch, []);
+    }
+
+    private static bool TryWordStartMatch(string titleLower, string queryLower, out IReadOnlyList<int> positions)
+    {
+        var matchPositions = new List<int>(queryLower.Length);
+        var queryIndex = 0;
+        for (var index = 0; index < titleLower.Length && queryIndex < queryLower.Length; index++)
+        {
+            var isWordStart = index == 0 || titleLower[index - 1] is ' ' or '-' or '_';
+            if (isWordStart && titleLower[index] == queryLower[queryIndex])
+            {
+                matchPositions.Add(index);
+                queryIndex++;
+            }
+        }
+
+        positions = queryIndex == queryLower.Length ? matchPositions : [];
+        return queryIndex == queryLower.Length;
     }
 
     private static bool TryFuzzyMatch(string title, string query, out IReadOnlyList<int> positions, out int gaps)
@@ -174,24 +231,81 @@ public static class CommandPaletteSearch
         return true;
     }
 
-    private static double PositionBonus(int contiguousIndex, int titleLength)
+    private static (double Score, IReadOnlyList<CommandPaletteEvidenceEntry> Evidence) BayesianScore(
+        CommandPaletteMatchKind kind,
+        IReadOnlyList<int> positions,
+        int queryLength,
+        string titleLower)
     {
-        if (contiguousIndex < 0 || titleLength <= 0)
+        var combinedOdds = PriorOdds(kind);
+        var evidence = new List<CommandPaletteEvidenceEntry>
         {
-            return 0;
+            new("match_type", combinedOdds, $"{kind.ToString().ToLowerInvariant()} match")
+        };
+        if (positions.Count > 0)
+        {
+            var positionFactor = 1.0 + 1.0 / (positions[0] + 1.0) * 0.5;
+            combinedOdds *= positionFactor;
+            evidence.Add(new CommandPaletteEvidenceEntry(
+                "position",
+                positionFactor,
+                $"first match at position {positions[0]}"));
         }
 
-        return Math.Max(0.05 - contiguousIndex / (double)Math.Max(titleLength, 1) * 0.05, 0);
+        var wordBoundaryCount = positions.Count(position => position == 0 || titleLower[position - 1] is ' ' or '-' or '_');
+        if (wordBoundaryCount > 0)
+        {
+            var boundaryFactor = 1.0 + wordBoundaryCount * 0.3;
+            combinedOdds *= boundaryFactor;
+            evidence.Add(new CommandPaletteEvidenceEntry(
+                "word_boundary",
+                boundaryFactor,
+                $"{wordBoundaryCount} word boundary matches"));
+        }
+
+        if (kind == CommandPaletteMatchKind.Fuzzy && positions.Count > 1)
+        {
+            var totalGap = TotalGap(positions);
+            var gapFactor = 1.0 / (1.0 + totalGap * 0.1);
+            combinedOdds *= gapFactor;
+            evidence.Add(new CommandPaletteEvidenceEntry(
+                "gap_penalty",
+                gapFactor,
+                $"total gap of {totalGap} characters"));
+        }
+
+        var lengthFactor = 1.0 + queryLength / (double)Math.Max(titleLower.Length, 1) * 0.2;
+        combinedOdds *= lengthFactor;
+        evidence.Add(new CommandPaletteEvidenceEntry(
+            "title_length",
+            lengthFactor,
+            $"title length {titleLower.Length} chars"));
+        return (combinedOdds / (1.0 + combinedOdds), evidence);
     }
 
-    private static double WordBoundaryBonus(string title, int contiguousIndex)
-    {
-        if (contiguousIndex <= 0 || contiguousIndex > title.Length - 1)
+    private static double ScoreEmpty(string title) =>
+        1.0 / (title.Length + 1.0) * 0.1;
+
+    private static double PriorOdds(CommandPaletteMatchKind kind) =>
+        kind switch
         {
-            return contiguousIndex == 0 ? 0.1 : 0;
+            CommandPaletteMatchKind.Exact => 99.0,
+            CommandPaletteMatchKind.Prefix => 9.0,
+            CommandPaletteMatchKind.WordStart => 4.0,
+            CommandPaletteMatchKind.Substring => 2.0,
+            CommandPaletteMatchKind.Fuzzy => 0.333,
+            _ => 0.0
+        };
+
+    private static int TotalGap(IReadOnlyList<int> positions)
+    {
+        var total = 0;
+        for (var index = 1; index < positions.Count; index++)
+        {
+            total += Math.Max(positions[index] - positions[index - 1] - 1, 0);
         }
 
-        return char.IsWhiteSpace(title[contiguousIndex - 1]) ? 0.1 : 0;
+        return total;
     }
 }
 
@@ -202,7 +316,23 @@ public static class CommandPaletteController
         ArgumentNullException.ThrowIfNull(state);
         ArgumentNullException.ThrowIfNull(entries);
 
-        return CommandPaletteSearch.Search(entries, state.Query);
+        var results = CommandPaletteSearch.Search(entries, state.Query);
+        if (state.CategoryFilter is { } categoryFilter)
+        {
+            results = results
+                .Where(result => result.Entry.Category == categoryFilter)
+                .ToArray();
+        }
+
+        if (!state.FavoritesOnly)
+        {
+            return results;
+        }
+
+        var favorites = FavoriteSet(state);
+        return results
+            .Where(result => favorites.Contains(result.Entry.Id))
+            .ToArray();
     }
 
     public static CommandPaletteState Toggle(CommandPaletteState state) =>
@@ -249,6 +379,69 @@ public static class CommandPaletteController
             }
 
             return (Close(state), null);
+        }
+
+        if (IsCtrlF(gesture, requireShift: true))
+        {
+            var nextFavoritesOnly = !state.FavoritesOnly;
+            return (state with
+            {
+                FavoritesOnly = nextFavoritesOnly,
+                SelectedIndex = 0,
+                Status = nextFavoritesOnly ? "Favorites filter enabled." : "Favorites filter disabled."
+            }, null);
+        }
+
+        if (IsCtrlF(gesture, requireShift: false))
+        {
+            if (selectedIndex < 0 || selectedIndex >= results.Count)
+            {
+                return (state with { Status = "No command selected." }, null);
+            }
+
+            var selected = results[selectedIndex].Entry;
+            var favorites = FavoriteSet(state);
+            var nextFavorites = favorites.Contains(selected.Id)
+                ? favorites.Where(id => !string.Equals(id, selected.Id, StringComparison.Ordinal)).ToArray()
+                : favorites.Append(selected.Id).Order(StringComparer.Ordinal).ToArray();
+
+            var favorited = nextFavorites.Contains(selected.Id, StringComparer.Ordinal);
+            return (state with
+            {
+                FavoriteEntryIds = nextFavorites,
+                SelectedIndex = 0,
+                Status = favorited
+                    ? $"Favorited {selected.Title}."
+                    : $"Unfavorited {selected.Title}."
+            }, null);
+        }
+
+        if (IsCtrlNumber(gesture, out var digit))
+        {
+            if (digit == 0)
+            {
+                return (state with
+                {
+                    CategoryFilter = null,
+                    SelectedIndex = 0,
+                    Status = "Category filter cleared."
+                }, null);
+            }
+
+            var categories = Enum.GetValues<CommandPaletteCategory>();
+            var index = digit - 1;
+            if (index < 0 || index >= categories.Length)
+            {
+                return (state with { Status = "No category for shortcut." }, null);
+            }
+
+            var category = categories[index];
+            return (state with
+            {
+                CategoryFilter = category,
+                SelectedIndex = 0,
+                Status = $"Category filter: {category}."
+            }, null);
         }
 
         if (gesture.Key == TerminalKey.Enter && gesture.Modifiers == TerminalModifiers.None)
@@ -324,6 +517,37 @@ public static class CommandPaletteController
         return (state, null);
     }
 
+    private static HashSet<string> FavoriteSet(CommandPaletteState state) =>
+        new(state.FavoriteEntryIds ?? [], StringComparer.Ordinal);
+
+    private static bool IsCtrlF(KeyGesture gesture, bool requireShift) =>
+        gesture.IsCharacter &&
+        gesture.Character is { } rune &&
+        string.Equals(rune.ToString(), "f", StringComparison.OrdinalIgnoreCase) &&
+        gesture.Modifiers.HasFlag(TerminalModifiers.Control) &&
+        gesture.Modifiers.HasFlag(TerminalModifiers.Shift) == requireShift;
+
+    private static bool IsCtrlNumber(KeyGesture gesture, out int digit)
+    {
+        digit = -1;
+        if (!gesture.IsCharacter ||
+            gesture.Character is not { } rune ||
+            !gesture.Modifiers.HasFlag(TerminalModifiers.Control) ||
+            gesture.Modifiers.HasFlag(TerminalModifiers.Shift))
+        {
+            return false;
+        }
+
+        var value = rune.ToString();
+        if (value.Length != 1 || !char.IsDigit(value[0]))
+        {
+            return false;
+        }
+
+        digit = value[0] - '0';
+        return true;
+    }
+
     private static int Move(int index, int count, int delta)
     {
         if (count <= 0)
@@ -388,7 +612,12 @@ public sealed class CommandPaletteWidget : IWidget
         var selected = Results.Count == 0 ? null : Results[Math.Min(SelectedIndex, Results.Count - 1)];
         var body = selected is null
             ? "Type to search..."
-            : $"{selected.Entry.Title}\n{selected.Entry.Description}\nCategory: {selected.Entry.Category}\nKey: {selected.Entry.Keybinding ?? "n/a"}";
+            : $"{selected.Entry.Title}\n{selected.Entry.Description}\nCategory: {selected.Entry.Category}\nKey: {selected.Entry.Keybinding ?? "n/a"}\n" +
+              $"Score: {selected.Score:0.000} ({selected.MatchKind})\n" +
+              $"Evidence: {FormatEvidence(selected.Evidence)}" +
+              (selected.Entry.ScreenNumber is { } screenNumber
+                  ? $"\nScreen: {screenNumber:00} {selected.Entry.ScreenSlug}\nScreen category: {selected.Entry.ScreenCategory}"
+                  : string.Empty);
 
         new PanelWidget
         {
@@ -396,4 +625,9 @@ public sealed class CommandPaletteWidget : IWidget
             Child = new ParagraphWidget(body)
         }.Render(context);
     }
+
+    private static string FormatEvidence(IReadOnlyList<CommandPaletteEvidenceEntry> evidence) =>
+        evidence.Count == 0
+            ? "none"
+            : string.Join("; ", evidence.Take(4).Select(entry => $"{entry.Kind} {entry.Factor:0.##}"));
 }

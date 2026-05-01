@@ -1,4 +1,5 @@
 using FrankenTui.Core;
+using FrankenTui.Extras;
 using FrankenTui.Layout;
 using FrankenTui.Text;
 using FrankenTui.Web;
@@ -123,6 +124,7 @@ public static class DoctorDashboardViewFactory
                                     $"Seed execution: status={report.SeedExecution?.Status ?? "unknown"} stages={report.SeedExecution?.Stages.Count.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0"}",
                                     $"Suite aggregate: total={report.SuiteAggregate?.TotalRuns.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0"} ok={report.SuiteAggregate?.OkRuns.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0"} failed={report.SuiteAggregate?.FailedRuns.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0"}",
                                     $"Cost profile: total={report.CostProfile?.GrandTotalMs.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0"}ms blocking={report.CostProfile?.BlockingTotalMs.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0"}ms targets={report.CostProfile?.OptimizationTargets.Count.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0"}",
+                                    $"Load governor: {LoadGovernorSummary(report.RuntimePerformance)}",
                                     $"Warnings: {string.Join(" | ", report.Telemetry?.Warnings ?? [])}",
                                     $"Mermaid issues: {string.Join(" | ", report.Mermaid?.ValidationIssues ?? [])}",
                                     $"OpenTUI issues: {string.Join(" | ", report.OpenTuiMigration?.Issues ?? [])}"
@@ -184,6 +186,7 @@ public static class DoctorDashboardViewFactory
                 $"Seed execution: status={report.SeedExecution?.Status ?? "unknown"} stages={string.Join(" | ", report.SeedExecution?.Stages.Select(static stage => stage.Stage) ?? [])}",
                 $"Suite aggregate: total_runs={report.SuiteAggregate?.TotalRuns.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0"} ok={report.SuiteAggregate?.OkRuns.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0"} failed={report.SuiteAggregate?.FailedRuns.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0"} traces={string.Join(" | ", report.SuiteAggregate?.TraceIds ?? [])}",
                 $"Cost profile: total={report.CostProfile?.GrandTotalMs.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0"}ms blocking={report.CostProfile?.BlockingTotalMs.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0"}ms targets={report.CostProfile?.OptimizationTargets.Count.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0"}",
+                $"Load governor: {LoadGovernorSummary(report.RuntimePerformance)}",
                 $"Host evidence: {string.Join(" | ", report.HostEvidenceSources ?? [])}",
                 $"Host divergences: {string.Join(" | ", report.KnownHostDivergences ?? [])}",
                 $"Capability overrides: {string.Join(" | ", report.CapabilityOverrides ?? [])}",
@@ -194,4 +197,21 @@ public static class DoctorDashboardViewFactory
                     : $"Artifacts: {string.Join(" | ", report.ArtifactPaths.Select(static entry => $"{entry.Key}={entry.Value}"))}"
             ]);
     }
+
+    private static string LoadGovernorSummary(PerformanceHudSnapshot? snapshot) =>
+        snapshot is null
+            ? "not captured"
+            : string.Join(
+                " ",
+                [
+                    $"level={snapshot.DegradationLevel}",
+                    $"action={snapshot.LoadGovernorAction}",
+                    $"reason={snapshot.LoadGovernorReason}",
+                    $"pid={snapshot.LoadGovernorPidOutput:0.###}",
+                    $"e={snapshot.LoadGovernorEProcessValue:0.###}",
+                    $"pid_margin={snapshot.LoadGovernorPidGateMargin:0.###}",
+                    $"evidence_margin={snapshot.LoadGovernorEvidenceMargin:0.###}",
+                    $"warmup={(snapshot.LoadGovernorInWarmup ? "true" : "false")}",
+                    $"transition={snapshot.LoadGovernorTransitionSeq}/{snapshot.LoadGovernorTransitionCorrelationId}"
+                ]);
 }
