@@ -6832,6 +6832,65 @@ public sealed class ShowcaseShellTests
         Assert.Equal(17_300, detailRecord.RootElement.GetProperty("target_id").GetInt32());
     }
 
+    [Fact]
+    public void ShowcaseFrameHitRegistryExposesAdvancedPanels()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 10,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+
+        var patterns = ShowcaseFrameHitRegistry.HitTest(state, 3, 6);
+        var composite = ShowcaseFrameHitRegistry.HitTest(state, 90, 6);
+
+        Assert.Equal("advanced:patterns", patterns.LocalHitId);
+        Assert.Equal((uint)10_000, patterns.UpstreamHitId);
+        Assert.Equal("advanced:composite", composite.LocalHitId);
+        Assert.Equal((uint)10_100, composite.UpstreamHitId);
+    }
+
+    [Fact]
+    public void ShowcaseEvidenceJsonlWriterEmitsAdvancedMouseActions()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"ftui-showcase-advanced-mouse-{Guid.NewGuid():N}.jsonl");
+        var options = ShowcaseCliOptions.Parse(
+            ["--screen=10", "--evidence-jsonl", path],
+            _ => null);
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 10,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+        var patternsEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 6, TerminalMouseButton.WheelDown, TerminalMouseKind.Scroll),
+            timestamp);
+        var compositeEvent = TerminalEvent.Mouse(
+            new MouseGesture(90, 6, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp + TimeSpan.FromMilliseconds(10));
+
+        using (var writer = ShowcaseEvidenceJsonlWriter.Create(options.EvidenceJsonlPath))
+        {
+            Assert.NotNull(writer);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 1, frame: 1, patternsEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 2, frame: 2, compositeEvent, state, state);
+        }
+
+        var lines = File.ReadAllLines(path);
+        Assert.Equal(2, lines.Length);
+        using var patternsRecord = JsonDocument.Parse(lines[0]);
+        using var compositeRecord = JsonDocument.Parse(lines[1]);
+        Assert.Equal("advanced_patterns_scroll_down", patternsRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("advanced:patterns", patternsRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(10_000, patternsRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("advanced_composite_focus", compositeRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("advanced:composite", compositeRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(10_100, compositeRecord.RootElement.GetProperty("target_id").GetInt32());
+    }
+
     private static ShowcaseDemoState ApplyKey(ShowcaseDemoState state, KeyGesture gesture, DateTimeOffset timestamp)
     {
         var terminalEvent = TerminalEvent.Key(gesture, timestamp);

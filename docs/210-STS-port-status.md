@@ -365,6 +365,10 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   `dotnet test tests/FrankenTui.Tests.Headless/FrankenTui.Tests.Headless.csproj --no-restore --filter FullyQualifiedName~ShowcaseShellTests`
   and `84` operator-surface/showcase-shell tests via
   `dotnet test tests/FrankenTui.Tests.Headless/FrankenTui.Tests.Headless.csproj --no-restore --filter "FullyQualifiedName~OperatorSurfaceTests|FullyQualifiedName~ShowcaseShellTests"`.
+  The Advanced screen now has a local two-pane patterns/composite surface with
+  frame-registered patterns and composite regions plus matching mouse evidence;
+  richer upstream advanced pattern workflows, stateful mouse mutation, and exact
+  styling remain tracked under `364-DEM`.
   The Terminal Capabilities screen now has a local upstream-shaped
   matrix/evidence/simulation tri-panel with deterministic capability rows,
   evidence-source labels, diagnostic event names, simulated profile controls,
@@ -894,11 +898,12 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   evidence, and the Mermaid Showcase increment adds header, library, viewport,
   controls, metrics, and status-log regions plus matching mouse evidence, and
   the Mermaid Mega increment adds shared-showcase, library, controls, and
-  node-detail regions plus matching mouse evidence, while still leaving broader
-  generalized screen hit routing open.
-  Focused showcase-shell verification is now `207` tests via
+  node-detail regions plus matching mouse evidence, and the Advanced increment
+  adds patterns and composite regions plus matching mouse evidence, while still
+  leaving broader generalized screen hit routing open.
+  Focused showcase-shell verification is now `209` tests via
   `dotnet test tests/FrankenTui.Tests.Headless/FrankenTui.Tests.Headless.csproj --no-restore --filter FullyQualifiedName~ShowcaseShellTests`.
-  Current local verification is `461` headless tests, `9` web tests, and `7`
+  Current local verification is `463` headless tests, `9` web tests, and `7`
   PTY tests via `dotnet test FrankenTui.Net.sln --no-restore`.
   Previous focused registry/evidence verification covered `33`
   registry/evidence

@@ -558,6 +558,22 @@ internal static class ShowcaseFrameHitRegistry
                 new("terminal_capabilities:simulation", ShowcaseHitLayer.Content, 12_200)));
         }
 
+        if (state.CurrentScreenNumber == 10 && TryResolveContentInnerArea(state.Viewport, out var advancedInner) && advancedInner.Width >= 30 && advancedInner.Height >= 8)
+        {
+            var patternsWidth = Math.Max(1, advancedInner.Width / 2);
+            var compositeWidth = Math.Max(1, advancedInner.Width - patternsWidth);
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(advancedInner.X, advancedInner.Y, (ushort)patternsWidth, advancedInner.Height),
+                new("advanced:patterns", ShowcaseHitLayer.Content, 10_000)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(
+                    (ushort)(advancedInner.X + patternsWidth),
+                    advancedInner.Y,
+                    (ushort)compositeWidth,
+                    advancedInner.Height),
+                new("advanced:composite", ShowcaseHitLayer.Content, 10_100)));
+        }
+
         if (state.CurrentScreenNumber == 14 && TryResolveContentInnerArea(state.Viewport, out var performanceInner) && performanceInner.Width >= 45 && performanceInner.Height >= 8)
         {
             var footerY = performanceInner.Y + performanceInner.Height - 1;
