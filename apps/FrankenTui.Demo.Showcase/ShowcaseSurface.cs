@@ -621,6 +621,20 @@ internal static class ShowcaseSurface
     private static IWidget BuildDataViz(ShowcaseDemoState state)
     {
         var value = ((state.ScriptFrame % 6) + 2) / 8.0;
+        var activePanel = Math.Clamp(state.DataVizActivePanelIndex, 0, 2) switch
+        {
+            0 => "Progress",
+            1 => "Metrics",
+            _ => "Narrative"
+        };
+        var selectedMetric = Math.Clamp(state.DataVizMetricRowIndex, 0, 3);
+        var narrativeDetail = Math.Clamp(state.DataVizNarrativeDetailIndex, 0, 2);
+        var narrativeDetailText = narrativeDetail switch
+        {
+            1 => "Detail: metrics table selected; mouse wheel steps deterministic rows.",
+            2 => "Detail: narrative selected; context clicks cycle this local note.",
+            _ => "Detail: progress lanes selected; chart parity remains pending."
+        };
         return TwoColumn(
             new StackWidget(
                 LayoutDirection.Vertical,
@@ -636,10 +650,21 @@ internal static class ShowcaseSurface
                             ["Dirty rows", $"{Math.Max(state.ScriptFrame, 1) * 3}"],
                             ["Frames", $"{state.ScriptFrame + 1}"],
                             ["Cells", $"{Math.Max(state.RuntimeStats?.ChangedCells ?? 128, 128)}"]
-                        ]
+                        ],
+                        SelectedRow = selectedMetric
                     })
                 ]),
-            Panel("Narrative", "The .NET port does not yet have upstream chart/canvas widgets, so this screen uses density through tables, progress lanes, and runtime counters."));
+            Panel(
+                state.DataVizActivePanelIndex == 2 ? "Narrative [active]" : "Narrative",
+                $"""
+                Active panel: {activePanel}
+                Selected metric row: {selectedMetric}
+                Narrative detail: {narrativeDetail}
+
+                {narrativeDetailText}
+
+                The .NET port does not yet have upstream chart/canvas widgets, so this screen uses density through tables, progress lanes, and runtime counters.
+                """));
     }
 
     private static IWidget BuildFileBrowser(ShowcaseDemoState state) =>

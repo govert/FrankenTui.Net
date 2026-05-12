@@ -113,6 +113,9 @@ internal sealed record ShowcaseDemoState(
     int MarkdownRendererScroll = 0,
     int MarkdownStreamScroll = 0,
     int MarkdownWrapModeIndex = 0,
+    int DataVizActivePanelIndex = 0,
+    int DataVizMetricRowIndex = 0,
+    int DataVizNarrativeDetailIndex = 0,
     bool PaletteLabBenchEnabled = false,
     int PaletteLabBenchFrame = 0,
     int PaletteLabBenchProcessed = 0,
@@ -244,6 +247,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent tableThemeMouseEvent &&
             HandleTableThemeGalleryMouse(tableThemeMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent dataVizMouseEvent &&
+            HandleDataVizMouse(dataVizMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -1075,6 +1084,66 @@ internal sealed record ShowcaseDemoState(
 
         next = next with { TableThemePresetIndex = Math.Clamp(preset, 0, 2) };
         return true;
+    }
+
+    private static bool HandleDataVizMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 8 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content)
+        {
+            return false;
+        }
+
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = hit.LocalHitId switch
+            {
+                "data_viz:metrics_table" => next with
+                {
+                    DataVizActivePanelIndex = 1,
+                    DataVizMetricRowIndex = Math.Clamp(next.DataVizMetricRowIndex + delta, 0, 3)
+                },
+                "data_viz:narrative" => next with
+                {
+                    DataVizActivePanelIndex = 2,
+                    DataVizNarrativeDetailIndex = Math.Clamp(next.DataVizNarrativeDetailIndex + delta, 0, 2)
+                },
+                _ => next
+            };
+            return hit.LocalHitId is "data_viz:metrics_table" or "data_viz:narrative";
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left && gesture.Button != TerminalMouseButton.Right)
+        {
+            return false;
+        }
+
+        next = hit.LocalHitId switch
+        {
+            "data_viz:progress" => next with { DataVizActivePanelIndex = 0 },
+            "data_viz:metrics_table" => next with
+            {
+                DataVizActivePanelIndex = 1,
+                DataVizMetricRowIndex = Math.Clamp(next.DataVizMetricRowIndex + 1, 0, 3)
+            },
+            "data_viz:narrative" => next with
+            {
+                DataVizActivePanelIndex = 2,
+                DataVizNarrativeDetailIndex = Math.Clamp(next.DataVizNarrativeDetailIndex + 1, 0, 2)
+            },
+            _ => next
+        };
+        return hit.LocalHitId is "data_viz:progress" or "data_viz:metrics_table" or "data_viz:narrative";
     }
 
     private static bool HandleTerminalCapabilitiesMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
