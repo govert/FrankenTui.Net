@@ -5630,6 +5630,85 @@ public sealed class ShowcaseShellTests
         Assert.Equal(33_200, timelineRecord.RootElement.GetProperty("target_id").GetInt32());
     }
 
+    [Fact]
+    public void ShowcaseFrameHitRegistryExposesI18nPanels()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 34,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+
+        var locale = ShowcaseFrameHitRegistry.HitTest(state, 3, 3);
+        var lookup = ShowcaseFrameHitRegistry.HitTest(state, 3, 8);
+        var plurals = ShowcaseFrameHitRegistry.HitTest(state, 3, 20);
+        var rtl = ShowcaseFrameHitRegistry.HitTest(state, 70, 8);
+        var stress = ShowcaseFrameHitRegistry.HitTest(state, 70, 20);
+        var footer = ShowcaseFrameHitRegistry.HitTest(state, 3, 29);
+
+        Assert.Equal("i18n:locale_bar", locale.LocalHitId);
+        Assert.Equal((uint)34_000, locale.UpstreamHitId);
+        Assert.Equal("i18n:string_lookup", lookup.LocalHitId);
+        Assert.Equal((uint)34_100, lookup.UpstreamHitId);
+        Assert.Equal("i18n:plural_rules", plurals.LocalHitId);
+        Assert.Equal((uint)34_110, plurals.UpstreamHitId);
+        Assert.Equal("i18n:rtl_layout", rtl.LocalHitId);
+        Assert.Equal((uint)34_120, rtl.UpstreamHitId);
+        Assert.Equal("i18n:stress_lab", stress.LocalHitId);
+        Assert.Equal((uint)34_130, stress.UpstreamHitId);
+        Assert.Equal("i18n:footer", footer.LocalHitId);
+        Assert.Equal((uint)34_200, footer.UpstreamHitId);
+    }
+
+    [Fact]
+    public void ShowcaseEvidenceJsonlWriterEmitsI18nMouseActions()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"ftui-showcase-i18n-mouse-{Guid.NewGuid():N}.jsonl");
+        var options = ShowcaseCliOptions.Parse(
+            ["--screen=34", "--evidence-jsonl", path],
+            _ => null);
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 34,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+        var localeEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 3, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp);
+        var pluralEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 20, TerminalMouseButton.WheelDown, TerminalMouseKind.Scroll),
+            timestamp + TimeSpan.FromMilliseconds(10));
+        var stressEvent = TerminalEvent.Mouse(
+            new MouseGesture(70, 20, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp + TimeSpan.FromMilliseconds(20));
+
+        using (var writer = ShowcaseEvidenceJsonlWriter.Create(options.EvidenceJsonlPath))
+        {
+            Assert.NotNull(writer);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 1, frame: 1, localeEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 2, frame: 2, pluralEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 3, frame: 3, stressEvent, state, state);
+        }
+
+        var lines = File.ReadAllLines(path);
+        Assert.Equal(3, lines.Length);
+        using var localeRecord = JsonDocument.Parse(lines[0]);
+        using var pluralRecord = JsonDocument.Parse(lines[1]);
+        using var stressRecord = JsonDocument.Parse(lines[2]);
+        Assert.Equal("i18n_locale_select", localeRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("i18n:locale_bar", localeRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(34_000, localeRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("i18n_plural_count_increment", pluralRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("i18n:plural_rules", pluralRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(34_110, pluralRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("i18n_stress_lab_focus", stressRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("i18n:stress_lab", stressRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(34_130, stressRecord.RootElement.GetProperty("target_id").GetInt32());
+    }
+
     private static ShowcaseDemoState ApplyKey(ShowcaseDemoState state, KeyGesture gesture, DateTimeOffset timestamp)
     {
         var terminalEvent = TerminalEvent.Key(gesture, timestamp);

@@ -1000,6 +1000,39 @@ internal static class ShowcaseFrameHitRegistry
                 new("explainability:source_controls", ShowcaseHitLayer.Content, 33_300)));
         }
 
+        if (state.CurrentScreenNumber == 34 && TryResolveContentInnerArea(state.Viewport, out var i18nInner) && i18nInner.Width >= 40 && i18nInner.Height >= 12)
+        {
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(i18nInner.X, i18nInner.Y, i18nInner.Width, (ushort)Math.Min(3, (int)i18nInner.Height)),
+                new("i18n:locale_bar", ShowcaseHitLayer.Content, 34_000)));
+
+            var bodyY = i18nInner.Y + 3;
+            var bodyHeight = Math.Max(1, i18nInner.Height - 4);
+            var leftWidth = Math.Max(1, i18nInner.Width / 2);
+            var rightX = i18nInner.X + leftWidth;
+            var rightWidth = Math.Max(1, i18nInner.Width - leftWidth);
+            var topHeight = Math.Max(1, bodyHeight / 2);
+            var bottomHeight = Math.Max(1, bodyHeight - topHeight);
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(i18nInner.X, (ushort)bodyY, (ushort)leftWidth, (ushort)topHeight),
+                new("i18n:string_lookup", ShowcaseHitLayer.Content, 34_100)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(i18nInner.X, (ushort)(bodyY + topHeight), (ushort)leftWidth, (ushort)bottomHeight),
+                new("i18n:plural_rules", ShowcaseHitLayer.Content, 34_110)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)rightX, (ushort)bodyY, (ushort)rightWidth, (ushort)topHeight),
+                new("i18n:rtl_layout", ShowcaseHitLayer.Content, 34_120)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)rightX, (ushort)(bodyY + topHeight), (ushort)rightWidth, (ushort)bottomHeight),
+                new("i18n:stress_lab", ShowcaseHitLayer.Content, 34_130)));
+            AddRegion(
+                regions,
+                i18nInner.X,
+                Math.Max(i18nInner.Y, i18nInner.Bottom - 1),
+                i18nInner.Width,
+                new("i18n:footer", ShowcaseHitLayer.Content, 34_200));
+        }
+
         if (state.CurrentScreenNumber == 7 && TryResolveContentInnerArea(state.Viewport, out var formsInner) && formsInner.Width >= 30 && formsInner.Height >= 8)
         {
             var formWidth = Math.Max(1, formsInner.Width / 2);

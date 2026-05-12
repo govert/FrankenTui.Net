@@ -1226,6 +1226,41 @@ public sealed class ShowcaseEvidenceJsonlWriter : IDisposable
             return "explainability_hit_test";
         }
 
+        if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 34)
+        {
+            if (gesture.Kind == TerminalMouseKind.Scroll)
+            {
+                return hit.LocalHitId switch
+                {
+                    "i18n:plural_rules" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "i18n_plural_count_decrement"
+                        : "i18n_plural_count_increment",
+                    "i18n:stress_lab" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "i18n_stress_sample_prev"
+                        : "i18n_stress_sample_next",
+                    _ => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "i18n_panel_scroll_up"
+                        : "i18n_panel_scroll_down"
+                };
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Left)
+            {
+                return hit.LocalHitId switch
+                {
+                    "i18n:locale_bar" => "i18n_locale_select",
+                    "i18n:string_lookup" => "i18n_string_lookup_focus",
+                    "i18n:plural_rules" => "i18n_plural_rules_focus",
+                    "i18n:rtl_layout" => "i18n_rtl_layout_focus",
+                    "i18n:stress_lab" => "i18n_stress_lab_focus",
+                    "i18n:footer" => "i18n_controls_focus",
+                    _ => "i18n_hit_test"
+                };
+            }
+
+            return "i18n_hit_test";
+        }
+
         if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 7)
         {
             if (gesture.Kind == TerminalMouseKind.Scroll)
