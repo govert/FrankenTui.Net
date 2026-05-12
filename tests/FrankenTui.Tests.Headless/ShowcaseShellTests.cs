@@ -6331,7 +6331,7 @@ public sealed class ShowcaseShellTests
             flowDirection: WidgetFlowDirection.LeftToRight) with
         {
             ThemeStudioPresetIndex = 3,
-            ThemeStudioTokenIndex = 6,
+            ThemeStudioTokenIndex = 24,
             ThemeStudioFocusIndex = 1,
             ThemeStudioDiagnosticsScroll = 4,
             ThemeStudioExportArmed = true
@@ -6342,10 +6342,10 @@ public sealed class ShowcaseShellTests
             .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 32), Theme.DefaultTheme));
 
         var screen = HeadlessBufferView.ScreenString(buffer);
-        Assert.Contains("Token Inspector [focus accent::SUCCESS]", screen);
+        Assert.Contains("Token Inspector [focus PriorityP4]", screen);
         Assert.Contains("Status: Export ready for Nord", screen);
         Assert.Contains("Diagnostics scroll: 4", screen);
-        Assert.Contains("selected=Nord token=accent::SUCCESS export=ready", screen);
+        Assert.Contains("selected=Nord token=PriorityP4 export=ready", screen);
     }
 
     [Fact]

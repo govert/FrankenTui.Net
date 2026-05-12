@@ -2420,7 +2420,7 @@ internal static class ShowcaseSurface
     private static IWidget BuildThemeStudio(ShowcaseDemoState state)
     {
         var presetIndex = Math.Clamp(state.ThemeStudioPresetIndex, 0, 4);
-        var tokenIndex = Math.Clamp(state.ThemeStudioTokenIndex, 0, 11);
+        var tokenIndex = Math.Clamp(state.ThemeStudioTokenIndex, 0, 24);
         var focusIndex = Math.Clamp(state.ThemeStudioFocusIndex, 0, 4);
         var diagnosticsScroll = Math.Clamp(state.ThemeStudioDiagnosticsScroll, 0, 8);
         var exportArmed = state.ThemeStudioExportArmed;
@@ -2437,14 +2437,27 @@ internal static class ShowcaseSurface
             ["", "fg::PRIMARY", "Foreground", "#F8FAFC", "13.6:1", "AAA"],
             ["", "fg::SECONDARY", "Foreground", "#CBD5E1", "9.7:1", "AAA"],
             ["", "fg::MUTED", "Foreground", "#94A3B8", "5.8:1", "AA"],
+            ["", "fg::DISABLED", "Foreground", "#64748B", "3.9:1", "AA Large"],
+            ["", "bg::DEEP", "Background", "#020617", "1.0:1", "Fail"],
             ["", "bg::BASE", "Background", "#0F172A", "1.0:1", "Fail"],
             ["", "bg::SURFACE", "Background", "#1E293B", "1.4:1", "Fail"],
+            ["", "bg::OVERLAY", "Background", "#334155", "2.0:1", "Fail"],
+            ["", "bg::HIGHLIGHT", "Background", "#475569", "2.8:1", "Fail"],
             ["", "accent::PRIMARY", "Accent", "#22D3EE", "8.4:1", "AAA"],
+            ["", "accent::SECONDARY", "Accent", "#A78BFA", "5.6:1", "AA"],
             ["", "accent::SUCCESS", "Accent", "#22C55E", "6.9:1", "AA"],
             ["", "accent::WARNING", "Accent", "#F59E0B", "8.9:1", "AAA"],
             ["", "accent::ERROR", "Accent", "#EF4444", "4.6:1", "AA"],
+            ["", "accent::INFO", "Accent", "#38BDF8", "7.9:1", "AAA"],
+            ["", "accent::LINK", "Accent", "#60A5FA", "7.1:1", "AAA"],
+            ["", "StatusOpen", "Status", "#60A5FA", "7.1:1", "AAA"],
             ["", "StatusInProgress", "Status", "#38BDF8", "7.9:1", "AAA"],
+            ["", "StatusBlocked", "Status", "#F97316", "6.8:1", "AA"],
+            ["", "StatusClosed", "Status", "#22C55E", "6.9:1", "AA"],
             ["", "PriorityP0", "Priority", "#F43F5E", "4.5:1", "AA"],
+            ["", "PriorityP1", "Priority", "#F97316", "6.8:1", "AA"],
+            ["", "PriorityP2", "Priority", "#F59E0B", "8.9:1", "AAA"],
+            ["", "PriorityP3", "Priority", "#22C55E", "6.9:1", "AA"],
             ["", "PriorityP4", "Priority", "#64748B", "3.9:1", "AA Large"]
         ];
         var tokens = tokenRows

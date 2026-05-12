@@ -2887,7 +2887,7 @@ internal sealed record ShowcaseDemoState(
                 },
                 { } value when value.StartsWith("theme_studio:token:", StringComparison.Ordinal) => next with
                 {
-                    ThemeStudioTokenIndex = Math.Clamp(next.ThemeStudioTokenIndex + delta, 0, 11),
+                    ThemeStudioTokenIndex = Math.Clamp(next.ThemeStudioTokenIndex + delta, 0, 24),
                     ThemeStudioFocusIndex = 1
                 },
                 "theme_studio:diagnostics" => next with
@@ -2934,7 +2934,7 @@ internal sealed record ShowcaseDemoState(
 
             next = next with
             {
-                ThemeStudioTokenIndex = Math.Clamp(row, 0, 11),
+                ThemeStudioTokenIndex = Math.Clamp(row, 0, 24),
                 ThemeStudioFocusIndex = 1
             };
             return true;
