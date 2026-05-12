@@ -1753,6 +1753,18 @@ internal static class ShowcaseFrameHitRegistry
             }
         }
 
+        if (state.CurrentScreenNumber == 3 && TryResolveContentInnerArea(state.Viewport, out var shakespeareInner) && shakespeareInner.Width >= 30 && shakespeareInner.Height >= 8)
+        {
+            var searchWidth = Math.Max(1, shakespeareInner.Width / 2);
+            var notesWidth = Math.Max(1, shakespeareInner.Width - searchWidth);
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(shakespeareInner.X, shakespeareInner.Y, (ushort)searchWidth, shakespeareInner.Height),
+                new("shakespeare:search", ShowcaseHitLayer.Content, 3_000)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)(shakespeareInner.X + searchWidth), shakespeareInner.Y, (ushort)notesWidth, shakespeareInner.Height),
+                new("shakespeare:notes", ShowcaseHitLayer.Content, 3_100)));
+        }
+
         if (state.CurrentScreenNumber == 4 && TryResolveContentInnerArea(state.Viewport, out var codeExplorerInner) && codeExplorerInner.Width >= 30 && codeExplorerInner.Height >= 8)
         {
             var treeWidth = Math.Max(1, codeExplorerInner.Width / 2);

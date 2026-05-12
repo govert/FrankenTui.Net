@@ -912,6 +912,39 @@ public sealed class ShowcaseEvidenceJsonlWriter : IDisposable
             return "code_explorer_hit_test";
         }
 
+        if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 3)
+        {
+            if (gesture.Kind == TerminalMouseKind.Scroll)
+            {
+                return hit.LocalHitId == "shakespeare:search"
+                    ? gesture.Button == TerminalMouseButton.WheelUp
+                        ? "shakespeare_search_scroll_up"
+                        : "shakespeare_search_scroll_down"
+                    : gesture.Button == TerminalMouseButton.WheelUp
+                        ? "shakespeare_notes_scroll_up"
+                        : "shakespeare_notes_scroll_down";
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Right)
+            {
+                return hit.LocalHitId == "shakespeare:search"
+                    ? "shakespeare_search_context"
+                    : "shakespeare_notes_context";
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Left)
+            {
+                return hit.LocalHitId switch
+                {
+                    "shakespeare:search" => "shakespeare_search_focus",
+                    "shakespeare:notes" => "shakespeare_notes_focus",
+                    _ => "shakespeare_hit_test"
+                };
+            }
+
+            return "shakespeare_hit_test";
+        }
+
         if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 5)
         {
             if (gesture.Kind == TerminalMouseKind.Scroll)
