@@ -225,6 +225,11 @@ internal sealed record ShowcaseDemoState(
     int DeterminismRunCount = 0,
     bool DeterminismFaultEnabled = false,
     bool DeterminismExportArmed = false,
+    int HyperlinkFocusIndex = 0,
+    int HyperlinkHoverIndex = -1,
+    int HyperlinkLastActionIndex = 0,
+    int HyperlinkActivationCount = 0,
+    bool HyperlinkCopied = false,
     bool PaletteLabBenchEnabled = false,
     int PaletteLabBenchFrame = 0,
     int PaletteLabBenchProcessed = 0,
@@ -488,6 +493,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent determinismMouseEvent &&
             HandleDeterminismMouse(determinismMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent hyperlinkMouseEvent &&
+            HandleHyperlinkMouse(hyperlinkMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -3154,6 +3165,93 @@ internal sealed record ShowcaseDemoState(
             _ => next
         };
         return hit.LocalHitId is "determinism:header" or "determinism:equivalence" or "determinism:report" or "determinism:preview" or "determinism:checks" or "determinism:footer";
+    }
+
+    private static bool HandleHyperlinkMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 41 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Move or TerminalMouseKind.Down or TerminalMouseKind.Up or TerminalMouseKind.Drag or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            if (hit.Layer != ShowcaseHitLayer.Link)
+            {
+                return false;
+            }
+
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = next with
+            {
+                HyperlinkFocusIndex = Math.Clamp(next.HyperlinkFocusIndex + delta, 0, 4),
+                HyperlinkLastActionIndex = 1
+            };
+            return true;
+        }
+
+        if (hit.Layer != ShowcaseHitLayer.Link || hit.UpstreamHitId is null)
+        {
+            return false;
+        }
+
+        var linkIndex = Math.Clamp((int)(hit.UpstreamHitId.Value - ShowcaseFrameHitRegistry.LinkHitBase), 0, 4);
+        if (gesture.Kind is TerminalMouseKind.Move or TerminalMouseKind.Drag)
+        {
+            next = next with
+            {
+                HyperlinkHoverIndex = linkIndex,
+                HyperlinkLastActionIndex = 1
+            };
+            return true;
+        }
+
+        if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Right)
+        {
+            next = next with
+            {
+                HyperlinkFocusIndex = linkIndex,
+                HyperlinkHoverIndex = linkIndex,
+                HyperlinkLastActionIndex = 3,
+                HyperlinkCopied = true
+            };
+            return true;
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        if (gesture.Kind == TerminalMouseKind.Down)
+        {
+            next = next with
+            {
+                HyperlinkFocusIndex = linkIndex,
+                HyperlinkHoverIndex = linkIndex,
+                HyperlinkLastActionIndex = 2
+            };
+            return true;
+        }
+
+        if (gesture.Kind == TerminalMouseKind.Up)
+        {
+            next = next with
+            {
+                HyperlinkFocusIndex = linkIndex,
+                HyperlinkHoverIndex = linkIndex,
+                HyperlinkLastActionIndex = 4,
+                HyperlinkActivationCount = next.HyperlinkActivationCount + 1
+            };
+            return true;
+        }
+
+        return false;
     }
 
     private static bool HandleTerminalCapabilitiesMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)

@@ -3230,26 +3230,45 @@ internal static class ShowcaseSurface
 
     private static IWidget BuildHyperlinkPlayground(ShowcaseDemoState state)
     {
-        var active = Math.Abs((state.RuntimeStats?.StepIndex ?? state.ScriptFrame) % 5);
+        var focus = Math.Clamp(state.HyperlinkFocusIndex, 0, 4);
+        var hover = state.HyperlinkHoverIndex >= 0 ? Math.Clamp(state.HyperlinkHoverIndex, 0, 4) : -1;
+        var action = Math.Clamp(state.HyperlinkLastActionIndex, 0, 4) switch
+        {
+            1 => "focus_move",
+            2 => "mouse_select",
+            3 => "copy_url",
+            4 => "mouse_activate",
+            _ => "idle"
+        };
+        var labels = new[] { "FrankenTUI", "Docs", "GitHub", "OSC 8 Spec", "ANSI Reference" };
+        var urls = new[]
+        {
+            "https://ftui.dev",
+            "https://ftui.dev/docs",
+            "https://github.com/Dicklesworthstone/frankentui",
+            "https://iterm2.com/documentation-escape-codes.html",
+            "https://vt100.net/docs/vt510-rm/OSC.html"
+        };
         var links = Panel(
-            "Links (OSC-8)",
-            $"{(active == 0 ? "> " : "  ")}FrankenTUI  https://ftui.dev\n" +
-            $"{(active == 1 ? "> " : "  ")}Docs        https://ftui.dev/docs\n" +
-            $"{(active == 2 ? "> " : "  ")}GitHub      https://github.com/Dicklesworthstone/frankentui\n" +
-            $"{(active == 3 ? "> " : "  ")}OSC 8 Spec  https://iterm2.com/documentation-escape-codes.html\n" +
-            $"{(active == 4 ? "> " : "  ")}ANSI Reference https://vt100.net/docs/vt510-rm/OSC.html\n\n" +
+            hover >= 0 ? $"Links (OSC-8) [hover {hover + 1}]" : $"Links (OSC-8) [focus {focus + 1}]",
+            $"{(focus == 0 ? "> " : "  ")}{(hover == 0 ? "* " : "  ")}FrankenTUI  https://ftui.dev\n" +
+            $"{(focus == 1 ? "> " : "  ")}{(hover == 1 ? "* " : "  ")}Docs        https://ftui.dev/docs\n" +
+            $"{(focus == 2 ? "> " : "  ")}{(hover == 2 ? "* " : "  ")}GitHub      https://github.com/Dicklesworthstone/frankentui\n" +
+            $"{(focus == 3 ? "> " : "  ")}{(hover == 3 ? "* " : "  ")}OSC 8 Spec  https://iterm2.com/documentation-escape-codes.html\n" +
+            $"{(focus == 4 ? "> " : "  ")}{(hover == 4 ? "* " : "  ")}ANSI Reference https://vt100.net/docs/vt510-rm/OSC.html\n\n" +
             "Each row registers LinkRegistry id plus HitRegion::Link data.");
 
         var details = Panel(
             "Details & Registry",
-            "Selected: FrankenTUI\n" +
-            "URL: https://ftui.dev\n" +
-            "Registry ID: 1\n" +
-            "Hit: id=8000 region=Link data=1\n" +
-            "OSC 8 open: \\x1b]8;;https://ftui.dev\\x1b\\\n" +
+            $"Selected: {labels[focus]}\n" +
+            $"URL: {urls[focus]}\n" +
+            $"Registry ID: {focus + 1}\n" +
+            $"Hit: id={ShowcaseFrameHitRegistry.LinkRawId(focus)} region=Link data={focus + 1}\n" +
+            $"OSC 8 open: \\x1b]8;;{urls[focus]}\\x1b\\\n" +
             "OSC 8 close: \\x1b]8;;\\x1b\\\n" +
-            "Notes: Project home + overview\n" +
-            "Hover: None | Action: Copied URL / Activated link\n\n" +
+            $"Notes: {labels[focus]} target\n" +
+            $"Hover: {(hover >= 0 ? labels[hover] : "None")} | Action: {action}\n" +
+            $"Copied: {(state.HyperlinkCopied ? "yes" : "no")} | Activations: {state.HyperlinkActivationCount}\n\n" +
             "Registry map: [1] FrankenTUI [2] Docs [3] GitHub [4] OSC 8 Spec [5] ANSI Reference");
 
         var controls = Panel(

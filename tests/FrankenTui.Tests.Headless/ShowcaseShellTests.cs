@@ -2233,6 +2233,86 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseHyperlinkPlaygroundMouseMutatesHoverFocusCopyAndActivation()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new FrankenTui.Core.Size(72, 18),
+            screenNumber: 41,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(
+            state,
+            3,
+            8,
+            timestamp,
+            TerminalMouseButton.Left,
+            TerminalMouseKind.Move);
+        Assert.Equal(1, state.HyperlinkHoverIndex);
+        Assert.Equal(1, state.HyperlinkLastActionIndex);
+
+        state = ApplyMouse(state, 3, 9, timestamp + TimeSpan.FromMilliseconds(10));
+        Assert.Equal(2, state.HyperlinkFocusIndex);
+        Assert.Equal(2, state.HyperlinkHoverIndex);
+        Assert.Equal(2, state.HyperlinkLastActionIndex);
+
+        state = ApplyMouse(
+            state,
+            3,
+            9,
+            timestamp + TimeSpan.FromMilliseconds(20),
+            TerminalMouseButton.Left,
+            TerminalMouseKind.Up);
+        Assert.Equal(2, state.HyperlinkFocusIndex);
+        Assert.Equal(4, state.HyperlinkLastActionIndex);
+        Assert.Equal(1, state.HyperlinkActivationCount);
+
+        state = ApplyMouse(
+            state,
+            3,
+            10,
+            timestamp + TimeSpan.FromMilliseconds(30),
+            TerminalMouseButton.Right);
+        Assert.Equal(3, state.HyperlinkFocusIndex);
+        Assert.Equal(3, state.HyperlinkHoverIndex);
+        Assert.Equal(3, state.HyperlinkLastActionIndex);
+        Assert.True(state.HyperlinkCopied);
+    }
+
+    [Fact]
+    public void ShowcaseHyperlinkPlaygroundRendersMouseSelectedState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new FrankenTui.Core.Size(170, 36),
+            screenNumber: 41,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            HyperlinkFocusIndex = 3,
+            HyperlinkHoverIndex = 4,
+            HyperlinkLastActionIndex = 4,
+            HyperlinkActivationCount = 2,
+            HyperlinkCopied = true
+        };
+        var buffer = new RenderBuffer(170, 36);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, FrankenTui.Core.Rect.FromSize(170, 36), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("Links (OSC-8) [hover 5]", screen);
+        Assert.Contains(">   OSC 8 Spec", screen);
+        Assert.Contains("* ANSI Reference", screen);
+        Assert.Contains("Selected: OSC 8 Spec", screen);
+        Assert.Contains("Action: mouse_activate", screen);
+        Assert.Contains("Copied: yes", screen);
+        Assert.Contains("Activations: 2", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryRoutesDashboardPaneLinks()
     {
         var state = ShowcaseDemoState.Create(
