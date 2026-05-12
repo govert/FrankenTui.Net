@@ -187,9 +187,11 @@ internal sealed record ShowcaseDemoState(
     int ActionTimelineSelectedIndex = 0,
     bool ActionTimelineDetailExpanded = false,
     bool ActionTimelineContextArmed = false,
+    int IntrinsicSizingFocusIndex = 0,
     int IntrinsicSizingScenarioIndex = 0,
     int IntrinsicSizingWidthPresetIndex = 2,
     int IntrinsicSizingDetailScroll = 0,
+    bool IntrinsicSizingContextArmed = false,
     int LayoutInspectorScenarioIndex = 0,
     int LayoutInspectorStepIndex = 0,
     bool LayoutInspectorOverlayVisible = true,
@@ -2194,19 +2196,42 @@ internal sealed record ShowcaseDemoState(
             {
                 "intrinsic_sizing:scenarios" => next with
                 {
+                    IntrinsicSizingFocusIndex = 1,
+                    IntrinsicSizingContextArmed = false,
                     IntrinsicSizingScenarioIndex = Math.Clamp(next.IntrinsicSizingScenarioIndex + delta, 0, 3)
                 },
                 "intrinsic_sizing:detail" => next with
                 {
+                    IntrinsicSizingFocusIndex = 2,
+                    IntrinsicSizingContextArmed = false,
                     IntrinsicSizingDetailScroll = Math.Clamp(next.IntrinsicSizingDetailScroll + delta, 0, 6)
                 },
                 "intrinsic_sizing:controls" => next with
                 {
+                    IntrinsicSizingFocusIndex = 3,
+                    IntrinsicSizingContextArmed = false,
                     IntrinsicSizingWidthPresetIndex = Math.Clamp(next.IntrinsicSizingWidthPresetIndex + delta, 0, 3)
                 },
                 _ => next
             };
             return hit.LocalHitId is "intrinsic_sizing:scenarios" or "intrinsic_sizing:detail" or "intrinsic_sizing:controls";
+        }
+
+        if (gesture.Button == TerminalMouseButton.Right &&
+            hit.LocalHitId is "intrinsic_sizing:header" or "intrinsic_sizing:scenarios" or "intrinsic_sizing:detail" or "intrinsic_sizing:controls")
+        {
+            next = next with
+            {
+                IntrinsicSizingFocusIndex = hit.LocalHitId switch
+                {
+                    "intrinsic_sizing:scenarios" => 1,
+                    "intrinsic_sizing:detail" => 2,
+                    "intrinsic_sizing:controls" => 3,
+                    _ => 0
+                },
+                IntrinsicSizingContextArmed = true
+            };
+            return true;
         }
 
         if (gesture.Button != TerminalMouseButton.Left)
@@ -2216,12 +2241,32 @@ internal sealed record ShowcaseDemoState(
 
         next = hit.LocalHitId switch
         {
-            "intrinsic_sizing:scenarios" => next with { IntrinsicSizingScenarioIndex = (next.IntrinsicSizingScenarioIndex + 1) % 4 },
-            "intrinsic_sizing:detail" => next with { IntrinsicSizingDetailScroll = Math.Clamp(next.IntrinsicSizingDetailScroll + 1, 0, 6) },
-            "intrinsic_sizing:controls" => next with { IntrinsicSizingWidthPresetIndex = (next.IntrinsicSizingWidthPresetIndex + 1) % 4 },
+            "intrinsic_sizing:header" => next with
+            {
+                IntrinsicSizingFocusIndex = 0,
+                IntrinsicSizingContextArmed = false
+            },
+            "intrinsic_sizing:scenarios" => next with
+            {
+                IntrinsicSizingFocusIndex = 1,
+                IntrinsicSizingContextArmed = false,
+                IntrinsicSizingScenarioIndex = (next.IntrinsicSizingScenarioIndex + 1) % 4
+            },
+            "intrinsic_sizing:detail" => next with
+            {
+                IntrinsicSizingFocusIndex = 2,
+                IntrinsicSizingContextArmed = false,
+                IntrinsicSizingDetailScroll = Math.Clamp(next.IntrinsicSizingDetailScroll + 1, 0, 6)
+            },
+            "intrinsic_sizing:controls" => next with
+            {
+                IntrinsicSizingFocusIndex = 3,
+                IntrinsicSizingContextArmed = false,
+                IntrinsicSizingWidthPresetIndex = (next.IntrinsicSizingWidthPresetIndex + 1) % 4
+            },
             _ => next
         };
-        return hit.LocalHitId is "intrinsic_sizing:scenarios" or "intrinsic_sizing:detail" or "intrinsic_sizing:controls";
+        return hit.LocalHitId is "intrinsic_sizing:header" or "intrinsic_sizing:scenarios" or "intrinsic_sizing:detail" or "intrinsic_sizing:controls";
     }
 
     private static bool HandleLayoutInspectorMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)

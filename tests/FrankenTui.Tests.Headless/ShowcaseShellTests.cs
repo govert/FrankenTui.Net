@@ -8094,9 +8094,12 @@ public sealed class ShowcaseShellTests
 
         state = ApplyMouse(state, 3, 8, timestamp);
         Assert.Equal(1, state.IntrinsicSizingScenarioIndex);
+        Assert.Equal(1, state.IntrinsicSizingFocusIndex);
+        Assert.False(state.IntrinsicSizingContextArmed);
 
         state = ApplyMouse(state, 95, 8, timestamp + TimeSpan.FromMilliseconds(10));
         Assert.Equal(3, state.IntrinsicSizingWidthPresetIndex);
+        Assert.Equal(3, state.IntrinsicSizingFocusIndex);
 
         state = ApplyMouse(
             state,
@@ -8106,6 +8109,17 @@ public sealed class ShowcaseShellTests
             TerminalMouseButton.WheelDown,
             TerminalMouseKind.Scroll);
         Assert.Equal(1, state.IntrinsicSizingDetailScroll);
+        Assert.Equal(2, state.IntrinsicSizingFocusIndex);
+
+        state = ApplyMouse(
+            state,
+            95,
+            8,
+            timestamp + TimeSpan.FromMilliseconds(30),
+            TerminalMouseButton.Right,
+            TerminalMouseKind.Down);
+        Assert.Equal(3, state.IntrinsicSizingFocusIndex);
+        Assert.True(state.IntrinsicSizingContextArmed);
     }
 
     [Fact]
@@ -8120,7 +8134,9 @@ public sealed class ShowcaseShellTests
         {
             IntrinsicSizingScenarioIndex = 2,
             IntrinsicSizingWidthPresetIndex = 1,
-            IntrinsicSizingDetailScroll = 3
+            IntrinsicSizingDetailScroll = 3,
+            IntrinsicSizingFocusIndex = 3,
+            IntrinsicSizingContextArmed = true
         };
         var buffer = new RenderBuffer(120, 32);
 
@@ -8130,6 +8146,7 @@ public sealed class ShowcaseShellTests
         var screen = HeadlessBufferView.ScreenString(buffer);
         Assert.Contains("Scenario: Auto-Sizing Table (3/4)", screen);
         Assert.Contains("Width preset: 1", screen);
+        Assert.Contains("Focus: 3 ctx", screen);
         Assert.Contains("Auto-Sizing Table [scroll 3]", screen);
     }
 

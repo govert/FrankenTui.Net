@@ -1763,6 +1763,8 @@ internal static class ShowcaseSurface
         var scenario = Math.Clamp(state.IntrinsicSizingScenarioIndex, 0, 3);
         var widthPreset = Math.Clamp(state.IntrinsicSizingWidthPresetIndex, 0, 3);
         var detailScroll = Math.Clamp(state.IntrinsicSizingDetailScroll, 0, 6);
+        var focus = Math.Clamp(state.IntrinsicSizingFocusIndex, 0, 3);
+        var focusLabel = state.IntrinsicSizingContextArmed ? "ctx" : "focus";
         var effectiveWidth = widthPreset switch
         {
             0 => 50,
@@ -1820,13 +1822,14 @@ internal static class ShowcaseSurface
                 Fields: Name, Email, Phone, Location, Department, Role
                 """
         };
-        var controls = """
+        var controls = $"""
             Intrinsic Sizing Demo
             1-4 switch scenario | Left/Right or n/p cycle
             w cycle width preset: 50 -> 80 -> 120 -> auto
             +/- adjust simulated width by 10 | r reset
             Click/Scroll content cycles scenario
             Width preset: {widthPreset} | Detail scroll: {detailScroll}
+            Focus: {focus} {focusLabel}
 
             Embedded Pane Studio
             visible when content >=72x12
@@ -1838,7 +1841,7 @@ internal static class ShowcaseSurface
             [
                 (LayoutConstraint.Fixed(4), new PanelWidget
                 {
-                    Title = "Intrinsic Sizing Demo",
+                    Title = focus == 0 ? $"Intrinsic Sizing Demo [{focusLabel}]" : "Intrinsic Sizing Demo",
                     Child = new ParagraphWidget($"Scenario: {activeScenario[1]} ({scenario + 1}/4) | Effective width: {effectiveWidth} | Width preset: {widthPreset} | Terminal: {state.Viewport.Width}x{state.Viewport.Height}")
                 }),
                 (LayoutConstraint.Fill(), new StackWidget(
@@ -1846,7 +1849,7 @@ internal static class ShowcaseSurface
                     [
                         (LayoutConstraint.Percentage(38), new PanelWidget
                         {
-                            Title = "Scenarios",
+                            Title = focus == 1 ? $"Scenarios [{focusLabel}]" : "Scenarios",
                             Child = new TableWidget
                             {
                                 Headers = ["#", "Scenario", "Intrinsic rule"],
@@ -1854,8 +1857,8 @@ internal static class ShowcaseSurface
                                 SelectedRow = scenario
                             }
                         }),
-                        (LayoutConstraint.Percentage(34), Panel(detailScroll > 0 ? $"{activeScenario[1]} [scroll {detailScroll}]" : activeScenario[1], scenarioDetail)),
-                        (LayoutConstraint.Fill(), Panel("Controls + Pane Studio", controls))
+                        (LayoutConstraint.Percentage(34), Panel(focus == 2 ? $"{activeScenario[1]} [{focusLabel} {detailScroll}]" : detailScroll > 0 ? $"{activeScenario[1]} [scroll {detailScroll}]" : activeScenario[1], scenarioDetail)),
+                        (LayoutConstraint.Fill(), Panel(focus == 3 ? $"Controls + Pane Studio [{focusLabel}]" : "Controls + Pane Studio", controls))
                     ]))
             ]);
     }
