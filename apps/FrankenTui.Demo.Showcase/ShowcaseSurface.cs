@@ -2338,7 +2338,8 @@ internal static class ShowcaseSurface
         var selected = Math.Clamp(state.AsyncTasksSelectedIndex, 0, 7);
         var focusedPanel = Math.Clamp(state.AsyncTasksFocusedPanelIndex, 0, 6);
         var hazardScroll = Math.Clamp(state.AsyncTasksHazardScroll, 0, 6);
-        var policy = Math.Clamp(state.AsyncTasksPolicyIndex, 0, 5) switch
+        var policyIndex = Math.Clamp(state.AsyncTasksPolicyIndex, 0, 5);
+        var policy = policyIndex switch
         {
             0 => "FIFO",
             1 => "SJF",
@@ -2346,6 +2347,15 @@ internal static class ShowcaseSurface
             3 => "Smith",
             4 => "Priority",
             _ => "RoundRobin"
+        };
+        var policyDescription = policyIndex switch
+        {
+            0 => "First-In-First-Out",
+            1 => "Shortest Job First",
+            2 => "Shortest Remaining Time",
+            3 => "Weighted SJF (w/p)",
+            4 => "Priority-based",
+            _ => "Round Robin"
         };
         var aging = state.AsyncTasksAgingEnabled;
         string[][] tasks =
@@ -2361,7 +2371,7 @@ internal static class ShowcaseSurface
         ];
         var header = Panel(
             focusedPanel == 0 ? "Scheduler [focus]" : "Scheduler",
-            $"Q:3 R:2 D:1 F:1 | {policy}[Shortest Remaining Time] | Aging:{(aging ? "on" : "off")} | max_concurrent=3\nInvariant: bounded_concurrency");
+            $"Q:3 R:2 D:1 F:1 | {policy}[{policyDescription}] | Aging:{(aging ? "on" : "off")} | max_concurrent=3\nInvariant: bounded_concurrency");
         var queue = new PanelWidget
         {
             Title = focusedPanel == 1 ? "Task Queue [focus]" : "Task Queue",
@@ -2381,7 +2391,7 @@ internal static class ShowcaseSurface
             "Spawned: Initial Setup\nStarted: Initial Setup\nStarted: Data Sync\nScheduler: SRPT\nAging: ON\nCanceled: Batch Backup #8\nRetrying: Full Deploy #7");
         var evidence = Panel(
             focusedPanel == 5 ? "Policy + Evidence [focus]" : "Policy + Evidence",
-            $"Policies: FIFO, SJF, SRPT, Smith, Priority, RoundRobin\nActive policy: {policy}\nSRPT theorem: minimizes E[T] (mean sojourn time)\nAging formula: effective_priority = priority + aging_factor * wait_time\nInvariants: bounded_concurrency, bounded_progress, terminal_stability, monotonic_ids, bounded_wait\nMetrics: tasks_scheduled, tasks_completed, mean_wait, mean_completion, max_wait, aging_boosts_applied");
+            $"Policies: FIFO, SJF, SRPT, Smith, Priority, RoundRobin\nActive policy: {policy} [{policyDescription}]\nSRPT theorem: minimizes E[T] (mean sojourn time)\nAging formula: effective_priority = priority + aging_factor * wait_time\nInvariants: bounded_concurrency, bounded_progress, terminal_stability, monotonic_ids, bounded_wait\nMetrics: tasks_scheduled, tasks_completed, mean_wait, mean_completion, max_wait, aging_boosts_applied");
         var hazard = Panel(
             hazardScroll > 0 ? $"Hazard + Diagnostics [scroll {hazardScroll}]" : focusedPanel == 4 ? "Hazard + Diagnostics [focus]" : "Hazard + Diagnostics",
             $"Hazard scroll: {hazardScroll}\nHazard: base=0.001 factor=0.1 exponent=2.0 threshold=1.0\nExpected loss tuple: (E[Loss_continue], E[Loss_cancel], recommendation)\nDecision: loss_continue vs loss_cancel, bayes_factor, recommend_cancel\nJSONL: state_transition, scheduling_decision, policy_change, aging_toggle, invariant_check, starvation_warning, metrics_snapshot, cancellation_decision\nMouse: Click selects task row; Wheel scrolls task list");

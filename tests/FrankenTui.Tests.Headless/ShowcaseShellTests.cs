@@ -6202,7 +6202,7 @@ public sealed class ShowcaseShellTests
             .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 32), Theme.DefaultTheme));
 
         var screen = HeadlessBufferView.ScreenString(buffer);
-        Assert.Contains("Smith[Shortest Remaining Time]", screen);
+        Assert.Contains("Smith[Weighted SJF (w/p)]", screen);
         Assert.Contains("Aging:off", screen);
         Assert.Contains("ID: 4", screen);
         Assert.Contains("Name: Async Build #1", screen);
