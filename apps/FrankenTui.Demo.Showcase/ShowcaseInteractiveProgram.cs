@@ -3,6 +3,7 @@ using FrankenTui.Extras;
 using FrankenTui.Layout;
 using FrankenTui.Runtime;
 using FrankenTui.Widgets;
+using System.Globalization;
 
 namespace FrankenTui.Demo.Showcase;
 
@@ -98,6 +99,7 @@ internal sealed record ShowcaseDemoState(
     bool A11yLargeText = false,
     bool MouseCaptureEnabled = false,
     ShowcasePaletteLabMatchFilter PaletteLabMatchFilter = ShowcasePaletteLabMatchFilter.All,
+    int TableThemePresetIndex = 0,
     bool PaletteLabBenchEnabled = false,
     int PaletteLabBenchFrame = 0,
     int PaletteLabBenchProcessed = 0,
@@ -223,6 +225,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent paletteLabMouseEvent &&
             HandlePaletteLabMouse(paletteLabMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent tableThemeMouseEvent &&
+            HandleTableThemeGalleryMouse(tableThemeMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -978,6 +986,46 @@ internal sealed record ShowcaseDemoState(
         }
 
         return Math.Clamp((selectedIndex < 0 ? 0 : selectedIndex) + delta, 0, count - 1);
+    }
+
+    private static bool HandleTableThemeGalleryMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 11 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content ||
+            !hit.LocalHitId.StartsWith("table_theme:preset:", StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = next with { TableThemePresetIndex = Math.Clamp(next.TableThemePresetIndex + delta, 0, 2) };
+            return true;
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        var presetText = hit.LocalHitId["table_theme:preset:".Length..];
+        if (!int.TryParse(presetText, CultureInfo.InvariantCulture, out var preset))
+        {
+            return false;
+        }
+
+        next = next with { TableThemePresetIndex = Math.Clamp(preset, 0, 2) };
+        return true;
     }
 
     private static bool HandleTourMouse(MouseTerminalEvent mouseEvent, DateTimeOffset now, ref ShowcaseDemoState next)

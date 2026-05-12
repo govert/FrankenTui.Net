@@ -6962,6 +6962,60 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseTableThemeGalleryMouseSelectsActivePreset()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 11,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(state, 45, 6, timestamp);
+        Assert.Equal(1, state.TableThemePresetIndex);
+
+        state = ApplyMouse(
+            state,
+            90,
+            6,
+            timestamp + TimeSpan.FromMilliseconds(10),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(2, state.TableThemePresetIndex);
+
+        state = ApplyMouse(
+            state,
+            3,
+            6,
+            timestamp + TimeSpan.FromMilliseconds(20),
+            TerminalMouseButton.WheelUp,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(1, state.TableThemePresetIndex);
+    }
+
+    [Fact]
+    public void ShowcaseTableThemeGalleryRendersActivePresetTitle()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 11,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            TableThemePresetIndex = 2
+        };
+        var buffer = new RenderBuffer(120, 32);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 32), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("Preset C [active]", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryExposesDataVizPanels()
     {
         var state = ShowcaseDemoState.Create(

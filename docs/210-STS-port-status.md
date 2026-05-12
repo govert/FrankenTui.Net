@@ -382,9 +382,9 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   richer upstream advanced pattern workflows, stateful mouse mutation, and exact
   styling remain tracked under `364-DEM`.
   The Table Theme Gallery screen now has a local three-preset table gallery with
-  frame-registered Preset A/B/C regions plus matching mouse evidence; fuller
-  upstream table-theme catalog behavior, stateful preset mutation, and exact
-  styling remain tracked under `364-DEM`.
+  frame-registered Preset A/B/C regions, matching mouse evidence, and
+  mouse-selected active preset rendering; fuller upstream table-theme catalog
+  behavior and exact styling remain tracked under `364-DEM`.
   The Terminal Capabilities screen now has a local upstream-shaped
   matrix/evidence/simulation tri-panel with deterministic capability rows,
   evidence-source labels, diagnostic event names, simulated profile controls,
@@ -928,13 +928,14 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   mesh-raster evidence, and harness/divergence control regions plus matching
   mouse evidence, and the Dashboard increment adds non-link overview/highlights
   content regions plus matching mouse evidence while preserving link-row
-  routing priority, and a full-catalog registry guard now verifies every
+  routing priority, the Table Theme increment adds mouse-selected active preset
+  mutation/rendering, and a full-catalog registry guard now verifies every
   showcase screen exposes at least one screen-specific content/link/overlay
   region at the standard 120x32 showcase viewport, while still leaving broader
   generalized screen hit routing open.
-  Focused showcase-shell verification is now `226` tests via
+  Focused showcase-shell verification is now `228` tests via
   `dotnet test tests/FrankenTui.Tests.Headless/FrankenTui.Tests.Headless.csproj --no-restore --filter FullyQualifiedName~ShowcaseShellTests`.
-  Current local verification is `480` headless tests, `9` web tests, and `7`
+  Current local verification is `482` headless tests, `9` web tests, and `7`
   PTY tests via `dotnet test FrankenTui.Net.sln --no-restore`.
   Previous focused registry/evidence verification covered `33`
   registry/evidence

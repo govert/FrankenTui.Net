@@ -671,6 +671,7 @@ internal static class ShowcaseSurface
 
     private static IWidget BuildTableThemeGallery(ShowcaseDemoState state)
     {
+        var active = Math.Clamp(state.TableThemePresetIndex, 0, 2);
         IReadOnlyList<IReadOnlyList<string>> rows =
         [
             new[] { "Default", "stable", "terminal-safe" },
@@ -679,9 +680,9 @@ internal static class ShowcaseSurface
             new[] { "Alert", "critical", "ops surfaces" }
         ];
         return ThreeColumn(
-            new PanelWidget { Title = "Preset A", Child = new TableWidget { Headers = ["Theme", "Tone", "Use"], Rows = rows, SelectedRow = 0 } },
-            new PanelWidget { Title = "Preset B", Child = new TableWidget { Headers = ["Theme", "Tone", "Use"], Rows = rows, SelectedRow = 1 } },
-            new PanelWidget { Title = "Preset C", Child = new TableWidget { Headers = ["Theme", "Tone", "Use"], Rows = rows, SelectedRow = 2 } });
+            new PanelWidget { Title = active == 0 ? "Preset A [active]" : "Preset A", Child = new TableWidget { Headers = ["Theme", "Tone", "Use"], Rows = rows, SelectedRow = 0 } },
+            new PanelWidget { Title = active == 1 ? "Preset B [active]" : "Preset B", Child = new TableWidget { Headers = ["Theme", "Tone", "Use"], Rows = rows, SelectedRow = 1 } },
+            new PanelWidget { Title = active == 2 ? "Preset C [active]" : "Preset C", Child = new TableWidget { Headers = ["Theme", "Tone", "Use"], Rows = rows, SelectedRow = 2 } });
     }
 
     private static IWidget BuildTerminalCapabilities(ShowcaseDemoState state)
