@@ -622,6 +622,40 @@ internal static class ShowcaseFrameHitRegistry
                 new("notifications:lifecycle", ShowcaseHitLayer.Content, 21_200)));
         }
 
+        if (state.CurrentScreenNumber == 13 && TryResolveContentInnerArea(state.Viewport, out var macroInner) && macroInner.Width >= 40 && macroInner.Height >= 12)
+        {
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(macroInner.X, macroInner.Y, macroInner.Width, (ushort)Math.Min(8, (int)macroInner.Height)),
+                new("macro_recorder:controls", ShowcaseHitLayer.Content, 13_000)));
+
+            var bodyY = macroInner.Y + 8;
+            var bodyHeight = Math.Max(1, macroInner.Height - 8);
+            var timelineWidth = Math.Max(1, macroInner.Width * 60 / 100);
+            for (var row = 0; row < Math.Min(10, bodyHeight); row++)
+            {
+                AddRegion(
+                    regions,
+                    macroInner.X,
+                    bodyY + row,
+                    timelineWidth,
+                    new($"macro_recorder:timeline:{row}", ShowcaseHitLayer.Content, (uint)(13_100 + row)));
+            }
+
+            var rightX = macroInner.X + timelineWidth;
+            var rightWidth = Math.Max(1, macroInner.Width - timelineWidth);
+            var detailHeight = Math.Max(1, bodyHeight * 65 / 100);
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)rightX, (ushort)bodyY, (ushort)rightWidth, (ushort)detailHeight),
+                new("macro_recorder:event_detail", ShowcaseHitLayer.Content, 13_200)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(
+                    (ushort)rightX,
+                    (ushort)(bodyY + detailHeight),
+                    (ushort)rightWidth,
+                    (ushort)Math.Max(1, bodyHeight - detailHeight)),
+                new("macro_recorder:scenario_runner", ShowcaseHitLayer.Content, 13_300)));
+        }
+
         if (state.CurrentScreenNumber == 7 && TryResolveContentInnerArea(state.Viewport, out var formsInner) && formsInner.Width >= 30 && formsInner.Height >= 8)
         {
             var formWidth = Math.Max(1, formsInner.Width / 2);

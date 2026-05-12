@@ -4937,6 +4937,79 @@ public sealed class ShowcaseShellTests
         Assert.Equal(27_220, diagnosticsRecord.RootElement.GetProperty("target_id").GetInt32());
     }
 
+    [Fact]
+    public void ShowcaseFrameHitRegistryExposesMacroRecorderPanels()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 30),
+            screenNumber: 13,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+
+        var controls = ShowcaseFrameHitRegistry.HitTest(state, 3, 3);
+        var timeline = ShowcaseFrameHitRegistry.HitTest(state, 3, 12);
+        var detail = ShowcaseFrameHitRegistry.HitTest(state, 90, 12);
+        var scenario = ShowcaseFrameHitRegistry.HitTest(state, 90, 23);
+
+        Assert.Equal("macro_recorder:controls", controls.LocalHitId);
+        Assert.Equal((uint)13_000, controls.UpstreamHitId);
+        Assert.Equal("macro_recorder:timeline:2", timeline.LocalHitId);
+        Assert.Equal((uint)13_102, timeline.UpstreamHitId);
+        Assert.Equal("macro_recorder:event_detail", detail.LocalHitId);
+        Assert.Equal((uint)13_200, detail.UpstreamHitId);
+        Assert.Equal("macro_recorder:scenario_runner", scenario.LocalHitId);
+        Assert.Equal((uint)13_300, scenario.UpstreamHitId);
+    }
+
+    [Fact]
+    public void ShowcaseEvidenceJsonlWriterEmitsMacroRecorderMouseActions()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"ftui-showcase-macro-mouse-{Guid.NewGuid():N}.jsonl");
+        var options = ShowcaseCliOptions.Parse(
+            ["--screen=13", "--evidence-jsonl", path],
+            _ => null);
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 30),
+            screenNumber: 13,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+        var timelineEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 12, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp);
+        var detailEvent = TerminalEvent.Mouse(
+            new MouseGesture(90, 12, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp + TimeSpan.FromMilliseconds(10));
+        var scenarioEvent = TerminalEvent.Mouse(
+            new MouseGesture(90, 23, TerminalMouseButton.WheelDown, TerminalMouseKind.Scroll),
+            timestamp + TimeSpan.FromMilliseconds(20));
+
+        using (var writer = ShowcaseEvidenceJsonlWriter.Create(options.EvidenceJsonlPath))
+        {
+            Assert.NotNull(writer);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 1, frame: 1, timelineEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 2, frame: 2, detailEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 3, frame: 3, scenarioEvent, state, state);
+        }
+
+        var lines = File.ReadAllLines(path);
+        Assert.Equal(3, lines.Length);
+        using var timelineRecord = JsonDocument.Parse(lines[0]);
+        using var detailRecord = JsonDocument.Parse(lines[1]);
+        using var scenarioRecord = JsonDocument.Parse(lines[2]);
+        Assert.Equal("macro_timeline_select", timelineRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("macro_recorder:timeline:2", timelineRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(13_102, timelineRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("macro_event_detail_focus", detailRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("macro_recorder:event_detail", detailRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(13_200, detailRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("macro_panel_scroll_down", scenarioRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("macro_recorder:scenario_runner", scenarioRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(13_300, scenarioRecord.RootElement.GetProperty("target_id").GetInt32());
+    }
+
     private static ShowcaseDemoState ApplyKey(ShowcaseDemoState state, KeyGesture gesture, DateTimeOffset timestamp)
     {
         var terminalEvent = TerminalEvent.Key(gesture, timestamp);

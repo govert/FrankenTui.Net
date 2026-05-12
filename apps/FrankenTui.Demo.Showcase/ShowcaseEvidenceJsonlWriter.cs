@@ -833,6 +833,38 @@ public sealed class ShowcaseEvidenceJsonlWriter : IDisposable
             return "notifications_hit_test";
         }
 
+        if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 13)
+        {
+            if (gesture.Kind == TerminalMouseKind.Scroll)
+            {
+                return hit.LocalHitId.StartsWith("macro_recorder:timeline:", StringComparison.Ordinal)
+                    ? gesture.Button == TerminalMouseButton.WheelUp
+                        ? "macro_timeline_scroll_up"
+                        : "macro_timeline_scroll_down"
+                    : gesture.Button == TerminalMouseButton.WheelUp
+                        ? "macro_panel_scroll_up"
+                        : "macro_panel_scroll_down";
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Left)
+            {
+                if (hit.LocalHitId.StartsWith("macro_recorder:timeline:", StringComparison.Ordinal))
+                {
+                    return "macro_timeline_select";
+                }
+
+                return hit.LocalHitId switch
+                {
+                    "macro_recorder:controls" => "macro_controls_focus",
+                    "macro_recorder:event_detail" => "macro_event_detail_focus",
+                    "macro_recorder:scenario_runner" => "macro_scenario_select",
+                    _ => "macro_hit_test"
+                };
+            }
+
+            return "macro_hit_test";
+        }
+
         if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 7)
         {
             if (gesture.Kind == TerminalMouseKind.Scroll)
