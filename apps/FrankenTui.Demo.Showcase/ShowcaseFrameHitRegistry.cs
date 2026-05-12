@@ -820,6 +820,53 @@ internal static class ShowcaseFrameHitRegistry
                 new("async_tasks:footer", ShowcaseHitLayer.Content, 29_300));
         }
 
+        if (state.CurrentScreenNumber == 30 && TryResolveContentInnerArea(state.Viewport, out var themeInner) && themeInner.Width >= 40 && themeInner.Height >= 12)
+        {
+            var bodyHeight = Math.Max(1, themeInner.Height - 1);
+            var presetWidth = Math.Max(1, themeInner.Width * 25 / 100);
+            for (var row = 0; row < Math.Min(5, bodyHeight); row++)
+            {
+                AddRegion(
+                    regions,
+                    themeInner.X,
+                    themeInner.Y + row,
+                    presetWidth,
+                    new($"theme_studio:preset:{row}", ShowcaseHitLayer.Content, (uint)(30_000 + row)));
+            }
+
+            var inspectorX = themeInner.X + presetWidth;
+            var inspectorWidth = Math.Max(1, themeInner.Width - presetWidth);
+            var tokenHeight = Math.Max(1, bodyHeight * 52 / 100);
+            for (var row = 0; row < Math.Min(12, tokenHeight); row++)
+            {
+                AddRegion(
+                    regions,
+                    inspectorX,
+                    themeInner.Y + row,
+                    inspectorWidth,
+                    new($"theme_studio:token:{row}", ShowcaseHitLayer.Content, (uint)(30_100 + row)));
+            }
+
+            var exportY = themeInner.Y + tokenHeight;
+            var exportHeight = Math.Max(1, bodyHeight * 24 / 100);
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)inspectorX, (ushort)exportY, (ushort)inspectorWidth, (ushort)exportHeight),
+                new("theme_studio:export", ShowcaseHitLayer.Content, 30_300)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(
+                    (ushort)inspectorX,
+                    (ushort)(exportY + exportHeight),
+                    (ushort)inspectorWidth,
+                    (ushort)Math.Max(1, bodyHeight - tokenHeight - exportHeight)),
+                new("theme_studio:diagnostics", ShowcaseHitLayer.Content, 30_310)));
+            AddRegion(
+                regions,
+                themeInner.X,
+                Math.Max(themeInner.Y, themeInner.Bottom - 1),
+                themeInner.Width,
+                new("theme_studio:footer", ShowcaseHitLayer.Content, 30_400));
+        }
+
         if (state.CurrentScreenNumber == 7 && TryResolveContentInnerArea(state.Viewport, out var formsInner) && formsInner.Width >= 30 && formsInner.Height >= 8)
         {
             var formWidth = Math.Max(1, formsInner.Width / 2);

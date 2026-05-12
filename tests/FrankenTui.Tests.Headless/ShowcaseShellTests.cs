@@ -5311,6 +5311,82 @@ public sealed class ShowcaseShellTests
         Assert.Equal(29_230, hazardRecord.RootElement.GetProperty("target_id").GetInt32());
     }
 
+    [Fact]
+    public void ShowcaseFrameHitRegistryExposesThemeStudioPanels()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 30,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+
+        var preset = ShowcaseFrameHitRegistry.HitTest(state, 3, 5);
+        var token = ShowcaseFrameHitRegistry.HitTest(state, 40, 8);
+        var export = ShowcaseFrameHitRegistry.HitTest(state, 40, 17);
+        var diagnostics = ShowcaseFrameHitRegistry.HitTest(state, 40, 24);
+        var footer = ShowcaseFrameHitRegistry.HitTest(state, 3, 29);
+
+        Assert.Equal("theme_studio:preset:3", preset.LocalHitId);
+        Assert.Equal((uint)30_003, preset.UpstreamHitId);
+        Assert.Equal("theme_studio:token:6", token.LocalHitId);
+        Assert.Equal((uint)30_106, token.UpstreamHitId);
+        Assert.Equal("theme_studio:export", export.LocalHitId);
+        Assert.Equal((uint)30_300, export.UpstreamHitId);
+        Assert.Equal("theme_studio:diagnostics", diagnostics.LocalHitId);
+        Assert.Equal((uint)30_310, diagnostics.UpstreamHitId);
+        Assert.Equal("theme_studio:footer", footer.LocalHitId);
+        Assert.Equal((uint)30_400, footer.UpstreamHitId);
+    }
+
+    [Fact]
+    public void ShowcaseEvidenceJsonlWriterEmitsThemeStudioMouseActions()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"ftui-showcase-theme-studio-mouse-{Guid.NewGuid():N}.jsonl");
+        var options = ShowcaseCliOptions.Parse(
+            ["--screen=30", "--evidence-jsonl", path],
+            _ => null);
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 30,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+        var presetEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 5, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp);
+        var tokenEvent = TerminalEvent.Mouse(
+            new MouseGesture(40, 8, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp + TimeSpan.FromMilliseconds(10));
+        var diagnosticsEvent = TerminalEvent.Mouse(
+            new MouseGesture(40, 24, TerminalMouseButton.WheelDown, TerminalMouseKind.Scroll),
+            timestamp + TimeSpan.FromMilliseconds(20));
+
+        using (var writer = ShowcaseEvidenceJsonlWriter.Create(options.EvidenceJsonlPath))
+        {
+            Assert.NotNull(writer);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 1, frame: 1, presetEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 2, frame: 2, tokenEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 3, frame: 3, diagnosticsEvent, state, state);
+        }
+
+        var lines = File.ReadAllLines(path);
+        Assert.Equal(3, lines.Length);
+        using var presetRecord = JsonDocument.Parse(lines[0]);
+        using var tokenRecord = JsonDocument.Parse(lines[1]);
+        using var diagnosticsRecord = JsonDocument.Parse(lines[2]);
+        Assert.Equal("theme_studio_preset_select", presetRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("theme_studio:preset:3", presetRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(30_003, presetRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("theme_studio_token_select", tokenRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("theme_studio:token:6", tokenRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(30_106, tokenRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("theme_studio_diagnostics_scroll_down", diagnosticsRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("theme_studio:diagnostics", diagnosticsRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(30_310, diagnosticsRecord.RootElement.GetProperty("target_id").GetInt32());
+    }
+
     private static ShowcaseDemoState ApplyKey(ShowcaseDemoState state, KeyGesture gesture, DateTimeOffset timestamp)
     {
         var terminalEvent = TerminalEvent.Key(gesture, timestamp);
