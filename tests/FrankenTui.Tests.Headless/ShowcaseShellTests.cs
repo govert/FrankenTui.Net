@@ -6945,7 +6945,7 @@ public sealed class ShowcaseShellTests
             3,
             20,
             timestamp + TimeSpan.FromMilliseconds(10),
-            TerminalMouseButton.WheelDown,
+            TerminalMouseButton.WheelUp,
             TerminalMouseKind.Scroll);
         Assert.Equal(2, state.I18nPluralCount);
         Assert.Equal(2, state.I18nFocusIndex);

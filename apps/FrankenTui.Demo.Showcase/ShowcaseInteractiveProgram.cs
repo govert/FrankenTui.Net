@@ -3304,7 +3304,7 @@ internal sealed record ShowcaseDemoState(
             {
                 "i18n:plural_rules" => next with
                 {
-                    I18nPluralCount = Math.Clamp(next.I18nPluralCount + delta, 0, 21),
+                    I18nPluralCount = Math.Clamp(next.I18nPluralCount - delta, 0, 21),
                     I18nFocusIndex = 2
                 },
                 "i18n:stress_lab" => next with

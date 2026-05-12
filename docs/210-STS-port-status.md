@@ -955,7 +955,7 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   the Time-Travel Studio increment adds mouse-mutated frame/timeline-scrub/focus/playback/diagnostics rendering,
   the Performance Challenge increment adds mouse-mutated stress/tier/upstream budget-wheel/sparkline/evidence rendering,
   the Explainability Cockpit increment adds mouse-mutated focus/upstream timeline-wheel/source/pause/overlay rendering,
-  the i18n Stress Lab increment adds mouse-mutated locale/plural/RTL/stress/export rendering,
+  the i18n Stress Lab increment adds mouse-mutated locale/upstream plural-wheel/RTL/stress/export rendering,
   the VOI Overlay increment adds mouse-mutated focus/ledger/detail/controls/reset rendering,
   the Inline Mode Story increment adds mouse-mutated compare/pause/rate/height/scroll rendering,
   the Accessibility increment adds mouse-mutated toggle/focus/preview/telemetry rendering,
