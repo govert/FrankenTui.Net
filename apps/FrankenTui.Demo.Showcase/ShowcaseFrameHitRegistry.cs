@@ -637,6 +637,56 @@ internal static class ShowcaseFrameHitRegistry
                 new("visual_effects:harness", ShowcaseHitLayer.Content, 18_100)));
         }
 
+        if (state.CurrentScreenNumber == 19 && TryResolveContentInnerArea(state.Viewport, out var responsiveInner) && responsiveInner.Width >= 30 && responsiveInner.Height >= 8)
+        {
+            AddRegion(
+                regions,
+                responsiveInner.X,
+                responsiveInner.Y,
+                responsiveInner.Width,
+                new("responsive:indicator", ShowcaseHitLayer.Content, 19_000));
+
+            var bodyY = responsiveInner.Y + 1;
+            var bodyHeight = Math.Max(1, responsiveInner.Height - 1);
+            if (responsiveInner.Width < 90)
+            {
+                regions.Add(new ShowcaseHitRegion(
+                    new Rect(responsiveInner.X, (ushort)bodyY, responsiveInner.Width, (ushort)Math.Min(7, bodyHeight)),
+                    new("responsive:layout_info", ShowcaseHitLayer.Content, 19_100)));
+                regions.Add(new ShowcaseHitRegion(
+                    new Rect(
+                        responsiveInner.X,
+                        (ushort)(bodyY + Math.Min(7, bodyHeight)),
+                        responsiveInner.Width,
+                        (ushort)Math.Max(1, bodyHeight - Math.Min(7, bodyHeight))),
+                    new("responsive:values", ShowcaseHitLayer.Content, 19_110)));
+            }
+            else
+            {
+                var sidebarWidth = Math.Min(28, Math.Max(1, responsiveInner.Width / 3));
+                var asideVisible = state.Viewport.Width >= 120;
+                var asideWidth = asideVisible ? Math.Min(24, Math.Max(1, responsiveInner.Width / 4)) : 0;
+                var contentWidth = Math.Max(1, responsiveInner.Width - sidebarWidth - asideWidth);
+                var contentX = responsiveInner.X + sidebarWidth;
+                regions.Add(new ShowcaseHitRegion(
+                    new Rect(responsiveInner.X, (ushort)bodyY, (ushort)sidebarWidth, (ushort)bodyHeight),
+                    new("responsive:sidebar", ShowcaseHitLayer.Content, 19_200)));
+                regions.Add(new ShowcaseHitRegion(
+                    new Rect((ushort)contentX, (ushort)bodyY, (ushort)contentWidth, (ushort)bodyHeight),
+                    new("responsive:content", ShowcaseHitLayer.Content, 19_210)));
+                if (asideVisible)
+                {
+                    regions.Add(new ShowcaseHitRegion(
+                        new Rect(
+                            (ushort)(contentX + contentWidth),
+                            (ushort)bodyY,
+                            (ushort)asideWidth,
+                            (ushort)bodyHeight),
+                        new("responsive:aside", ShowcaseHitLayer.Content, 19_220)));
+                }
+            }
+        }
+
         if (state.CurrentScreenNumber == 13 && TryResolveContentInnerArea(state.Viewport, out var macroInner) && macroInner.Width >= 40 && macroInner.Height >= 12)
         {
             regions.Add(new ShowcaseHitRegion(

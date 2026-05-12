@@ -6169,6 +6169,79 @@ public sealed class ShowcaseShellTests
         Assert.Equal(18_100, harnessRecord.RootElement.GetProperty("target_id").GetInt32());
     }
 
+    [Fact]
+    public void ShowcaseFrameHitRegistryExposesResponsiveLayoutPanels()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 19,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+
+        var indicator = ShowcaseFrameHitRegistry.HitTest(state, 3, 2);
+        var sidebar = ShowcaseFrameHitRegistry.HitTest(state, 3, 6);
+        var content = ShowcaseFrameHitRegistry.HitTest(state, 45, 6);
+        var aside = ShowcaseFrameHitRegistry.HitTest(state, 100, 6);
+
+        Assert.Equal("responsive:indicator", indicator.LocalHitId);
+        Assert.Equal((uint)19_000, indicator.UpstreamHitId);
+        Assert.Equal("responsive:sidebar", sidebar.LocalHitId);
+        Assert.Equal((uint)19_200, sidebar.UpstreamHitId);
+        Assert.Equal("responsive:content", content.LocalHitId);
+        Assert.Equal((uint)19_210, content.UpstreamHitId);
+        Assert.Equal("responsive:aside", aside.LocalHitId);
+        Assert.Equal((uint)19_220, aside.UpstreamHitId);
+    }
+
+    [Fact]
+    public void ShowcaseEvidenceJsonlWriterEmitsResponsiveLayoutMouseActions()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"ftui-showcase-responsive-mouse-{Guid.NewGuid():N}.jsonl");
+        var options = ShowcaseCliOptions.Parse(
+            ["--screen=19", "--evidence-jsonl", path],
+            _ => null);
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 19,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+        var indicatorEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 2, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp);
+        var contentEvent = TerminalEvent.Mouse(
+            new MouseGesture(45, 6, TerminalMouseButton.WheelDown, TerminalMouseKind.Scroll),
+            timestamp + TimeSpan.FromMilliseconds(10));
+        var asideEvent = TerminalEvent.Mouse(
+            new MouseGesture(100, 6, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp + TimeSpan.FromMilliseconds(20));
+
+        using (var writer = ShowcaseEvidenceJsonlWriter.Create(options.EvidenceJsonlPath))
+        {
+            Assert.NotNull(writer);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 1, frame: 1, indicatorEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 2, frame: 2, contentEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 3, frame: 3, asideEvent, state, state);
+        }
+
+        var lines = File.ReadAllLines(path);
+        Assert.Equal(3, lines.Length);
+        using var indicatorRecord = JsonDocument.Parse(lines[0]);
+        using var contentRecord = JsonDocument.Parse(lines[1]);
+        using var asideRecord = JsonDocument.Parse(lines[2]);
+        Assert.Equal("responsive_breakpoints_toggle", indicatorRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("responsive:indicator", indicatorRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(19_000, indicatorRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("responsive_width_increment", contentRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("responsive:content", contentRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(19_210, contentRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("responsive_aside_toggle", asideRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("responsive:aside", asideRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(19_220, asideRecord.RootElement.GetProperty("target_id").GetInt32());
+    }
+
     private static ShowcaseDemoState ApplyKey(ShowcaseDemoState state, KeyGesture gesture, DateTimeOffset timestamp)
     {
         var terminalEvent = TerminalEvent.Key(gesture, timestamp);

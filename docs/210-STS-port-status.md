@@ -395,9 +395,11 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   parity remain tracked under `364-DEM`. The Responsive Layout screen now has
   a local breakpoint indicator, default/custom-threshold notes,
   sidebar/content/aside adaptive layout, visibility rules, responsive values,
-  and simulated-width controls; live resize/mouse/key mutation, actual
-  `ResponsiveLayout` primitive parity, breakpoint coloring, and exact
-  custom-breakpoint state remain tracked under `364-DEM`. The Log Search screen
+  simulated-width controls, and frame-registered indicator, compact body, and
+  wide sidebar/content/aside regions with matching mouse evidence; live
+  resize/mouse/key mutation, actual `ResponsiveLayout` primitive parity,
+  breakpoint coloring, and exact custom-breakpoint state remain tracked under
+  `364-DEM`. The Log Search screen
   now places the local search viewport beside upstream-shaped live-stream
   limits, search/filter key controls, deterministic env flags, diagnostic event
   names, and JSONL field labels; real streaming append/follow mode, inline
@@ -873,9 +875,9 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   and the Determinism Lab increment adds header, equivalence, report/env,
   scene-preview, checks, and footer regions plus matching mouse evidence, while
   still leaving broader generalized screen hit routing open.
-  Focused showcase-shell verification is now `189` tests via
+  Focused showcase-shell verification is now `191` tests via
   `dotnet test tests/FrankenTui.Tests.Headless/FrankenTui.Tests.Headless.csproj --no-restore --filter FullyQualifiedName~ShowcaseShellTests`.
-  Current local verification is `443` headless tests, `9` web tests, and `7`
+  Current local verification is `445` headless tests, `9` web tests, and `7`
   PTY tests via `dotnet test FrankenTui.Net.sln --no-restore`.
   Previous focused registry/evidence verification covered `33`
   registry/evidence
