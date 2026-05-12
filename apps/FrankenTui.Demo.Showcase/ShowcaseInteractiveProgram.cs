@@ -285,6 +285,8 @@ internal sealed record ShowcaseDemoState(
     int WidgetBuilderValue = -1,
     bool WidgetBuilderPreviewEnabled = true,
     bool WidgetBuilderBorderEnabled = true,
+    bool WidgetBuilderTitleEnabled = true,
+    int WidgetBuilderAccentIndex = 0,
     bool WidgetBuilderPresetSaved = false,
     bool WidgetBuilderExportArmed = false,
     int DeterminismFocusIndex = 0,
@@ -949,6 +951,11 @@ internal sealed record ShowcaseDemoState(
                 next = (next with { A11yLargeText = !next.A11yLargeText }).RecordA11yTelemetry("LargeText");
                 return true;
             }
+        }
+
+        if (HandleWidgetBuilderKey(gesture, ref next))
+        {
+            return true;
         }
 
         if (HandlePaletteLabKey(gesture, ref next))
@@ -3786,6 +3793,159 @@ internal sealed record ShowcaseDemoState(
             _ => next
         };
         return hit.LocalHitId is "widget_builder:header" or "widget_builder:presets" or "widget_builder:tree" or "widget_builder:preview" or "widget_builder:props" or "widget_builder:export" or "widget_builder:footer";
+    }
+
+    private static bool HandleWidgetBuilderKey(KeyGesture gesture, ref ShowcaseDemoState next)
+    {
+        if (next.CurrentScreenNumber != 38 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Modifiers.HasFlag(TerminalModifiers.Control) ||
+            gesture.Modifiers.HasFlag(TerminalModifiers.Alt))
+        {
+            return false;
+        }
+
+        var selected = ResolveWidgetBuilderSelectedIndex(next);
+        if (gesture.Key == TerminalKey.Down || IsCharacter(gesture, 'j'))
+        {
+            next = next with
+            {
+                WidgetBuilderSelectedIndex = (selected + 1) % 5,
+                WidgetBuilderFocusIndex = 2
+            };
+            return true;
+        }
+
+        if (gesture.Key == TerminalKey.Up || IsCharacter(gesture, 'k'))
+        {
+            next = next with
+            {
+                WidgetBuilderSelectedIndex = selected == 0 ? 4 : selected - 1,
+                WidgetBuilderFocusIndex = 2
+            };
+            return true;
+        }
+
+        if (IsCharacter(gesture, 'p'))
+        {
+            next = next with
+            {
+                WidgetBuilderPresetIndex = (ResolveWidgetBuilderPresetIndex(next) + 1) % 3,
+                WidgetBuilderSelectedIndex = 0,
+                WidgetBuilderFocusIndex = 1
+            };
+            return true;
+        }
+
+        if (IsShiftCharacter(gesture, 'p'))
+        {
+            var preset = ResolveWidgetBuilderPresetIndex(next);
+            next = next with
+            {
+                WidgetBuilderPresetIndex = preset == 0 ? 2 : preset - 1,
+                WidgetBuilderSelectedIndex = 0,
+                WidgetBuilderFocusIndex = 1
+            };
+            return true;
+        }
+
+        if (IsCharacter(gesture, 'r') || IsShiftCharacter(gesture, 'r'))
+        {
+            next = next with
+            {
+                WidgetBuilderSelectedIndex = 0,
+                WidgetBuilderPreviewEnabled = true,
+                WidgetBuilderBorderEnabled = true,
+                WidgetBuilderTitleEnabled = true,
+                WidgetBuilderAccentIndex = 0,
+                WidgetBuilderValue = -1,
+                WidgetBuilderFocusIndex = 6
+            };
+            return true;
+        }
+
+        if (IsCharacter(gesture, 's') || IsShiftCharacter(gesture, 's'))
+        {
+            next = next with
+            {
+                WidgetBuilderPresetSaved = true,
+                WidgetBuilderFocusIndex = 1
+            };
+            return true;
+        }
+
+        if (IsCharacter(gesture, 'x') || IsShiftCharacter(gesture, 'x'))
+        {
+            next = next with
+            {
+                WidgetBuilderExportArmed = true,
+                WidgetBuilderFocusIndex = 5
+            };
+            return true;
+        }
+
+        if (IsCharacter(gesture, 'e') || IsShiftCharacter(gesture, 'e'))
+        {
+            next = next with
+            {
+                WidgetBuilderPreviewEnabled = !next.WidgetBuilderPreviewEnabled,
+                WidgetBuilderFocusIndex = 4
+            };
+            return true;
+        }
+
+        if (IsCharacter(gesture, 'b') || IsShiftCharacter(gesture, 'b'))
+        {
+            next = next with
+            {
+                WidgetBuilderBorderEnabled = !next.WidgetBuilderBorderEnabled,
+                WidgetBuilderFocusIndex = 4
+            };
+            return true;
+        }
+
+        if (IsCharacter(gesture, 't') || IsShiftCharacter(gesture, 't'))
+        {
+            next = next with
+            {
+                WidgetBuilderTitleEnabled = !next.WidgetBuilderTitleEnabled,
+                WidgetBuilderFocusIndex = 4
+            };
+            return true;
+        }
+
+        if (IsCharacter(gesture, 'c') || IsShiftCharacter(gesture, 'c'))
+        {
+            next = next with
+            {
+                WidgetBuilderAccentIndex = (Math.Clamp(next.WidgetBuilderAccentIndex, 0, 5) + 1) % 6,
+                WidgetBuilderFocusIndex = 4
+            };
+            return true;
+        }
+
+        if (IsCharacter(gesture, '['))
+        {
+            next = next with
+            {
+                WidgetBuilderValue = Math.Clamp(ResolveWidgetBuilderValue(next) - 5, 0, 100),
+                WidgetBuilderFocusIndex = 4
+            };
+            return true;
+        }
+
+        if (IsCharacter(gesture, ']'))
+        {
+            next = next with
+            {
+                WidgetBuilderValue = Math.Clamp(ResolveWidgetBuilderValue(next) + 5, 0, 100),
+                WidgetBuilderFocusIndex = 4
+            };
+            return true;
+        }
+
+        return false;
     }
 
     private static int ResolveWidgetBuilderPresetIndex(ShowcaseDemoState state) =>

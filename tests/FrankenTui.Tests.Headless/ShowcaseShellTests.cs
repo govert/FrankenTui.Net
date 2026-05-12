@@ -7664,6 +7664,50 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseWidgetBuilderKeysMutatePresetSelectionPropsAndExport()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 38,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyKey(state, new KeyGesture(TerminalKey.Character, TerminalModifiers.None, new Rune('p')), timestamp);
+        Assert.Equal(1, state.WidgetBuilderPresetIndex);
+        Assert.Equal(0, state.WidgetBuilderSelectedIndex);
+        Assert.Equal(1, state.WidgetBuilderFocusIndex);
+
+        state = ApplyKey(state, new KeyGesture(TerminalKey.Character, TerminalModifiers.Shift, new Rune('P')), timestamp.AddMilliseconds(10));
+        Assert.Equal(0, state.WidgetBuilderPresetIndex);
+
+        state = ApplyKey(state, new KeyGesture(TerminalKey.Down, TerminalModifiers.None), timestamp.AddMilliseconds(20));
+        Assert.Equal(1, state.WidgetBuilderSelectedIndex);
+        Assert.Equal(2, state.WidgetBuilderFocusIndex);
+
+        state = ApplyKey(state, new KeyGesture(TerminalKey.Character, TerminalModifiers.None, new Rune('e')), timestamp.AddMilliseconds(30));
+        state = ApplyKey(state, new KeyGesture(TerminalKey.Character, TerminalModifiers.None, new Rune('b')), timestamp.AddMilliseconds(40));
+        state = ApplyKey(state, new KeyGesture(TerminalKey.Character, TerminalModifiers.None, new Rune('t')), timestamp.AddMilliseconds(50));
+        state = ApplyKey(state, new KeyGesture(TerminalKey.Character, TerminalModifiers.None, new Rune('c')), timestamp.AddMilliseconds(60));
+        state = ApplyKey(state, new KeyGesture(TerminalKey.Character, TerminalModifiers.None, new Rune(']')), timestamp.AddMilliseconds(70));
+
+        Assert.False(state.WidgetBuilderPreviewEnabled);
+        Assert.False(state.WidgetBuilderBorderEnabled);
+        Assert.False(state.WidgetBuilderTitleEnabled);
+        Assert.Equal(1, state.WidgetBuilderAccentIndex);
+        Assert.Equal(45, state.WidgetBuilderValue);
+        Assert.Equal(4, state.WidgetBuilderFocusIndex);
+
+        state = ApplyKey(state, new KeyGesture(TerminalKey.Character, TerminalModifiers.None, new Rune('s')), timestamp.AddMilliseconds(80));
+        state = ApplyKey(state, new KeyGesture(TerminalKey.Character, TerminalModifiers.None, new Rune('x')), timestamp.AddMilliseconds(90));
+
+        Assert.True(state.WidgetBuilderPresetSaved);
+        Assert.True(state.WidgetBuilderExportArmed);
+        Assert.Equal(5, state.WidgetBuilderFocusIndex);
+    }
+
+    [Fact]
     public void ShowcaseWidgetBuilderRendersMouseSelectedState()
     {
         var state = ShowcaseDemoState.Create(
@@ -7681,6 +7725,8 @@ public sealed class ShowcaseShellTests
             WidgetBuilderValue = 85,
             WidgetBuilderPreviewEnabled = false,
             WidgetBuilderBorderEnabled = false,
+            WidgetBuilderTitleEnabled = false,
+            WidgetBuilderAccentIndex = 4,
             WidgetBuilderPresetSaved = true,
             WidgetBuilderExportArmed = true
         };
@@ -7694,6 +7740,8 @@ public sealed class ShowcaseShellTests
         Assert.Contains("preview=off", screen);
         Assert.Contains("> 05. Badge [off]", screen);
         Assert.Contains("Border: off", screen);
+        Assert.Contains("Title: off", screen);
+        Assert.Contains("Accent: 5", screen);
         Assert.Contains("status=ready", screen);
         Assert.Contains("X export(ready)", screen);
     }

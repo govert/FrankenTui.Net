@@ -556,10 +556,11 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   The Widget Builder screen now follows the upstream sandbox header plus
   presets, widget tree, live preview, props, export, and mouse-hint layout with
   preset names, widget-kind ids, editable prop labels, JSONL export fields,
-  snapshot schema labels, keyboard shortcuts, and mouse routing notes; real
-  `WidgetBuilder` preset state, widget config mutation, live widget rendering,
-  save/export file IO, props hash generation, list selection state, mouse hit
-  testing, and exact upstream styling remain tracked under `364-DEM`.
+  snapshot schema labels, keyboard shortcuts, and mouse routing notes; screen-local
+  keyboard controls now mutate preset cycling, list selection, save/export arming,
+  enabled/border/title/accent/value state, and reset state; real `WidgetBuilder`
+  preset storage, live widget rendering, save/export file IO, props hash generation,
+  and exact upstream styling remain tracked under `364-DEM`.
   The Determinism Lab screen now follows the upstream header plus equivalence,
   scene preview, checks, and report/env layout with Full/DirtyRows/FullRedraw
   strategy rows, checksum timeline, mismatch fields, scenario/run labels, JSONL

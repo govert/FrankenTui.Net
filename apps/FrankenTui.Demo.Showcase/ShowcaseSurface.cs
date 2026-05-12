@@ -3138,6 +3138,8 @@ internal static class ShowcaseSurface
         var propsScroll = Math.Clamp(state.WidgetBuilderPropsScroll, 0, 8);
         var previewEnabled = state.WidgetBuilderPreviewEnabled;
         var borderEnabled = state.WidgetBuilderBorderEnabled;
+        var titleEnabled = state.WidgetBuilderTitleEnabled;
+        var accentIndex = Math.Clamp(state.WidgetBuilderAccentIndex, 0, 5);
         var presetSaved = state.WidgetBuilderPresetSaved;
         var exportArmed = state.WidgetBuilderExportArmed;
 
@@ -3177,8 +3179,8 @@ internal static class ShowcaseSurface
             $"Selected: {(selected == 0 ? "Paragraph" : selected == 1 ? "List" : selected == 2 ? "Progress" : selected == 3 ? "Sparkline" : "Badge")} (#{selected + 1})\n" +
             $"Enabled: {(previewEnabled ? "on" : "off")} (E)\n" +
             $"Border: {(borderEnabled ? "on" : "off")} (B)\n" +
-            "Title: on (T)\n" +
-            $"Accent: {(selected % 6) + 1} (C)\n" +
+            $"Title: {(titleEnabled ? "on" : "off")} (T)\n" +
+            $"Accent: {accentIndex + 1} (C)\n" +
             $"Value: {Math.Min(100, value)} ([ / ])\n" +
             "J/K or Up/Down select widget | P/Shift+P cycle presets | R reset");
 
