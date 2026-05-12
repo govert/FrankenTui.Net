@@ -574,6 +574,20 @@ internal static class ShowcaseFrameHitRegistry
                 new("advanced:composite", ShowcaseHitLayer.Content, 10_100)));
         }
 
+        if (state.CurrentScreenNumber == 11 && TryResolveContentInnerArea(state.Viewport, out var tableThemeInner) && tableThemeInner.Width >= 45 && tableThemeInner.Height >= 8)
+        {
+            var presetWidth = Math.Max(1, tableThemeInner.Width / 3);
+            var presetCWidth = Math.Max(1, tableThemeInner.Width - presetWidth * 2);
+            for (var preset = 0; preset < 3; preset++)
+            {
+                var x = tableThemeInner.X + preset * presetWidth;
+                var width = preset == 2 ? presetCWidth : presetWidth;
+                regions.Add(new ShowcaseHitRegion(
+                    new Rect((ushort)x, tableThemeInner.Y, (ushort)width, tableThemeInner.Height),
+                    new($"table_theme:preset:{preset}", ShowcaseHitLayer.Content, (uint)(11_000 + preset))));
+            }
+        }
+
         if (state.CurrentScreenNumber == 14 && TryResolveContentInnerArea(state.Viewport, out var performanceInner) && performanceInner.Width >= 45 && performanceInner.Height >= 8)
         {
             var footerY = performanceInner.Y + performanceInner.Height - 1;

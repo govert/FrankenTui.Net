@@ -369,6 +369,10 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   frame-registered patterns and composite regions plus matching mouse evidence;
   richer upstream advanced pattern workflows, stateful mouse mutation, and exact
   styling remain tracked under `364-DEM`.
+  The Table Theme Gallery screen now has a local three-preset table gallery with
+  frame-registered Preset A/B/C regions plus matching mouse evidence; fuller
+  upstream table-theme catalog behavior, stateful preset mutation, and exact
+  styling remain tracked under `364-DEM`.
   The Terminal Capabilities screen now has a local upstream-shaped
   matrix/evidence/simulation tri-panel with deterministic capability rows,
   evidence-source labels, diagnostic event names, simulated profile controls,
@@ -899,11 +903,12 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   controls, metrics, and status-log regions plus matching mouse evidence, and
   the Mermaid Mega increment adds shared-showcase, library, controls, and
   node-detail regions plus matching mouse evidence, and the Advanced increment
-  adds patterns and composite regions plus matching mouse evidence, while still
-  leaving broader generalized screen hit routing open.
-  Focused showcase-shell verification is now `209` tests via
+  adds patterns and composite regions plus matching mouse evidence, and the
+  Table Theme Gallery increment adds Preset A/B/C regions plus matching mouse
+  evidence, while still leaving broader generalized screen hit routing open.
+  Focused showcase-shell verification is now `211` tests via
   `dotnet test tests/FrankenTui.Tests.Headless/FrankenTui.Tests.Headless.csproj --no-restore --filter FullyQualifiedName~ShowcaseShellTests`.
-  Current local verification is `463` headless tests, `9` web tests, and `7`
+  Current local verification is `465` headless tests, `9` web tests, and `7`
   PTY tests via `dotnet test FrankenTui.Net.sln --no-restore`.
   Previous focused registry/evidence verification covered `33`
   registry/evidence
