@@ -7440,6 +7440,32 @@ public sealed class ShowcaseShellTests
         Assert.Equal(6_100, metricsRecord.RootElement.GetProperty("target_id").GetInt32());
     }
 
+    [Fact]
+    public void ShowcaseFrameHitRegistryExposesSpecificRegionsForEveryCatalogScreen()
+    {
+        var missingScreens = new List<string>();
+        foreach (var screen in ShowcaseCatalog.Screens)
+        {
+            var state = ShowcaseDemoState.Create(
+                inlineMode: false,
+                viewport: new Size(120, 32),
+                screenNumber: screen.Number,
+                language: "en",
+                flowDirection: WidgetFlowDirection.LeftToRight);
+            var genericPaneId = $"pane:{screen.Number}";
+            var hasSpecificRegion = ShowcaseFrameHitRegistry.BuildRegions(state).Any(region =>
+                region.Result.Layer is ShowcaseHitLayer.Content or ShowcaseHitLayer.Link or ShowcaseHitLayer.Overlay &&
+                region.Result.LocalHitId != genericPaneId &&
+                region.Result.LocalHitId != "none");
+            if (!hasSpecificRegion)
+            {
+                missingScreens.Add($"{screen.Number}:{screen.Slug}");
+            }
+        }
+
+        Assert.Empty(missingScreens);
+    }
+
     private static ShowcaseDemoState ApplyKey(ShowcaseDemoState state, KeyGesture gesture, DateTimeOffset timestamp)
     {
         var terminalEvent = TerminalEvent.Key(gesture, timestamp);

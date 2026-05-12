@@ -477,6 +477,14 @@ internal static class ShowcaseFrameHitRegistry
             regions.Add(new ShowcaseHitRegion(
                 paletteLabArea,
                 new("palette_lab", ShowcaseHitLayer.Pane, PaneRawId(39), TargetScreenNumber: 39)));
+            var paletteWidth = Math.Max(1, paletteLabArea.Width * 55 / 100);
+            var evidenceWidth = Math.Max(1, paletteLabArea.Width - paletteWidth);
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(paletteLabArea.X, paletteLabArea.Y, (ushort)paletteWidth, paletteLabArea.Height),
+                new("palette_lab:palette", ShowcaseHitLayer.Content, 39_000)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)(paletteLabArea.X + paletteWidth), paletteLabArea.Y, (ushort)evidenceWidth, paletteLabArea.Height),
+                new("palette_lab:evidence", ShowcaseHitLayer.Content, 39_100)));
         }
 
         if (state.CurrentScreenNumber == 43 && TryResolveContentInnerArea(state.Viewport, out var liveMarkdownInner) && liveMarkdownInner.Width >= 30 && liveMarkdownInner.Height >= 10)
