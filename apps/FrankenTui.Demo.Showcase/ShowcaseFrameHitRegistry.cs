@@ -772,6 +772,54 @@ internal static class ShowcaseFrameHitRegistry
             }
         }
 
+        if (state.CurrentScreenNumber == 29 && TryResolveContentInnerArea(state.Viewport, out var asyncInner) && asyncInner.Width >= 40 && asyncInner.Height >= 12)
+        {
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(asyncInner.X, asyncInner.Y, asyncInner.Width, (ushort)Math.Min(4, (int)asyncInner.Height)),
+                new("async_tasks:scheduler", ShowcaseHitLayer.Content, 29_000)));
+
+            var bodyY = asyncInner.Y + 4;
+            var bodyHeight = Math.Max(1, asyncInner.Height - 5);
+            var queueWidth = Math.Max(1, asyncInner.Width * 60 / 100);
+            for (var row = 0; row < Math.Min(8, bodyHeight); row++)
+            {
+                AddRegion(
+                    regions,
+                    asyncInner.X,
+                    bodyY + row,
+                    queueWidth,
+                    new($"async_tasks:task:{row}", ShowcaseHitLayer.Content, (uint)(29_100 + row)));
+            }
+
+            var rightX = asyncInner.X + queueWidth;
+            var rightWidth = Math.Max(1, asyncInner.Width - queueWidth);
+            var detailsHeight = Math.Max(1, bodyHeight * 36 / 100);
+            var activityHeight = Math.Max(1, bodyHeight * 26 / 100);
+            var evidenceHeight = Math.Max(1, bodyHeight * 19 / 100);
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)rightX, (ushort)bodyY, (ushort)rightWidth, (ushort)detailsHeight),
+                new("async_tasks:details", ShowcaseHitLayer.Content, 29_200)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)rightX, (ushort)(bodyY + detailsHeight), (ushort)rightWidth, (ushort)activityHeight),
+                new("async_tasks:activity", ShowcaseHitLayer.Content, 29_210)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)rightX, (ushort)(bodyY + detailsHeight + activityHeight), (ushort)rightWidth, (ushort)evidenceHeight),
+                new("async_tasks:evidence", ShowcaseHitLayer.Content, 29_220)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(
+                    (ushort)rightX,
+                    (ushort)(bodyY + detailsHeight + activityHeight + evidenceHeight),
+                    (ushort)rightWidth,
+                    (ushort)Math.Max(1, bodyHeight - detailsHeight - activityHeight - evidenceHeight)),
+                new("async_tasks:hazard", ShowcaseHitLayer.Content, 29_230)));
+            AddRegion(
+                regions,
+                asyncInner.X,
+                Math.Max(asyncInner.Y, asyncInner.Bottom - 1),
+                asyncInner.Width,
+                new("async_tasks:footer", ShowcaseHitLayer.Content, 29_300));
+        }
+
         if (state.CurrentScreenNumber == 7 && TryResolveContentInnerArea(state.Viewport, out var formsInner) && formsInner.Width >= 30 && formsInner.Height >= 8)
         {
             var formWidth = Math.Max(1, formsInner.Width / 2);

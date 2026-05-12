@@ -5229,6 +5229,88 @@ public sealed class ShowcaseShellTests
         Assert.Equal(28_403, diagnosticsRecord.RootElement.GetProperty("target_id").GetInt32());
     }
 
+    [Fact]
+    public void ShowcaseFrameHitRegistryExposesAsyncTaskPanels()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 29,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+
+        var scheduler = ShowcaseFrameHitRegistry.HitTest(state, 3, 3);
+        var task = ShowcaseFrameHitRegistry.HitTest(state, 3, 9);
+        var details = ShowcaseFrameHitRegistry.HitTest(state, 90, 7);
+        var activity = ShowcaseFrameHitRegistry.HitTest(state, 90, 14);
+        var evidence = ShowcaseFrameHitRegistry.HitTest(state, 90, 20);
+        var hazard = ShowcaseFrameHitRegistry.HitTest(state, 90, 24);
+        var footer = ShowcaseFrameHitRegistry.HitTest(state, 3, 29);
+
+        Assert.Equal("async_tasks:scheduler", scheduler.LocalHitId);
+        Assert.Equal((uint)29_000, scheduler.UpstreamHitId);
+        Assert.Equal("async_tasks:task:3", task.LocalHitId);
+        Assert.Equal((uint)29_103, task.UpstreamHitId);
+        Assert.Equal("async_tasks:details", details.LocalHitId);
+        Assert.Equal((uint)29_200, details.UpstreamHitId);
+        Assert.Equal("async_tasks:activity", activity.LocalHitId);
+        Assert.Equal((uint)29_210, activity.UpstreamHitId);
+        Assert.Equal("async_tasks:evidence", evidence.LocalHitId);
+        Assert.Equal((uint)29_220, evidence.UpstreamHitId);
+        Assert.Equal("async_tasks:hazard", hazard.LocalHitId);
+        Assert.Equal((uint)29_230, hazard.UpstreamHitId);
+        Assert.Equal("async_tasks:footer", footer.LocalHitId);
+        Assert.Equal((uint)29_300, footer.UpstreamHitId);
+    }
+
+    [Fact]
+    public void ShowcaseEvidenceJsonlWriterEmitsAsyncTaskMouseActions()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"ftui-showcase-async-tasks-mouse-{Guid.NewGuid():N}.jsonl");
+        var options = ShowcaseCliOptions.Parse(
+            ["--screen=29", "--evidence-jsonl", path],
+            _ => null);
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 29,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+        var taskEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 9, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp);
+        var evidenceEvent = TerminalEvent.Mouse(
+            new MouseGesture(90, 20, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp + TimeSpan.FromMilliseconds(10));
+        var hazardEvent = TerminalEvent.Mouse(
+            new MouseGesture(90, 24, TerminalMouseButton.WheelDown, TerminalMouseKind.Scroll),
+            timestamp + TimeSpan.FromMilliseconds(20));
+
+        using (var writer = ShowcaseEvidenceJsonlWriter.Create(options.EvidenceJsonlPath))
+        {
+            Assert.NotNull(writer);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 1, frame: 1, taskEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 2, frame: 2, evidenceEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 3, frame: 3, hazardEvent, state, state);
+        }
+
+        var lines = File.ReadAllLines(path);
+        Assert.Equal(3, lines.Length);
+        using var taskRecord = JsonDocument.Parse(lines[0]);
+        using var evidenceRecord = JsonDocument.Parse(lines[1]);
+        using var hazardRecord = JsonDocument.Parse(lines[2]);
+        Assert.Equal("async_tasks_task_select", taskRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("async_tasks:task:3", taskRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(29_103, taskRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("async_tasks_evidence_focus", evidenceRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("async_tasks:evidence", evidenceRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(29_220, evidenceRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("async_tasks_hazard_scroll_down", hazardRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("async_tasks:hazard", hazardRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(29_230, hazardRecord.RootElement.GetProperty("target_id").GetInt32());
+    }
+
     private static ShowcaseDemoState ApplyKey(ShowcaseDemoState state, KeyGesture gesture, DateTimeOffset timestamp)
     {
         var terminalEvent = TerminalEvent.Key(gesture, timestamp);

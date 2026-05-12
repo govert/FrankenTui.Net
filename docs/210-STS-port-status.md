@@ -846,11 +846,13 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   Editor increment adds editor-line, search/replace, undo-history, and
   diagnostics regions plus matching mouse evidence. The Virtualized Search
   increment adds search-bar, result-row, stats, and diagnostics regions plus
+  matching mouse evidence. The Async Tasks increment adds scheduler, task-row,
+  details, activity, policy/evidence, hazard, and footer-control regions plus
   matching mouse evidence, while still leaving broader generalized screen hit
   routing open. Focused showcase-shell
-  verification is now `165` tests via
+  verification is now `167` tests via
   `dotnet test tests/FrankenTui.Tests.Headless/FrankenTui.Tests.Headless.csproj --no-restore --filter FullyQualifiedName~ShowcaseShellTests`.
-  Current local verification is `419` headless tests, `9` web tests, and `7`
+  Current local verification is `421` headless tests, `9` web tests, and `7`
   PTY tests via `dotnet test FrankenTui.Net.sln --no-restore`.
   Previous focused registry/evidence verification covered `33`
   registry/evidence
