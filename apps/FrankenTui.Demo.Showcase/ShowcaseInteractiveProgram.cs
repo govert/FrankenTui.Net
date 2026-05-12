@@ -99,6 +99,9 @@ internal sealed record ShowcaseDemoState(
     bool A11yLargeText = false,
     bool MouseCaptureEnabled = false,
     ShowcasePaletteLabMatchFilter PaletteLabMatchFilter = ShowcasePaletteLabMatchFilter.All,
+    int WidgetGalleryListIndex = 4,
+    int WidgetGalleryTabIndex = 2,
+    int WidgetGalleryTableRow = 1,
     int TableThemePresetIndex = 0,
     int TerminalCapabilitiesSelectedRow = 1,
     int TerminalCapabilitiesProfileIndex = 0,
@@ -239,6 +242,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent terminalCapabilitiesMouseEvent &&
             HandleTerminalCapabilitiesMouse(terminalCapabilitiesMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent widgetGalleryMouseEvent &&
+            HandleWidgetGalleryMouse(widgetGalleryMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -1089,6 +1098,69 @@ internal sealed record ShowcaseDemoState(
             _ => next
         };
         return hit.LocalHitId is "terminal_capabilities:matrix" or "terminal_capabilities:simulation";
+    }
+
+    private static bool HandleWidgetGalleryMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 5 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content)
+        {
+            return false;
+        }
+
+        var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            next = hit.LocalHitId switch
+            {
+                "widget_gallery:list" => next with
+                {
+                    WidgetGalleryListIndex = Math.Clamp(next.WidgetGalleryListIndex + delta, 0, 6)
+                },
+                "widget_gallery:tabs" => next with
+                {
+                    WidgetGalleryTabIndex = Math.Clamp(next.WidgetGalleryTabIndex + delta, 0, 3)
+                },
+                "widget_gallery:table" => next with
+                {
+                    WidgetGalleryTableRow = Math.Clamp(next.WidgetGalleryTableRow + delta, 0, 3)
+                },
+                _ => next
+            };
+            return hit.LocalHitId is "widget_gallery:list" or "widget_gallery:tabs" or "widget_gallery:table";
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        next = hit.LocalHitId switch
+        {
+            "widget_gallery:list" => next with
+            {
+                WidgetGalleryListIndex = Math.Clamp(next.WidgetGalleryListIndex + 1, 0, 6)
+            },
+            "widget_gallery:tabs" => next with
+            {
+                WidgetGalleryTabIndex = Math.Clamp(next.WidgetGalleryTabIndex + 1, 0, 3)
+            },
+            "widget_gallery:table" => next with
+            {
+                WidgetGalleryTableRow = Math.Clamp(next.WidgetGalleryTableRow + 1, 0, 3)
+            },
+            _ => next
+        };
+        return hit.LocalHitId is "widget_gallery:list" or "widget_gallery:tabs" or "widget_gallery:table";
     }
 
     private static bool HandleTourMouse(MouseTerminalEvent mouseEvent, DateTimeOffset now, ref ShowcaseDemoState next)

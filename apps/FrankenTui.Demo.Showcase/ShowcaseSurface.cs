@@ -526,6 +526,9 @@ internal static class ShowcaseSurface
 
     private static IWidget BuildWidgetGallery(ShowcaseDemoState state)
     {
+        var listIndex = Math.Clamp(state.WidgetGalleryListIndex, 0, 6);
+        var tabIndex = Math.Clamp(state.WidgetGalleryTabIndex, 0, 3);
+        var tableRow = Math.Clamp(state.WidgetGalleryTableRow, 0, 3);
         var left = new StackWidget(
             LayoutDirection.Vertical,
             [
@@ -544,7 +547,7 @@ internal static class ShowcaseSurface
                     Child = new ListWidget
                     {
                         Items = ["Paragraph", "Panel", "Table", "Tabs", "Tree", "TextArea", "Progress"],
-                        SelectedIndex = 4
+                        SelectedIndex = listIndex
                     }
                 })
             ]);
@@ -558,7 +561,7 @@ internal static class ShowcaseSurface
                     Child = new TabsWidget
                     {
                         Tabs = ["Core", "Text", "Layout", "Extras"],
-                        SelectedIndex = 2
+                        SelectedIndex = tabIndex
                     }
                 }),
                 (LayoutConstraint.Fill(), new PanelWidget
@@ -574,7 +577,7 @@ internal static class ShowcaseSurface
                             ["TextArea", "ready", "cursor + status"],
                             ["Mermaid", "contract", "extras surface"]
                         ],
-                        SelectedRow = 1
+                        SelectedRow = tableRow
                     }
                 })
             ]);

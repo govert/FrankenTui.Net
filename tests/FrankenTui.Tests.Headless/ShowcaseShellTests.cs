@@ -7492,6 +7492,62 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseWidgetGalleryMouseMutatesSelections()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 5,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(
+            state,
+            3,
+            12,
+            timestamp,
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(5, state.WidgetGalleryListIndex);
+
+        state = ApplyMouse(state, 90, 4, timestamp + TimeSpan.FromMilliseconds(10));
+        Assert.Equal(3, state.WidgetGalleryTabIndex);
+
+        state = ApplyMouse(
+            state,
+            90,
+            12,
+            timestamp + TimeSpan.FromMilliseconds(20),
+            TerminalMouseButton.WheelUp,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(0, state.WidgetGalleryTableRow);
+    }
+
+    [Fact]
+    public void ShowcaseWidgetGalleryRendersMouseSelectedState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 5,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            WidgetGalleryTabIndex = 3,
+            WidgetGalleryTableRow = 3
+        };
+        var buffer = new RenderBuffer(120, 32);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 32), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("[Extras]", screen);
+        Assert.Contains("Mermaid", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryExposesLayoutLabPanels()
     {
         var state = ShowcaseDemoState.Create(
