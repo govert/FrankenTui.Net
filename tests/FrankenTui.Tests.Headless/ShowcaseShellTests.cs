@@ -9492,6 +9492,78 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseShakespeareMouseMutatesFocusQueryScrollAndContext()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 3,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(state, 3, 6, timestamp);
+        Assert.Equal(0, state.ShakespeareFocusIndex);
+        Assert.Equal(1, state.ShakespeareQueryIndex);
+
+        state = ApplyMouse(
+            state,
+            3,
+            6,
+            timestamp + TimeSpan.FromMilliseconds(10),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(0, state.ShakespeareFocusIndex);
+        Assert.Equal(1, state.ShakespeareSearchScroll);
+
+        state = ApplyMouse(
+            state,
+            90,
+            6,
+            timestamp + TimeSpan.FromMilliseconds(20),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(1, state.ShakespeareFocusIndex);
+        Assert.Equal(1, state.ShakespeareNotesScroll);
+
+        state = ApplyMouse(
+            state,
+            90,
+            6,
+            timestamp + TimeSpan.FromMilliseconds(30),
+            TerminalMouseButton.Right);
+        Assert.Equal(1, state.ShakespeareFocusIndex);
+        Assert.True(state.ShakespeareContextArmed);
+    }
+
+    [Fact]
+    public void ShowcaseShakespeareRendersMouseSelectedState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 3,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            ShakespeareFocusIndex = 1,
+            ShakespeareQueryIndex = 2,
+            ShakespeareSearchScroll = 3,
+            ShakespeareNotesScroll = 4,
+            ShakespeareContextArmed = true
+        };
+        var buffer = new RenderBuffer(120, 32);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 32), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("shakespeare mouse focus=1 query_idx=2 search_scroll=3 notes_scroll=4 context=armed", screen);
+        Assert.Contains("query=king", screen);
+        Assert.Contains("Notes [focus]", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryExposesDashboardPanelsWithoutReplacingLinks()
     {
         var state = ShowcaseDemoState.Create(

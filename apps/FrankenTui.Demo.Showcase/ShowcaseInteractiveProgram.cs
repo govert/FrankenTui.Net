@@ -103,6 +103,11 @@ internal sealed record ShowcaseDemoState(
     int DashboardOverviewScroll = 0,
     int DashboardHighlightIndex = 0,
     bool DashboardContextArmed = false,
+    int ShakespeareFocusIndex = 0,
+    int ShakespeareQueryIndex = 0,
+    int ShakespeareSearchScroll = 0,
+    int ShakespeareNotesScroll = 0,
+    bool ShakespeareContextArmed = false,
     int LayoutLabFocusIndex = 0,
     int LayoutLabWorkspaceZoom = 0,
     int LayoutLabMetricsScroll = 0,
@@ -407,6 +412,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent dashboardMouseEvent &&
             HandleDashboardMouse(dashboardMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent shakespeareMouseEvent &&
+            HandleShakespeareMouse(shakespeareMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -1286,6 +1297,74 @@ internal sealed record ShowcaseDemoState(
             },
             _ => next
         };
+        return true;
+    }
+
+    private static bool HandleShakespeareMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 3 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content ||
+            hit.LocalHitId is not ("shakespeare:search" or "shakespeare:notes"))
+        {
+            return false;
+        }
+
+        var focus = hit.LocalHitId == "shakespeare:search" ? 0 : 1;
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = hit.LocalHitId == "shakespeare:search"
+                ? next with
+                {
+                    ShakespeareFocusIndex = focus,
+                    ShakespeareSearchScroll = Math.Clamp(next.ShakespeareSearchScroll + delta, 0, 12),
+                    ShakespeareContextArmed = false
+                }
+                : next with
+                {
+                    ShakespeareFocusIndex = focus,
+                    ShakespeareNotesScroll = Math.Clamp(next.ShakespeareNotesScroll + delta, 0, 12),
+                    ShakespeareContextArmed = false
+                };
+            return true;
+        }
+
+        if (gesture.Button == TerminalMouseButton.Right)
+        {
+            next = next with
+            {
+                ShakespeareFocusIndex = focus,
+                ShakespeareContextArmed = true
+            };
+            return true;
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        next = hit.LocalHitId == "shakespeare:search"
+            ? next with
+            {
+                ShakespeareFocusIndex = focus,
+                ShakespeareQueryIndex = (next.ShakespeareQueryIndex + 1) % 4,
+                ShakespeareContextArmed = false
+            }
+            : next with
+            {
+                ShakespeareFocusIndex = focus,
+                ShakespeareContextArmed = false
+            };
         return true;
     }
 

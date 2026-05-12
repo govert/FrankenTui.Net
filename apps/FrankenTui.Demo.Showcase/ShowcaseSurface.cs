@@ -493,19 +493,37 @@ internal static class ShowcaseSurface
 
     private static IWidget BuildShakespeare(ShowcaseDemoState state)
     {
+        var queries = new[] { "be", "love", "king", "night" };
+        var queryIndex = Math.Clamp(state.ShakespeareQueryIndex, 0, queries.Length - 1);
+        var focus = Math.Clamp(state.ShakespeareFocusIndex, 0, 1);
         var searchState = state.Session.LogSearch with
         {
-            Query = string.IsNullOrWhiteSpace(state.Session.LogSearch.Query) ? "be" : state.Session.LogSearch.Query,
+            Query = queries[queryIndex],
             SearchOpen = true
         };
 
-        return TwoColumn(
-            new LogSearchWidget
-            {
-                State = searchState,
-                SourceLines = ShakespeareLines
-            },
-            Panel("Notes", "A text-heavy screen driven through the same search primitives used elsewhere in the demo."));
+        var notes = $"""
+            A text-heavy screen driven through the same search primitives used elsewhere in the demo.
+
+            focus={focus} query_idx={queryIndex} query={searchState.Query}
+            search_scroll={state.ShakespeareSearchScroll}
+            notes_scroll={state.ShakespeareNotesScroll}
+            context={(state.ShakespeareContextArmed ? "armed" : "idle")}
+            """;
+
+        return new StackWidget(
+            LayoutDirection.Vertical,
+            [
+                (LayoutConstraint.Fixed(1), new ParagraphWidget(
+                    $"shakespeare mouse focus={focus} query_idx={queryIndex} search_scroll={state.ShakespeareSearchScroll} notes_scroll={state.ShakespeareNotesScroll} context={(state.ShakespeareContextArmed ? "armed" : "idle")}")),
+                (LayoutConstraint.Fill(), TwoColumn(
+                    new LogSearchWidget
+                    {
+                        State = searchState,
+                        SourceLines = ShakespeareLines
+                    },
+                    Panel(focus == 1 ? "Notes [focus]" : "Notes", notes)))
+            ]);
     }
 
     private static IWidget BuildCodeExplorer(ShowcaseDemoState state) =>
