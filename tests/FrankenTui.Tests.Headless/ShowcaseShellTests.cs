@@ -6315,6 +6315,79 @@ public sealed class ShowcaseShellTests
         Assert.Equal(23_300, controlsRecord.RootElement.GetProperty("target_id").GetInt32());
     }
 
+    [Fact]
+    public void ShowcaseFrameHitRegistryExposesLayoutInspectorPanels()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 24,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+
+        var info = ShowcaseFrameHitRegistry.HitTest(state, 3, 6);
+        var overlay = ShowcaseFrameHitRegistry.HitTest(state, 45, 6);
+        var tree = ShowcaseFrameHitRegistry.HitTest(state, 45, 18);
+        var pane = ShowcaseFrameHitRegistry.HitTest(state, 95, 6);
+
+        Assert.Equal("layout_inspector:info", info.LocalHitId);
+        Assert.Equal((uint)24_000, info.UpstreamHitId);
+        Assert.Equal("layout_inspector:overlay", overlay.LocalHitId);
+        Assert.Equal((uint)24_100, overlay.UpstreamHitId);
+        Assert.Equal("layout_inspector:tree", tree.LocalHitId);
+        Assert.Equal((uint)24_110, tree.UpstreamHitId);
+        Assert.Equal("layout_inspector:pane_studio", pane.LocalHitId);
+        Assert.Equal((uint)24_200, pane.UpstreamHitId);
+    }
+
+    [Fact]
+    public void ShowcaseEvidenceJsonlWriterEmitsLayoutInspectorMouseActions()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"ftui-showcase-layout-inspector-mouse-{Guid.NewGuid():N}.jsonl");
+        var options = ShowcaseCliOptions.Parse(
+            ["--screen=24", "--evidence-jsonl", path],
+            _ => null);
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 24,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+        var infoEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 6, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp);
+        var overlayEvent = TerminalEvent.Mouse(
+            new MouseGesture(45, 6, TerminalMouseButton.WheelDown, TerminalMouseKind.Scroll),
+            timestamp + TimeSpan.FromMilliseconds(10));
+        var paneEvent = TerminalEvent.Mouse(
+            new MouseGesture(95, 6, TerminalMouseButton.Right, TerminalMouseKind.Down),
+            timestamp + TimeSpan.FromMilliseconds(20));
+
+        using (var writer = ShowcaseEvidenceJsonlWriter.Create(options.EvidenceJsonlPath))
+        {
+            Assert.NotNull(writer);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 1, frame: 1, infoEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 2, frame: 2, overlayEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 3, frame: 3, paneEvent, state, state);
+        }
+
+        var lines = File.ReadAllLines(path);
+        Assert.Equal(3, lines.Length);
+        using var infoRecord = JsonDocument.Parse(lines[0]);
+        using var overlayRecord = JsonDocument.Parse(lines[1]);
+        using var paneRecord = JsonDocument.Parse(lines[2]);
+        Assert.Equal("layout_inspector_scenario_select", infoRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("layout_inspector:info", infoRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(24_000, infoRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("layout_inspector_step_next", overlayRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("layout_inspector:overlay", overlayRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(24_100, overlayRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("layout_inspector_pane_mode", paneRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("layout_inspector:pane_studio", paneRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(24_200, paneRecord.RootElement.GetProperty("target_id").GetInt32());
+    }
+
     private static ShowcaseDemoState ApplyKey(ShowcaseDemoState state, KeyGesture gesture, DateTimeOffset timestamp)
     {
         var terminalEvent = TerminalEvent.Key(gesture, timestamp);

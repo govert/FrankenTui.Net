@@ -711,6 +711,32 @@ internal static class ShowcaseFrameHitRegistry
                 new("intrinsic_sizing:controls", ShowcaseHitLayer.Content, 23_300)));
         }
 
+        if (state.CurrentScreenNumber == 24 && TryResolveContentInnerArea(state.Viewport, out var inspectorInner) && inspectorInner.Width >= 45 && inspectorInner.Height >= 10)
+        {
+            var inspectorWidth = Math.Max(1, inspectorInner.Width * 34 / 100);
+            var middleWidth = Math.Max(1, inspectorInner.Width * 40 / 100);
+            var paneWidth = Math.Max(1, inspectorInner.Width - inspectorWidth - middleWidth);
+            var middleX = inspectorInner.X + inspectorWidth;
+            var paneX = middleX + middleWidth;
+            var overlayHeight = Math.Min(10, (int)inspectorInner.Height);
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(inspectorInner.X, inspectorInner.Y, (ushort)inspectorWidth, inspectorInner.Height),
+                new("layout_inspector:info", ShowcaseHitLayer.Content, 24_000)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)middleX, inspectorInner.Y, (ushort)middleWidth, (ushort)Math.Max(1, overlayHeight)),
+                new("layout_inspector:overlay", ShowcaseHitLayer.Content, 24_100)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(
+                    (ushort)middleX,
+                    (ushort)(inspectorInner.Y + overlayHeight),
+                    (ushort)middleWidth,
+                    (ushort)Math.Max(1, inspectorInner.Height - overlayHeight)),
+                new("layout_inspector:tree", ShowcaseHitLayer.Content, 24_110)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)paneX, inspectorInner.Y, (ushort)paneWidth, inspectorInner.Height),
+                new("layout_inspector:pane_studio", ShowcaseHitLayer.Content, 24_200)));
+        }
+
         if (state.CurrentScreenNumber == 13 && TryResolveContentInnerArea(state.Viewport, out var macroInner) && macroInner.Width >= 40 && macroInner.Height >= 12)
         {
             regions.Add(new ShowcaseHitRegion(

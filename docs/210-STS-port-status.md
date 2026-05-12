@@ -425,9 +425,10 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   tracked under `364-DEM`. The Layout
   Inspector screen now shows upstream-shaped scenarios, solver steps,
   overlay/tree toggles, constraint-vs-rect records, overflow/underflow statuses,
-  mouse/key affordances, and pane-studio notes; real `ConstraintOverlay` /
-  `LayoutDebugger` widget parity, live scenario/step state, embedded pane
-  interaction, hit-region routing, and exact styled rect visualization remain
+  mouse/key affordances, pane-studio notes, and frame-registered inspector,
+  overlay, tree, and pane-studio regions with matching mouse evidence; real
+  `ConstraintOverlay` / `LayoutDebugger` widget parity, live scenario/step
+  state, embedded pane interaction, and exact styled rect visualization remain
   tracked under `364-DEM`. The Advanced Text Editor screen now shows sample
   multiline editor content, line/cursor/match status, search/replace controls,
   undo/redo history, focus-cycle controls, text-editor diagnostic env flags,
@@ -877,9 +878,9 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   and the Determinism Lab increment adds header, equivalence, report/env,
   scene-preview, checks, and footer regions plus matching mouse evidence, while
   still leaving broader generalized screen hit routing open.
-  Focused showcase-shell verification is now `193` tests via
+  Focused showcase-shell verification is now `195` tests via
   `dotnet test tests/FrankenTui.Tests.Headless/FrankenTui.Tests.Headless.csproj --no-restore --filter FullyQualifiedName~ShowcaseShellTests`.
-  Current local verification is `447` headless tests, `9` web tests, and `7`
+  Current local verification is `449` headless tests, `9` web tests, and `7`
   PTY tests via `dotnet test FrankenTui.Net.sln --no-restore`.
   Previous focused registry/evidence verification covered `33`
   registry/evidence

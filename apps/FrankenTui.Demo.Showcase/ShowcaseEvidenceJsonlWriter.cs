@@ -925,6 +925,49 @@ public sealed class ShowcaseEvidenceJsonlWriter : IDisposable
             return "intrinsic_sizing_hit_test";
         }
 
+        if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 24)
+        {
+            if (gesture.Kind == TerminalMouseKind.Scroll)
+            {
+                return hit.LocalHitId switch
+                {
+                    "layout_inspector:info" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "layout_inspector_scenario_prev"
+                        : "layout_inspector_scenario_next",
+                    "layout_inspector:overlay" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "layout_inspector_step_prev"
+                        : "layout_inspector_step_next",
+                    "layout_inspector:tree" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "layout_inspector_tree_scroll_up"
+                        : "layout_inspector_tree_scroll_down",
+                    _ => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "layout_inspector_panel_scroll_up"
+                        : "layout_inspector_panel_scroll_down"
+                };
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Right)
+            {
+                return hit.LocalHitId == "layout_inspector:pane_studio"
+                    ? "layout_inspector_pane_mode"
+                    : "layout_inspector_overlay_toggle";
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Left)
+            {
+                return hit.LocalHitId switch
+                {
+                    "layout_inspector:info" => "layout_inspector_scenario_select",
+                    "layout_inspector:overlay" => "layout_inspector_step_select",
+                    "layout_inspector:tree" => "layout_inspector_tree_focus",
+                    "layout_inspector:pane_studio" => "layout_inspector_pane_focus",
+                    _ => "layout_inspector_hit_test"
+                };
+            }
+
+            return "layout_inspector_hit_test";
+        }
+
         if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 13)
         {
             if (gesture.Kind == TerminalMouseKind.Scroll)
