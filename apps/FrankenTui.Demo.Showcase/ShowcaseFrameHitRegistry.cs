@@ -574,6 +574,27 @@ internal static class ShowcaseFrameHitRegistry
                 new("advanced:composite", ShowcaseHitLayer.Content, 10_100)));
         }
 
+        if (state.CurrentScreenNumber == 8 && TryResolveContentInnerArea(state.Viewport, out var dataVizInner) && dataVizInner.Width >= 30 && dataVizInner.Height >= 8)
+        {
+            var metricsWidth = Math.Max(1, dataVizInner.Width / 2);
+            var narrativeWidth = Math.Max(1, dataVizInner.Width - metricsWidth);
+            var progressHeight = Math.Min(8, (int)dataVizInner.Height);
+            var tableHeight = Math.Max(1, dataVizInner.Height - progressHeight);
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(dataVizInner.X, dataVizInner.Y, (ushort)metricsWidth, (ushort)progressHeight),
+                new("data_viz:progress", ShowcaseHitLayer.Content, 8_000)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(dataVizInner.X, (ushort)(dataVizInner.Y + progressHeight), (ushort)metricsWidth, (ushort)tableHeight),
+                new("data_viz:metrics_table", ShowcaseHitLayer.Content, 8_100)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(
+                    (ushort)(dataVizInner.X + metricsWidth),
+                    dataVizInner.Y,
+                    (ushort)narrativeWidth,
+                    dataVizInner.Height),
+                new("data_viz:narrative", ShowcaseHitLayer.Content, 8_200)));
+        }
+
         if (state.CurrentScreenNumber == 11 && TryResolveContentInnerArea(state.Viewport, out var tableThemeInner) && tableThemeInner.Width >= 45 && tableThemeInner.Height >= 8)
         {
             var presetWidth = Math.Max(1, tableThemeInner.Width / 3);

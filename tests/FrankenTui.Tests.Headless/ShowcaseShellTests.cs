@@ -6961,6 +6961,76 @@ public sealed class ShowcaseShellTests
         Assert.Equal(11_000, contextRecord.RootElement.GetProperty("target_id").GetInt32());
     }
 
+    [Fact]
+    public void ShowcaseFrameHitRegistryExposesDataVizPanels()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 8,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+
+        var progress = ShowcaseFrameHitRegistry.HitTest(state, 3, 6);
+        var metrics = ShowcaseFrameHitRegistry.HitTest(state, 3, 14);
+        var narrative = ShowcaseFrameHitRegistry.HitTest(state, 90, 6);
+
+        Assert.Equal("data_viz:progress", progress.LocalHitId);
+        Assert.Equal((uint)8_000, progress.UpstreamHitId);
+        Assert.Equal("data_viz:metrics_table", metrics.LocalHitId);
+        Assert.Equal((uint)8_100, metrics.UpstreamHitId);
+        Assert.Equal("data_viz:narrative", narrative.LocalHitId);
+        Assert.Equal((uint)8_200, narrative.UpstreamHitId);
+    }
+
+    [Fact]
+    public void ShowcaseEvidenceJsonlWriterEmitsDataVizMouseActions()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"ftui-showcase-data-viz-mouse-{Guid.NewGuid():N}.jsonl");
+        var options = ShowcaseCliOptions.Parse(
+            ["--screen=8", "--evidence-jsonl", path],
+            _ => null);
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 8,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+        var progressEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 6, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp);
+        var metricsEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 14, TerminalMouseButton.WheelDown, TerminalMouseKind.Scroll),
+            timestamp + TimeSpan.FromMilliseconds(10));
+        var narrativeEvent = TerminalEvent.Mouse(
+            new MouseGesture(90, 6, TerminalMouseButton.Right, TerminalMouseKind.Down),
+            timestamp + TimeSpan.FromMilliseconds(20));
+
+        using (var writer = ShowcaseEvidenceJsonlWriter.Create(options.EvidenceJsonlPath))
+        {
+            Assert.NotNull(writer);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 1, frame: 1, progressEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 2, frame: 2, metricsEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 3, frame: 3, narrativeEvent, state, state);
+        }
+
+        var lines = File.ReadAllLines(path);
+        Assert.Equal(3, lines.Length);
+        using var progressRecord = JsonDocument.Parse(lines[0]);
+        using var metricsRecord = JsonDocument.Parse(lines[1]);
+        using var narrativeRecord = JsonDocument.Parse(lines[2]);
+        Assert.Equal("data_viz_progress_focus", progressRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("data_viz:progress", progressRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(8_000, progressRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("data_viz_metrics_scroll_down", metricsRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("data_viz:metrics_table", metricsRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(8_100, metricsRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("data_viz_narrative_context", narrativeRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("data_viz:narrative", narrativeRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(8_200, narrativeRecord.RootElement.GetProperty("target_id").GetInt32());
+    }
+
     private static ShowcaseDemoState ApplyKey(ShowcaseDemoState state, KeyGesture gesture, DateTimeOffset timestamp)
     {
         var terminalEvent = TerminalEvent.Key(gesture, timestamp);
