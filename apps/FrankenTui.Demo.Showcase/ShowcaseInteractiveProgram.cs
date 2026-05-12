@@ -108,6 +108,7 @@ internal sealed record ShowcaseDemoState(
     int TerminalCapabilitiesProfileIndex = 0,
     int MacroRecorderTimelineIndex = 0,
     int MacroRecorderScenarioIndex = 0,
+    int PerformanceSelectedIndex = 0,
     bool PaletteLabBenchEnabled = false,
     int PaletteLabBenchFrame = 0,
     int PaletteLabBenchProcessed = 0,
@@ -263,6 +264,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent macroRecorderMouseEvent &&
             HandleMacroRecorderMouse(macroRecorderMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent performanceMouseEvent &&
+            HandlePerformanceMouse(performanceMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -1279,6 +1286,40 @@ internal sealed record ShowcaseDemoState(
         }
 
         return false;
+    }
+
+    private static bool HandlePerformanceMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 14 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content ||
+            hit.LocalHitId is not ("performance:list" or "performance:list:selected"))
+        {
+            return false;
+        }
+
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = next with { PerformanceSelectedIndex = Math.Clamp(next.PerformanceSelectedIndex + delta, 0, 9_999) };
+            return true;
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        next = next with { PerformanceSelectedIndex = Math.Clamp(next.PerformanceSelectedIndex + 1, 0, 9_999) };
+        return true;
     }
 
     private static bool HandleTourMouse(MouseTerminalEvent mouseEvent, DateTimeOffset now, ref ShowcaseDemoState next)

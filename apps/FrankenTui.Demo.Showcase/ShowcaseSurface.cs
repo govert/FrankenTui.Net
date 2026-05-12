@@ -868,7 +868,7 @@ internal static class ShowcaseSurface
     {
         const int totalItems = 10_000;
         var viewportRows = Math.Max(8, Math.Min(18, state.Viewport.Height - 10));
-        var selected = Math.Min(totalItems - 1, (state.ScriptFrame * 37) % totalItems);
+        var selected = Math.Clamp(state.PerformanceSelectedIndex, 0, totalItems - 1);
         var scrollOffset = Math.Max(0, selected - viewportRows / 2);
         var visibleEnd = Math.Min(totalItems, scrollOffset + viewportRows);
         var rows = Enumerable.Range(scrollOffset, visibleEnd - scrollOffset)

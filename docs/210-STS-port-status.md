@@ -932,15 +932,16 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   routing priority, the Widget Gallery increment adds mouse-mutated
   list/tab/table selections, the Forms & Input increment adds mouse-mutated
   selected-field rendering, the Macro Recorder increment adds mouse-mutated
-  timeline/scenario selection rendering, the Table Theme increment adds
+  timeline/scenario selection rendering, the Performance increment adds
+  mouse-mutated virtual-list item rendering, the Table Theme increment adds
   mouse-selected active preset mutation/rendering, the Terminal Capabilities
   increment adds mouse-mutated capability/profile selection rendering, and a full-catalog
   registry guard now verifies every showcase screen exposes at least one
   screen-specific content/link/overlay region at the standard 120x32 showcase
   viewport, while still leaving broader generalized screen hit routing open.
-  Focused showcase-shell verification is now `236` tests via
+  Focused showcase-shell verification is now `238` tests via
   `dotnet test tests/FrankenTui.Tests.Headless/FrankenTui.Tests.Headless.csproj --no-restore --filter FullyQualifiedName~ShowcaseShellTests`.
-  Current local verification is `490` headless tests, `9` web tests, and `7`
+  Current local verification is `492` headless tests, `9` web tests, and `7`
   PTY tests via `dotnet test FrankenTui.Net.sln --no-restore`.
   Previous focused registry/evidence verification covered `33`
   registry/evidence

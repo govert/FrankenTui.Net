@@ -6760,6 +6760,52 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcasePerformanceMouseMutatesSelectedItem()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 14,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(
+            state,
+            3,
+            6,
+            timestamp,
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(1, state.PerformanceSelectedIndex);
+
+        state = ApplyMouse(state, 3, 15, timestamp + TimeSpan.FromMilliseconds(10));
+        Assert.Equal(2, state.PerformanceSelectedIndex);
+    }
+
+    [Fact]
+    public void ShowcasePerformanceRendersMouseSelectedItem()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 14,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            PerformanceSelectedIndex = 42
+        };
+        var buffer = new RenderBuffer(120, 32);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 32), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("Selected:     43 / 10000", screen);
+        Assert.Contains("Event #00042", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryExposesMarkdownPanels()
     {
         var state = ShowcaseDemoState.Create(
