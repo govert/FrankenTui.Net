@@ -6031,6 +6031,85 @@ public sealed class ShowcaseShellTests
         Assert.Equal(38_200, previewRecord.RootElement.GetProperty("target_id").GetInt32());
     }
 
+    [Fact]
+    public void ShowcaseFrameHitRegistryExposesDeterminismLabPanels()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 40,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+
+        var header = ShowcaseFrameHitRegistry.HitTest(state, 3, 2);
+        var equivalence = ShowcaseFrameHitRegistry.HitTest(state, 3, 6);
+        var report = ShowcaseFrameHitRegistry.HitTest(state, 3, 22);
+        var preview = ShowcaseFrameHitRegistry.HitTest(state, 80, 6);
+        var checks = ShowcaseFrameHitRegistry.HitTest(state, 80, 22);
+        var footer = ShowcaseFrameHitRegistry.HitTest(state, 3, 29);
+
+        Assert.Equal("determinism:header", header.LocalHitId);
+        Assert.Equal((uint)40_000, header.UpstreamHitId);
+        Assert.Equal("determinism:equivalence", equivalence.LocalHitId);
+        Assert.Equal((uint)40_100, equivalence.UpstreamHitId);
+        Assert.Equal("determinism:report", report.LocalHitId);
+        Assert.Equal((uint)40_110, report.UpstreamHitId);
+        Assert.Equal("determinism:preview", preview.LocalHitId);
+        Assert.Equal((uint)40_200, preview.UpstreamHitId);
+        Assert.Equal("determinism:checks", checks.LocalHitId);
+        Assert.Equal((uint)40_210, checks.UpstreamHitId);
+        Assert.Equal("determinism:footer", footer.LocalHitId);
+        Assert.Equal((uint)40_300, footer.UpstreamHitId);
+    }
+
+    [Fact]
+    public void ShowcaseEvidenceJsonlWriterEmitsDeterminismLabMouseActions()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"ftui-showcase-determinism-lab-mouse-{Guid.NewGuid():N}.jsonl");
+        var options = ShowcaseCliOptions.Parse(
+            ["--screen=40", "--evidence-jsonl", path],
+            _ => null);
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 40,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+        var equivalenceEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 6, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp);
+        var reportEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 22, TerminalMouseButton.WheelDown, TerminalMouseKind.Scroll),
+            timestamp + TimeSpan.FromMilliseconds(10));
+        var checksEvent = TerminalEvent.Mouse(
+            new MouseGesture(80, 22, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp + TimeSpan.FromMilliseconds(20));
+
+        using (var writer = ShowcaseEvidenceJsonlWriter.Create(options.EvidenceJsonlPath))
+        {
+            Assert.NotNull(writer);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 1, frame: 1, equivalenceEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 2, frame: 2, reportEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 3, frame: 3, checksEvent, state, state);
+        }
+
+        var lines = File.ReadAllLines(path);
+        Assert.Equal(3, lines.Length);
+        using var equivalenceRecord = JsonDocument.Parse(lines[0]);
+        using var reportRecord = JsonDocument.Parse(lines[1]);
+        using var checksRecord = JsonDocument.Parse(lines[2]);
+        Assert.Equal("determinism_strategy_select", equivalenceRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("determinism:equivalence", equivalenceRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(40_100, equivalenceRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("determinism_report_scroll_down", reportRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("determinism:report", reportRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(40_110, reportRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("determinism_scenario_run", checksRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("determinism:checks", checksRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(40_210, checksRecord.RootElement.GetProperty("target_id").GetInt32());
+    }
+
     private static ShowcaseDemoState ApplyKey(ShowcaseDemoState state, KeyGesture gesture, DateTimeOffset timestamp)
     {
         var terminalEvent = TerminalEvent.Key(gesture, timestamp);

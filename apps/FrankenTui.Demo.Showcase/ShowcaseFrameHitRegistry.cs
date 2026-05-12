@@ -1200,6 +1200,47 @@ internal static class ShowcaseFrameHitRegistry
                 new("widget_builder:footer", ShowcaseHitLayer.Content, 38_400));
         }
 
+        if (state.CurrentScreenNumber == 40 && TryResolveContentInnerArea(state.Viewport, out var determinismInner) && determinismInner.Width >= 60 && determinismInner.Height >= 12)
+        {
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(determinismInner.X, determinismInner.Y, determinismInner.Width, (ushort)Math.Min(2, (int)determinismInner.Height)),
+                new("determinism:header", ShowcaseHitLayer.Content, 40_000)));
+
+            var bodyY = determinismInner.Y + 2;
+            var bodyHeight = Math.Max(1, determinismInner.Height - 3);
+            var leftWidth = Math.Max(1, determinismInner.Width * 58 / 100);
+            var rightX = determinismInner.X + leftWidth;
+            var rightWidth = Math.Max(1, determinismInner.Width - leftWidth);
+            var equivalenceHeight = Math.Max(1, bodyHeight * 55 / 100);
+            var previewHeight = Math.Max(1, bodyHeight * 52 / 100);
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(determinismInner.X, (ushort)bodyY, (ushort)leftWidth, (ushort)equivalenceHeight),
+                new("determinism:equivalence", ShowcaseHitLayer.Content, 40_100)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(
+                    determinismInner.X,
+                    (ushort)(bodyY + equivalenceHeight),
+                    (ushort)leftWidth,
+                    (ushort)Math.Max(1, bodyHeight - equivalenceHeight)),
+                new("determinism:report", ShowcaseHitLayer.Content, 40_110)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)rightX, (ushort)bodyY, (ushort)rightWidth, (ushort)previewHeight),
+                new("determinism:preview", ShowcaseHitLayer.Content, 40_200)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(
+                    (ushort)rightX,
+                    (ushort)(bodyY + previewHeight),
+                    (ushort)rightWidth,
+                    (ushort)Math.Max(1, bodyHeight - previewHeight)),
+                new("determinism:checks", ShowcaseHitLayer.Content, 40_210)));
+            AddRegion(
+                regions,
+                determinismInner.X,
+                Math.Max(determinismInner.Y, determinismInner.Bottom - 1),
+                determinismInner.Width,
+                new("determinism:footer", ShowcaseHitLayer.Content, 40_300));
+        }
+
         if (state.CurrentScreenNumber == 7 && TryResolveContentInnerArea(state.Viewport, out var formsInner) && formsInner.Width >= 30 && formsInner.Height >= 8)
         {
             var formWidth = Math.Max(1, formsInner.Width / 2);

@@ -1416,6 +1416,44 @@ public sealed class ShowcaseEvidenceJsonlWriter : IDisposable
             return "widget_builder_hit_test";
         }
 
+        if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 40)
+        {
+            if (gesture.Kind == TerminalMouseKind.Scroll)
+            {
+                return hit.LocalHitId switch
+                {
+                    "determinism:equivalence" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "determinism_seed_decrement"
+                        : "determinism_seed_increment",
+                    "determinism:checks" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "determinism_checks_scroll_up"
+                        : "determinism_checks_scroll_down",
+                    "determinism:report" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "determinism_report_scroll_up"
+                        : "determinism_report_scroll_down",
+                    _ => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "determinism_panel_scroll_up"
+                        : "determinism_panel_scroll_down"
+                };
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Left)
+            {
+                return hit.LocalHitId switch
+                {
+                    "determinism:header" => "determinism_header_focus",
+                    "determinism:equivalence" => "determinism_strategy_select",
+                    "determinism:report" => "determinism_export_focus",
+                    "determinism:preview" => "determinism_preview_focus",
+                    "determinism:checks" => "determinism_scenario_run",
+                    "determinism:footer" => "determinism_controls_focus",
+                    _ => "determinism_hit_test"
+                };
+            }
+
+            return "determinism_hit_test";
+        }
+
         if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 7)
         {
             if (gesture.Kind == TerminalMouseKind.Scroll)
