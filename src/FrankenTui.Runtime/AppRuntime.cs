@@ -21,6 +21,7 @@ public sealed class AppRuntime<TModel, TMessage>
     private RuntimeFrameStats _frameStats = RuntimeFrameStats.Empty;
     private HashSet<string> _activeSubscriptionKeys = [];
     private readonly RuntimeLoadGovernor _loadGovernor;
+    private readonly ConservativeRuntimeLoadGovernor _conservativeLoadGovernor;
     private readonly RuntimeDegradationCascade _degradationCascade;
     private readonly bool _cascadeRenderGateEnabled;
     private DiffStrategy _lastDiffStrategy = DiffStrategy.Full;
@@ -40,6 +41,9 @@ public sealed class AppRuntime<TModel, TMessage>
         Policy = policy ?? RuntimeExecutionPolicy.Default;
         Telemetry = new TelemetrySessionLog(Policy.Telemetry ?? TelemetryConfig.Disabled);
         _loadGovernor = new RuntimeLoadGovernor(Policy.EffectiveLoadGovernor);
+        _conservativeLoadGovernor = new ConservativeRuntimeLoadGovernor(
+            Policy.EffectiveLoadGovernor,
+            Policy.EffectiveEffectQueue.MaxQueueDepth);
         _degradationCascade = new RuntimeDegradationCascade(Policy.EffectiveDegradationCascade);
         _cascadeRenderGateEnabled = Policy.PolicyConfig is not null;
     }
@@ -86,13 +90,13 @@ public sealed class AppRuntime<TModel, TMessage>
         RuntimeTraceEntry<TMessage>? traceEntry = null;
         if (Policy.CaptureTrace)
         {
-            Trace.Record(_stepIndex, message, emitted, screenText, presentation.Output);
+            Trace.Record(_stepIndex, message, emitted.Messages, screenText, presentation.Output);
             traceEntry = Trace.Entries[^1];
         }
 
         if (Policy.CaptureReplayTape)
         {
-            Replay.Add(_stepIndex, message, emitted, screenText, presentation.Output);
+            Replay.Add(_stepIndex, message, emitted.Messages, screenText, presentation.Output);
         }
 
         if (Policy.EmitTelemetry)
@@ -153,8 +157,9 @@ public sealed class AppRuntime<TModel, TMessage>
             update.Model,
             presentation,
             screenText,
-            emitted,
-            traceEntry);
+            emitted.Messages,
+            traceEntry,
+            emitted.QueueSpecs);
     }
 
     public async ValueTask<PresentResult> RenderAsync(
@@ -181,6 +186,11 @@ public sealed class AppRuntime<TModel, TMessage>
             frameStopwatch.Stop();
             var skipped = new PresentResult(string.Empty, 0, 0, 0, UsedSyncOutput: false, Truncated: false);
             var skippedLoadDecision = _loadGovernor.Observe(TimeSpan.Zero);
+            var skippedEffectiveLevel = EffectiveDegradationLevel(skippedLoadDecision, cascadeEvidence);
+            var skippedConservativeSnapshot = ObserveConservativeGovernor(
+                TimeSpan.Zero,
+                skippedEffectiveLevel,
+                resizeCoalescingActive: _resizePending);
             _frameStats = CreateFrameStats(
                 skipped,
                 frameStopwatch.Elapsed,
@@ -188,6 +198,7 @@ public sealed class AppRuntime<TModel, TMessage>
                 diffDuration: TimeSpan.Zero,
                 dirtyRows: 0,
                 skippedLoadDecision,
+                skippedConservativeSnapshot,
                 cascadeEvidence,
                 cascadeKey);
             RecordRenderTelemetry(
@@ -197,6 +208,7 @@ public sealed class AppRuntime<TModel, TMessage>
                 diffDuration: TimeSpan.Zero,
                 dirtyRows: 0,
                 skippedLoadDecision,
+                skippedConservativeSnapshot,
                 cascadeEvidence,
                 cascadeKey,
                 selection: null);
@@ -232,6 +244,11 @@ public sealed class AppRuntime<TModel, TMessage>
 
         _degradationCascade.Observe(frameStopwatch.Elapsed, cascadeKey);
         var loadDecision = _loadGovernor.Observe(frameStopwatch.Elapsed);
+        var effectiveLevel = EffectiveDegradationLevel(loadDecision, cascadeEvidence);
+        var conservativeSnapshot = ObserveConservativeGovernor(
+            frameStopwatch.Elapsed,
+            effectiveLevel,
+            resizeCoalescingActive: _resizePending);
         _lastPresentLatency = presentStopwatch.Elapsed;
         _diffSelector.Observe(selection, diff.Count, _lastPresentLatency);
         _lastDiffStrategy = selection.Strategy;
@@ -244,6 +261,7 @@ public sealed class AppRuntime<TModel, TMessage>
             diffStopwatch.Elapsed,
             dirtyRows,
             loadDecision,
+            conservativeSnapshot,
             cascadeEvidence,
             cascadeKey);
 
@@ -254,6 +272,7 @@ public sealed class AppRuntime<TModel, TMessage>
             diffStopwatch.Elapsed,
             dirtyRows,
             loadDecision,
+            conservativeSnapshot,
             cascadeEvidence,
             cascadeKey,
             selection);
@@ -268,12 +287,11 @@ public sealed class AppRuntime<TModel, TMessage>
         TimeSpan diffDuration,
         int dirtyRows,
         LoadGovernorDecision loadDecision,
+        RuntimeLoadGovernorSnapshot conservativeSnapshot,
         RuntimeCascadeEvidence cascadeEvidence,
         RuntimeConformalBucketKey cascadeKey)
     {
-        var effectiveLevel = _cascadeRenderGateEnabled
-            ? MoreDegraded(loadDecision.LevelAfter, cascadeEvidence.LevelAfter)
-            : loadDecision.LevelAfter;
+        var effectiveLevel = EffectiveDegradationLevel(loadDecision, cascadeEvidence);
         return new RuntimeFrameStats(
             _stepIndex,
             result.ChangedCells,
@@ -303,6 +321,22 @@ public sealed class AppRuntime<TModel, TMessage>
             LoadGovernorEProcessInWarmup: loadDecision.EProcessInWarmup,
             LoadGovernorTransitionSeq: loadDecision.TransitionSeq,
             LoadGovernorTransitionCorrelationId: loadDecision.TransitionCorrelationId,
+            RuntimeMode: conservativeSnapshot.Mode.Label(),
+            RuntimeModeBefore: conservativeSnapshot.ModeBefore.Label(),
+            RuntimePressureClass: conservativeSnapshot.PressureClass.Label(),
+            RuntimeWorkDisposition: conservativeSnapshot.WorkDisposition.Label(),
+            RuntimeGovernorReason: conservativeSnapshot.ReasonCode,
+            RuntimeGovernorTransition: conservativeSnapshot.Transition,
+            RuntimeStrictSemanticsPreserved: conservativeSnapshot.StrictSemanticsPreserved,
+            RuntimeQueueInFlight: conservativeSnapshot.QueueInFlight,
+            RuntimeQueueMaxDepth: conservativeSnapshot.QueueMaxDepth,
+            RuntimeQueueDroppedDelta: conservativeSnapshot.QueueDroppedDelta,
+            RuntimeResizeCoalescingActive: conservativeSnapshot.ResizeCoalescingActive,
+            RuntimeRecoveryIntervalsObserved: conservativeSnapshot.RecoveryIntervalsObserved,
+            RuntimeRecoveryIntervalsRequired: conservativeSnapshot.RecoveryIntervalsRequired,
+            RuntimeDeferredWorkTotal: conservativeSnapshot.DeferredWorkTotal,
+            RuntimeCoalescedWorkTotal: conservativeSnapshot.CoalescedWorkTotal,
+            RuntimeDroppedWorkTotal: conservativeSnapshot.DroppedWorkTotal,
             CascadeDecision: RuntimeCascadeEvidence.DecisionLabel(cascadeEvidence.Decision),
             CascadeLevelBefore: cascadeEvidence.LevelBefore.Label(),
             CascadeLevelAfter: cascadeEvidence.LevelAfter.Label(),
@@ -324,6 +358,7 @@ public sealed class AppRuntime<TModel, TMessage>
         TimeSpan diffDuration,
         int dirtyRows,
         LoadGovernorDecision loadDecision,
+        RuntimeLoadGovernorSnapshot conservativeSnapshot,
         RuntimeCascadeEvidence cascadeEvidence,
         RuntimeConformalBucketKey cascadeKey,
         DiffStrategySelection? selection)
@@ -399,6 +434,22 @@ public sealed class AppRuntime<TModel, TMessage>
                 new TelemetryField("in_warmup", loadDecision.EProcessInWarmup ? "true" : "false"),
                 new TelemetryField("transition_seq", loadDecision.TransitionSeq.ToString(CultureInfo.InvariantCulture)),
                 new TelemetryField("transition_correlation_id", loadDecision.TransitionCorrelationId.ToString(CultureInfo.InvariantCulture)),
+                new TelemetryField("runtime_mode", conservativeSnapshot.Mode.Label()),
+                new TelemetryField("runtime_mode_before", conservativeSnapshot.ModeBefore.Label()),
+                new TelemetryField("pressure_class", conservativeSnapshot.PressureClass.Label()),
+                new TelemetryField("work_disposition", conservativeSnapshot.WorkDisposition.Label()),
+                new TelemetryField("governor_reason", conservativeSnapshot.ReasonCode),
+                new TelemetryField("governor_transition", conservativeSnapshot.Transition ? "true" : "false"),
+                new TelemetryField("strict_semantics_preserved", conservativeSnapshot.StrictSemanticsPreserved ? "true" : "false"),
+                new TelemetryField("queue_in_flight", conservativeSnapshot.QueueInFlight.ToString(CultureInfo.InvariantCulture)),
+                new TelemetryField("queue_max_depth", conservativeSnapshot.QueueMaxDepth?.ToString(CultureInfo.InvariantCulture) ?? ""),
+                new TelemetryField("queue_dropped_delta", conservativeSnapshot.QueueDroppedDelta.ToString(CultureInfo.InvariantCulture)),
+                new TelemetryField("resize_coalescing_active", conservativeSnapshot.ResizeCoalescingActive ? "true" : "false"),
+                new TelemetryField("recovery_intervals_observed", conservativeSnapshot.RecoveryIntervalsObserved.ToString(CultureInfo.InvariantCulture)),
+                new TelemetryField("recovery_intervals_required", conservativeSnapshot.RecoveryIntervalsRequired.ToString(CultureInfo.InvariantCulture)),
+                new TelemetryField("deferred_work_total", conservativeSnapshot.DeferredWorkTotal.ToString(CultureInfo.InvariantCulture)),
+                new TelemetryField("coalesced_work_total", conservativeSnapshot.CoalescedWorkTotal.ToString(CultureInfo.InvariantCulture)),
+                new TelemetryField("dropped_work_total", conservativeSnapshot.DroppedWorkTotal.ToString(CultureInfo.InvariantCulture)),
                 new TelemetryField("cascade_decision", RuntimeCascadeEvidence.DecisionLabel(cascadeEvidence.Decision)),
                 new TelemetryField("cascade_level_before", cascadeEvidence.LevelBefore.Label()),
                 new TelemetryField("cascade_level_after", cascadeEvidence.LevelAfter.Label()),
@@ -488,7 +539,7 @@ public sealed class AppRuntime<TModel, TMessage>
         }
     }
 
-    private IReadOnlyList<TMessage> CollectMessages(
+    private CollectedRuntimeMessages<TMessage> CollectMessages(
         AppCommand<TMessage> commands,
         IReadOnlyList<Subscription<TMessage>> subscriptions)
     {
@@ -502,6 +553,19 @@ public sealed class AppRuntime<TModel, TMessage>
         EffectSystem.RecordSubscriptionStart(started);
         EffectSystem.RecordSubscriptionStop(stopped);
         var messages = new List<TMessage>(commandMessages);
+        Dictionary<int, RuntimeQueueTaskSpec>? queueSpecs = null;
+        if (commands.QueueSpecs is not null)
+        {
+            queueSpecs = [];
+            foreach (var item in commands.QueueSpecs)
+            {
+                if (item.Key >= 0 && item.Key < commandMessages.Length)
+                {
+                    queueSpecs[item.Key] = item.Value;
+                }
+            }
+        }
+
         foreach (var subscription in subscriptions)
         {
             messages.AddRange(EffectSystem.TraceSubscriptionEffect(subscription));
@@ -510,11 +574,37 @@ public sealed class AppRuntime<TModel, TMessage>
         EffectSystem.RecordReconcile(reconcileStopwatch.Elapsed);
         _activeSubscriptionKeys = currentKeys;
 
-        return messages;
+        return new CollectedRuntimeMessages<TMessage>(messages, queueSpecs);
     }
 
     private static long ToMicroseconds(TimeSpan duration) =>
         (long)Math.Round(duration.TotalMilliseconds * 1000.0, MidpointRounding.AwayFromZero);
+
+    private RuntimeLoadGovernorSnapshot ObserveConservativeGovernor(
+        TimeSpan frameDuration,
+        RuntimeDegradationLevel degradationLevel,
+        bool resizeCoalescingActive)
+    {
+        var queue = EffectSystem.SnapshotQueueTelemetry();
+        return _conservativeLoadGovernor.Observe(new RuntimeLoadGovernorObservation(
+            frameDuration.TotalMilliseconds,
+            Policy.EffectiveLoadGovernor.EffectiveBudgetController.TargetFrameTime.TotalMilliseconds,
+            degradationLevel,
+            QueueInFlight: ToNonNegativeUlong(queue.InFlight),
+            QueueMaxDepth: null,
+            QueueDroppedTotal: ToNonNegativeUlong(queue.Dropped),
+            ResizeCoalescingActive: resizeCoalescingActive));
+    }
+
+    private RuntimeDegradationLevel EffectiveDegradationLevel(
+        LoadGovernorDecision loadDecision,
+        RuntimeCascadeEvidence cascadeEvidence) =>
+        _cascadeRenderGateEnabled
+            ? MoreDegraded(loadDecision.LevelAfter, cascadeEvidence.LevelAfter)
+            : loadDecision.LevelAfter;
+
+    private static ulong ToNonNegativeUlong(long value) =>
+        value > 0 ? (ulong)value : 0UL;
 
     private static RuntimeDegradationLevel MoreDegraded(
         RuntimeDegradationLevel left,
@@ -536,3 +626,7 @@ public sealed class AppRuntime<TModel, TMessage>
         return DiffSkipHint.NarrowToRows(BufferDiff.CollectDirtyRows(_current, _next));
     }
 }
+
+internal sealed record CollectedRuntimeMessages<TMessage>(
+    IReadOnlyList<TMessage> Messages,
+    IReadOnlyDictionary<int, RuntimeQueueTaskSpec>? QueueSpecs);

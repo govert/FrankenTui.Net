@@ -83,11 +83,108 @@ public sealed record BudgetControllerConfig(
     public static BudgetControllerConfig Default { get; } = new(TimeSpan.FromMilliseconds(16));
 }
 
+public enum RuntimeLoadMode
+{
+    Healthy,
+    Stressed,
+    Degraded,
+    Recovered,
+    Unsafe
+}
+
+public static class RuntimeLoadModeExtensions
+{
+    public static string Label(this RuntimeLoadMode mode) =>
+        mode switch
+        {
+            RuntimeLoadMode.Stressed => "stressed",
+            RuntimeLoadMode.Degraded => "degraded",
+            RuntimeLoadMode.Recovered => "recovered",
+            RuntimeLoadMode.Unsafe => "unsafe",
+            _ => "healthy"
+        };
+}
+
+public enum RuntimePressureClass
+{
+    SteadyState,
+    SoftOverload,
+    HardOverload,
+    Unsafe
+}
+
+public static class RuntimePressureClassExtensions
+{
+    public static string Label(this RuntimePressureClass pressure) =>
+        pressure switch
+        {
+            RuntimePressureClass.SoftOverload => "soft_overload",
+            RuntimePressureClass.HardOverload => "hard_overload",
+            RuntimePressureClass.Unsafe => "unsafe",
+            _ => "steady_state"
+        };
+}
+
+public enum RuntimeWorkDisposition
+{
+    AdmitAll,
+    CoalesceVisibleDeferBackground,
+    DeferBackgroundDropBestEffort,
+    ReadmitAfterHysteresis,
+    FailFastStrictGuarantee
+}
+
+public static class RuntimeWorkDispositionExtensions
+{
+    public static string Label(this RuntimeWorkDisposition disposition) =>
+        disposition switch
+        {
+            RuntimeWorkDisposition.CoalesceVisibleDeferBackground => "coalesce_visible_defer_background",
+            RuntimeWorkDisposition.DeferBackgroundDropBestEffort => "defer_background_drop_best_effort",
+            RuntimeWorkDisposition.ReadmitAfterHysteresis => "readmit_after_hysteresis",
+            RuntimeWorkDisposition.FailFastStrictGuarantee => "fail_fast_strict_guarantee",
+            _ => "admit_all"
+        };
+}
+
+public sealed record LoadGovernorPolicy(
+    double StressedQueueWatermark = 0.5,
+    double DegradedQueueWatermark = 0.8,
+    double RecoveryQueueWatermark = 0.25,
+    byte RecoveryIntervals = 3,
+    double BudgetOverrunSoftRatio = 1.0)
+{
+    public static LoadGovernorPolicy Default { get; } = new();
+
+    public LoadGovernorPolicy Normalized()
+    {
+        var recovery = NormalizeRatio(RecoveryQueueWatermark, 0.25);
+        var stressed = Math.Max(NormalizeRatio(StressedQueueWatermark, 0.5), recovery);
+        var degraded = Math.Max(NormalizeRatio(DegradedQueueWatermark, 0.8), stressed);
+        return this with
+        {
+            RecoveryQueueWatermark = recovery,
+            StressedQueueWatermark = stressed,
+            DegradedQueueWatermark = degraded,
+            RecoveryIntervals = (byte)Math.Max(RecoveryIntervals, (byte)1),
+            BudgetOverrunSoftRatio = double.IsFinite(BudgetOverrunSoftRatio) && BudgetOverrunSoftRatio > 0
+                ? BudgetOverrunSoftRatio
+                : 1.0
+        };
+    }
+
+    private static double NormalizeRatio(double value, double fallback) =>
+        double.IsFinite(value) ? Math.Clamp(value, 0.0, 1.0) : fallback;
+}
+
 public sealed record LoadGovernorConfig(
     bool Enabled = true,
-    BudgetControllerConfig? BudgetController = null)
+    BudgetControllerConfig? BudgetController = null,
+    LoadGovernorPolicy? Policy = null)
 {
     public BudgetControllerConfig EffectiveBudgetController => BudgetController ?? BudgetControllerConfig.Default;
+
+    public LoadGovernorPolicy EffectivePolicy => (Policy ?? LoadGovernorPolicy.Default).Normalized();
 
     public static LoadGovernorConfig Default { get; } = new();
 
@@ -97,6 +194,261 @@ public sealed record LoadGovernorConfig(
 
     public LoadGovernorConfig WithBudgetController(BudgetControllerConfig config) =>
         this with { BudgetController = config ?? throw new ArgumentNullException(nameof(config)) };
+
+    public LoadGovernorConfig WithPolicy(LoadGovernorPolicy policy) =>
+        this with { Policy = (policy ?? throw new ArgumentNullException(nameof(policy))).Normalized() };
+}
+
+public sealed record RuntimeLoadGovernorObservation(
+    double FrameDurationMs,
+    double BudgetMs,
+    RuntimeDegradationLevel DegradationLevel = RuntimeDegradationLevel.Full,
+    ulong QueueInFlight = 0,
+    int? QueueMaxDepth = null,
+    ulong QueueDroppedTotal = 0,
+    bool ResizeCoalescingActive = false,
+    bool StrictSemanticsViolation = false);
+
+public sealed record RuntimeLoadGovernorSnapshot(
+    RuntimeLoadMode Mode,
+    RuntimeLoadMode ModeBefore,
+    RuntimePressureClass PressureClass,
+    RuntimeWorkDisposition WorkDisposition,
+    string ReasonCode,
+    bool Transition,
+    bool StrictSemanticsPreserved,
+    ulong QueueInFlight,
+    int? QueueMaxDepth,
+    ulong QueueDroppedDelta,
+    bool ResizeCoalescingActive,
+    byte RecoveryIntervalsObserved,
+    byte RecoveryIntervalsRequired,
+    ulong DeferredWorkTotal,
+    ulong CoalescedWorkTotal,
+    ulong DroppedWorkTotal);
+
+public sealed class ConservativeRuntimeLoadGovernor
+{
+    private readonly bool _enabled;
+    private readonly LoadGovernorPolicy _policy;
+    private readonly int _maxQueueDepth;
+    private RuntimeLoadMode _mode = RuntimeLoadMode.Healthy;
+    private byte _recoveryIntervalsObserved;
+    private ulong _lastQueueDropped;
+    private bool _queueBaselineInitialized;
+    private ulong _deferredWorkTotal;
+    private ulong _coalescedWorkTotal;
+    private ulong _droppedWorkTotal;
+
+    public ConservativeRuntimeLoadGovernor(LoadGovernorConfig config, int maxQueueDepth = 0)
+    {
+        ArgumentNullException.ThrowIfNull(config);
+        _enabled = config.Enabled;
+        _policy = config.EffectivePolicy;
+        _maxQueueDepth = Math.Max(maxQueueDepth, 0);
+    }
+
+    public RuntimeLoadMode Mode => _mode;
+
+    public RuntimeLoadGovernorSnapshot Observe(RuntimeLoadGovernorObservation observation)
+    {
+        ArgumentNullException.ThrowIfNull(observation);
+        if (!_enabled)
+        {
+            return Snapshot(
+                RuntimeLoadMode.Healthy,
+                RuntimeLoadMode.Healthy,
+                RuntimePressureClass.SteadyState,
+                RuntimeWorkDisposition.AdmitAll,
+                "governor_disabled",
+                transition: false,
+                strictSemanticsPreserved: true,
+                observation,
+                droppedDelta: 0);
+        }
+
+        var droppedDelta = QueueDroppedDelta(observation.QueueDroppedTotal);
+        var pressure = ClassifyPressure(observation, droppedDelta);
+        var modeBefore = _mode;
+        var reason = ReasonCode(observation, pressure, droppedDelta);
+
+        switch (pressure)
+        {
+            case RuntimePressureClass.Unsafe:
+                _mode = RuntimeLoadMode.Unsafe;
+                _recoveryIntervalsObserved = 0;
+                break;
+            case RuntimePressureClass.HardOverload:
+                _mode = RuntimeLoadMode.Degraded;
+                _recoveryIntervalsObserved = 0;
+                break;
+            case RuntimePressureClass.SoftOverload:
+                if (_mode != RuntimeLoadMode.Degraded)
+                {
+                    _mode = RuntimeLoadMode.Stressed;
+                }
+
+                _recoveryIntervalsObserved = 0;
+                break;
+            default:
+                ObserveSteadyInterval();
+                break;
+        }
+
+        RecordWorkDisposition(observation, droppedDelta);
+        var disposition = DispositionForMode(_mode);
+        var snapshotReason = _mode == RuntimeLoadMode.Recovered
+            ? "recovery_hysteresis_satisfied"
+            : modeBefore == RuntimeLoadMode.Recovered && _mode == RuntimeLoadMode.Healthy
+                ? "recovered_interval_closed"
+                : reason;
+        return Snapshot(
+            _mode,
+            modeBefore,
+            pressure,
+            disposition,
+            snapshotReason,
+            modeBefore != _mode,
+            pressure != RuntimePressureClass.Unsafe,
+            observation,
+            droppedDelta);
+    }
+
+    private ulong QueueDroppedDelta(ulong droppedTotal)
+    {
+        if (!_queueBaselineInitialized)
+        {
+            _queueBaselineInitialized = true;
+            _lastQueueDropped = droppedTotal;
+            return 0;
+        }
+
+        var delta = droppedTotal >= _lastQueueDropped ? droppedTotal - _lastQueueDropped : 0;
+        _lastQueueDropped = droppedTotal;
+        return delta;
+    }
+
+    private RuntimePressureClass ClassifyPressure(RuntimeLoadGovernorObservation observation, ulong droppedDelta)
+    {
+        if (observation.StrictSemanticsViolation)
+        {
+            return RuntimePressureClass.Unsafe;
+        }
+
+        if (droppedDelta > 0 ||
+            QueueRatio(observation.QueueInFlight) is { } degradedRatio && degradedRatio >= _policy.DegradedQueueWatermark ||
+            observation.DegradationLevel > RuntimeDegradationLevel.Full)
+        {
+            return RuntimePressureClass.HardOverload;
+        }
+
+        if (QueueRatio(observation.QueueInFlight) is { } stressedRatio && stressedRatio >= _policy.StressedQueueWatermark ||
+            observation.ResizeCoalescingActive ||
+            observation.FrameDurationMs > Math.Max(observation.BudgetMs, 0.001) * _policy.BudgetOverrunSoftRatio)
+        {
+            return RuntimePressureClass.SoftOverload;
+        }
+
+        return RuntimePressureClass.SteadyState;
+    }
+
+    private void ObserveSteadyInterval()
+    {
+        switch (_mode)
+        {
+            case RuntimeLoadMode.Degraded:
+                _recoveryIntervalsObserved = (byte)Math.Min(_recoveryIntervalsObserved + 1, _policy.RecoveryIntervals);
+                if (_recoveryIntervalsObserved >= _policy.RecoveryIntervals)
+                {
+                    _mode = RuntimeLoadMode.Recovered;
+                }
+                break;
+            case RuntimeLoadMode.Recovered:
+            case RuntimeLoadMode.Stressed:
+                _mode = RuntimeLoadMode.Healthy;
+                _recoveryIntervalsObserved = 0;
+                break;
+            case RuntimeLoadMode.Healthy:
+                _recoveryIntervalsObserved = 0;
+                break;
+        }
+    }
+
+    private void RecordWorkDisposition(RuntimeLoadGovernorObservation observation, ulong droppedDelta)
+    {
+        if (droppedDelta > 0)
+        {
+            _droppedWorkTotal += droppedDelta;
+        }
+
+        if (_mode == RuntimeLoadMode.Stressed && observation.ResizeCoalescingActive)
+        {
+            _coalescedWorkTotal++;
+        }
+        else if (_mode == RuntimeLoadMode.Degraded)
+        {
+            _deferredWorkTotal++;
+            if (observation.ResizeCoalescingActive)
+            {
+                _coalescedWorkTotal++;
+            }
+        }
+    }
+
+    private string ReasonCode(RuntimeLoadGovernorObservation observation, RuntimePressureClass pressure, ulong droppedDelta) =>
+        pressure switch
+        {
+            RuntimePressureClass.Unsafe => "strict_semantics_violation",
+            RuntimePressureClass.HardOverload when droppedDelta > 0 => "effect_queue_drop",
+            RuntimePressureClass.HardOverload when QueueRatio(observation.QueueInFlight) is { } ratio && ratio >= _policy.DegradedQueueWatermark => "queue_degraded_watermark",
+            RuntimePressureClass.HardOverload => "budget_degradation_active",
+            RuntimePressureClass.SoftOverload when QueueRatio(observation.QueueInFlight) is { } ratio && ratio >= _policy.StressedQueueWatermark => "queue_stressed_watermark",
+            RuntimePressureClass.SoftOverload when observation.ResizeCoalescingActive => "resize_coalescing_active",
+            RuntimePressureClass.SoftOverload => "frame_budget_overrun",
+            RuntimePressureClass.SteadyState when _mode == RuntimeLoadMode.Degraded => "recovery_hysteresis_pending",
+            _ => "steady_state"
+        };
+
+    private double? QueueRatio(ulong inFlight) =>
+        _maxQueueDepth > 0 ? inFlight / (double)_maxQueueDepth : null;
+
+    private static RuntimeWorkDisposition DispositionForMode(RuntimeLoadMode mode) =>
+        mode switch
+        {
+            RuntimeLoadMode.Stressed => RuntimeWorkDisposition.CoalesceVisibleDeferBackground,
+            RuntimeLoadMode.Degraded => RuntimeWorkDisposition.DeferBackgroundDropBestEffort,
+            RuntimeLoadMode.Recovered => RuntimeWorkDisposition.ReadmitAfterHysteresis,
+            RuntimeLoadMode.Unsafe => RuntimeWorkDisposition.FailFastStrictGuarantee,
+            _ => RuntimeWorkDisposition.AdmitAll
+        };
+
+    private RuntimeLoadGovernorSnapshot Snapshot(
+        RuntimeLoadMode mode,
+        RuntimeLoadMode modeBefore,
+        RuntimePressureClass pressureClass,
+        RuntimeWorkDisposition disposition,
+        string reasonCode,
+        bool transition,
+        bool strictSemanticsPreserved,
+        RuntimeLoadGovernorObservation observation,
+        ulong droppedDelta) =>
+        new(
+            mode,
+            modeBefore,
+            pressureClass,
+            disposition,
+            reasonCode,
+            transition,
+            strictSemanticsPreserved,
+            observation.QueueInFlight,
+            observation.QueueMaxDepth ?? (_maxQueueDepth > 0 ? _maxQueueDepth : null),
+            droppedDelta,
+            observation.ResizeCoalescingActive,
+            _recoveryIntervalsObserved,
+            _policy.RecoveryIntervals,
+            _deferredWorkTotal,
+            _coalescedWorkTotal,
+            _droppedWorkTotal);
 }
 
 public sealed record LoadGovernorDecision(

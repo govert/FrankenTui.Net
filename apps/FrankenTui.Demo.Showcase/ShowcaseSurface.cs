@@ -71,10 +71,17 @@ internal static class ShowcaseSurface
         new StackWidget(
             LayoutDirection.Vertical,
             [
-                (LayoutConstraint.Fixed((ushort)1), BuildAppNavigation()),
-                (LayoutConstraint.Fill(), BuildBody(state)),
+                (LayoutConstraint.Fixed((ushort)1), BuildScreenTabs(state)),
+                (LayoutConstraint.Fill(), BuildContentFrame(state)),
                 (LayoutConstraint.Fixed((ushort)1), BuildStatus(state))
             ]);
+
+    private static IWidget BuildContentFrame(ShowcaseDemoState state) =>
+        new PanelWidget
+        {
+            Title = state.CurrentScreen.Title,
+            Child = BuildBody(state)
+        };
 
     public static string BuildHelpText() =>
         """
@@ -273,26 +280,23 @@ internal static class ShowcaseSurface
     private static IWidget BuildCategoryTabs(ShowcaseDemoState state) =>
         new TabsWidget
         {
-            Tabs = ShowcaseCatalog.Categories.Select(static category => category.ToString()).ToArray(),
+            Tabs = ShowcaseCatalog.Categories.Select(ShowcaseCatalog.CategoryShortLabel).ToArray(),
             SelectedIndex = Array.IndexOf(ShowcaseCatalog.Categories.ToArray(), state.CurrentScreen.Category)
         };
 
     private static IWidget BuildScreenTabs(ShowcaseDemoState state)
     {
-        var window = ShowcaseCatalog.WindowAround(state.CurrentScreenNumber);
-        var tabs = window
-            .Select(screen => screen.Number == state.CurrentScreenNumber
-                ? $"{screen.Number}:{screen.ShortLabel}"
-                : $"{screen.Number}")
+        var tabs = ShowcaseCatalog.Screens
+            .Select((screen, index) =>
+            {
+                var keyLabel = index < 9 ? $"{index + 1}" : index == 9 ? "0" : "-";
+                return $"{keyLabel}: {screen.ShortLabel}";
+            })
             .ToArray();
-        var selectedIndex = window
-            .Select((screen, index) => (screen, index))
-            .First(candidate => candidate.screen.Number == state.CurrentScreenNumber)
-            .index;
         return new TabsWidget
         {
             Tabs = tabs,
-            SelectedIndex = selectedIndex
+            SelectedIndex = ShowcaseCatalog.ClampScreenNumber(state.CurrentScreenNumber) - 1
         };
     }
 
@@ -301,7 +305,14 @@ internal static class ShowcaseSurface
 
     private static IWidget BuildStatus(ShowcaseDemoState state)
     {
-        var details = $" {state.CurrentScreen.Title} [{state.CurrentScreenNumber}/{ShowcaseCatalog.Screens.Count}] [h] [cmd] [p] [d]   Tab/Shift+Tab: next/prev    0x0 00:00";
+        var help = state.HelpVisible ? "[H]" : "[h]";
+        var palette = state.Session.CommandPalette.IsOpen ? "[Cmd]" : "[cmd]";
+        var perf = state.PerfHudVisible ? "[P]" : "[p]";
+        var debug = state.DebugVisible ? "[D]" : "[d]";
+        var mouseMode = state.InlineMode ? "inline" : "alt";
+        var mouse = state.MouseCaptureEnabled ? $"Mouse: AUTO ({mouseMode}:ON)" : $"Mouse: AUTO ({mouseMode}:OFF)";
+        var a11y = StatusA11yLabel(state);
+        var details = $" {state.CurrentScreen.Title} [{state.CurrentScreenNumber}/{ShowcaseCatalog.Screens.Count}]  default {help} {palette} {perf} {debug}  {mouse}{a11y}  Tab/Shift+Tab: next/prev    0x0 00:00";
         if (state.TourActive)
         {
             details += $" | tour {(state.TourPaused ? "paused" : "live")} @{state.TourSpeed:0.##}x";
@@ -318,6 +329,27 @@ internal static class ShowcaseSurface
         }
 
         return new ParagraphWidget(details);
+    }
+
+    private static string StatusA11yLabel(ShowcaseDemoState state)
+    {
+        var flags = new List<string>(3);
+        if (state.A11yHighContrast)
+        {
+            flags.Add("HC");
+        }
+
+        if (state.A11yReducedMotion)
+        {
+            flags.Add("RM");
+        }
+
+        if (state.A11yLargeText)
+        {
+            flags.Add("LT");
+        }
+
+        return flags.Count == 0 ? string.Empty : $" A11y:{string.Join(" ", flags)}";
     }
 
     private static string OverlayList(ShowcaseDemoState state)
@@ -436,11 +468,14 @@ internal static class ShowcaseSurface
                 {
                     Items =
                     [
-                        "Guided tour + screen tabs",
-                        "Command palette overlay",
-                        "Mermaid / markdown / macro surfaces",
-                        "Pane workspace and operator tools",
-                        "Determinism and runtime evidence panels"
+                        "Visual Effects canvas",
+                        "Data Viz charts",
+                        "Code Explorer panes",
+                        "Performance metrics",
+                        "Layout Lab workspace",
+                        "Drag & Drop lab",
+                        "Action Timeline",
+                        "Markdown rich text"
                     ]
                 }
             });
@@ -1982,10 +2017,10 @@ internal static class ShowcaseSurface
             "Spawned: Initial Setup\nStarted: Initial Setup\nStarted: Data Sync\nScheduler: SRPT\nAging: ON\nCanceled: Batch Backup #8\nRetrying: Full Deploy #7");
         var evidence = Panel(
             "Policy + Evidence",
-            "Policies: FIFO, SJF, SRPT, Smith, Priority, RoundRobin\nAging formula: effective_priority = priority + aging_factor * wait_time\nInvariants: bounded_concurrency, bounded_progress, terminal_stability, monotonic_ids, bounded_wait\nMetrics: tasks_scheduled, tasks_completed, mean_wait, mean_completion, max_wait, aging_boosts_applied");
+            "Policies: FIFO, SJF, SRPT, Smith, Priority, RoundRobin\nSRPT theorem: minimizes E[T] (mean sojourn time)\nAging formula: effective_priority = priority + aging_factor * wait_time\nInvariants: bounded_concurrency, bounded_progress, terminal_stability, monotonic_ids, bounded_wait\nMetrics: tasks_scheduled, tasks_completed, mean_wait, mean_completion, max_wait, aging_boosts_applied");
         var hazard = Panel(
             "Hazard + Diagnostics",
-            "Hazard: base=0.001 factor=0.1 exponent=2.0 threshold=1.0\nDecision: loss_continue vs loss_cancel, bayes_factor, recommend_cancel\nJSONL: state_transition, scheduling_decision, policy_change, aging_toggle, invariant_check, starvation_warning, metrics_snapshot, cancellation_decision\nMouse: Click selects task row; Wheel scrolls task list");
+            "Hazard: base=0.001 factor=0.1 exponent=2.0 threshold=1.0\nExpected loss tuple: (E[Loss_continue], E[Loss_cancel], recommendation)\nDecision: loss_continue vs loss_cancel, bayes_factor, recommend_cancel\nJSONL: state_transition, scheduling_decision, policy_change, aging_toggle, invariant_check, starvation_warning, metrics_snapshot, cancellation_decision\nMouse: Click selects task row; Wheel scrolls task list");
 
         return new StackWidget(
             LayoutDirection.Vertical,

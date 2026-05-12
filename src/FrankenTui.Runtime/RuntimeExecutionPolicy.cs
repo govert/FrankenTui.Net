@@ -7,7 +7,8 @@ public sealed record RuntimeExecutionPolicy(
     bool PersistStateSnapshots = false,
     TelemetryConfig? Telemetry = null,
     LoadGovernorConfig? LoadGovernor = null,
-    RuntimePolicyConfig? PolicyConfig = null)
+    RuntimePolicyConfig? PolicyConfig = null,
+    RuntimeEffectQueueConfig? EffectQueue = null)
 {
     public static RuntimeExecutionPolicy Default { get; } = new();
 
@@ -16,4 +17,6 @@ public sealed record RuntimeExecutionPolicy(
     public LoadGovernorConfig EffectiveLoadGovernor => LoadGovernor ?? EffectivePolicyConfig.ToLoadGovernorConfig();
 
     public DegradationCascadeConfig EffectiveDegradationCascade => EffectivePolicyConfig.ToCascadeConfig();
+
+    public RuntimeEffectQueueConfig EffectiveEffectQueue => (EffectQueue ?? RuntimeEffectQueueConfig.Default).Normalized();
 }

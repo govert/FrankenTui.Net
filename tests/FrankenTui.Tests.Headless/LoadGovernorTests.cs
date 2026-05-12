@@ -17,7 +17,119 @@ public sealed class LoadGovernorTests
         Assert.Equal(0.5, config.EffectiveBudgetController.EffectivePid.Kp);
         Assert.Equal(0.05, config.EffectiveBudgetController.EffectiveEProcess.Alpha);
         Assert.Equal((uint)10, config.EffectiveBudgetController.EffectiveEProcess.WarmupFrames);
+        Assert.Equal(0.5, config.EffectivePolicy.StressedQueueWatermark);
+        Assert.Equal(0.8, config.EffectivePolicy.DegradedQueueWatermark);
+        Assert.Equal(0.25, config.EffectivePolicy.RecoveryQueueWatermark);
+        Assert.Equal((byte)3, config.EffectivePolicy.RecoveryIntervals);
+        Assert.Equal(1.0, config.EffectivePolicy.BudgetOverrunSoftRatio);
         Assert.False(LoadGovernorConfig.Disabled.Enabled);
+    }
+
+    [Fact]
+    public void LoadGovernorStableRuntimeModeLabelsMatchUpstreamContract()
+    {
+        Assert.Equal("healthy", RuntimeLoadMode.Healthy.Label());
+        Assert.Equal("stressed", RuntimeLoadMode.Stressed.Label());
+        Assert.Equal("degraded", RuntimeLoadMode.Degraded.Label());
+        Assert.Equal("recovered", RuntimeLoadMode.Recovered.Label());
+        Assert.Equal("unsafe", RuntimeLoadMode.Unsafe.Label());
+        Assert.Equal("steady_state", RuntimePressureClass.SteadyState.Label());
+        Assert.Equal("soft_overload", RuntimePressureClass.SoftOverload.Label());
+        Assert.Equal("hard_overload", RuntimePressureClass.HardOverload.Label());
+        Assert.Equal("unsafe", RuntimePressureClass.Unsafe.Label());
+        Assert.Equal("admit_all", RuntimeWorkDisposition.AdmitAll.Label());
+        Assert.Equal("coalesce_visible_defer_background", RuntimeWorkDisposition.CoalesceVisibleDeferBackground.Label());
+        Assert.Equal("defer_background_drop_best_effort", RuntimeWorkDisposition.DeferBackgroundDropBestEffort.Label());
+        Assert.Equal("readmit_after_hysteresis", RuntimeWorkDisposition.ReadmitAfterHysteresis.Label());
+        Assert.Equal("fail_fast_strict_guarantee", RuntimeWorkDisposition.FailFastStrictGuarantee.Label());
+    }
+
+    [Fact]
+    public void LoadGovernorPolicyNormalizesWatermarksLikeUpstream()
+    {
+        var policy = new LoadGovernorPolicy(
+            StressedQueueWatermark: double.NaN,
+            DegradedQueueWatermark: 0.1,
+            RecoveryQueueWatermark: 0.9,
+            RecoveryIntervals: 0,
+            BudgetOverrunSoftRatio: -1).Normalized();
+
+        Assert.Equal(0.9, policy.RecoveryQueueWatermark);
+        Assert.Equal(0.9, policy.StressedQueueWatermark);
+        Assert.Equal(0.9, policy.DegradedQueueWatermark);
+        Assert.Equal((byte)1, policy.RecoveryIntervals);
+        Assert.Equal(1.0, policy.BudgetOverrunSoftRatio);
+
+        var config = LoadGovernorConfig.Default.WithPolicy(policy);
+        Assert.Equal(policy, config.EffectivePolicy);
+    }
+
+    [Fact]
+    public void ConservativeRuntimeLoadGovernorClassifiesQueueWatermarksAndRecovery()
+    {
+        var governor = new ConservativeRuntimeLoadGovernor(
+            LoadGovernorConfig.Default.WithPolicy(new LoadGovernorPolicy(RecoveryIntervals: 2)),
+            maxQueueDepth: 10);
+
+        var stressed = governor.Observe(new RuntimeLoadGovernorObservation(10, 16, QueueInFlight: 5, QueueMaxDepth: 10));
+        Assert.Equal(RuntimeLoadMode.Stressed, stressed.Mode);
+        Assert.Equal(RuntimePressureClass.SoftOverload, stressed.PressureClass);
+        Assert.Equal(RuntimeWorkDisposition.CoalesceVisibleDeferBackground, stressed.WorkDisposition);
+        Assert.Equal("queue_stressed_watermark", stressed.ReasonCode);
+
+        var degraded = governor.Observe(new RuntimeLoadGovernorObservation(10, 16, QueueInFlight: 8, QueueMaxDepth: 10));
+        Assert.Equal(RuntimeLoadMode.Degraded, degraded.Mode);
+        Assert.Equal(RuntimePressureClass.HardOverload, degraded.PressureClass);
+        Assert.Equal(RuntimeWorkDisposition.DeferBackgroundDropBestEffort, degraded.WorkDisposition);
+        Assert.Equal("queue_degraded_watermark", degraded.ReasonCode);
+
+        var pending = governor.Observe(new RuntimeLoadGovernorObservation(10, 16, QueueInFlight: 0, QueueMaxDepth: 10));
+        Assert.Equal(RuntimeLoadMode.Degraded, pending.Mode);
+        Assert.Equal("recovery_hysteresis_pending", pending.ReasonCode);
+        Assert.Equal((byte)1, pending.RecoveryIntervalsObserved);
+
+        var recovered = governor.Observe(new RuntimeLoadGovernorObservation(10, 16, QueueInFlight: 0, QueueMaxDepth: 10));
+        Assert.Equal(RuntimeLoadMode.Recovered, recovered.Mode);
+        Assert.Equal(RuntimeWorkDisposition.ReadmitAfterHysteresis, recovered.WorkDisposition);
+        Assert.Equal("recovery_hysteresis_satisfied", recovered.ReasonCode);
+
+        var healthy = governor.Observe(new RuntimeLoadGovernorObservation(10, 16, QueueInFlight: 0, QueueMaxDepth: 10));
+        Assert.Equal(RuntimeLoadMode.Healthy, healthy.Mode);
+        Assert.Equal("recovered_interval_closed", healthy.ReasonCode);
+    }
+
+    [Fact]
+    public void ConservativeRuntimeLoadGovernorStrictSemanticsFailureIsTerminal()
+    {
+        var governor = new ConservativeRuntimeLoadGovernor(LoadGovernorConfig.Default, maxQueueDepth: 10);
+
+        var unsafeSnapshot = governor.Observe(new RuntimeLoadGovernorObservation(10, 16, StrictSemanticsViolation: true));
+        Assert.Equal(RuntimeLoadMode.Unsafe, unsafeSnapshot.Mode);
+        Assert.Equal(RuntimePressureClass.Unsafe, unsafeSnapshot.PressureClass);
+        Assert.Equal(RuntimeWorkDisposition.FailFastStrictGuarantee, unsafeSnapshot.WorkDisposition);
+        Assert.Equal("strict_semantics_violation", unsafeSnapshot.ReasonCode);
+        Assert.False(unsafeSnapshot.StrictSemanticsPreserved);
+
+        var steady = governor.Observe(new RuntimeLoadGovernorObservation(10, 16));
+        Assert.Equal(RuntimeLoadMode.Unsafe, steady.Mode);
+        Assert.Equal(RuntimeWorkDisposition.FailFastStrictGuarantee, steady.WorkDisposition);
+    }
+
+    [Fact]
+    public void ConservativeRuntimeLoadGovernorTracksDroppedAndCoalescedWork()
+    {
+        var governor = new ConservativeRuntimeLoadGovernor(LoadGovernorConfig.Default, maxQueueDepth: 10);
+
+        governor.Observe(new RuntimeLoadGovernorObservation(10, 16, QueueDroppedTotal: 2));
+        var dropped = governor.Observe(new RuntimeLoadGovernorObservation(10, 16, QueueDroppedTotal: 5));
+        Assert.Equal(RuntimePressureClass.HardOverload, dropped.PressureClass);
+        Assert.Equal("effect_queue_drop", dropped.ReasonCode);
+        Assert.Equal((ulong)3, dropped.QueueDroppedDelta);
+        Assert.Equal((ulong)3, dropped.DroppedWorkTotal);
+
+        var coalesced = governor.Observe(new RuntimeLoadGovernorObservation(20, 16, ResizeCoalescingActive: true, QueueDroppedTotal: 5));
+        Assert.Equal(RuntimePressureClass.SoftOverload, coalesced.PressureClass);
+        Assert.True(coalesced.CoalescedWorkTotal >= 1);
     }
 
     [Fact]
@@ -58,6 +170,12 @@ public sealed class LoadGovernorTests
         Assert.Contains(decisions, decision => decision.PidOutput > 0);
         Assert.True(decisions.Last().EProcessValue > 1);
         Assert.False(decisions.Last().Warmup);
+        Assert.Equal("degraded", simulator.Runtime.FrameStats.RuntimeMode);
+        Assert.Equal("hard_overload", simulator.Runtime.FrameStats.RuntimePressureClass);
+        Assert.Equal("defer_background_drop_best_effort", simulator.Runtime.FrameStats.RuntimeWorkDisposition);
+        Assert.Contains(
+            simulator.Runtime.FrameStats.RuntimeGovernorReason,
+            new[] { "budget_degradation_active", "effect_queue_drop" });
     }
 
     [Fact]
@@ -141,6 +259,12 @@ public sealed class LoadGovernorTests
         Assert.Contains(item.Fields, static field => field.Key == "e_value");
         Assert.Contains(item.Fields, static field => field.Key == "evidence_threshold");
         Assert.Contains(item.Fields, static field => field.Key == "transition_correlation_id" && field.Value != "0");
+        Assert.Contains(item.Fields, static field => field.Key == "runtime_mode" && field.Value == "degraded");
+        Assert.Contains(item.Fields, static field => field.Key == "pressure_class" && field.Value == "hard_overload");
+        Assert.Contains(item.Fields, static field => field.Key == "work_disposition" && field.Value == "defer_background_drop_best_effort");
+        Assert.Contains(item.Fields, static field => field.Key == "governor_reason" && field.Value == "budget_degradation_active");
+        Assert.Contains(item.Fields, static field => field.Key == "strict_semantics_preserved" && field.Value == "true");
+        Assert.Contains(item.Fields, static field => field.Key == "queue_in_flight");
         Assert.Contains(item.Fields, static field => field.Key == "conformal_bucket" && field.Value == "altscreen:full:8");
         Assert.Contains(item.Fields, static field => field.Key == "conformal_upper_us");
         Assert.Contains(item.Fields, static field => field.Key == "conformal_budget_us");

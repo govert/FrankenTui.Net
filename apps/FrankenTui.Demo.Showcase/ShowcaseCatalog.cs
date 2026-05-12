@@ -90,6 +90,13 @@ internal static class ShowcaseCatalog
     public static int FirstInCategory(ShowcaseScreenCategory category) =>
         Screens.First(screen => screen.Category == category).Number;
 
+    public static string CategoryShortLabel(ShowcaseScreenCategory category) =>
+        category switch
+        {
+            ShowcaseScreenCategory.Interaction => "Interact",
+            _ => category.ToString()
+        };
+
     public static IReadOnlyList<ShowcaseScreen> WindowAround(int currentScreenNumber, int maxItems = 8)
     {
         var clamped = ClampScreenNumber(currentScreenNumber);

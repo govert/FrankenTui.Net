@@ -15,6 +15,8 @@ public sealed class ShowcaseEvidenceJsonlWriter : IDisposable
 
     private readonly StreamWriter _writer;
     private long _sequence;
+    private string? _hoverHitKey;
+    private TerminalMouseButton? _suppressNextUpButton;
 
     private ShowcaseEvidenceJsonlWriter(string path)
     {
@@ -235,7 +237,80 @@ public sealed class ShowcaseEvidenceJsonlWriter : IDisposable
         }
 
         var gesture = mouseEvent.Gesture;
-        var action = ClassifyMouseAction(gesture, before, after);
+        var hitBefore = ShowcaseFrameHitRegistry.HitTest(before, gesture.Column, gesture.Row);
+        var hoverChanged = false;
+        if (gesture.Kind is TerminalMouseKind.Move or TerminalMouseKind.Drag)
+        {
+            var nextHoverHitKey = HoverHitKey(hitBefore);
+            if (_hoverHitKey != nextHoverHitKey)
+            {
+                hoverChanged = true;
+                _hoverHitKey = nextHoverHitKey;
+                WriteMouseEventRecord(
+                    "hover_change",
+                    trigger,
+                    options,
+                    stats,
+                    stepIndex,
+                    frame,
+                    gesture,
+                    before,
+                    after,
+                    hitBefore);
+            }
+        }
+
+        if (gesture.Kind == TerminalMouseKind.Move && hoverChanged && IsChromeTarget(hitBefore))
+        {
+            return;
+        }
+
+        var suppressUp = !before.Session.CommandPalette.IsOpen &&
+            gesture.Kind == TerminalMouseKind.Up &&
+            _suppressNextUpButton == gesture.Button;
+        if (suppressUp)
+        {
+            _suppressNextUpButton = null;
+        }
+
+        if (!before.Session.CommandPalette.IsOpen &&
+            gesture.Kind == TerminalMouseKind.Down &&
+            gesture.Button == TerminalMouseButton.Left &&
+            IsChromeOrDashboardLinkTarget(before, hitBefore))
+        {
+            _suppressNextUpButton = gesture.Button;
+            WriteMouseEventRecord(
+                "down_click_fallback",
+                trigger,
+                options,
+                stats,
+                stepIndex,
+                frame,
+                gesture,
+                before,
+                after,
+                ShowcaseFrameHitRegistry.Resolve(gesture, before, before));
+        }
+
+        var action = suppressUp
+            ? "up_suppressed_after_down_click"
+            : ClassifyMouseAction(gesture, before, after);
+        var hit = ShowcaseFrameHitRegistry.Resolve(gesture, before, after);
+        WriteMouseEventRecord(action, trigger, options, stats, stepIndex, frame, gesture, before, after, hit);
+    }
+
+    private void WriteMouseEventRecord(
+        string action,
+        string trigger,
+        ShowcaseCliOptions options,
+        RuntimeFrameStats stats,
+        int stepIndex,
+        int frame,
+        MouseGesture gesture,
+        ShowcaseDemoState before,
+        ShowcaseDemoState after,
+        ShowcaseHitTestResult hit)
+    {
         var targetChanged = before.CurrentScreenNumber != after.CurrentScreenNumber;
         var fields = BuildStateFields(after) as Dictionary<string, object?> ?? [];
         fields["mouse_trigger"] = trigger;
@@ -255,7 +330,15 @@ public sealed class ShowcaseEvidenceJsonlWriter : IDisposable
         fields["kind"] = MouseKindLabel(gesture);
         fields["x"] = gesture.Column;
         fields["y"] = gesture.Row;
-        fields["hit_id"] = ResolveLocalMouseHitId(gesture, before, after);
+        fields["hit_id"] = hit.LocalHitId;
+        fields["hit_raw_id"] = hit.UpstreamHitId;
+        fields["hit_layer"] = hit.Layer.ToString().ToLowerInvariant();
+        fields["hit_target_screen_number"] = hit.TargetScreenNumber;
+        fields["hit_target_category"] = hit.TargetCategory?.ToString();
+        fields["target_id"] = hit.Layer == ShowcaseHitLayer.Content ? hit.UpstreamHitId : null;
+        fields["link_id"] = hit.Layer == ShowcaseHitLayer.Link && hit.UpstreamHitId is { } linkRawId
+            ? linkRawId - ShowcaseFrameHitRegistry.LinkHitBase + 1
+            : null;
         fields["action"] = action;
         fields["target_screen"] = targetChanged ? after.CurrentScreen.Title : "none";
         fields["current_screen"] = before.CurrentScreen.Title;
@@ -577,7 +660,7 @@ public sealed class ShowcaseEvidenceJsonlWriter : IDisposable
     {
         if (before.Session.CommandPalette.IsOpen)
         {
-            return "palette_mouse";
+            return gesture.Kind == TerminalMouseKind.Scroll ? "palette_scroll" : "palette_mouse";
         }
 
         if (before.CurrentScreenNumber == 39 &&
@@ -596,6 +679,146 @@ public sealed class ShowcaseEvidenceJsonlWriter : IDisposable
             }
 
             return "palette_lab_mouse";
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(before, gesture.Column, gesture.Row);
+        if (IsNonLeftChromeOrPaneClickTarget(gesture, before, hit))
+        {
+            return gesture.Kind == TerminalMouseKind.Up
+                ? "click_non_left"
+                : "down_non_left_click_target";
+        }
+
+        if (gesture.Kind == TerminalMouseKind.Drag)
+        {
+            return "drag_forward";
+        }
+
+        if (hit.Layer == ShowcaseHitLayer.Overlay)
+        {
+            if (before.CurrentScreenNumber == 1 &&
+                !before.TourActive &&
+                before.TourStartScreen != after.TourStartScreen &&
+                hit.UpstreamHitId == ShowcaseFrameHitRegistry.OverlayTour)
+            {
+                return after.TourStartScreen > before.TourStartScreen
+                    ? "tour_landing_step_next"
+                    : "tour_landing_step_prev";
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Scroll)
+            {
+                return "scroll_forward";
+            }
+
+            return hit.UpstreamHitId switch
+            {
+                ShowcaseFrameHitRegistry.OverlayHelpClose or ShowcaseFrameHitRegistry.OverlayHelpContent
+                    when before.HelpVisible != after.HelpVisible => "overlay_help_close",
+                ShowcaseFrameHitRegistry.OverlayTour when !before.TourActive && after.TourActive => "overlay_tour_start",
+                ShowcaseFrameHitRegistry.OverlayTour when before.TourActive && !after.TourActive => "overlay_tour_click",
+                ShowcaseFrameHitRegistry.OverlayTour => "overlay_tour_click",
+                ShowcaseFrameHitRegistry.OverlayA11y when before.A11yPanelVisible != after.A11yPanelVisible => "overlay_a11y_close",
+                ShowcaseFrameHitRegistry.OverlayPerfHud when before.PerfHudVisible != after.PerfHudVisible => "overlay_perf_close",
+                ShowcaseFrameHitRegistry.OverlayEvidence when before.EvidenceLedgerVisible != after.EvidenceLedgerVisible => "overlay_evidence_close",
+                ShowcaseFrameHitRegistry.OverlayDebug when before.DebugVisible != after.DebugVisible => "overlay_debug_close",
+                _ => "overlay_unknown"
+            };
+        }
+
+        if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 43)
+        {
+            if (gesture.Kind == TerminalMouseKind.Scroll && hit.LocalHitId == "live_markdown:preview")
+            {
+                return gesture.Button == TerminalMouseButton.WheelUp
+                    ? "live_markdown_preview_scroll_up"
+                    : "live_markdown_preview_scroll_down";
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Left)
+            {
+                return hit.LocalHitId switch
+                {
+                    "live_markdown:search" => "live_markdown_focus_search",
+                    "live_markdown:editor" => "live_markdown_focus_editor",
+                    "live_markdown:preview" => "live_markdown_focus_preview",
+                    _ => "live_markdown_hit_test"
+                };
+            }
+
+            return "live_markdown_hit_test";
+        }
+
+        if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 44)
+        {
+            if (gesture.Kind == TerminalMouseKind.Scroll)
+            {
+                return gesture.Button == TerminalMouseButton.WheelUp
+                    ? "drag_drop_scroll_up"
+                    : "drag_drop_scroll_down";
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Right)
+            {
+                return "drag_drop_context_action";
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Left)
+            {
+                return hit.LocalHitId.StartsWith("drag_drop:tab:", StringComparison.Ordinal)
+                    ? "drag_drop_tab_select"
+                    : "drag_drop_item_select";
+            }
+
+            return "drag_drop_hit_test";
+        }
+
+        if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 42)
+        {
+            return gesture.Kind switch
+            {
+                TerminalMouseKind.Down when gesture.Button == TerminalMouseButton.Left => "kanban_drag_start",
+                TerminalMouseKind.Drag when gesture.Button == TerminalMouseButton.Left => "kanban_drag_move",
+                TerminalMouseKind.Up when gesture.Button == TerminalMouseButton.Left => "kanban_drop",
+                _ => "kanban_hit_test"
+            };
+        }
+
+        if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 26)
+        {
+            return gesture.Kind switch
+            {
+                TerminalMouseKind.Down when gesture.Button == TerminalMouseButton.Left => "target_click",
+                TerminalMouseKind.Move => "mouse_move",
+                TerminalMouseKind.Drag => "mouse_drag",
+                TerminalMouseKind.Scroll => "mouse_scroll",
+                _ => "hit_test"
+            };
+        }
+
+        if (hit.Layer == ShowcaseHitLayer.Link)
+        {
+            return gesture.Kind switch
+            {
+                TerminalMouseKind.Down when gesture.Button == TerminalMouseButton.Left => "mouse_select",
+                TerminalMouseKind.Up when gesture.Button == TerminalMouseButton.Left => "mouse_activate",
+                TerminalMouseKind.Move or TerminalMouseKind.Drag => "link_hover",
+                _ => "link_forward"
+            };
+        }
+
+        if (hit.Layer == ShowcaseHitLayer.StatusToggle && hit.UpstreamHitId is { } statusRawId)
+        {
+            return statusRawId switch
+            {
+                ShowcaseFrameHitRegistry.StatusHelpToggle when before.HelpVisible != after.HelpVisible => "status_toggle_help",
+                ShowcaseFrameHitRegistry.StatusPaletteToggle when before.Session.CommandPalette.IsOpen != after.Session.CommandPalette.IsOpen => "status_toggle_palette",
+                ShowcaseFrameHitRegistry.StatusA11yToggle when before.A11yPanelVisible != after.A11yPanelVisible => "status_toggle_a11y",
+                ShowcaseFrameHitRegistry.StatusPerfToggle when before.PerfHudVisible != after.PerfHudVisible => "status_toggle_perf",
+                ShowcaseFrameHitRegistry.StatusDebugToggle when before.DebugVisible != after.DebugVisible => "status_toggle_debug",
+                ShowcaseFrameHitRegistry.StatusMouseToggle when before.MouseCaptureEnabled != after.MouseCaptureEnabled => "status_toggle_mouse",
+                _ => "status_unknown"
+            };
         }
 
         if (before.MouseCaptureEnabled != after.MouseCaptureEnabled)
@@ -633,15 +856,6 @@ public sealed class ShowcaseEvidenceJsonlWriter : IDisposable
             return "status_toggle_palette";
         }
 
-        if (before.CurrentScreenNumber == 1 &&
-            !before.TourActive &&
-            before.TourStartScreen != after.TourStartScreen)
-        {
-            return after.TourStartScreen > before.TourStartScreen
-                ? "tour_landing_step_next"
-                : "tour_landing_step_prev";
-        }
-
         if (!before.TourActive && after.TourActive)
         {
             return "overlay_tour_start";
@@ -652,21 +866,25 @@ public sealed class ShowcaseEvidenceJsonlWriter : IDisposable
             return "overlay_tour_click";
         }
 
-        if (before.CurrentScreenNumber == 2 && after.CurrentScreenNumber != before.CurrentScreenNumber)
-        {
-            return "pane_link_switch_screen";
-        }
-
         if (before.CurrentScreenNumber != after.CurrentScreenNumber)
         {
-            if (gesture.Kind == TerminalMouseKind.Scroll && gesture.Row == 1)
+            var navigationHit = ShowcaseFrameHitRegistry.HitTest(before, gesture.Column, gesture.Row);
+            if (gesture.Kind == TerminalMouseKind.Scroll && navigationHit.Layer == ShowcaseHitLayer.Tab)
             {
                 return gesture.Button == TerminalMouseButton.WheelUp
                     ? "scroll_prev_tab"
                     : "scroll_next_tab";
             }
 
-            return gesture.Row == 0 ? "category_switch_screen" : "switch_screen";
+            return "switch_screen";
+        }
+
+        if (gesture.Button == TerminalMouseButton.Left &&
+            gesture.Kind is TerminalMouseKind.Down or TerminalMouseKind.Up &&
+            hit.Layer is ShowcaseHitLayer.Tab or ShowcaseHitLayer.Category &&
+            hit.TargetScreenNumber == before.CurrentScreenNumber)
+        {
+            return "tab_no_change";
         }
 
         if (gesture.Kind == TerminalMouseKind.Scroll)
@@ -683,6 +901,34 @@ public sealed class ShowcaseEvidenceJsonlWriter : IDisposable
             _ => "mouse_forward"
         };
     }
+
+    private static string? HoverHitKey(ShowcaseHitTestResult hit) =>
+        hit.LocalHitId == "none" && hit.UpstreamHitId is null
+            ? null
+            : hit.UpstreamHitId?.ToString(CultureInfo.InvariantCulture) ?? hit.LocalHitId;
+
+    private static bool IsNonLeftChromeOrPaneClickTarget(
+        MouseGesture gesture,
+        ShowcaseDemoState before,
+        ShowcaseHitTestResult hit)
+    {
+        if (gesture.Button == TerminalMouseButton.Left ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Up))
+        {
+            return false;
+        }
+
+        return IsChromeOrDashboardLinkTarget(before, hit);
+    }
+
+    private static bool IsChromeOrDashboardLinkTarget(ShowcaseDemoState before, ShowcaseHitTestResult hit) =>
+        IsChromeTarget(hit) ||
+        hit is { Layer: ShowcaseHitLayer.Pane, TargetScreenNumber: { } target } &&
+        before.CurrentScreenNumber == 2 &&
+        target != before.CurrentScreenNumber;
+
+    private static bool IsChromeTarget(ShowcaseHitTestResult hit) =>
+        hit.Layer is ShowcaseHitLayer.Overlay or ShowcaseHitLayer.StatusToggle or ShowcaseHitLayer.Tab or ShowcaseHitLayer.Category;
 
     private static string MouseKindLabel(MouseGesture gesture) =>
         gesture.Kind switch
@@ -858,6 +1104,22 @@ public sealed class ShowcaseEvidenceJsonlWriter : IDisposable
             ["load_governor_in_warmup"] = stats.LoadGovernorEProcessInWarmup,
             ["load_governor_transition_seq"] = stats.LoadGovernorTransitionSeq,
             ["load_governor_transition_correlation_id"] = stats.LoadGovernorTransitionCorrelationId,
+            ["runtime_mode"] = stats.RuntimeMode,
+            ["runtime_mode_before"] = stats.RuntimeModeBefore,
+            ["pressure_class"] = stats.RuntimePressureClass,
+            ["work_disposition"] = stats.RuntimeWorkDisposition,
+            ["governor_reason"] = stats.RuntimeGovernorReason,
+            ["governor_transition"] = stats.RuntimeGovernorTransition,
+            ["strict_semantics_preserved"] = stats.RuntimeStrictSemanticsPreserved,
+            ["queue_in_flight"] = stats.RuntimeQueueInFlight,
+            ["queue_max_depth"] = stats.RuntimeQueueMaxDepth,
+            ["queue_dropped_delta"] = stats.RuntimeQueueDroppedDelta,
+            ["resize_coalescing_active"] = stats.RuntimeResizeCoalescingActive,
+            ["recovery_intervals_observed"] = stats.RuntimeRecoveryIntervalsObserved,
+            ["recovery_intervals_required"] = stats.RuntimeRecoveryIntervalsRequired,
+            ["deferred_work_total"] = stats.RuntimeDeferredWorkTotal,
+            ["coalesced_work_total"] = stats.RuntimeCoalescedWorkTotal,
+            ["dropped_work_total"] = stats.RuntimeDroppedWorkTotal,
             ["cascade_decision"] = stats.CascadeDecision,
             ["cascade_level_before"] = stats.CascadeLevelBefore,
             ["cascade_level_after"] = stats.CascadeLevelAfter,

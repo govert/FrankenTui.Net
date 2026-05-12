@@ -13,7 +13,7 @@ This covers `242-MAP` and `243-MAP` from
 
 - Managed upstream workspace: `.external/frankentui`
 - Current basis commit:
-  `40c98246f27f9d174b3923c8df841ba325247dd4`
+  `f958e59e1406a90fdb92512103e3591911a9d68c`
 - Primary upstream reference assets currently used by local verification:
   - `tests/baseline.json`
   - `docs/spec/diff-strategy-contract.md`
@@ -71,7 +71,7 @@ sequence:
 ```bash
 mkdir -p .external
 git clone https://github.com/Dicklesworthstone/frankentui.git .external/frankentui
-git -C .external/frankentui checkout 40c98246f27f9d174b3923c8df841ba325247dd4
+git -C .external/frankentui checkout f958e59e1406a90fdb92512103e3591911a9d68c
 ```
 
 To move to a newer basis:
@@ -239,6 +239,75 @@ The remaining non-isomorphic runtime difference is the upstream background
 subscription-thread / bounded-join implementation shape, which is treated
 locally as an explicit execution-model divergence rather than as an untracked
 missing contract.
+
+## 2026-05-11 Upstream Refresh And Showcase Hit Registry Slice
+
+Batch basis:
+
+- managed upstream workspace refreshed from
+  `40c98246f27f9d174b3923c8df841ba325247dd4` to
+  `f958e59e1406a90fdb92512103e3591911a9d68c`
+- dominant upstream showcase source consulted:
+  - `crates/ftui-demo-showcase/src/chrome.rs`
+- dominant local planning owner:
+  - `364-DEM-D` tour, overlay, mouse, and hit-region behavior
+
+Local landing in this slice:
+
+- `apps/FrankenTui.Demo.Showcase/ShowcaseFrameHitRegistry.cs` now carries the
+  upstream-shaped demo hit-id bands for tab, category, pane, overlay, and
+  status layers, tab/category/pane reverse mapping helpers, and a local
+  frame-region registry used by single-row chrome tab, status-toggle, overlay
+  dismissal including help close/content hit ids, dashboard pane-link routing,
+  generic current-screen body pane regions scoped to the upstream-shaped
+  content-frame inner area that emit pane-hit evidence while forwarding
+  current-screen clicks to the screen path, mirroring upstream's pane-sized
+  hit-region fallback, richer dashboard left-panel pane hits,
+  and an upstream-shaped dashboard link target set for Visual Effects, Data Viz,
+  Code Explorer, Performance, Layout Lab, Drag & Drop, Action Timeline, and
+  Markdown.
+- `apps/FrankenTui.Demo.Showcase/ShowcaseEvidenceJsonlWriter.cs` now adds
+  `hit_raw_id`, `hit_layer`, `hit_target_screen_number`, and
+  `hit_target_category` to local `mouse_event` evidence while preserving the
+  existing string `hit_id` aliases.
+- `tests/FrankenTui.Tests.Headless/ShowcaseShellTests.cs` preserves the
+  upstream-shaped hit bands, registry-driven chrome/status/overlay/dashboard
+  routing, and mouse-event evidence for dashboard pane links, command-palette
+  overlay priority, upstream-named palette scroll, body-region-gated guided-tour
+  landing scroll, hit-gated tab-wheel navigation, rendered upstream-shaped
+  single-row screen tab chrome/hit geometry plus outer content frame/title,
+  upstream-named non-left click target evidence,
+  upstream-named tab no-change evidence, left-button
+  down-click fallback prelude evidence,
+  hover-change evidence for move/drag target changes including first
+  chrome-move consumption and repeated chrome-hover coalescing, drag-forward
+  evidence for dispatcher-idle and post-down-fallback drags, command-palette
+  hit priority over
+  status/chrome/body regions, upstream-shaped dynamic status-toggle positions
+  and inline/alt mouse labels with conditional A11y status hits/evidence,
+  hit-id-gated overlay/status
+  action evidence including `overlay_unknown` and `status_unknown`, and without local always-on
+  A11y/evidence-ledger mouse targets, overlay-before-chrome mouse dispatch
+  priority,
+  hit-gated guided-tour landing click start, upstream-shaped overlay hit
+  geometry including whole-frame-origin perf/debug helpers and
+  content-inner-scoped A11y/tour regions, overlay
+  scroll-forward evidence, suppressed-up evidence
+  after down-click fallback, and upstream-named overlay close/content clicks.
+
+Focused verification:
+
+```bash
+dotnet test tests/FrankenTui.Tests.Headless/FrankenTui.Tests.Headless.csproj --no-restore --filter "FullyQualifiedName~ShowcaseShellTests.ShowcaseFrameHitRegistry|FullyQualifiedName~ShowcaseShellTests.ShowcaseEvidenceJsonlWriterEmitsMouseEventForDashboardPaneLink|FullyQualifiedName~ShowcaseShellTests.ShowcaseEvidenceJsonlWriterEmitsMouseEventForPalettePriority"
+```
+
+Focused showcase drift audit for `crates/ftui-demo-showcase` through
+`f958e59e1406a90fdb92512103e3591911a9d68c` found only doc-comment changes in
+`screens/async_tasks.rs` and `test_logging.rs`; `app.rs`, `chrome.rs`, and
+`screens/dashboard.rs` have no file diff from the prior `40c98246` basis.
+Remaining non-showcase drift still needs deeper audit and porting, especially
+the newer runtime, doctor, harness, core animation/input, render, and extras
+surfaces listed by the managed upstream diff.
 
 ## Reconciliation Standard
 
@@ -498,7 +567,26 @@ Local landing in this refresh:
   threshold/margin, warmup, and transition-correlation fields.
 - `tests/FrankenTui.Tests.Headless/LoadGovernorTests.cs`
   preserves the local default, disabled, e-process warmup, degradation-floor,
-  transition, and telemetry behavior.
+  transition, and telemetry behavior. The local runtime model also carries the
+  newer `f958e59e` stable runtime mode, pressure-class, and work-disposition
+  labels plus a normalized queue/budget `LoadGovernorPolicy` contract and a
+  standalone conservative state machine covering queue watermarks,
+  dropped/coalesced work, strict-semantics failure, and recovery hysteresis;
+  `AppRuntime` now feeds it live frame duration, degradation, effect-queue drop,
+  in-flight queue, and resize-coalescing signals. Generic showcase frame evidence
+  now carries the upstream-shaped runtime mode/pressure/disposition, queue,
+  coalescing, recovery, and strict-semantics fields. `RuntimeEffectQueueConfig`
+  adds an enabled/backend/max-depth backpressure foothold plus scheduler
+  mode/config defaults (`smith`/`srpt`/`fifo`) plus a local
+  `RuntimeQueueingScheduler` for Smith/SRPT/FIFO priority ordering, source
+  fallback normalization, preemption, cancel/clear/reset lifecycle, basic
+  tick/completion stats, scheduler-backed live session drain ordering,
+  per-message queue metadata (`RuntimeQueueTaskSpec`) plus command-carried queue
+  specs for explicit weights, estimates, and source labels propagated through
+  `RuntimeStepResult` into scheduler-backed sessions, max-depth rejection, and
+  upstream-shaped scheduling evidence JSONL/telemetry for local session queues
+  and feeds configured max
+  depth into conservative-governor frame stats.
 - `apps/FrankenTui.Demo.Showcase/ShowcaseEvidenceJsonlWriter.cs` and
   `tests/FrankenTui.Tests.Headless/ShowcaseShellTests.cs` now thread those
   load-governor PID/e-process fields through generic showcase frame evidence.
@@ -665,7 +753,7 @@ Local landing in this refresh:
   F6/`m` mouse-capture toggling, local status-row mouse toggle zones, F12 debug
   overlay toggling, Shift+A A11y panel toggling and panel-local Shift+H/M/L
   flags, Shift+H/Shift+L navigation, guided-tour landing mouse wheel/click
-  controls, active-tour mouse-overlay exit, category-tab and visible
+  controls, active-tour mouse-overlay exit, upstream-shaped single-row
   screen-tab mouse routing, tab-wheel screen cycling, palette priority over
   chrome routing, local dashboard highlight pane-link routing,
   screen-ID command-palette entries/favorites/category filtering/execution plus

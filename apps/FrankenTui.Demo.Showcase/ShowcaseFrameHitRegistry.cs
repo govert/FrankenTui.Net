@@ -1,0 +1,704 @@
+using FrankenTui.Core;
+
+namespace FrankenTui.Demo.Showcase;
+
+internal enum ShowcaseHitLayer
+{
+    Overlay,
+    StatusToggle,
+    Tab,
+    Category,
+    Link,
+    Content,
+    Pane,
+    Unknown
+}
+
+internal readonly record struct ShowcaseHitTestResult(
+    string LocalHitId,
+    ShowcaseHitLayer Layer,
+    uint? UpstreamHitId = null,
+    int? TargetScreenNumber = null,
+    ShowcaseScreenCategory? TargetCategory = null);
+
+internal readonly record struct ShowcaseHitRegion(Rect Bounds, ShowcaseHitTestResult Result);
+
+internal static class ShowcaseFrameHitRegistry
+{
+    // Mirrors upstream ftui-demo-showcase/src/chrome.rs hit-id bands at the
+    // current port basis: tabs 1000+, categories 2000+, panes 4000+,
+    // overlays 5000+, status toggles 6000+.
+    public const uint TabHitBase = 1000;
+    public const uint CategoryHitBase = 2000;
+    public const uint PaneHitBase = 4000;
+    public const uint OverlayHitBase = 5000;
+    public const uint StatusHitBase = 6000;
+    public const uint LinkHitBase = 8000;
+
+    public const uint OverlayHelpClose = OverlayHitBase;
+    public const uint OverlayHelpContent = OverlayHitBase + 1;
+    public const uint OverlayTour = OverlayHitBase + 10;
+    public const uint OverlayA11y = OverlayHitBase + 20;
+    public const uint OverlayPerfHud = OverlayHitBase + 30;
+    public const uint OverlayEvidence = OverlayHitBase + 40;
+    public const uint OverlayDebug = OverlayHitBase + 50;
+
+    public const uint StatusHelpToggle = StatusHitBase;
+    public const uint StatusPaletteToggle = StatusHitBase + 1;
+    public const uint StatusA11yToggle = StatusHitBase + 2;
+    public const uint StatusPerfToggle = StatusHitBase + 3;
+    public const uint StatusDebugToggle = StatusHitBase + 4;
+    public const uint StatusMouseToggle = StatusHitBase + 5;
+
+    public static IReadOnlyList<ShowcaseHitRegion> BuildRegions(ShowcaseDemoState state)
+    {
+        var regions = new List<ShowcaseHitRegion>();
+        var viewport = state.Viewport;
+        if (viewport.Width == 0 || viewport.Height == 0)
+        {
+            return regions;
+        }
+
+        RegisterOverlayRegions(state, regions);
+        RegisterStatusRegions(state, regions);
+        RegisterChromeRegions(state, regions);
+        RegisterScreenPaneRegions(state, regions);
+        return regions;
+    }
+
+    public static ShowcaseHitTestResult HitTest(ShowcaseDemoState state, ushort column, ushort row)
+    {
+        foreach (var region in BuildRegions(state))
+        {
+            if (region.Bounds.Contains(column, row))
+            {
+                return region.Result;
+            }
+        }
+
+        return new("none", ShowcaseHitLayer.Unknown);
+    }
+
+    public static ShowcaseHitTestResult Resolve(
+        MouseGesture gesture,
+        ShowcaseDemoState before,
+        ShowcaseDemoState after)
+    {
+        var hit = HitTest(before, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Unknown)
+        {
+            if (hit.TargetScreenNumber is null && before.CurrentScreenNumber != after.CurrentScreenNumber)
+            {
+                return hit with
+                {
+                    LocalHitId = hit.LocalHitId == "tab" ? $"tab:{after.CurrentScreenNumber}" :
+                        hit.LocalHitId == "category" ? $"category:{after.CurrentScreen.Category}" : hit.LocalHitId,
+                    TargetScreenNumber = after.CurrentScreenNumber,
+                    TargetCategory = hit.Layer == ShowcaseHitLayer.Category ? after.CurrentScreen.Category : hit.TargetCategory
+                };
+            }
+
+            return hit;
+        }
+
+        if (before.CurrentScreenNumber != after.CurrentScreenNumber)
+        {
+            return new(
+                $"pane:{after.CurrentScreenNumber}",
+                ShowcaseHitLayer.Pane,
+                PaneRawId(after.CurrentScreenNumber),
+                TargetScreenNumber: after.CurrentScreenNumber);
+        }
+
+        return hit;
+    }
+
+    public static uint TabRawId(int screenNumber) => TabHitBase + (uint)(ShowcaseCatalog.ClampScreenNumber(screenNumber) - 1);
+
+    public static uint PaneRawId(int screenNumber) => PaneHitBase + (uint)(ShowcaseCatalog.ClampScreenNumber(screenNumber) - 1);
+
+    public static uint LinkRawId(int linkIndex) => LinkHitBase + (uint)Math.Max(linkIndex, 0);
+
+    public static uint CategoryRawId(ShowcaseScreenCategory category)
+    {
+        var index = CategoryIndex(category);
+        return CategoryHitBase + (uint)Math.Min(index, ShowcaseCatalog.Categories.Count - 1);
+    }
+
+    public static int? ScreenFromRawId(uint rawId)
+    {
+        if (rawId >= TabHitBase && rawId < TabHitBase + ShowcaseCatalog.Screens.Count)
+        {
+            return (int)(rawId - TabHitBase) + 1;
+        }
+
+        if (rawId >= PaneHitBase && rawId < PaneHitBase + ShowcaseCatalog.Screens.Count)
+        {
+            return (int)(rawId - PaneHitBase) + 1;
+        }
+
+        if (CategoryFromRawId(rawId) is { } category)
+        {
+            return ShowcaseCatalog.FirstInCategory(category);
+        }
+
+        return null;
+    }
+
+    public static ShowcaseScreenCategory? CategoryFromRawId(uint rawId)
+    {
+        if (rawId < CategoryHitBase || rawId >= CategoryHitBase + ShowcaseCatalog.Categories.Count)
+        {
+            return null;
+        }
+
+        return ShowcaseCatalog.Categories[(int)(rawId - CategoryHitBase)];
+    }
+
+    private static void RegisterOverlayRegions(ShowcaseDemoState state, List<ShowcaseHitRegion> regions)
+    {
+        if (state.Session.CommandPalette.IsOpen)
+        {
+            regions.Add(WholeViewport(state.Viewport, new("palette", ShowcaseHitLayer.Overlay, OverlayHitBase)));
+            return;
+        }
+
+        if (state.EvidenceLedgerVisible)
+        {
+            if (TryResolveEvidenceOverlayArea(state.Viewport, out var area))
+            {
+                regions.Add(new ShowcaseHitRegion(area, new("overlay:evidence", ShowcaseHitLayer.Overlay, OverlayEvidence)));
+            }
+
+            return;
+        }
+
+        if (state.PerfHudVisible)
+        {
+            if (TryResolvePerfHudOverlayArea(WholeViewportArea(state.Viewport), out var area))
+            {
+                regions.Add(new ShowcaseHitRegion(area, new("overlay:perf", ShowcaseHitLayer.Overlay, OverlayPerfHud)));
+            }
+
+            return;
+        }
+
+        if (state.DebugVisible)
+        {
+            if (TryResolveDebugOverlayArea(WholeViewportArea(state.Viewport), out var area))
+            {
+                regions.Add(new ShowcaseHitRegion(area, new("overlay:debug", ShowcaseHitLayer.Overlay, OverlayDebug)));
+            }
+
+            return;
+        }
+
+        if (state.HelpVisible)
+        {
+            if (TryResolveHelpOverlayArea(state.Viewport, out var overlayArea, out var innerArea))
+            {
+                regions.Add(new ShowcaseHitRegion(
+                    new Rect(overlayArea.X, overlayArea.Y, overlayArea.Width, 1),
+                    new("overlay:help_close", ShowcaseHitLayer.Overlay, OverlayHelpClose)));
+                if (!innerArea.IsEmpty)
+                {
+                    regions.Add(new ShowcaseHitRegion(innerArea, new("overlay:help", ShowcaseHitLayer.Overlay, OverlayHelpContent)));
+                }
+            }
+
+            return;
+        }
+
+        if (state.A11yPanelVisible)
+        {
+            if (TryResolveContentInnerArea(state.Viewport, out var contentInner) &&
+                TryResolveA11yOverlayArea(contentInner, out var area))
+            {
+                regions.Add(new ShowcaseHitRegion(area, new("overlay:a11y", ShowcaseHitLayer.Overlay, OverlayA11y)));
+            }
+
+            return;
+        }
+
+        if (state.CurrentScreenNumber == 1 || state.TourActive)
+        {
+            if (TryResolveContentInnerArea(state.Viewport, out var contentInner) &&
+                TryResolveTourOverlayArea(contentInner, state.TourActive, out var area))
+            {
+                regions.Add(new ShowcaseHitRegion(
+                    area,
+                    new("overlay:tour", ShowcaseHitLayer.Overlay, OverlayTour, TargetScreenNumber: state.CurrentScreenNumber)));
+            }
+        }
+    }
+
+    private static ShowcaseHitRegion WholeViewport(Size viewport, ShowcaseHitTestResult result) =>
+        new(WholeViewportArea(viewport), result);
+
+    private static Rect WholeViewportArea(Size viewport) => new(0, 0, viewport.Width, viewport.Height);
+
+    private static bool TryResolveHelpOverlayArea(Size viewport, out Rect overlayArea, out Rect innerArea)
+    {
+        overlayArea = default;
+        innerArea = default;
+        if (viewport.Width < 2 || viewport.Height < 2)
+        {
+            return false;
+        }
+
+        var width = Math.Min((ushort)Math.Clamp(viewport.Width * 60 / 100, 36, 72), (ushort)(viewport.Width - 2));
+        var height = Math.Min((ushort)Math.Clamp(viewport.Height * 70 / 100, 14, 28), (ushort)(viewport.Height - 2));
+        if (width == 0 || height == 0)
+        {
+            return false;
+        }
+
+        var x = (ushort)((viewport.Width - width) / 2);
+        var y = (ushort)((viewport.Height - height) / 2);
+        overlayArea = new Rect(x, y, width, height);
+        innerArea = InnerBlock(overlayArea);
+        return true;
+    }
+
+    private static bool TryResolveA11yOverlayArea(Rect bounds, out Rect area)
+    {
+        area = default;
+        if (bounds.Width < 2 || bounds.Height < 2)
+        {
+            return false;
+        }
+
+        var width = Math.Min((ushort)36, (ushort)(bounds.Width - 2));
+        var height = Math.Min((ushort)8, (ushort)(bounds.Height - 2));
+        if (width < 26 || height < 6)
+        {
+            return false;
+        }
+
+        var x = (ushort)(bounds.X + bounds.Width - width - 1);
+        var y = (ushort)(bounds.Y + bounds.Height - height - 1);
+        area = new Rect(x, y, width, height);
+        return true;
+    }
+
+    private static bool TryResolvePerfHudOverlayArea(Rect bounds, out Rect area)
+    {
+        area = default;
+        if (bounds.Width < 4 || bounds.Height < 4)
+        {
+            return false;
+        }
+
+        var width = Math.Min((ushort)48, (ushort)(bounds.Width - 4));
+        var height = Math.Min((ushort)16, (ushort)(bounds.Height - 4));
+        if (width < 20 || height < 6)
+        {
+            return false;
+        }
+
+        area = new Rect((ushort)(bounds.X + 1), (ushort)(bounds.Y + 1), width, height);
+        return true;
+    }
+
+    private static bool TryResolveDebugOverlayArea(Rect bounds, out Rect area)
+    {
+        area = default;
+        if (bounds.Width < 4 || bounds.Height < 4)
+        {
+            return false;
+        }
+
+        var width = Math.Min((ushort)40, (ushort)(bounds.Width - 4));
+        var height = Math.Min((ushort)8, (ushort)(bounds.Height - 4));
+        var x = (ushort)(bounds.X + bounds.Width - width - 1);
+        var y = (ushort)(bounds.Y + 1);
+        area = new Rect(x, y, width, height);
+        return width > 0 && height > 0;
+    }
+
+    private static bool TryResolveEvidenceOverlayArea(Size viewport, out Rect area)
+    {
+        area = default;
+        if (viewport.Width < 4 || viewport.Height < 4)
+        {
+            return false;
+        }
+
+        var width = Math.Min((ushort)74, (ushort)(viewport.Width - 4));
+        var height = Math.Min((ushort)18, (ushort)(viewport.Height - 4));
+        if (width < 40 || height < 10)
+        {
+            return false;
+        }
+
+        var x = (ushort)(viewport.Width - width - 1);
+        var y = (ushort)(viewport.Height - height - 1);
+        area = new Rect(x, y, width, height);
+        return true;
+    }
+
+    private static bool TryResolveTourOverlayArea(Rect bounds, bool active, out Rect area)
+    {
+        area = default;
+        if (bounds.Width == 0 || bounds.Height == 0)
+        {
+            return false;
+        }
+
+        if (!active)
+        {
+            var width = bounds.Width < 24 ? bounds.Width : Math.Clamp((int)bounds.Width, 24, 62);
+            var height = bounds.Height < 7 ? bounds.Height : Math.Clamp((int)bounds.Height, 7, 11);
+            var x = (ushort)(bounds.X + (bounds.Width - width) / 2);
+            var y = (ushort)(bounds.Y + (bounds.Height - height) / 2);
+            area = new Rect(x, y, (ushort)width, (ushort)height);
+            return true;
+        }
+
+        var activeWidth = Math.Min((ushort)56, bounds.Width);
+        var activeHeight = Math.Min((ushort)14, bounds.Height);
+        if (activeWidth < 28 || activeHeight < 7)
+        {
+            return false;
+        }
+
+        var activeX = (ushort)(bounds.X + bounds.Width - activeWidth);
+        area = new Rect(activeX, bounds.Y, activeWidth, activeHeight);
+        return true;
+    }
+
+    private static Rect InnerBlock(Rect area)
+    {
+        if (area.Width <= 2 || area.Height <= 2)
+        {
+            return new Rect(area.X, area.Y, 0, 0);
+        }
+
+        return new Rect(
+            (ushort)(area.X + 1),
+            (ushort)(area.Y + 1),
+            (ushort)(area.Width - 2),
+            (ushort)(area.Height - 2));
+    }
+
+    private static void RegisterStatusRegions(ShowcaseDemoState state, List<ShowcaseHitRegion> regions)
+    {
+        var viewport = state.Viewport;
+        if (viewport.Height == 0)
+        {
+            return;
+        }
+
+        var y = (ushort)(viewport.Height - 1);
+        var position = $"[{state.CurrentScreenNumber}/{ShowcaseCatalog.Screens.Count}]";
+        var theme = "  default";
+        var help = state.HelpVisible ? " [H]" : " [h]";
+        var palette = state.Session.CommandPalette.IsOpen ? " [Cmd]" : " [cmd]";
+        var perf = state.PerfHudVisible ? " [P]" : " [p]";
+        var debug = state.DebugVisible ? " [D]" : " [d]";
+        var mouseMode = state.InlineMode ? "inline" : "alt";
+        var mouse = state.MouseCaptureEnabled ? $"  Mouse: AUTO ({mouseMode}:ON)" : $"  Mouse: AUTO ({mouseMode}:OFF)";
+        var x = 1 + state.CurrentScreen.Title.Length + 1 + position.Length + theme.Length;
+        AddRegion(regions, x, y, help.Length, new("status:help", ShowcaseHitLayer.StatusToggle, StatusHelpToggle));
+        x += help.Length;
+        AddRegion(regions, x, y, palette.Length, new("status:palette", ShowcaseHitLayer.StatusToggle, StatusPaletteToggle));
+        x += palette.Length;
+        AddRegion(regions, x, y, perf.Length, new("status:perf", ShowcaseHitLayer.StatusToggle, StatusPerfToggle));
+        x += perf.Length;
+        AddRegion(regions, x, y, debug.Length, new("status:debug", ShowcaseHitLayer.StatusToggle, StatusDebugToggle));
+        x += debug.Length;
+        AddRegion(regions, x, y, mouse.Length, new("status:mouse", ShowcaseHitLayer.StatusToggle, StatusMouseToggle));
+        x += mouse.Length;
+
+        var a11y = StatusA11yLabel(state);
+        if (!string.IsNullOrEmpty(a11y))
+        {
+            AddRegion(regions, x, y, a11y.Length, new("status:a11y", ShowcaseHitLayer.StatusToggle, StatusA11yToggle));
+        }
+    }
+
+    private static string StatusA11yLabel(ShowcaseDemoState state)
+    {
+        var flags = new List<string>(3);
+        if (state.A11yHighContrast)
+        {
+            flags.Add("HC");
+        }
+
+        if (state.A11yReducedMotion)
+        {
+            flags.Add("RM");
+        }
+
+        if (state.A11yLargeText)
+        {
+            flags.Add("LT");
+        }
+
+        return flags.Count == 0 ? string.Empty : $" A11y:{string.Join(" ", flags)}";
+    }
+
+    private static void RegisterChromeRegions(ShowcaseDemoState state, List<ShowcaseHitRegion> regions)
+    {
+        if (state.Viewport.Height < 2)
+        {
+            return;
+        }
+
+        var x = 0;
+        for (var index = 0; index < ShowcaseCatalog.Screens.Count; index++)
+        {
+            var screen = ShowcaseCatalog.Screens[index];
+            var keyLabel = index < 9 ? $"{index + 1}" : index == 9 ? "0" : "-";
+            var label = $"{keyLabel}: {screen.ShortLabel}";
+            var width = label.Length + 2;
+            AddRegion(
+                regions,
+                x,
+                0,
+                width,
+                new(
+                    $"tab:{screen.Number}",
+                    ShowcaseHitLayer.Tab,
+                    TabRawId(screen.Number),
+                    TargetScreenNumber: screen.Number));
+            x += width + 1;
+            if (x >= state.Viewport.Width)
+            {
+                break;
+            }
+        }
+    }
+
+    private static void RegisterScreenPaneRegions(ShowcaseDemoState state, List<ShowcaseHitRegion> regions)
+    {
+        if (state.CurrentScreenNumber == 39 && ShowcaseDemoState.TryResolvePaletteLabPaletteArea(state.Viewport, out var paletteLabArea))
+        {
+            regions.Add(new ShowcaseHitRegion(
+                paletteLabArea,
+                new("palette_lab", ShowcaseHitLayer.Pane, PaneRawId(39), TargetScreenNumber: 39)));
+        }
+
+        if (state.CurrentScreenNumber == 43 && TryResolveContentInnerArea(state.Viewport, out var liveMarkdownInner) && liveMarkdownInner.Width >= 30 && liveMarkdownInner.Height >= 10)
+        {
+            AddRegion(
+                regions,
+                liveMarkdownInner.X,
+                liveMarkdownInner.Y + 3,
+                liveMarkdownInner.Width,
+                new("live_markdown:search", ShowcaseHitLayer.Content, 43_000));
+            var split = Math.Max(1, liveMarkdownInner.Width / 2);
+            var paneY = liveMarkdownInner.Y + 5;
+            var paneHeight = Math.Max(1, liveMarkdownInner.Height - 5);
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(
+                    liveMarkdownInner.X,
+                    (ushort)paneY,
+                    (ushort)Math.Max(1, split),
+                    (ushort)Math.Max(1, paneHeight)),
+                new("live_markdown:editor", ShowcaseHitLayer.Content, 43_001)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(
+                    (ushort)(liveMarkdownInner.X + split),
+                    (ushort)paneY,
+                    (ushort)Math.Max(1, liveMarkdownInner.Width - split),
+                    (ushort)Math.Max(1, paneHeight)),
+                new("live_markdown:preview", ShowcaseHitLayer.Content, 43_002)));
+        }
+
+        if (state.CurrentScreenNumber == 44 && TryResolveContentInnerArea(state.Viewport, out var dragDropInner) && dragDropInner.Width >= 30 && dragDropInner.Height >= 8)
+        {
+            var tabY = dragDropInner.Y;
+            var tabWidth = Math.Max(1, dragDropInner.Width / 3);
+            for (var index = 0; index < 3; index++)
+            {
+                AddRegion(
+                    regions,
+                    dragDropInner.X + index * tabWidth,
+                    tabY,
+                    tabWidth,
+                    new($"drag_drop:tab:{index}", ShowcaseHitLayer.Content, (uint)(44_000 + index)));
+            }
+
+            var listY = dragDropInner.Y + 3;
+            var listHeight = Math.Max(1, Math.Min(8, dragDropInner.Height - 4));
+            var halfWidth = Math.Max(1, dragDropInner.Width / 2);
+            for (var row = 0; row < listHeight; row++)
+            {
+                AddRegion(
+                    regions,
+                    dragDropInner.X,
+                    listY + row,
+                    halfWidth,
+                    new($"drag_drop:item:0:{row}", ShowcaseHitLayer.Content, (uint)row));
+                AddRegion(
+                    regions,
+                    dragDropInner.X + halfWidth,
+                    listY + row,
+                    Math.Max(1, dragDropInner.Width - halfWidth),
+                    new($"drag_drop:item:1:{row}", ShowcaseHitLayer.Content, (uint)(8 + row)));
+            }
+        }
+
+        if (state.CurrentScreenNumber == 42 && TryResolveContentInnerArea(state.Viewport, out var kanbanInner) && kanbanInner.Width >= 30 && kanbanInner.Height >= 8)
+        {
+            var board = state.KanbanBoard ?? ShowcaseKanbanState.CreateDefault();
+            var colWidth = Math.Max(1, kanbanInner.Width / 3);
+            for (var col = 0; col < 3; col++)
+            {
+                var cards = board.Column(col);
+                for (var row = 0; row < cards.Count; row++)
+                {
+                    var card = cards[row];
+                    regions.Add(new ShowcaseHitRegion(
+                        new Rect(
+                            (ushort)(kanbanInner.X + col * colWidth),
+                            (ushort)(kanbanInner.Y + 2 + row * 3),
+                            (ushort)Math.Max(1, colWidth),
+                            3),
+                        new($"kanban:{col}:{row}:{card.Id}", ShowcaseHitLayer.Content, (uint)card.Id)));
+                }
+            }
+        }
+
+        if (state.CurrentScreenNumber == 26 && TryResolveContentInnerArea(state.Viewport, out var mouseInner) && mouseInner.Width >= 16 && mouseInner.Height >= 6)
+        {
+            var targetPanelWidth = Math.Max(4, mouseInner.Width * 42 / 100);
+            var gridX = (ushort)(mouseInner.X + 1);
+            var gridY = (ushort)(mouseInner.Y + 1);
+            var gridWidth = Math.Max(4, targetPanelWidth - 2);
+            var gridHeight = Math.Max(3, mouseInner.Height - 2);
+            var cellWidth = Math.Max(1, gridWidth / 4);
+            var cellHeight = Math.Max(1, gridHeight / 3);
+            for (var row = 0; row < 3; row++)
+            {
+                for (var col = 0; col < 4; col++)
+                {
+                    var target = (row * 4) + col + 1;
+                    regions.Add(new ShowcaseHitRegion(
+                        new Rect(
+                            (ushort)(gridX + col * cellWidth),
+                            (ushort)(gridY + row * cellHeight),
+                            (ushort)Math.Max(1, cellWidth),
+                            (ushort)Math.Max(1, cellHeight)),
+                        new($"target:{target}", ShowcaseHitLayer.Content, (uint)target)));
+                }
+            }
+        }
+
+        if (state.CurrentScreenNumber == 41 && TryResolveContentInnerArea(state.Viewport, out var hyperlinkInner) && hyperlinkInner.Width >= 32 && hyperlinkInner.Height >= 9)
+        {
+            var linkPanelWidth = Math.Max(1, hyperlinkInner.Width * 45 / 100);
+            var linkRowX = hyperlinkInner.X + 1;
+            var linkRowWidth = Math.Max(1, linkPanelWidth - 2);
+            for (var index = 0; index < 5; index++)
+            {
+                AddRegion(
+                    regions,
+                    linkRowX,
+                    hyperlinkInner.Y + 5 + index,
+                    linkRowWidth,
+                    new(
+                        $"link:{index + 1}",
+                        ShowcaseHitLayer.Link,
+                        LinkRawId(index)));
+            }
+        }
+
+        if (state.CurrentScreenNumber == 2 && TryResolveContentInnerArea(state.Viewport, out var contentInner) && contentInner.Width >= 18 && contentInner.Height >= 6)
+        {
+            var rightColumnStart = contentInner.X + Math.Max(1, contentInner.Width * 52 / 100);
+            var leftWidth = Math.Max(1, rightColumnStart - contentInner.X);
+            var leftLinks = new[] { 18, 8, 4, 14 };
+            for (var index = 0; index < leftLinks.Length; index++)
+            {
+                var target = leftLinks[index];
+                AddRegion(
+                    regions,
+                    contentInner.X,
+                    contentInner.Y + 3 + index,
+                    leftWidth,
+                    new(
+                        $"pane:{target}",
+                        ShowcaseHitLayer.Pane,
+                        PaneRawId(target),
+                        TargetScreenNumber: target));
+            }
+
+            var x = rightColumnStart;
+            var width = Math.Max(1, contentInner.Right - x);
+            var links = new[] { 18, 8, 4, 14, 6, 44, 22, 15 };
+            for (var index = 0; index < links.Length; index++)
+            {
+                var target = links[index];
+                AddRegion(
+                    regions,
+                    x,
+                    contentInner.Y + 3 + index,
+                    width,
+                    new(
+                        $"pane:{target}",
+                        ShowcaseHitLayer.Pane,
+                        PaneRawId(target),
+                        TargetScreenNumber: target));
+            }
+        }
+
+        RegisterCurrentScreenBodyPane(state, regions);
+    }
+
+    private static void RegisterCurrentScreenBodyPane(ShowcaseDemoState state, List<ShowcaseHitRegion> regions)
+    {
+        if (!TryResolveContentInnerArea(state.Viewport, out var contentInner))
+        {
+            return;
+        }
+
+        var current = state.CurrentScreenNumber;
+        regions.Add(new ShowcaseHitRegion(
+            contentInner,
+            new($"pane:{current}", ShowcaseHitLayer.Pane, PaneRawId(current), TargetScreenNumber: current)));
+    }
+
+    private static bool TryResolveContentInnerArea(Size viewport, out Rect inner)
+    {
+        inner = default;
+        if (viewport.Width <= 2 || viewport.Height <= 4)
+        {
+            return false;
+        }
+
+        inner = new Rect(1, 2, (ushort)(viewport.Width - 2), (ushort)(viewport.Height - 4));
+        return !inner.IsEmpty;
+    }
+
+    private static void AddRegion(
+        List<ShowcaseHitRegion> regions,
+        int x,
+        int y,
+        int width,
+        ShowcaseHitTestResult result)
+    {
+        if (width <= 0 || x >= ushort.MaxValue || y >= ushort.MaxValue)
+        {
+            return;
+        }
+
+        regions.Add(new ShowcaseHitRegion(
+            new Rect((ushort)Math.Max(x, 0), (ushort)Math.Max(y, 0), (ushort)Math.Min(width, ushort.MaxValue), 1),
+            result));
+    }
+
+    private static int CategoryIndex(ShowcaseScreenCategory category)
+    {
+        for (var index = 0; index < ShowcaseCatalog.Categories.Count; index++)
+        {
+            if (ShowcaseCatalog.Categories[index] == category)
+            {
+                return index;
+            }
+        }
+
+        return 0;
+    }
+}

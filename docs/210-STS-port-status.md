@@ -26,7 +26,7 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
 - Current status basis commit:
   working tree after first `f612df2b` upstream-sync wave
 - Current upstream workspace basis:
-  `40c98246f27f9d174b3923c8df841ba325247dd4`
+  `f958e59e1406a90fdb92512103e3591911a9d68c`
 - Last full verification pass at status update time:
   `dotnet test FrankenTui.Net.sln --no-restore`
 
@@ -125,7 +125,28 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   PID, e-process budget, and budget policy records now mirror the upstream
   policy-config conversion seam and feed `RuntimeExecutionPolicy` defaults for
   load-governor and cascade configuration while preserving explicit
-  `LoadGovernor` overrides. `AppRuntime` now observes the policy-backed
+  `LoadGovernor` overrides. Local load-governor contracts now also expose the
+  `f958e59e` stable runtime mode, pressure-class, and work-disposition labels
+  plus normalized queue/budget policy watermarks and a standalone conservative
+  state machine covering queue watermarks, dropped/coalesced work,
+  strict-semantics failure, and recovery hysteresis as a foothold for the newer
+  conservative runtime governor. `AppRuntime` now feeds that governor live frame
+  duration, degradation, effect-queue drop, in-flight queue, and resize-coalescing
+  signals, generic showcase frame evidence now carries
+  the upstream-shaped runtime mode/pressure/disposition, queue, coalescing,
+  recovery, and strict-semantics fields, and `RuntimeEffectQueueConfig` now
+  provides an upstream-shaped enabled/backend/max-depth backpressure foothold,
+  scheduler-mode/config defaults (`smith`/`srpt`/`fifo`) plus a local
+  `RuntimeQueueingScheduler` for Smith/SRPT/FIFO priority ordering, source
+  fallback normalization, preemption, cancel/clear/reset lifecycle, basic
+  tick/completion stats, scheduler-backed live session drain ordering,
+  per-message queue metadata (`RuntimeQueueTaskSpec`) plus command-carried queue
+  specs for explicit weights, estimates, and source labels propagated through
+  `RuntimeStepResult` into scheduler-backed sessions, max-depth rejection, and
+  upstream-shaped scheduling evidence JSONL/telemetry for local session queues,
+  and feeds configured max
+  depth into conservative-governor frame stats.
+  `AppRuntime` now observes the policy-backed
   cascade each rendered frame and records conformal bucket, guard state,
   p99/budget/calibration fields, and cascade before/after decisions in
   `RuntimeFrameStats`, `ftui.decision.degradation`, and generic showcase frame
@@ -202,7 +223,7 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   upstream-shaped pause/resume, step, speed, and exit keys. Guided-tour landing
   mouse wheel/click controls and active-tour mouse-overlay exit now mirror the
   upstream overlay-level behavior while the full hit-region registry remains
-  open. Local chrome mouse routing now covers category-tab clicks, visible
+  open. Local chrome mouse routing now covers upstream-shaped single-row
   screen-tab clicks, tab-wheel screen cycling, tour stop on chrome navigation,
   and command-palette priority over chrome routing. Local dashboard highlight
   pane-link routing now switches to linked screens while preserving non-link and
@@ -509,6 +530,12 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   The Hyperlink Playground screen now follows the upstream header plus OSC-8
   links, details/registry, and controls/JSONL layout with upstream link
   labels/URLs, `LinkRegistry` and `HitRegion` labels, OSC-8 open/close evidence,
+  upstream-shaped `LINK_HIT_BASE=8000` link-row hit regions,
+  `mouse_select`/`mouse_activate` link mouse evidence, Mouse Playground content
+  hit targets with raw ids `1..12`, Kanban card-row content hit regions plus
+  `kanban_drag_start`/`kanban_drag_move`/`kanban_drop` evidence, Drag & Drop
+  tab/list-row content hit regions plus tab-select/item-select/scroll/context
+  evidence, `link_id` / `target_id` JSONL aliases, and `target_click` evidence,
   hover/action state labels, keybindings, mouse action labels, logging env vars,
   JSONL fields, action names, and hit-id base; real `LinkRegistry` rendering,
   hit-region registration, hover/click/focus state, keyboard activation/copy
@@ -530,14 +557,18 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   SyntaxHighlighter notes, keyboard and mouse controls, cached layout-rect
   notes, and JSONL action fields; real mutable `MarkdownLiveEditor` state, rope
   editing, search selection, focus transitions, preview scrolling, diff
-  recomputation, mouse pane routing, syntax-highlighted Markdown rendering, and
-  exact upstream styling remain tracked under `364-DEM`.
+  recomputation, stateful mouse pane routing, syntax-highlighted Markdown
+  rendering, and exact upstream styling remain tracked under `364-DEM`. The
+  local frame hit registry now exposes search/editor/preview content regions and
+  evidence emits focus and preview-scroll actions.
   The Drag & Drop Lab screen now follows the upstream three-mode layout with
   Sortable List, Cross-Container, and Keyboard Drag tabs, deterministic
   Item/File lists, selected/focused list state, keyboard drag manager status,
   drop target/payload labels, announcements, sortable reorder and transfer
   controls, mouse click/scroll/right-click routing notes, small-terminal
-  fallback text, cached layout-rect notes, and JSONL action fields; real
+  fallback text, cached layout-rect notes, and JSONL action fields; local frame
+  hit registry now exposes tab/list-row content regions and evidence emits tab
+  select, item select, scroll, and right-click context actions. Real
   `DragDropDemo` state mutation, `KeyboardDragManager` integration,
   `DropTargetInfo` navigation, list reorder/transfer behavior, announcements
   queue, mouse hit testing, and exact upstream styling remain tracked under
@@ -764,6 +795,53 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   than an open missing contract. Current local verification is `148` headless
   tests, `5` web tests, and `7` PTY tests via `dotnet test FrankenTui.Net.sln
   --no-restore`.
+- showcase hit-registry slice after upstream `f958e59e`
+  Refreshed the managed upstream workspace to
+  `f958e59e1406a90fdb92512103e3591911a9d68c` and added a local
+  upstream-shaped showcase hit-id registry for tab, category, pane, overlay,
+  and status layers plus a local frame-region registry now used for chrome
+  single-row tab routing, status-toggle routing, overlay dismissal including help
+  close/content hit ids, upstream-named overlay close actions, upstream-named
+  palette scroll evidence, body-region-gated guided-tour landing scroll,
+  hit-gated tab-wheel navigation, rendered upstream-shaped single-row screen
+  tab chrome/hit geometry plus outer content frame/title,
+  upstream-named tab no-change evidence,
+  upstream-named non-left click-target evidence,
+  left-button down-click fallback prelude evidence, hover-change evidence for
+  move/drag target changes including first chrome-move consumption and repeated
+  chrome-hover coalescing, drag-forward evidence for dispatcher-idle and
+  post-down-fallback drags,
+  command-palette hit priority over status/chrome/body regions,
+  upstream-shaped dynamic status-toggle positions and inline/alt mouse labels
+  with conditional A11y status hits/evidence, hit-id-gated overlay/status
+  action evidence including
+  `overlay_unknown` and `status_unknown`,
+  and without local always-on A11y/evidence-ledger mouse targets,
+  overlay-before-chrome mouse dispatch priority, hit-gated guided-tour landing
+  click start, upstream-shaped help/perf/debug/evidence overlay hit geometry
+  with whole-frame-origin perf/debug helpers and content-inner-scoped A11y/tour
+  overlay hit geometry, overlay
+  scroll-forward evidence, suppressed-up evidence after down-click
+  fallback, dashboard pane-link routing with richer dashboard left-panel pane
+  hits plus the upstream-shaped eight-target dashboard link set,
+  and generic current-screen body pane regions scoped to the upstream-shaped
+  content-frame inner area that forward current-screen clicks while preserving
+  pane-hit evidence. Mouse
+  evidence records numeric `hit_raw_id`,
+  `hit_layer`,
+  `hit_target_screen_number`, and `hit_target_category` fields alongside the
+  existing local string `hit_id`, closing one more piece of the `364-DEM-D`
+  frame-hit registry lane while leaving broader generalized screen hit routing
+  open. Focused showcase-shell verification is now `33` registry/evidence
+  tests for this lane. Focused `crates/ftui-demo-showcase` drift audit through `f958e59e`
+  found only doc-comment-only changes in `screens/async_tasks.rs` and
+  `test_logging.rs`, with no `app.rs`, `chrome.rs`, or `screens/dashboard.rs`
+  file diff from `40c98246`; the visible async-task policy/hazard text now
+  carries the newer `E[T]` and expected-loss tuple terminology. Focused
+  verification is `32` showcase-shell tests via
+  `dotnet test tests/FrankenTui.Tests.Headless/FrankenTui.Tests.Headless.csproj --no-restore --filter "FullyQualifiedName~ShowcaseShellTests.ShowcaseFrameHitRegistry|FullyQualifiedName~ShowcaseShellTests.ShowcaseEvidenceJsonlWriterEmitsMouseEventForDashboardPaneLink|FullyQualifiedName~ShowcaseShellTests.ShowcaseEvidenceJsonlWriterEmitsMouseEventForPalettePriority"`.
+  Current local verification is `403` headless tests, `9` web tests, and `7`
+  PTY tests via `dotnet test FrankenTui.Net.sln --no-restore`.
 
 ## Status
 

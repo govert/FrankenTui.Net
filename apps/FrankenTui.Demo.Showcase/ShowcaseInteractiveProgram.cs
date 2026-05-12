@@ -197,6 +197,24 @@ internal sealed record ShowcaseDemoState(
             next = next with { Viewport = resize.Size };
         }
 
+        if (input.EffectiveEvent is MouseTerminalEvent tourMouseEvent &&
+            HandleTourMouse(tourMouseEvent, input.Timestamp, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent overlayMouseEvent &&
+            HandleOverlayMouse(overlayMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent statusMouseEvent &&
+            HandleStatusMouse(statusMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
         if (input.EffectiveEvent is MouseTerminalEvent mouseEvent &&
             HandleChromeMouse(mouseEvent, ref next))
         {
@@ -209,14 +227,8 @@ internal sealed record ShowcaseDemoState(
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
 
-        if (input.EffectiveEvent is MouseTerminalEvent tourMouseEvent &&
-            HandleTourMouse(tourMouseEvent, input.Timestamp, ref next))
-        {
-            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
-        }
-
-        if (input.EffectiveEvent is MouseTerminalEvent statusMouseEvent &&
-            HandleStatusMouse(statusMouseEvent, ref next))
+        if (input.EffectiveEvent is MouseTerminalEvent kanbanMouseEvent &&
+            HandleKanbanBoardMouse(kanbanMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -727,18 +739,22 @@ internal sealed record ShowcaseDemoState(
             return false;
         }
 
-        if (gesture.Kind is TerminalMouseKind.Scroll && gesture.Row == 1)
+        if (gesture.Kind is TerminalMouseKind.Scroll)
         {
-            if (gesture.Button is TerminalMouseButton.WheelDown)
+            var scrollHit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+            if (scrollHit.Layer == ShowcaseHitLayer.Tab)
             {
-                next = StopTourAndMove(next, 1);
-                return true;
-            }
+                if (gesture.Button is TerminalMouseButton.WheelDown)
+                {
+                    next = StopTourAndMove(next, 1);
+                    return true;
+                }
 
-            if (gesture.Button is TerminalMouseButton.WheelUp)
-            {
-                next = StopTourAndMove(next, -1);
-                return true;
+                if (gesture.Button is TerminalMouseButton.WheelUp)
+                {
+                    next = StopTourAndMove(next, -1);
+                    return true;
+                }
             }
         }
 
@@ -748,54 +764,14 @@ internal sealed record ShowcaseDemoState(
             return false;
         }
 
-        if (gesture.Row == 0)
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if ((hit.Layer is ShowcaseHitLayer.Category or ShowcaseHitLayer.Tab) &&
+            hit.TargetScreenNumber is { } targetScreenNumber)
         {
-            var labels = ShowcaseCatalog.Categories.Select(static category => category.ToString()).ToArray();
-            if (TryResolveTabIndex(labels, gesture.Column, out var categoryIndex))
-            {
-                next = StopTourAndSelect(
-                    next,
-                    ShowcaseCatalog.FirstInCategory(ShowcaseCatalog.Categories[categoryIndex]));
-                return true;
-            }
+            next = StopTourAndSelect(next, targetScreenNumber);
+            return true;
         }
 
-        if (gesture.Row == 1)
-        {
-            var currentScreenNumber = next.CurrentScreenNumber;
-            var window = ShowcaseCatalog.WindowAround(currentScreenNumber);
-            var labels = window.Select(screen => screen.Number == currentScreenNumber
-                ? $"{screen.Number}:{screen.ShortLabel}"
-                : screen.Number.ToString()).ToArray();
-            if (TryResolveTabIndex(labels, gesture.Column, out var screenIndex))
-            {
-                next = StopTourAndSelect(next, window[screenIndex].Number);
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private static bool TryResolveTabIndex(
-        IReadOnlyList<string> labels,
-        ushort column,
-        out int tabIndex)
-    {
-        var start = 0;
-        for (var index = 0; index < labels.Count; index++)
-        {
-            var length = labels[index].Length + 2;
-            if (column >= start && column < start + length)
-            {
-                tabIndex = index;
-                return true;
-            }
-
-            start += length + 1;
-        }
-
-        tabIndex = -1;
         return false;
     }
 
@@ -815,12 +791,60 @@ internal sealed record ShowcaseDemoState(
             CurrentScreenNumber = ShowcaseCatalog.Move(state.CurrentScreenNumber, delta)
         };
 
+    private static bool HandleKanbanBoardMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 42 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Up or TerminalMouseKind.Drag))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content ||
+            !TryParseKanbanHit(hit.LocalHitId, out var col, out var row, out _))
+        {
+            return false;
+        }
+
+        var board = next.KanbanBoard ?? ShowcaseKanbanState.CreateDefault();
+        var updated = gesture.Kind switch
+        {
+            TerminalMouseKind.Down when gesture.Button == TerminalMouseButton.Left => board.FocusAt(col, row),
+            TerminalMouseKind.Up when gesture.Button == TerminalMouseButton.Left => board.MoveFocusedToColumn(col),
+            TerminalMouseKind.Drag when gesture.Button == TerminalMouseButton.Left => board.FocusColumn(col),
+            _ => board
+        };
+
+        if (updated == board)
+        {
+            return true;
+        }
+
+        next = next with { KanbanBoard = updated };
+        return true;
+    }
+
+    private static bool TryParseKanbanHit(string localHitId, out int col, out int row, out int cardId)
+    {
+        col = 0;
+        row = 0;
+        cardId = 0;
+        var parts = localHitId.Split(':');
+        return parts.Length == 4 &&
+            parts[0] == "kanban" &&
+            int.TryParse(parts[1], out col) &&
+            int.TryParse(parts[2], out row) &&
+            int.TryParse(parts[3], out cardId);
+    }
+
     private static bool HandlePaneMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
     {
         var gesture = mouseEvent.Gesture;
         if (next.Session.CommandPalette.IsOpen ||
             next.TourActive ||
-            next.CurrentScreenNumber != 2 ||
             next.Viewport.Height <= 4 ||
             gesture.Row >= next.Viewport.Height - 1 ||
             gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Up) ||
@@ -829,7 +853,13 @@ internal sealed record ShowcaseDemoState(
             return false;
         }
 
-        if (!TryResolveDashboardPaneLink(next.Viewport, gesture.Column, gesture.Row, out var targetScreenNumber))
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit is not { Layer: ShowcaseHitLayer.Pane, TargetScreenNumber: { } targetScreenNumber })
+        {
+            return false;
+        }
+
+        if (next.CurrentScreenNumber != 2 || targetScreenNumber == next.CurrentScreenNumber)
         {
             return false;
         }
@@ -841,33 +871,6 @@ internal sealed record ShowcaseDemoState(
             TourPaused = false
         };
         return true;
-    }
-
-    private static bool TryResolveDashboardPaneLink(Size viewport, ushort column, ushort row, out int targetScreenNumber)
-    {
-        targetScreenNumber = 0;
-        if (viewport.Width < 20 || viewport.Height < 8)
-        {
-            return false;
-        }
-
-        var rightColumnStart = Math.Max(1, viewport.Width * 52 / 100);
-        if (column < rightColumnStart || row < 5)
-        {
-            return false;
-        }
-
-        var linkIndex = row - 5;
-        targetScreenNumber = linkIndex switch
-        {
-            0 => 1,
-            1 => 39,
-            2 => 16,
-            3 => 6,
-            4 => 40,
-            _ => 0
-        };
-        return targetScreenNumber != 0;
     }
 
     private static bool HandlePaletteLabMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
@@ -992,7 +995,11 @@ internal sealed record ShowcaseDemoState(
             return false;
         }
 
-        if (next.CurrentScreenNumber == 1 && !next.TourActive && gesture.Kind is TerminalMouseKind.Scroll)
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (next.CurrentScreenNumber == 1 &&
+            !next.TourActive &&
+            gesture.Kind is TerminalMouseKind.Scroll &&
+            hit is { Layer: ShowcaseHitLayer.Overlay, UpstreamHitId: ShowcaseFrameHitRegistry.OverlayTour })
         {
             if (gesture.Button is TerminalMouseButton.WheelDown)
             {
@@ -1008,7 +1015,8 @@ internal sealed record ShowcaseDemoState(
         }
 
         if (gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Up) ||
-            gesture.Button is not TerminalMouseButton.Left)
+            gesture.Button is not TerminalMouseButton.Left ||
+            hit is not { Layer: ShowcaseHitLayer.Overlay, UpstreamHitId: ShowcaseFrameHitRegistry.OverlayTour })
         {
             return false;
         }
@@ -1028,6 +1036,45 @@ internal sealed record ShowcaseDemoState(
         return false;
     }
 
+    private static bool HandleOverlayMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (gesture.Kind is not TerminalMouseKind.Down ||
+            gesture.Button is not TerminalMouseButton.Left ||
+            next.Session.CommandPalette.IsOpen)
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Overlay || hit.UpstreamHitId is not { } rawId)
+        {
+            return false;
+        }
+
+        switch (rawId)
+        {
+            case ShowcaseFrameHitRegistry.OverlayEvidence:
+                next = next with { EvidenceLedgerVisible = false };
+                return true;
+            case ShowcaseFrameHitRegistry.OverlayPerfHud:
+                next = next with { PerfHudVisible = false };
+                return true;
+            case ShowcaseFrameHitRegistry.OverlayDebug:
+                next = next with { DebugVisible = false };
+                return true;
+            case ShowcaseFrameHitRegistry.OverlayHelpClose:
+            case ShowcaseFrameHitRegistry.OverlayHelpContent:
+                next = next with { HelpVisible = false };
+                return true;
+            case ShowcaseFrameHitRegistry.OverlayA11y:
+                next = next with { A11yPanelVisible = false };
+                return true;
+            default:
+                return false;
+        }
+    }
+
     private static bool HandleStatusMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
     {
         var gesture = mouseEvent.Gesture;
@@ -1045,52 +1092,38 @@ internal sealed record ShowcaseDemoState(
             return false;
         }
 
-        if (gesture.Column < 6)
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.StatusToggle || hit.UpstreamHitId is not { } rawId)
         {
-            next = next with { HelpVisible = !next.HelpVisible };
-            return true;
+            return false;
         }
 
-        if (gesture.Column < 15)
+        switch (rawId)
         {
-            next = SyncSession(next, next.Session with
-            {
-                CommandPalette = CommandPaletteController.Toggle(next.Session.CommandPalette)
-            });
-            return true;
+            case ShowcaseFrameHitRegistry.StatusHelpToggle:
+                next = next with { HelpVisible = !next.HelpVisible };
+                return true;
+            case ShowcaseFrameHitRegistry.StatusPaletteToggle:
+                next = SyncSession(next, next.Session with
+                {
+                    CommandPalette = CommandPaletteController.Toggle(next.Session.CommandPalette)
+                });
+                return true;
+            case ShowcaseFrameHitRegistry.StatusA11yToggle:
+                next = next with { A11yPanelVisible = !next.A11yPanelVisible };
+                return true;
+            case ShowcaseFrameHitRegistry.StatusPerfToggle:
+                next = next with { PerfHudVisible = !next.PerfHudVisible };
+                return true;
+            case ShowcaseFrameHitRegistry.StatusDebugToggle:
+                next = next with { DebugVisible = !next.DebugVisible };
+                return true;
+            case ShowcaseFrameHitRegistry.StatusMouseToggle:
+                next = next with { MouseCaptureEnabled = !next.MouseCaptureEnabled };
+                return true;
+            default:
+                return false;
         }
-
-        if (gesture.Column < 22)
-        {
-            next = next with { A11yPanelVisible = !next.A11yPanelVisible };
-            return true;
-        }
-
-        if (gesture.Column < 29)
-        {
-            next = next with { PerfHudVisible = !next.PerfHudVisible };
-            return true;
-        }
-
-        if (gesture.Column < 37)
-        {
-            next = next with { DebugVisible = !next.DebugVisible };
-            return true;
-        }
-
-        if (gesture.Column < 47)
-        {
-            next = next with { EvidenceLedgerVisible = !next.EvidenceLedgerVisible };
-            return true;
-        }
-
-        if (gesture.Column < 56)
-        {
-            next = next with { MouseCaptureEnabled = !next.MouseCaptureEnabled };
-            return true;
-        }
-
-        return false;
     }
 
     private ShowcaseDemoState StartTour(DateTimeOffset now)
@@ -1286,6 +1319,15 @@ internal sealed record ShowcaseKanbanState(
         var redo = RedoStack.Take(RedoStack.Count - 1).ToArray();
         return FromColumns(columns, move.ToCol, insertAt, history, redo);
     }
+
+    public ShowcaseKanbanState FocusAt(int col, int row) =>
+        col is < 0 or > 2 ? this : WithFocus(col, row);
+
+    public ShowcaseKanbanState FocusColumn(int col) =>
+        col is < 0 or > 2 ? this : WithFocus(col, FocusRow);
+
+    public ShowcaseKanbanState MoveFocusedToColumn(int toCol) =>
+        toCol is < 0 or > 2 ? this : MoveCard(FocusCol, FocusRow, toCol);
 
     private ShowcaseKanbanState MoveCard(int fromCol, int fromRow, int toCol)
     {

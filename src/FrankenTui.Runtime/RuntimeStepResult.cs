@@ -7,4 +7,5 @@ public sealed record RuntimeStepResult<TModel, TMessage>(
     PresentResult Presentation,
     string ScreenText,
     IReadOnlyList<TMessage> EmittedMessages,
-    RuntimeTraceEntry<TMessage>? TraceEntry = null);
+    RuntimeTraceEntry<TMessage>? TraceEntry = null,
+    IReadOnlyDictionary<int, RuntimeQueueTaskSpec>? EmittedQueueSpecs = null);
