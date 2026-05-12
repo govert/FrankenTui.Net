@@ -926,11 +926,13 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   Shakespeare increment adds search/results and notes pane regions plus
   matching mouse evidence, and the Quake increment adds canvas, player/physics,
   mesh-raster evidence, and harness/divergence control regions plus matching
-  mouse evidence, while still leaving broader generalized screen hit routing
+  mouse evidence, and the Dashboard increment adds non-link overview/highlights
+  content regions plus matching mouse evidence while preserving link-row
+  routing priority, while still leaving broader generalized screen hit routing
   open.
-  Focused showcase-shell verification is now `223` tests via
+  Focused showcase-shell verification is now `225` tests via
   `dotnet test tests/FrankenTui.Tests.Headless/FrankenTui.Tests.Headless.csproj --no-restore --filter FullyQualifiedName~ShowcaseShellTests`.
-  Current local verification is `477` headless tests, `9` web tests, and `7`
+  Current local verification is `479` headless tests, `9` web tests, and `7`
   PTY tests via `dotnet test FrankenTui.Net.sln --no-restore`.
   Previous focused registry/evidence verification covered `33`
   registry/evidence

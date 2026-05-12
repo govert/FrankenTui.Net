@@ -1838,6 +1838,13 @@ internal static class ShowcaseFrameHitRegistry
                         PaneRawId(target),
                         TargetScreenNumber: target));
             }
+
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(contentInner.X, contentInner.Y, (ushort)leftWidth, contentInner.Height),
+                new("dashboard:overview", ShowcaseHitLayer.Content, 2_000)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)x, contentInner.Y, (ushort)width, contentInner.Height),
+                new("dashboard:highlights", ShowcaseHitLayer.Content, 2_100)));
         }
 
         RegisterCurrentScreenBodyPane(state, regions);

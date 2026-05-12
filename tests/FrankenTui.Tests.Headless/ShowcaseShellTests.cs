@@ -7166,6 +7166,76 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseFrameHitRegistryExposesDashboardPanelsWithoutReplacingLinks()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 2,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+
+        var overview = ShowcaseFrameHitRegistry.HitTest(state, 3, 4);
+        var highlight = ShowcaseFrameHitRegistry.HitTest(state, 90, 18);
+        var link = ShowcaseFrameHitRegistry.HitTest(state, 90, 5);
+
+        Assert.Equal("dashboard:overview", overview.LocalHitId);
+        Assert.Equal((uint)2_000, overview.UpstreamHitId);
+        Assert.Equal("dashboard:highlights", highlight.LocalHitId);
+        Assert.Equal((uint)2_100, highlight.UpstreamHitId);
+        Assert.Equal(ShowcaseHitLayer.Pane, link.Layer);
+        Assert.Equal("pane:18", link.LocalHitId);
+    }
+
+    [Fact]
+    public void ShowcaseEvidenceJsonlWriterEmitsDashboardPanelMouseActions()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"ftui-showcase-dashboard-panels-mouse-{Guid.NewGuid():N}.jsonl");
+        var options = ShowcaseCliOptions.Parse(
+            ["--screen=2", "--evidence-jsonl", path],
+            _ => null);
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 2,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+        var overviewEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 4, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp);
+        var highlightsScrollEvent = TerminalEvent.Mouse(
+            new MouseGesture(90, 18, TerminalMouseButton.WheelDown, TerminalMouseKind.Scroll),
+            timestamp + TimeSpan.FromMilliseconds(10));
+        var highlightsContextEvent = TerminalEvent.Mouse(
+            new MouseGesture(90, 18, TerminalMouseButton.Right, TerminalMouseKind.Down),
+            timestamp + TimeSpan.FromMilliseconds(20));
+
+        using (var writer = ShowcaseEvidenceJsonlWriter.Create(options.EvidenceJsonlPath))
+        {
+            Assert.NotNull(writer);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 1, frame: 1, overviewEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 2, frame: 2, highlightsScrollEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 3, frame: 3, highlightsContextEvent, state, state);
+        }
+
+        var lines = File.ReadAllLines(path);
+        Assert.Equal(3, lines.Length);
+        using var overviewRecord = JsonDocument.Parse(lines[0]);
+        using var highlightsScrollRecord = JsonDocument.Parse(lines[1]);
+        using var highlightsContextRecord = JsonDocument.Parse(lines[2]);
+        Assert.Equal("dashboard_overview_focus", overviewRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("dashboard:overview", overviewRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(2_000, overviewRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("dashboard_highlights_next", highlightsScrollRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("dashboard:highlights", highlightsScrollRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(2_100, highlightsScrollRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("dashboard_highlights_context", highlightsContextRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("dashboard:highlights", highlightsContextRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(2_100, highlightsContextRecord.RootElement.GetProperty("target_id").GetInt32());
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryExposesQuakePanels()
     {
         var state = ShowcaseDemoState.Create(
