@@ -939,7 +939,7 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   timeline/scenario selection rendering, the Performance increment adds
   mouse-mutated virtual-list item rendering, the Markdown increment adds
   mouse-mutated pane/scroll/wrap rendering, the Data Viz increment adds
-  mouse-mutated metric/narrative selection rendering, the File Browser
+  mouse-mutated metric/narrative/context rendering, the File Browser
   increment adds mouse-mutated tree/focus/preview scroll rendering, the Advanced
   increment adds mouse-mutated pattern/composite/focus/context rendering, the Notifications
   increment adds mouse-mutated trigger/toast/lifecycle rendering, the Action Timeline

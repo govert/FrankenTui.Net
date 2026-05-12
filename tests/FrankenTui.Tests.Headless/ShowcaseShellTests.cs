@@ -9364,10 +9364,12 @@ public sealed class ShowcaseShellTests
             TerminalMouseKind.Scroll);
         Assert.Equal(1, state.DataVizActivePanelIndex);
         Assert.Equal(1, state.DataVizMetricRowIndex);
+        Assert.False(state.DataVizContextArmed);
 
         state = ApplyMouse(state, 90, 6, timestamp + TimeSpan.FromMilliseconds(10), TerminalMouseButton.Right);
         Assert.Equal(2, state.DataVizActivePanelIndex);
         Assert.Equal(1, state.DataVizNarrativeDetailIndex);
+        Assert.True(state.DataVizContextArmed);
     }
 
     [Fact]
@@ -9382,7 +9384,8 @@ public sealed class ShowcaseShellTests
         {
             DataVizActivePanelIndex = 2,
             DataVizMetricRowIndex = 2,
-            DataVizNarrativeDetailIndex = 1
+            DataVizNarrativeDetailIndex = 1,
+            DataVizContextArmed = true
         };
         var buffer = new RenderBuffer(120, 32);
 
@@ -9390,9 +9393,10 @@ public sealed class ShowcaseShellTests
             .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 32), Theme.DefaultTheme));
 
         var screen = HeadlessBufferView.ScreenString(buffer);
-        Assert.Contains("Narrative [active]", screen);
+        Assert.Contains("Narrative [context]", screen);
         Assert.Contains("Active panel: Narrative", screen);
         Assert.Contains("Selected metric row: 2", screen);
+        Assert.Contains("Context action: armed", screen);
         Assert.Contains("Detail: metrics table selected", screen);
     }
 

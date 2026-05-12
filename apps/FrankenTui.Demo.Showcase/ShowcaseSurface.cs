@@ -721,6 +721,7 @@ internal static class ShowcaseSurface
             2 => "Detail: narrative selected; context clicks cycle this local note.",
             _ => "Detail: progress lanes selected; chart parity remains pending."
         };
+        var contextState = state.DataVizContextArmed ? "armed" : "clear";
         return TwoColumn(
             new StackWidget(
                 LayoutDirection.Vertical,
@@ -741,11 +742,12 @@ internal static class ShowcaseSurface
                     })
                 ]),
             Panel(
-                state.DataVizActivePanelIndex == 2 ? "Narrative [active]" : "Narrative",
+                state.DataVizContextArmed ? "Narrative [context]" : state.DataVizActivePanelIndex == 2 ? "Narrative [active]" : "Narrative",
                 $"""
                 Active panel: {activePanel}
                 Selected metric row: {selectedMetric}
                 Narrative detail: {narrativeDetail}
+                Context action: {contextState}
 
                 {narrativeDetailText}
 

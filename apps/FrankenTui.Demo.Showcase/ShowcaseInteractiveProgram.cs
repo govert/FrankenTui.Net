@@ -161,6 +161,7 @@ internal sealed record ShowcaseDemoState(
     int DataVizActivePanelIndex = 0,
     int DataVizMetricRowIndex = 0,
     int DataVizNarrativeDetailIndex = 0,
+    bool DataVizContextArmed = false,
     int FileBrowserSelectedRowIndex = 0,
     int FileBrowserFocusIndex = 0,
     int FileBrowserTreeScroll = 0,
@@ -1780,11 +1781,13 @@ internal sealed record ShowcaseDemoState(
                 "data_viz:metrics_table" => next with
                 {
                     DataVizActivePanelIndex = 1,
+                    DataVizContextArmed = false,
                     DataVizMetricRowIndex = Math.Clamp(next.DataVizMetricRowIndex + delta, 0, 3)
                 },
                 "data_viz:narrative" => next with
                 {
                     DataVizActivePanelIndex = 2,
+                    DataVizContextArmed = false,
                     DataVizNarrativeDetailIndex = Math.Clamp(next.DataVizNarrativeDetailIndex + delta, 0, 2)
                 },
                 _ => next
@@ -1799,15 +1802,21 @@ internal sealed record ShowcaseDemoState(
 
         next = hit.LocalHitId switch
         {
-            "data_viz:progress" => next with { DataVizActivePanelIndex = 0 },
+            "data_viz:progress" => next with
+            {
+                DataVizActivePanelIndex = 0,
+                DataVizContextArmed = false
+            },
             "data_viz:metrics_table" => next with
             {
                 DataVizActivePanelIndex = 1,
+                DataVizContextArmed = gesture.Button == TerminalMouseButton.Right,
                 DataVizMetricRowIndex = Math.Clamp(next.DataVizMetricRowIndex + 1, 0, 3)
             },
             "data_viz:narrative" => next with
             {
                 DataVizActivePanelIndex = 2,
+                DataVizContextArmed = gesture.Button == TerminalMouseButton.Right,
                 DataVizNarrativeDetailIndex = Math.Clamp(next.DataVizNarrativeDetailIndex + 1, 0, 2)
             },
             _ => next
