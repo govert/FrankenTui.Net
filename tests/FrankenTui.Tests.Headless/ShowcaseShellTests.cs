@@ -5156,6 +5156,79 @@ public sealed class ShowcaseShellTests
         Assert.Equal(25_301, diagnosticsRecord.RootElement.GetProperty("target_id").GetInt32());
     }
 
+    [Fact]
+    public void ShowcaseFrameHitRegistryExposesVirtualizedSearchPanels()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 28,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+
+        var search = ShowcaseFrameHitRegistry.HitTest(state, 3, 3);
+        var result = ShowcaseFrameHitRegistry.HitTest(state, 3, 8);
+        var stats = ShowcaseFrameHitRegistry.HitTest(state, 90, 8);
+        var diagnostic = ShowcaseFrameHitRegistry.HitTest(state, 90, 20);
+
+        Assert.Equal("virtualized_search:search_bar", search.LocalHitId);
+        Assert.Equal((uint)28_000, search.UpstreamHitId);
+        Assert.Equal("virtualized_search:result:3", result.LocalHitId);
+        Assert.Equal((uint)28_103, result.UpstreamHitId);
+        Assert.Equal("virtualized_search:stats", stats.LocalHitId);
+        Assert.Equal((uint)28_300, stats.UpstreamHitId);
+        Assert.Equal("virtualized_search:diagnostic:3", diagnostic.LocalHitId);
+        Assert.Equal((uint)28_403, diagnostic.UpstreamHitId);
+    }
+
+    [Fact]
+    public void ShowcaseEvidenceJsonlWriterEmitsVirtualizedSearchMouseActions()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"ftui-showcase-virtualized-search-mouse-{Guid.NewGuid():N}.jsonl");
+        var options = ShowcaseCliOptions.Parse(
+            ["--screen=28", "--evidence-jsonl", path],
+            _ => null);
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 28,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+        var searchEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 3, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp);
+        var resultEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 8, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp + TimeSpan.FromMilliseconds(10));
+        var diagnosticsEvent = TerminalEvent.Mouse(
+            new MouseGesture(90, 20, TerminalMouseButton.WheelDown, TerminalMouseKind.Scroll),
+            timestamp + TimeSpan.FromMilliseconds(20));
+
+        using (var writer = ShowcaseEvidenceJsonlWriter.Create(options.EvidenceJsonlPath))
+        {
+            Assert.NotNull(writer);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 1, frame: 1, searchEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 2, frame: 2, resultEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 3, frame: 3, diagnosticsEvent, state, state);
+        }
+
+        var lines = File.ReadAllLines(path);
+        Assert.Equal(3, lines.Length);
+        using var searchRecord = JsonDocument.Parse(lines[0]);
+        using var resultRecord = JsonDocument.Parse(lines[1]);
+        using var diagnosticsRecord = JsonDocument.Parse(lines[2]);
+        Assert.Equal("virtualized_search_focus_search", searchRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("virtualized_search:search_bar", searchRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(28_000, searchRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("virtualized_search_result_select", resultRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("virtualized_search:result:3", resultRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(28_103, resultRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("virtualized_search_diagnostics_scroll_down", diagnosticsRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("virtualized_search:diagnostic:3", diagnosticsRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(28_403, diagnosticsRecord.RootElement.GetProperty("target_id").GetInt32());
+    }
+
     private static ShowcaseDemoState ApplyKey(ShowcaseDemoState state, KeyGesture gesture, DateTimeOffset timestamp)
     {
         var terminalEvent = TerminalEvent.Key(gesture, timestamp);

@@ -968,6 +968,52 @@ public sealed class ShowcaseEvidenceJsonlWriter : IDisposable
             return "advanced_text_editor_hit_test";
         }
 
+        if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 28)
+        {
+            if (gesture.Kind == TerminalMouseKind.Scroll)
+            {
+                if (hit.LocalHitId.StartsWith("virtualized_search:result:", StringComparison.Ordinal))
+                {
+                    return gesture.Button == TerminalMouseButton.WheelUp
+                        ? "virtualized_search_results_scroll_up"
+                        : "virtualized_search_results_scroll_down";
+                }
+
+                if (hit.LocalHitId.StartsWith("virtualized_search:diagnostic:", StringComparison.Ordinal))
+                {
+                    return gesture.Button == TerminalMouseButton.WheelUp
+                        ? "virtualized_search_diagnostics_scroll_up"
+                        : "virtualized_search_diagnostics_scroll_down";
+                }
+
+                return gesture.Button == TerminalMouseButton.WheelUp
+                    ? "virtualized_search_panel_scroll_up"
+                    : "virtualized_search_panel_scroll_down";
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Left)
+            {
+                if (hit.LocalHitId.StartsWith("virtualized_search:result:", StringComparison.Ordinal))
+                {
+                    return "virtualized_search_result_select";
+                }
+
+                if (hit.LocalHitId.StartsWith("virtualized_search:diagnostic:", StringComparison.Ordinal))
+                {
+                    return "virtualized_search_diagnostic_select";
+                }
+
+                return hit.LocalHitId switch
+                {
+                    "virtualized_search:search_bar" => "virtualized_search_focus_search",
+                    "virtualized_search:stats" => "virtualized_search_stats_focus",
+                    _ => "virtualized_search_hit_test"
+                };
+            }
+
+            return "virtualized_search_hit_test";
+        }
+
         if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 7)
         {
             if (gesture.Kind == TerminalMouseKind.Scroll)

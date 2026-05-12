@@ -735,6 +735,43 @@ internal static class ShowcaseFrameHitRegistry
             }
         }
 
+        if (state.CurrentScreenNumber == 28 && TryResolveContentInnerArea(state.Viewport, out var virtualSearchInner) && virtualSearchInner.Width >= 40 && virtualSearchInner.Height >= 12)
+        {
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(virtualSearchInner.X, virtualSearchInner.Y, virtualSearchInner.Width, (ushort)Math.Min(3, (int)virtualSearchInner.Height)),
+                new("virtualized_search:search_bar", ShowcaseHitLayer.Content, 28_000)));
+
+            var bodyY = virtualSearchInner.Y + 3;
+            var bodyHeight = Math.Max(1, virtualSearchInner.Height - 3);
+            var resultsWidth = Math.Max(1, virtualSearchInner.Width * 70 / 100);
+            for (var row = 0; row < Math.Min(12, bodyHeight); row++)
+            {
+                AddRegion(
+                    regions,
+                    virtualSearchInner.X,
+                    bodyY + row,
+                    resultsWidth,
+                    new($"virtualized_search:result:{row}", ShowcaseHitLayer.Content, (uint)(28_100 + row)));
+            }
+
+            var sideX = virtualSearchInner.X + resultsWidth;
+            var sideWidth = Math.Max(1, virtualSearchInner.Width - resultsWidth);
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)sideX, (ushort)bodyY, (ushort)sideWidth, (ushort)Math.Min(12, bodyHeight)),
+                new("virtualized_search:stats", ShowcaseHitLayer.Content, 28_300)));
+
+            var diagnosticsY = bodyY + 12;
+            for (var row = 0; row < Math.Max(1, Math.Min(10, virtualSearchInner.Height - 15)); row++)
+            {
+                AddRegion(
+                    regions,
+                    sideX,
+                    diagnosticsY + row,
+                    sideWidth,
+                    new($"virtualized_search:diagnostic:{row}", ShowcaseHitLayer.Content, (uint)(28_400 + row)));
+            }
+        }
+
         if (state.CurrentScreenNumber == 7 && TryResolveContentInnerArea(state.Viewport, out var formsInner) && formsInner.Width >= 30 && formsInner.Height >= 8)
         {
             var formWidth = Math.Max(1, formsInner.Width / 2);
