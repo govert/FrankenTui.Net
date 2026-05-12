@@ -9287,6 +9287,90 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseQuakeMouseMutatesFocusQualityYawPitchAndReset()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 45,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(
+            state,
+            3,
+            8,
+            timestamp,
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(0, state.QuakeFocusIndex);
+        Assert.Equal(1, state.QuakeQualityIndex);
+
+        state = ApplyMouse(
+            state,
+            90,
+            8,
+            timestamp + TimeSpan.FromMilliseconds(10),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(1, state.QuakeFocusIndex);
+        Assert.Equal(1, state.QuakeYawStep);
+
+        state = ApplyMouse(state, 90, 8, timestamp + TimeSpan.FromMilliseconds(20));
+        Assert.Equal(1, state.QuakeFocusIndex);
+        Assert.Equal(1, state.QuakePitchStep);
+
+        state = ApplyMouse(state, 3, 8, timestamp + TimeSpan.FromMilliseconds(30));
+        Assert.Equal(0, state.QuakeFocusIndex);
+        Assert.Equal(1, state.QuakeFireFlash);
+
+        state = ApplyMouse(
+            state,
+            90,
+            24,
+            timestamp + TimeSpan.FromMilliseconds(40),
+            TerminalMouseButton.Right);
+        Assert.Equal(3, state.QuakeFocusIndex);
+        Assert.Equal(1, state.QuakeResetCount);
+        Assert.Equal(0, state.QuakeYawStep);
+        Assert.Equal(0, state.QuakePitchStep);
+        Assert.Equal(0, state.QuakeFireFlash);
+    }
+
+    [Fact]
+    public void ShowcaseQuakeRendersMouseSelectedState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 45,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            QuakeFocusIndex = 1,
+            QuakeQualityIndex = 2,
+            QuakeYawStep = 3,
+            QuakePitchStep = -2,
+            QuakePanelScroll = 4,
+            QuakeFireFlash = 5,
+            QuakeResetCount = 2
+        };
+        var buffer = new RenderBuffer(120, 32);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 32), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("V quality [Minimal]", screen);
+        Assert.Contains("Player + Physics [focus]", screen);
+        Assert.Contains("pitch=-0.16", screen);
+        Assert.Contains("quality=Minimal", screen);
+        Assert.Contains("flash=5 reset=2", screen);
+        Assert.Contains("scroll=4", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryExposesWidgetGalleryPanels()
     {
         var state = ShowcaseDemoState.Create(

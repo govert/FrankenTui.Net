@@ -241,6 +241,13 @@ internal sealed record ShowcaseDemoState(
     int DragDropMoveCount = 0,
     bool DragDropKeyboardActive = false,
     bool DragDropContextAction = false,
+    int QuakeFocusIndex = 0,
+    int QuakeQualityIndex = 0,
+    int QuakeYawStep = 0,
+    int QuakePitchStep = 0,
+    int QuakePanelScroll = 0,
+    int QuakeFireFlash = 0,
+    int QuakeResetCount = 0,
     bool PaletteLabBenchEnabled = false,
     int PaletteLabBenchFrame = 0,
     int PaletteLabBenchProcessed = 0,
@@ -558,6 +565,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent dragDropMouseEvent &&
             HandleDragDropMouse(dragDropMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent quakeMouseEvent &&
+            HandleQuakeMouse(quakeMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -3761,6 +3774,104 @@ internal sealed record ShowcaseDemoState(
             int.TryParse(parts[0], CultureInfo.InvariantCulture, out list) &&
             int.TryParse(parts[1], CultureInfo.InvariantCulture, out row);
     }
+
+    private static bool HandleQuakeMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 45 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content ||
+            !hit.LocalHitId.StartsWith("quake:", StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = hit.LocalHitId switch
+            {
+                "quake:canvas" => next with
+                {
+                    QuakeFocusIndex = 0,
+                    QuakeQualityIndex = Math.Clamp(next.QuakeQualityIndex + delta, 0, 3)
+                },
+                "quake:player" => next with
+                {
+                    QuakeFocusIndex = 1,
+                    QuakeYawStep = Math.Clamp(next.QuakeYawStep + delta, -12, 12)
+                },
+                "quake:renderer" => next with
+                {
+                    QuakeFocusIndex = 2,
+                    QuakePanelScroll = Math.Clamp(next.QuakePanelScroll + delta, 0, 8)
+                },
+                "quake:controls" => next with
+                {
+                    QuakeFocusIndex = 3,
+                    QuakePanelScroll = Math.Clamp(next.QuakePanelScroll + delta, 0, 8)
+                },
+                _ => next
+            };
+            return hit.LocalHitId is "quake:canvas" or "quake:player" or "quake:renderer" or "quake:controls";
+        }
+
+        if (gesture.Button == TerminalMouseButton.Right)
+        {
+            next = next with
+            {
+                QuakeFocusIndex = QuakeFocusIndexForHit(hit.LocalHitId),
+                QuakeResetCount = next.QuakeResetCount + 1,
+                QuakeYawStep = 0,
+                QuakePitchStep = 0,
+                QuakeFireFlash = 0
+            };
+            return true;
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        next = hit.LocalHitId switch
+        {
+            "quake:canvas" => next with
+            {
+                QuakeFocusIndex = 0,
+                QuakeFireFlash = Math.Clamp(next.QuakeFireFlash + 1, 0, 5)
+            },
+            "quake:player" => next with
+            {
+                QuakeFocusIndex = 1,
+                QuakePitchStep = Math.Clamp(next.QuakePitchStep + 1, -6, 6)
+            },
+            "quake:renderer" => next with { QuakeFocusIndex = 2 },
+            "quake:controls" => next with
+            {
+                QuakeFocusIndex = 3,
+                QuakeQualityIndex = (next.QuakeQualityIndex + 1) % 4
+            },
+            _ => next
+        };
+        return hit.LocalHitId is "quake:canvas" or "quake:player" or "quake:renderer" or "quake:controls";
+    }
+
+    private static int QuakeFocusIndexForHit(string localHitId) => localHitId switch
+    {
+        "quake:canvas" => 0,
+        "quake:player" => 1,
+        "quake:renderer" => 2,
+        "quake:controls" => 3,
+        _ => 0
+    };
 
     private static bool HandleTourMouse(MouseTerminalEvent mouseEvent, DateTimeOffset now, ref ShowcaseDemoState next)
     {

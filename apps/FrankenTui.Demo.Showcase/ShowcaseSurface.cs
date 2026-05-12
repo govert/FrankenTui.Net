@@ -3555,43 +3555,48 @@ internal static class ShowcaseSurface
 
     private static IWidget BuildQuake(ShowcaseDemoState state)
     {
-        var quality = Math.Abs(state.ScriptFrame % 4) switch
+        var qualityIndex = Math.Clamp(state.QuakeQualityIndex, 0, 3);
+        var focusIndex = Math.Clamp(state.QuakeFocusIndex, 0, 3);
+        var quality = qualityIndex switch
         {
             0 => "Full",
             1 => "Reduced",
             2 => "Minimal",
             _ => "Off"
         };
+        var yaw = state.ScriptFrame * 0.07 + state.QuakeYawStep * 0.11;
+        var pitch = state.QuakePitchStep * 0.08;
 
         var view = new PanelWidget
         {
-            Title = "Quake E1M1",
+            Title = focusIndex == 0 ? $"Quake E1M1 [focus flash={state.QuakeFireFlash}]" : "Quake E1M1",
             Child = new DeterministicVfxCanvasWidget(state.ScriptFrame, "quake-e1m1")
         };
 
         var statePanel = Panel(
-            "Player + Physics",
-            $"pos=(0.54,0.51,{0.18 + (state.ScriptFrame % 3) * 0.01:0.00}) yaw={state.ScriptFrame * 0.07:0.00} pitch=0.00 quality={quality}\n" +
+            focusIndex == 1 ? "Player + Physics [focus]" : "Player + Physics",
+            $"pos=(0.54,0.51,{0.18 + (state.ScriptFrame % 3) * 0.01:0.00}) yaw={yaw:0.00} pitch={pitch:0.00} quality={quality} flash={state.QuakeFireFlash} reset={state.QuakeResetCount} scroll={state.QuakePanelScroll}\n" +
             "W/A/S/D move | Arrows look yaw | j/k look pitch | Space jump | f fire | v quality | r reset\n" +
             "Constants: EYE_HEIGHT=0.18 GRAVITY=-0.28 JUMP=0.22 COLLISION_RADIUS=0.06\n" +
             "Physics: accel, friction, wall segment collision, floor-triangle ground height\n" +
-            "Fire flash decays by 0.1 per tick; pitch clamps -1.2..1.2; yaw wraps TAU");
+            $"Fire flash={state.QuakeFireFlash} reset_count={state.QuakeResetCount}\n" +
+            "Pitch clamps -1.2..1.2; yaw wraps TAU");
 
         var renderer = Panel(
-            "Mesh Raster Evidence",
+            focusIndex == 2 ? $"Mesh Raster Evidence [scroll {state.QuakePanelScroll}]" : $"Mesh Raster Evidence [scroll {state.QuakePanelScroll}]",
             $"Renderer: {ShowcaseVfxEffects.RendererName("quake-e1m1")}\n" +
-            $"Mode: braille | Frame: {state.ScriptFrame} | FxQuality={quality}\n" +
+            $"Mode: braille | Frame: {state.ScriptFrame} | FxQuality={quality} | quality_idx={qualityIndex}\n" +
             "Source data: QUAKE_E1M1_VERTS + QUAKE_E1M1_TRIS from 3d_data.rs\n" +
             "Pipeline: world_vertices -> camera_vertices -> clip_triangle_near -> depth buffer\n" +
             "Palette: palette_quake_stone dark mud/mid brown/tan/grey stone\n" +
             "Quality tiers: Full tri_step=1, Reduced=2, Minimal=4, Off=0");
 
         var controls = Panel(
-            "Harness + Divergence",
+            focusIndex == 3 ? "Harness + Divergence [focus]" : "Harness + Divergence",
             $"{ShowcaseVfxEffects.Description("quake-e1m1")}\n" +
             "Canvas.ensure_for_area(mode=Braille), painter.clear, Canvas.from_painter_ref\n" +
             "Small terminal fallback: Need a bit more space for Quake.\n" +
-            "JSONL fields: run_id, frame, effect=quake-e1m1, quality, pos, yaw, pitch, hash, input\n" +
+            $"JSONL fields: run_id, frame, effect=quake-e1m1, quality, pos, yaw, pitch, hash, input | focus={focusIndex} scroll={state.QuakePanelScroll}\n" +
             "Local status: deterministic FPS Braille canvas; real Quake asset/raster parity remains tracked under 364-DEM-E5");
 
         return new StackWidget(
