@@ -3221,7 +3221,7 @@ internal sealed record ShowcaseDemoState(
             {
                 "explainability:timeline" => next with
                 {
-                    ExplainabilityTimelineScroll = Math.Clamp(next.ExplainabilityTimelineScroll + delta, 0, 8),
+                    ExplainabilityTimelineScroll = Math.Clamp(next.ExplainabilityTimelineScroll - delta, 0, 8),
                     ExplainabilityFocusIndex = 4
                 },
                 "explainability:source_controls" => next with
