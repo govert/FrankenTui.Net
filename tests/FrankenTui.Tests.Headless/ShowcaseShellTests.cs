@@ -5466,6 +5466,91 @@ public sealed class ShowcaseShellTests
         Assert.Equal(31_220, diagnosticsRecord.RootElement.GetProperty("target_id").GetInt32());
     }
 
+    [Fact]
+    public void ShowcaseFrameHitRegistryExposesPerformanceChallengePanels()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 32,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+
+        var header = ShowcaseFrameHitRegistry.HitTest(state, 3, 2);
+        var metrics = ShowcaseFrameHitRegistry.HitTest(state, 3, 6);
+        var sparkline = ShowcaseFrameHitRegistry.HitTest(state, 45, 6);
+        var evidence = ShowcaseFrameHitRegistry.HitTest(state, 45, 20);
+        var budget = ShowcaseFrameHitRegistry.HitTest(state, 90, 6);
+        var stress = ShowcaseFrameHitRegistry.HitTest(state, 90, 16);
+        var tier = ShowcaseFrameHitRegistry.HitTest(state, 90, 23);
+        var footer = ShowcaseFrameHitRegistry.HitTest(state, 3, 29);
+
+        Assert.Equal("performance_challenge:header", header.LocalHitId);
+        Assert.Equal((uint)32_000, header.UpstreamHitId);
+        Assert.Equal("performance_challenge:metrics", metrics.LocalHitId);
+        Assert.Equal((uint)32_100, metrics.UpstreamHitId);
+        Assert.Equal("performance_challenge:sparkline", sparkline.LocalHitId);
+        Assert.Equal((uint)32_200, sparkline.UpstreamHitId);
+        Assert.Equal("performance_challenge:evidence", evidence.LocalHitId);
+        Assert.Equal((uint)32_210, evidence.UpstreamHitId);
+        Assert.Equal("performance_challenge:budget", budget.LocalHitId);
+        Assert.Equal((uint)32_300, budget.UpstreamHitId);
+        Assert.Equal("performance_challenge:stress", stress.LocalHitId);
+        Assert.Equal((uint)32_310, stress.UpstreamHitId);
+        Assert.Equal("performance_challenge:tier:3", tier.LocalHitId);
+        Assert.Equal((uint)32_403, tier.UpstreamHitId);
+        Assert.Equal("performance_challenge:footer", footer.LocalHitId);
+        Assert.Equal((uint)32_500, footer.UpstreamHitId);
+    }
+
+    [Fact]
+    public void ShowcaseEvidenceJsonlWriterEmitsPerformanceChallengeMouseActions()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"ftui-showcase-performance-challenge-mouse-{Guid.NewGuid():N}.jsonl");
+        var options = ShowcaseCliOptions.Parse(
+            ["--screen=32", "--evidence-jsonl", path],
+            _ => null);
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 32,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+        var stressEvent = TerminalEvent.Mouse(
+            new MouseGesture(90, 16, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp);
+        var tierEvent = TerminalEvent.Mouse(
+            new MouseGesture(90, 23, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp + TimeSpan.FromMilliseconds(10));
+        var budgetEvent = TerminalEvent.Mouse(
+            new MouseGesture(90, 6, TerminalMouseButton.WheelDown, TerminalMouseKind.Scroll),
+            timestamp + TimeSpan.FromMilliseconds(20));
+
+        using (var writer = ShowcaseEvidenceJsonlWriter.Create(options.EvidenceJsonlPath))
+        {
+            Assert.NotNull(writer);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 1, frame: 1, stressEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 2, frame: 2, tierEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 3, frame: 3, budgetEvent, state, state);
+        }
+
+        var lines = File.ReadAllLines(path);
+        Assert.Equal(3, lines.Length);
+        using var stressRecord = JsonDocument.Parse(lines[0]);
+        using var tierRecord = JsonDocument.Parse(lines[1]);
+        using var budgetRecord = JsonDocument.Parse(lines[2]);
+        Assert.Equal("performance_challenge_stress_toggle", stressRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("performance_challenge:stress", stressRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(32_310, stressRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("performance_challenge_tier_select", tierRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("performance_challenge:tier:3", tierRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(32_403, tierRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("performance_challenge_budget_scroll_down", budgetRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("performance_challenge:budget", budgetRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(32_300, budgetRecord.RootElement.GetProperty("target_id").GetInt32());
+    }
+
     private static ShowcaseDemoState ApplyKey(ShowcaseDemoState state, KeyGesture gesture, DateTimeOffset timestamp)
     {
         var terminalEvent = TerminalEvent.Key(gesture, timestamp);

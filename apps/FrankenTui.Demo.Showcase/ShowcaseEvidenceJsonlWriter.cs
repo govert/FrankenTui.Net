@@ -1150,6 +1150,47 @@ public sealed class ShowcaseEvidenceJsonlWriter : IDisposable
             return "snapshot_player_hit_test";
         }
 
+        if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 32)
+        {
+            if (gesture.Kind == TerminalMouseKind.Scroll)
+            {
+                return hit.LocalHitId switch
+                {
+                    "performance_challenge:sparkline" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "performance_challenge_sparkline_scroll_up"
+                        : "performance_challenge_sparkline_scroll_down",
+                    "performance_challenge:budget" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "performance_challenge_budget_scroll_up"
+                        : "performance_challenge_budget_scroll_down",
+                    _ => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "performance_challenge_panel_scroll_up"
+                        : "performance_challenge_panel_scroll_down"
+                };
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Left)
+            {
+                if (hit.LocalHitId.StartsWith("performance_challenge:tier:", StringComparison.Ordinal))
+                {
+                    return "performance_challenge_tier_select";
+                }
+
+                return hit.LocalHitId switch
+                {
+                    "performance_challenge:header" => "performance_challenge_header_focus",
+                    "performance_challenge:metrics" => "performance_challenge_metrics_focus",
+                    "performance_challenge:sparkline" => "performance_challenge_sparkline_focus",
+                    "performance_challenge:evidence" => "performance_challenge_evidence_focus",
+                    "performance_challenge:budget" => "performance_challenge_budget_focus",
+                    "performance_challenge:stress" => "performance_challenge_stress_toggle",
+                    "performance_challenge:footer" => "performance_challenge_controls_focus",
+                    _ => "performance_challenge_hit_test"
+                };
+            }
+
+            return "performance_challenge_hit_test";
+        }
+
         if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 7)
         {
             if (gesture.Kind == TerminalMouseKind.Scroll)

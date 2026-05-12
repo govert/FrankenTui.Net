@@ -907,6 +907,64 @@ internal static class ShowcaseFrameHitRegistry
                 new("snapshot_player:diagnostics", ShowcaseHitLayer.Content, 31_220)));
         }
 
+        if (state.CurrentScreenNumber == 32 && TryResolveContentInnerArea(state.Viewport, out var perfInner) && perfInner.Width >= 60 && perfInner.Height >= 12)
+        {
+            AddRegion(
+                regions,
+                perfInner.X,
+                perfInner.Y,
+                perfInner.Width,
+                new("performance_challenge:header", ShowcaseHitLayer.Content, 32_000));
+
+            var bodyY = perfInner.Y + 1;
+            var bodyHeight = Math.Max(1, perfInner.Height - 2);
+            var metricsWidth = Math.Min(34, Math.Max(1, perfInner.Width / 3));
+            var budgetWidth = Math.Min(42, Math.Max(1, perfInner.Width / 3));
+            var middleX = perfInner.X + metricsWidth;
+            var budgetX = perfInner.Right - budgetWidth;
+            var middleWidth = Math.Max(1, budgetX - middleX);
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(perfInner.X, (ushort)bodyY, (ushort)metricsWidth, (ushort)bodyHeight),
+                new("performance_challenge:metrics", ShowcaseHitLayer.Content, 32_100)));
+
+            var sparklineHeight = Math.Max(1, bodyHeight * 52 / 100);
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)middleX, (ushort)bodyY, (ushort)middleWidth, (ushort)sparklineHeight),
+                new("performance_challenge:sparkline", ShowcaseHitLayer.Content, 32_200)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(
+                    (ushort)middleX,
+                    (ushort)(bodyY + sparklineHeight),
+                    (ushort)middleWidth,
+                    (ushort)Math.Max(1, bodyHeight - sparklineHeight)),
+                new("performance_challenge:evidence", ShowcaseHitLayer.Content, 32_210)));
+
+            var budgetPanelHeight = Math.Max(1, bodyHeight * 42 / 100);
+            var stressHeight = Math.Max(1, bodyHeight * 28 / 100);
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)budgetX, (ushort)bodyY, (ushort)budgetWidth, (ushort)budgetPanelHeight),
+                new("performance_challenge:budget", ShowcaseHitLayer.Content, 32_300)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)budgetX, (ushort)(bodyY + budgetPanelHeight), (ushort)budgetWidth, (ushort)stressHeight),
+                new("performance_challenge:stress", ShowcaseHitLayer.Content, 32_310)));
+            for (var row = 0; row < Math.Max(1, Math.Min(4, bodyHeight - budgetPanelHeight - stressHeight)); row++)
+            {
+                AddRegion(
+                    regions,
+                    budgetX,
+                    bodyY + budgetPanelHeight + stressHeight + row,
+                    budgetWidth,
+                    new($"performance_challenge:tier:{row}", ShowcaseHitLayer.Content, (uint)(32_400 + row)));
+            }
+
+            AddRegion(
+                regions,
+                perfInner.X,
+                Math.Max(perfInner.Y, perfInner.Bottom - 1),
+                perfInner.Width,
+                new("performance_challenge:footer", ShowcaseHitLayer.Content, 32_500));
+        }
+
         if (state.CurrentScreenNumber == 7 && TryResolveContentInnerArea(state.Viewport, out var formsInner) && formsInner.Width >= 30 && formsInner.Height >= 8)
         {
             var formWidth = Math.Max(1, formsInner.Width / 2);
