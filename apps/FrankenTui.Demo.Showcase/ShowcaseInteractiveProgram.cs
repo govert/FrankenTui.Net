@@ -142,6 +142,12 @@ internal sealed record ShowcaseDemoState(
     int MousePlaygroundEventIndex = 0,
     bool MousePlaygroundOverlayVisible = false,
     bool MousePlaygroundJitterStatsVisible = false,
+    int FormValidationSelectedFieldIndex = 0,
+    int FormValidationSelectedErrorIndex = 0,
+    int FormValidationRulesScroll = 0,
+    int FormValidationDiagnosticsScroll = 0,
+    bool FormValidationOnSubmitMode = false,
+    bool FormValidationSubmitted = false,
     bool PaletteLabBenchEnabled = false,
     int PaletteLabBenchFrame = 0,
     int PaletteLabBenchProcessed = 0,
@@ -327,6 +333,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent mousePlaygroundMouseEvent &&
             HandleMousePlaygroundMouse(mousePlaygroundMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent formValidationMouseEvent &&
+            HandleFormValidationMouse(formValidationMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -1740,6 +1752,95 @@ internal sealed record ShowcaseDemoState(
             _ => next
         };
         return gesture.Button is TerminalMouseButton.Left or TerminalMouseButton.Right or TerminalMouseButton.Middle;
+    }
+
+    private static bool HandleFormValidationMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 27 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content)
+        {
+            return false;
+        }
+
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = hit.LocalHitId switch
+            {
+                { } value when value.StartsWith("form_validation:field:", StringComparison.Ordinal) => next with
+                {
+                    FormValidationSelectedFieldIndex = Math.Clamp(next.FormValidationSelectedFieldIndex + delta, 0, 8)
+                },
+                "form_validation:rules" => next with
+                {
+                    FormValidationRulesScroll = Math.Clamp(next.FormValidationRulesScroll + delta, 0, 6)
+                },
+                "form_validation:diagnostics" => next with
+                {
+                    FormValidationDiagnosticsScroll = Math.Clamp(next.FormValidationDiagnosticsScroll + delta, 0, 8)
+                },
+                _ => next
+            };
+            return hit.LocalHitId == "form_validation:rules" ||
+                hit.LocalHitId == "form_validation:diagnostics" ||
+                hit.LocalHitId.StartsWith("form_validation:field:", StringComparison.Ordinal);
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        if (hit.LocalHitId.StartsWith("form_validation:field:", StringComparison.Ordinal))
+        {
+            var rowText = hit.LocalHitId["form_validation:field:".Length..];
+            if (!int.TryParse(rowText, CultureInfo.InvariantCulture, out var row))
+            {
+                return false;
+            }
+
+            next = next with { FormValidationSelectedFieldIndex = Math.Clamp(row, 0, 8) };
+            return true;
+        }
+
+        if (hit.LocalHitId.StartsWith("form_validation:error:", StringComparison.Ordinal))
+        {
+            var rowText = hit.LocalHitId["form_validation:error:".Length..];
+            if (!int.TryParse(rowText, CultureInfo.InvariantCulture, out var row))
+            {
+                return false;
+            }
+
+            next = next with
+            {
+                FormValidationSelectedErrorIndex = Math.Clamp(row, 0, 8),
+                FormValidationOnSubmitMode = !next.FormValidationOnSubmitMode
+            };
+            return true;
+        }
+
+        next = hit.LocalHitId switch
+        {
+            "form_validation:mode" => next with { FormValidationOnSubmitMode = !next.FormValidationOnSubmitMode },
+            "form_validation:touched_dirty" => next with { FormValidationSubmitted = !next.FormValidationSubmitted },
+            "form_validation:controls" => next with { FormValidationSubmitted = true },
+            "form_validation:notifications" => next with { FormValidationSubmitted = !next.FormValidationSubmitted },
+            "form_validation:rules" => next with { FormValidationRulesScroll = Math.Clamp(next.FormValidationRulesScroll + 1, 0, 6) },
+            "form_validation:diagnostics" => next with { FormValidationDiagnosticsScroll = Math.Clamp(next.FormValidationDiagnosticsScroll + 1, 0, 8) },
+            _ => next
+        };
+        return hit.LocalHitId is "form_validation:mode" or "form_validation:touched_dirty" or
+            "form_validation:controls" or "form_validation:notifications" or
+            "form_validation:rules" or "form_validation:diagnostics";
     }
 
     private static bool HandleTerminalCapabilitiesMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)

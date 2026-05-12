@@ -5170,6 +5170,68 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseFormValidationMouseMutatesFieldModeSubmittedAndScrollState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 30),
+            screenNumber: 27,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(state, 3, 8, timestamp);
+        Assert.Equal(2, state.FormValidationSelectedFieldIndex);
+
+        state = ApplyMouse(state, 55, 5, timestamp + TimeSpan.FromMilliseconds(10));
+        Assert.Equal(1, state.FormValidationSelectedErrorIndex);
+        Assert.True(state.FormValidationOnSubmitMode);
+
+        state = ApplyMouse(state, 95, 2, timestamp + TimeSpan.FromMilliseconds(20));
+        Assert.True(state.FormValidationSubmitted);
+
+        state = ApplyMouse(
+            state,
+            95,
+            19,
+            timestamp + TimeSpan.FromMilliseconds(30),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(1, state.FormValidationDiagnosticsScroll);
+    }
+
+    [Fact]
+    public void ShowcaseFormValidationRendersMouseSelectedState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 30),
+            screenNumber: 27,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            FormValidationSelectedFieldIndex = 2,
+            FormValidationSelectedErrorIndex = 1,
+            FormValidationRulesScroll = 2,
+            FormValidationDiagnosticsScroll = 3,
+            FormValidationOnSubmitMode = true,
+            FormValidationSubmitted = true
+        };
+        var buffer = new RenderBuffer(120, 30);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 30), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("Mode: On Submit", screen);
+        Assert.Contains("Registration Form [focus Password]", screen);
+        Assert.Contains("Submitted: true", screen);
+        Assert.Contains("Selected error: 1", screen);
+        Assert.Contains("Validation Rules [scroll 2]", screen);
+        Assert.Contains("Diagnostics scroll: 3", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryExposesMacroRecorderPanels()
     {
         var state = ShowcaseDemoState.Create(

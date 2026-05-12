@@ -1961,6 +1961,12 @@ internal static class ShowcaseSurface
 
     private static IWidget BuildFormValidation(ShowcaseDemoState state)
     {
+        var selected = Math.Clamp(state.FormValidationSelectedFieldIndex, 0, 8);
+        var selectedError = Math.Clamp(state.FormValidationSelectedErrorIndex, 0, 8);
+        var rulesScroll = Math.Clamp(state.FormValidationRulesScroll, 0, 6);
+        var diagnosticsScroll = Math.Clamp(state.FormValidationDiagnosticsScroll, 0, 8);
+        var validationMode = state.FormValidationOnSubmitMode ? "On Submit" : "Real-time";
+        var submitted = state.FormValidationSubmitted;
         var fields =
             new[]
             {
@@ -1987,7 +1993,6 @@ internal static class ShowcaseSurface
             ["terms"] = [ValidationRules.Required()]
         };
         var validation = FormValidator.Validate(fields, validators);
-        var selected = state.ScriptFrame % fields.Length;
         var formRows = fields
             .Select((field, index) => new[]
             {
@@ -2004,16 +2009,17 @@ internal static class ShowcaseSurface
                 error.Message
             })
             .ToArray();
+        var selectedField = fields[selected];
 
         var left = new StackWidget(
             LayoutDirection.Vertical,
             [
                 (LayoutConstraint.Fixed(3), Panel(
                     "Mode",
-                    "Mode: Real-time [M to toggle]\nStatus: Error injection active")),
+                    $"Mode: {validationMode} [M to toggle]\nStatus: {(submitted ? "Submitted with validation errors" : "Error injection active")}")),
                 (LayoutConstraint.Fill(), new PanelWidget
                 {
-                    Title = "Registration Form",
+                    Title = $"Registration Form [focus {selectedField.Label}]",
                     Child = new TableWidget
                     {
                         Headers = ["", "Field", "Value", "State"],
@@ -2023,7 +2029,7 @@ internal static class ShowcaseSurface
                 }),
                 (LayoutConstraint.Fixed(4), Panel(
                     "Touched / Dirty",
-                    $"Touched: 9/9 | Dirty: 8/9\nSubmitted: false | Tick: {state.ScriptFrame}"))
+                    $"Touched: {Math.Max(1, selected + 1)}/9 | Dirty: 8/9\nSubmitted: {submitted.ToString().ToLowerInvariant()} | Focused: {selectedField.Id}"))
             ]);
         var center = new StackWidget(
             LayoutDirection.Vertical,
@@ -2035,12 +2041,12 @@ internal static class ShowcaseSurface
                     {
                         Headers = ["Field", "Message"],
                         Rows = errorRows,
-                        SelectedRow = selected % Math.Max(errorRows.Length, 1)
+                        SelectedRow = Math.Min(selectedError, Math.Max(errorRows.Length - 1, 0))
                     }
                 }),
                 (LayoutConstraint.Fill(), Panel(
-                    "Validation Rules",
-                    "Username: required, min 3\nEmail: required, contains @ and .\nPassword: required, min 8\nConfirm Password: match password\nAge: bounded 13..120\nBio: max 100 characters\nWebsite: http:// or https://\nRole: not placeholder\nAccept Terms: checked"))
+                    rulesScroll > 0 ? $"Validation Rules [scroll {rulesScroll}]" : "Validation Rules",
+                    $"Selected error: {selectedError}\nUsername: required, min 3\nEmail: required, contains @ and .\nPassword: required, min 8\nConfirm Password: match password\nAge: bounded 13..120\nBio: max 100 characters\nWebsite: http:// or https://\nRole: not placeholder\nAccept Terms: checked"))
             ]);
         var right = new StackWidget(
             LayoutDirection.Vertical,
@@ -2050,10 +2056,10 @@ internal static class ShowcaseSurface
                     "Tab/S-Tab: navigate fields\nUp/Down: change value / navigate\nSpace: toggle checkbox\nEnter: submit form\nM: Toggle validation mode\nE: Inject errors\nR: Reset form\nC: Clear errors")),
                 (LayoutConstraint.Fixed(7), Panel(
                     "Notifications",
-                    "QueueConfig: max_visible=3 max_queued=10\nPosition: TopRight\nSuccess toast: Registration successful!\nError toast: Validation Failed\nPriority: High on submit errors")),
+                    $"QueueConfig: max_visible=3 max_queued=10\nPosition: TopRight\nLatest toast: {(submitted ? "Validation Failed" : "Validation Failed / Registration pending")}\nPriority: High on submit errors")),
                 (LayoutConstraint.Fill(), Panel(
-                    "Mouse + Diagnostics",
-                    "Click error panel: toggle mode\nScroll form: navigate focused field\nEvents: mode_toggled, form_submitted, errors_injected, errors_cleared\nState hooks: touched_fields, dirty_fields, focused\nValidationMode: Real-time | On Submit"))
+                    diagnosticsScroll > 0 ? $"Mouse + Diagnostics [scroll {diagnosticsScroll}]" : "Mouse + Diagnostics",
+                    $"Diagnostics scroll: {diagnosticsScroll}\nClick error panel: toggle mode\nScroll form: navigate focused field\nEvents: mode_toggled, form_submitted, errors_injected, errors_cleared\nState hooks: touched_fields, dirty_fields, focused\nValidationMode: {validationMode} | Submitted: {submitted.ToString().ToLowerInvariant()}"))
             ]);
 
         return new StackWidget(
