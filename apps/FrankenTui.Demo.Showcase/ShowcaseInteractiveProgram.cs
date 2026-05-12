@@ -276,6 +276,7 @@ internal sealed record ShowcaseDemoState(
     int AccessibilitySelectedToggleIndex = 0,
     int AccessibilityPreviewScroll = 0,
     int AccessibilityTelemetryScroll = 0,
+    IReadOnlyList<ShowcaseA11yTelemetryEntry>? AccessibilityTelemetryEvents = null,
     int WidgetBuilderPresetIndex = -1,
     int WidgetBuilderSelectedIndex = -1,
     int WidgetBuilderFocusIndex = 0,
@@ -382,6 +383,17 @@ internal sealed record ShowcaseDemoState(
             TaskRunning: false,
             ModalOpen: Session.CommandPalette.IsOpen,
             ViewOverlay: EvidenceLedgerVisible || PerfHudVisible || DebugVisible || HelpVisible || A11yPanelVisible || TourActive);
+
+    public ShowcaseDemoState RecordA11yTelemetry(string kind)
+    {
+        var tick = RuntimeStats?.StepIndex ?? ScriptFrame;
+        var events = AccessibilityTelemetryEvents ?? [];
+        var nextEvents = events
+            .Append(new ShowcaseA11yTelemetryEntry(kind, tick, A11yHighContrast, A11yReducedMotion, A11yLargeText))
+            .TakeLast(6)
+            .ToArray();
+        return this with { AccessibilityTelemetryEvents = nextEvents };
+    }
 
     public ShowcaseDemoState AdvanceScript(int frames)
     {
@@ -889,19 +901,19 @@ internal sealed record ShowcaseDemoState(
         {
             if (IsShiftCharacter(gesture, 'h'))
             {
-                next = next with { A11yHighContrast = !next.A11yHighContrast };
+                next = (next with { A11yHighContrast = !next.A11yHighContrast }).RecordA11yTelemetry("HighContrast");
                 return true;
             }
 
             if (IsShiftCharacter(gesture, 'm'))
             {
-                next = next with { A11yReducedMotion = !next.A11yReducedMotion };
+                next = (next with { A11yReducedMotion = !next.A11yReducedMotion }).RecordA11yTelemetry("ReducedMotion");
                 return true;
             }
 
             if (IsShiftCharacter(gesture, 'l'))
             {
-                next = next with { A11yLargeText = !next.A11yLargeText };
+                next = (next with { A11yLargeText = !next.A11yLargeText }).RecordA11yTelemetry("LargeText");
                 return true;
             }
         }
@@ -916,6 +928,27 @@ internal sealed record ShowcaseDemoState(
         {
             next = next with { PerfHudVisible = !next.PerfHudVisible };
             return true;
+        }
+
+        if (next.CurrentScreenNumber == 37)
+        {
+            if (IsCharacter(gesture, 'h'))
+            {
+                next = (next with { A11yHighContrast = !next.A11yHighContrast }).RecordA11yTelemetry("HighContrast");
+                return true;
+            }
+
+            if (IsCharacter(gesture, 'm'))
+            {
+                next = (next with { A11yReducedMotion = !next.A11yReducedMotion }).RecordA11yTelemetry("ReducedMotion");
+                return true;
+            }
+
+            if (IsCharacter(gesture, 'l'))
+            {
+                next = (next with { A11yLargeText = !next.A11yLargeText }).RecordA11yTelemetry("LargeText");
+                return true;
+            }
         }
 
         if (HandlePaletteLabKey(gesture, ref next))
@@ -3588,24 +3621,24 @@ internal sealed record ShowcaseDemoState(
             var selected = Math.Clamp((gesture.Row - 9) / 2, 0, 2);
             next = selected switch
             {
-                0 => next with
+                0 => (next with
                 {
                     A11yHighContrast = !next.A11yHighContrast,
                     AccessibilitySelectedToggleIndex = 0,
                     AccessibilityFocusIndex = 1
-                },
-                1 => next with
+                }).RecordA11yTelemetry("HighContrast"),
+                1 => (next with
                 {
                     A11yReducedMotion = !next.A11yReducedMotion,
                     AccessibilitySelectedToggleIndex = 1,
                     AccessibilityFocusIndex = 1
-                },
-                _ => next with
+                }).RecordA11yTelemetry("ReducedMotion"),
+                _ => (next with
                 {
                     A11yLargeText = !next.A11yLargeText,
                     AccessibilitySelectedToggleIndex = 2,
                     AccessibilityFocusIndex = 1
-                }
+                }).RecordA11yTelemetry("LargeText")
             };
             return true;
         }
@@ -3630,7 +3663,7 @@ internal sealed record ShowcaseDemoState(
                 AccessibilityTelemetryScroll = Math.Clamp(next.AccessibilityTelemetryScroll + 1, 0, 8),
                 AccessibilityFocusIndex = 4
             },
-            "accessibility:footer" => next with
+            "accessibility:footer" => (next with
             {
                 A11yHighContrast = false,
                 A11yReducedMotion = false,
@@ -3638,7 +3671,7 @@ internal sealed record ShowcaseDemoState(
                 AccessibilityPreviewScroll = 0,
                 AccessibilityTelemetryScroll = 0,
                 AccessibilityFocusIndex = 5
-            },
+            }).RecordA11yTelemetry("Panel"),
             _ => next
         };
         return hit.LocalHitId is "accessibility:overview" or "accessibility:preview" or "accessibility:wcag" or "accessibility:telemetry" or "accessibility:footer";
@@ -5341,6 +5374,13 @@ internal abstract record ShowcaseDemoMessage;
 internal sealed record ShowcaseInputMessage(RuntimeInputEnvelope Input, RuntimeFrameStats RuntimeStats) : ShowcaseDemoMessage;
 
 internal sealed record ShowcaseTimerMessage(DateTimeOffset Now, RuntimeFrameStats RuntimeStats) : ShowcaseDemoMessage;
+
+internal sealed record ShowcaseA11yTelemetryEntry(
+    string Kind,
+    int Tick,
+    bool HighContrast,
+    bool ReducedMotion,
+    bool LargeText);
 
 internal sealed record ShowcaseKanbanCard(int Id, string Title, string Tag);
 

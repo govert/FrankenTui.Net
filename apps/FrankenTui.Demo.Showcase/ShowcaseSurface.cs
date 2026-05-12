@@ -3025,6 +3025,7 @@ internal static class ShowcaseSurface
         var selectedToggle = Math.Clamp(state.AccessibilitySelectedToggleIndex, 0, 2);
         var previewScroll = Math.Clamp(state.AccessibilityPreviewScroll, 0, 8);
         var telemetryScroll = Math.Clamp(state.AccessibilityTelemetryScroll, 0, 8);
+        var telemetryRows = BuildAccessibilityTelemetryRows(state, tick, highContrast, reducedMotion, largeText);
 
         var overview = Panel(
             focusIndex == 0 ? "Accessibility Control Panel [focus]" : "Accessibility Control Panel",
@@ -3066,9 +3067,7 @@ internal static class ShowcaseSurface
         var telemetry = Panel(
             telemetryScroll > 0 ? $"A11y Telemetry [scroll {telemetryScroll}]" : focusIndex == 4 ? "A11y Telemetry [focus]" : "A11y Telemetry",
             $"Telemetry scroll: {telemetryScroll}\n" +
-            $"[{tick,4}] Panel | HC:{(highContrast ? "ON" : "OFF")} RM:{(reducedMotion ? "ON" : "OFF")} LT:{(largeText ? "ON" : "OFF")}\n" +
-            $"[{tick + 1,4}] High Contrast | HC:ON RM:{(reducedMotion ? "ON" : "OFF")} LT:{(largeText ? "ON" : "OFF")}\n" +
-            $"[{tick + 2,4}] Reduced Motion | HC:{(highContrast ? "ON" : "OFF")} RM:ON LT:{(largeText ? "ON" : "OFF")}\n" +
+            telemetryRows + "\n" +
             "A11yEventKind: Panel, HighContrast, ReducedMotion, LargeText\n" +
             "A11yTelemetryEvent carries tick, high_contrast, reduced_motion, large_text");
 
@@ -3094,6 +3093,26 @@ internal static class ShowcaseSurface
                     ])),
                 (LayoutConstraint.Fixed(1), new ParagraphWidget($"h contrast | m motion | l large text | Shift+A overlay | Ctrl+T theme | selected={selectedToggle} focus={focusIndex} | layout_toggles hit rows"))
             ]);
+    }
+
+    private static string BuildAccessibilityTelemetryRows(
+        ShowcaseDemoState state,
+        int tick,
+        bool highContrast,
+        bool reducedMotion,
+        bool largeText)
+    {
+        if (state.AccessibilityTelemetryEvents is { Count: > 0 } events)
+        {
+            return string.Join(
+                "\n",
+                events.Select(static entry =>
+                    $"[{entry.Tick,4}] {entry.Kind} | HC:{(entry.HighContrast ? "ON" : "OFF")} RM:{(entry.ReducedMotion ? "ON" : "OFF")} LT:{(entry.LargeText ? "ON" : "OFF")}"));
+        }
+
+        return $"[{tick,4}] Panel | HC:{(highContrast ? "ON" : "OFF")} RM:{(reducedMotion ? "ON" : "OFF")} LT:{(largeText ? "ON" : "OFF")}\n" +
+            $"[{tick + 1,4}] HighContrast | HC:ON RM:{(reducedMotion ? "ON" : "OFF")} LT:{(largeText ? "ON" : "OFF")}\n" +
+            $"[{tick + 2,4}] ReducedMotion | HC:{(highContrast ? "ON" : "OFF")} RM:ON LT:{(largeText ? "ON" : "OFF")}";
     }
 
     private static IWidget BuildWidgetBuilder(ShowcaseDemoState state)

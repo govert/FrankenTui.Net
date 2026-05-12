@@ -548,10 +548,11 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   contrast, live preview, and telemetry layout with high-contrast,
   reduced-motion, and large-text state labels, WCAG threshold rows, preview
   styling labels, app-level toggle action names, telemetry event fields,
-  keybindings, and mouse hit-row notes; real app-level `A11ySettings` sync,
-  contrast computation from live palette, theme large-text style application,
-  telemetry event ring buffer, mouse toggle dispatch, overlay integration, and
-  exact upstream styling remain tracked under `364-DEM`.
+  keybindings, and mouse hit-row notes; keyboard toggle plus mouse toggle/reset
+  actions now append a bounded six-entry accessibility telemetry ring that
+  renders persisted event rows before deterministic fallback rows; real app-level `A11ySettings` sync, contrast
+  computation from live palette, theme large-text style application, overlay
+  integration, and exact upstream styling remain tracked under `364-DEM`.
   The Widget Builder screen now follows the upstream sandbox header plus
   presets, widget tree, live preview, props, export, and mouse-hint layout with
   preset names, widget-kind ids, editable prop labels, JSONL export fields,

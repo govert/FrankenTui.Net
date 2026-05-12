@@ -7401,6 +7401,16 @@ public sealed class ShowcaseShellTests
         Assert.True(state.A11yHighContrast);
         Assert.Equal(0, state.AccessibilitySelectedToggleIndex);
         Assert.Equal(1, state.AccessibilityFocusIndex);
+        Assert.NotNull(state.AccessibilityTelemetryEvents);
+        Assert.Collection<ShowcaseA11yTelemetryEntry>(
+            state.AccessibilityTelemetryEvents,
+            entry =>
+            {
+                Assert.Equal("HighContrast", entry.Kind);
+                Assert.True(entry.HighContrast);
+                Assert.False(entry.ReducedMotion);
+                Assert.False(entry.LargeText);
+            });
 
         state = ApplyMouse(state, 3, 12, timestamp + TimeSpan.FromMilliseconds(10));
         Assert.True(state.A11yReducedMotion);
@@ -7409,6 +7419,7 @@ public sealed class ShowcaseShellTests
         state = ApplyMouse(state, 3, 14, timestamp + TimeSpan.FromMilliseconds(20));
         Assert.True(state.A11yLargeText);
         Assert.Equal(2, state.AccessibilitySelectedToggleIndex);
+        Assert.Equal(["HighContrast", "ReducedMotion", "LargeText"], state.AccessibilityTelemetryEvents?.Select(static entry => entry.Kind));
 
         state = ApplyMouse(
             state,
@@ -7432,6 +7443,52 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseAccessibilityPersistsBoundedTelemetryRing()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 37,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        for (var index = 0; index < 8; index++)
+        {
+            state = ApplyMouse(state, 3, 10, timestamp + TimeSpan.FromMilliseconds(index));
+        }
+
+        Assert.NotNull(state.AccessibilityTelemetryEvents);
+        var events = state.AccessibilityTelemetryEvents;
+        Assert.Equal(6, events.Count);
+        Assert.All(events, entry => Assert.Equal("HighContrast", entry.Kind));
+        Assert.True(events[0].HighContrast);
+        Assert.False(events[^1].HighContrast);
+    }
+
+    [Fact]
+    public void ShowcaseAccessibilityKeysMutateA11yStateAndTelemetry()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 37,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyKey(state, new KeyGesture(TerminalKey.Character, TerminalModifiers.None, new Rune('h')), timestamp);
+        state = ApplyKey(state, new KeyGesture(TerminalKey.Character, TerminalModifiers.None, new Rune('m')), timestamp.AddMilliseconds(10));
+        state = ApplyKey(state, new KeyGesture(TerminalKey.Character, TerminalModifiers.None, new Rune('l')), timestamp.AddMilliseconds(20));
+
+        Assert.True(state.A11yHighContrast);
+        Assert.True(state.A11yReducedMotion);
+        Assert.True(state.A11yLargeText);
+        Assert.False(state.MouseCaptureEnabled);
+        Assert.Equal(["HighContrast", "ReducedMotion", "LargeText"], state.AccessibilityTelemetryEvents?.Select(static entry => entry.Kind));
+    }
+
+    [Fact]
     public void ShowcaseAccessibilityRendersMouseSelectedState()
     {
         var state = ShowcaseDemoState.Create(
@@ -7447,7 +7504,13 @@ public sealed class ShowcaseShellTests
             AccessibilityFocusIndex = 4,
             AccessibilitySelectedToggleIndex = 2,
             AccessibilityPreviewScroll = 3,
-            AccessibilityTelemetryScroll = 4
+            AccessibilityTelemetryScroll = 4,
+            AccessibilityTelemetryEvents =
+            [
+                new ShowcaseA11yTelemetryEntry("HighContrast", 7, true, false, false),
+                new ShowcaseA11yTelemetryEntry("ReducedMotion", 8, true, true, false),
+                new ShowcaseA11yTelemetryEntry("LargeText", 9, true, true, true)
+            ]
         };
         var buffer = new RenderBuffer(120, 32);
 
@@ -7459,6 +7522,7 @@ public sealed class ShowcaseShellTests
         Assert.Contains("> [l] Large Text: ON", screen);
         Assert.Contains("Live Preview [scroll 3]", screen);
         Assert.Contains("Telemetry scroll: 4", screen);
+        Assert.Contains("[   9] LargeText | HC:ON RM:ON LT:ON", screen);
         Assert.Contains("selected=2 focus=4", screen);
     }
 
