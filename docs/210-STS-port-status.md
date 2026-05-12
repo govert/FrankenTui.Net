@@ -865,10 +865,12 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   inline-story, alt-screen-story, controls, state/limits, and footer regions
   plus matching mouse evidence, and the Accessibility increment adds overview,
   toggles, preview, WCAG, telemetry, and footer regions plus matching mouse
-  evidence, while still leaving broader generalized screen hit routing open.
-  Focused showcase-shell verification is now `183` tests via
+  evidence, and the Widget Builder increment adds header, presets, widget-tree,
+  preview, props, export, and footer regions plus matching mouse evidence,
+  while still leaving broader generalized screen hit routing open.
+  Focused showcase-shell verification is now `185` tests via
   `dotnet test tests/FrankenTui.Tests.Headless/FrankenTui.Tests.Headless.csproj --no-restore --filter FullyQualifiedName~ShowcaseShellTests`.
-  Current local verification is `437` headless tests, `9` web tests, and `7`
+  Current local verification is `439` headless tests, `9` web tests, and `7`
   PTY tests via `dotnet test FrankenTui.Net.sln --no-restore`.
   Previous focused registry/evidence verification covered `33`
   registry/evidence

@@ -1154,6 +1154,52 @@ internal static class ShowcaseFrameHitRegistry
                 new("accessibility:footer", ShowcaseHitLayer.Content, 37_300));
         }
 
+        if (state.CurrentScreenNumber == 38 && TryResolveContentInnerArea(state.Viewport, out var builderInner) && builderInner.Width >= 80 && builderInner.Height >= 12)
+        {
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(builderInner.X, builderInner.Y, builderInner.Width, (ushort)Math.Min(2, (int)builderInner.Height)),
+                new("widget_builder:header", ShowcaseHitLayer.Content, 38_000)));
+
+            var bodyY = builderInner.Y + 2;
+            var bodyHeight = Math.Max(1, builderInner.Height - 3);
+            var leftWidth = Math.Min(30, Math.Max(1, builderInner.Width / 3));
+            var rightWidth = Math.Min(48, Math.Max(1, builderInner.Width / 2));
+            var previewWidth = Math.Max(1, builderInner.Width - leftWidth - rightWidth);
+            var previewX = builderInner.X + leftWidth;
+            var rightX = previewX + previewWidth;
+            var presetsHeight = Math.Max(1, bodyHeight * 45 / 100);
+            var propsHeight = Math.Max(1, bodyHeight * 48 / 100);
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(builderInner.X, (ushort)bodyY, (ushort)leftWidth, (ushort)presetsHeight),
+                new("widget_builder:presets", ShowcaseHitLayer.Content, 38_100)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(
+                    builderInner.X,
+                    (ushort)(bodyY + presetsHeight),
+                    (ushort)leftWidth,
+                    (ushort)Math.Max(1, bodyHeight - presetsHeight)),
+                new("widget_builder:tree", ShowcaseHitLayer.Content, 38_110)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)previewX, (ushort)bodyY, (ushort)previewWidth, (ushort)bodyHeight),
+                new("widget_builder:preview", ShowcaseHitLayer.Content, 38_200)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)rightX, (ushort)bodyY, (ushort)rightWidth, (ushort)propsHeight),
+                new("widget_builder:props", ShowcaseHitLayer.Content, 38_300)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(
+                    (ushort)rightX,
+                    (ushort)(bodyY + propsHeight),
+                    (ushort)rightWidth,
+                    (ushort)Math.Max(1, bodyHeight - propsHeight)),
+                new("widget_builder:export", ShowcaseHitLayer.Content, 38_310)));
+            AddRegion(
+                regions,
+                builderInner.X,
+                Math.Max(builderInner.Y, builderInner.Bottom - 1),
+                builderInner.Width,
+                new("widget_builder:footer", ShowcaseHitLayer.Content, 38_400));
+        }
+
         if (state.CurrentScreenNumber == 7 && TryResolveContentInnerArea(state.Viewport, out var formsInner) && formsInner.Width >= 30 && formsInner.Height >= 8)
         {
             var formWidth = Math.Max(1, formsInner.Width / 2);

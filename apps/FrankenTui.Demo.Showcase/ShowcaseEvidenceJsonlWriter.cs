@@ -1367,6 +1367,55 @@ public sealed class ShowcaseEvidenceJsonlWriter : IDisposable
             return "accessibility_hit_test";
         }
 
+        if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 38)
+        {
+            if (gesture.Kind == TerminalMouseKind.Scroll)
+            {
+                return hit.LocalHitId switch
+                {
+                    "widget_builder:presets" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "widget_builder_preset_prev"
+                        : "widget_builder_preset_next",
+                    "widget_builder:tree" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "widget_builder_tree_scroll_up"
+                        : "widget_builder_tree_scroll_down",
+                    "widget_builder:props" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "widget_builder_value_decrement"
+                        : "widget_builder_value_increment",
+                    _ => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "widget_builder_panel_scroll_up"
+                        : "widget_builder_panel_scroll_down"
+                };
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Right)
+            {
+                return hit.LocalHitId switch
+                {
+                    "widget_builder:presets" => "widget_builder_preset_save",
+                    "widget_builder:tree" => "widget_builder_border_toggle",
+                    _ => "widget_builder_context_action"
+                };
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Left)
+            {
+                return hit.LocalHitId switch
+                {
+                    "widget_builder:header" => "widget_builder_header_focus",
+                    "widget_builder:presets" => "widget_builder_preset_select",
+                    "widget_builder:tree" => "widget_builder_tree_select",
+                    "widget_builder:preview" => "widget_builder_preview_toggle",
+                    "widget_builder:props" => "widget_builder_props_focus",
+                    "widget_builder:export" => "widget_builder_export_focus",
+                    "widget_builder:footer" => "widget_builder_controls_focus",
+                    _ => "widget_builder_hit_test"
+                };
+            }
+
+            return "widget_builder_hit_test";
+        }
+
         if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 7)
         {
             if (gesture.Kind == TerminalMouseKind.Scroll)

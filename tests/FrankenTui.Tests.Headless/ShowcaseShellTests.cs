@@ -5949,6 +5949,88 @@ public sealed class ShowcaseShellTests
         Assert.Equal(37_210, telemetryRecord.RootElement.GetProperty("target_id").GetInt32());
     }
 
+    [Fact]
+    public void ShowcaseFrameHitRegistryExposesWidgetBuilderPanels()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 38,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+
+        var header = ShowcaseFrameHitRegistry.HitTest(state, 3, 2);
+        var presets = ShowcaseFrameHitRegistry.HitTest(state, 3, 6);
+        var tree = ShowcaseFrameHitRegistry.HitTest(state, 3, 20);
+        var preview = ShowcaseFrameHitRegistry.HitTest(state, 45, 6);
+        var props = ShowcaseFrameHitRegistry.HitTest(state, 90, 6);
+        var export = ShowcaseFrameHitRegistry.HitTest(state, 90, 20);
+        var footer = ShowcaseFrameHitRegistry.HitTest(state, 3, 29);
+
+        Assert.Equal("widget_builder:header", header.LocalHitId);
+        Assert.Equal((uint)38_000, header.UpstreamHitId);
+        Assert.Equal("widget_builder:presets", presets.LocalHitId);
+        Assert.Equal((uint)38_100, presets.UpstreamHitId);
+        Assert.Equal("widget_builder:tree", tree.LocalHitId);
+        Assert.Equal((uint)38_110, tree.UpstreamHitId);
+        Assert.Equal("widget_builder:preview", preview.LocalHitId);
+        Assert.Equal((uint)38_200, preview.UpstreamHitId);
+        Assert.Equal("widget_builder:props", props.LocalHitId);
+        Assert.Equal((uint)38_300, props.UpstreamHitId);
+        Assert.Equal("widget_builder:export", export.LocalHitId);
+        Assert.Equal((uint)38_310, export.UpstreamHitId);
+        Assert.Equal("widget_builder:footer", footer.LocalHitId);
+        Assert.Equal((uint)38_400, footer.UpstreamHitId);
+    }
+
+    [Fact]
+    public void ShowcaseEvidenceJsonlWriterEmitsWidgetBuilderMouseActions()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"ftui-showcase-widget-builder-mouse-{Guid.NewGuid():N}.jsonl");
+        var options = ShowcaseCliOptions.Parse(
+            ["--screen=38", "--evidence-jsonl", path],
+            _ => null);
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 38,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+        var presetsEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 6, TerminalMouseButton.Right, TerminalMouseKind.Down),
+            timestamp);
+        var treeEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 20, TerminalMouseButton.WheelDown, TerminalMouseKind.Scroll),
+            timestamp + TimeSpan.FromMilliseconds(10));
+        var previewEvent = TerminalEvent.Mouse(
+            new MouseGesture(45, 6, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp + TimeSpan.FromMilliseconds(20));
+
+        using (var writer = ShowcaseEvidenceJsonlWriter.Create(options.EvidenceJsonlPath))
+        {
+            Assert.NotNull(writer);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 1, frame: 1, presetsEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 2, frame: 2, treeEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 3, frame: 3, previewEvent, state, state);
+        }
+
+        var lines = File.ReadAllLines(path);
+        Assert.Equal(3, lines.Length);
+        using var presetsRecord = JsonDocument.Parse(lines[0]);
+        using var treeRecord = JsonDocument.Parse(lines[1]);
+        using var previewRecord = JsonDocument.Parse(lines[2]);
+        Assert.Equal("widget_builder_preset_save", presetsRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("widget_builder:presets", presetsRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(38_100, presetsRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("widget_builder_tree_scroll_down", treeRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("widget_builder:tree", treeRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(38_110, treeRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("widget_builder_preview_toggle", previewRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("widget_builder:preview", previewRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(38_200, previewRecord.RootElement.GetProperty("target_id").GetInt32());
+    }
+
     private static ShowcaseDemoState ApplyKey(ShowcaseDemoState state, KeyGesture gesture, DateTimeOffset timestamp)
     {
         var terminalEvent = TerminalEvent.Key(gesture, timestamp);
