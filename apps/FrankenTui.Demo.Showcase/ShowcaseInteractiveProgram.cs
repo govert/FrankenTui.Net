@@ -167,6 +167,8 @@ internal sealed record ShowcaseDemoState(
     int FileBrowserPreviewScroll = 0,
     int AdvancedPatternIndex = 0,
     int AdvancedCompositeModeIndex = 0,
+    int AdvancedFocusIndex = 0,
+    bool AdvancedContextArmed = false,
     int NotificationsTriggerIndex = 0,
     int NotificationsToastIndex = 0,
     int NotificationsLifecycleScroll = 0,
@@ -1899,11 +1901,29 @@ internal sealed record ShowcaseDemoState(
             var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
             next = hit.LocalHitId switch
             {
-                "advanced:patterns" => next with { AdvancedPatternIndex = Math.Clamp(next.AdvancedPatternIndex + delta, 0, 4) },
-                "advanced:composite" => next with { AdvancedCompositeModeIndex = Math.Clamp(next.AdvancedCompositeModeIndex + delta, 0, 2) },
+                "advanced:patterns" => next with
+                {
+                    AdvancedFocusIndex = 0,
+                    AdvancedPatternIndex = Math.Clamp(next.AdvancedPatternIndex + delta, 0, 4)
+                },
+                "advanced:composite" => next with
+                {
+                    AdvancedFocusIndex = 1,
+                    AdvancedCompositeModeIndex = Math.Clamp(next.AdvancedCompositeModeIndex + delta, 0, 2)
+                },
                 _ => next
             };
             return hit.LocalHitId is "advanced:patterns" or "advanced:composite";
+        }
+
+        if (gesture.Button == TerminalMouseButton.Right && hit.LocalHitId is "advanced:patterns" or "advanced:composite")
+        {
+            next = next with
+            {
+                AdvancedFocusIndex = hit.LocalHitId == "advanced:patterns" ? 0 : 1,
+                AdvancedContextArmed = true
+            };
+            return true;
         }
 
         if (gesture.Button != TerminalMouseButton.Left)
@@ -1913,8 +1933,18 @@ internal sealed record ShowcaseDemoState(
 
         next = hit.LocalHitId switch
         {
-            "advanced:patterns" => next with { AdvancedPatternIndex = Math.Clamp(next.AdvancedPatternIndex + 1, 0, 4) },
-            "advanced:composite" => next with { AdvancedCompositeModeIndex = Math.Clamp(next.AdvancedCompositeModeIndex + 1, 0, 2) },
+            "advanced:patterns" => next with
+            {
+                AdvancedFocusIndex = 0,
+                AdvancedContextArmed = false,
+                AdvancedPatternIndex = Math.Clamp(next.AdvancedPatternIndex + 1, 0, 4)
+            },
+            "advanced:composite" => next with
+            {
+                AdvancedFocusIndex = 1,
+                AdvancedContextArmed = false,
+                AdvancedCompositeModeIndex = Math.Clamp(next.AdvancedCompositeModeIndex + 1, 0, 2)
+            },
             _ => next
         };
         return hit.LocalHitId is "advanced:patterns" or "advanced:composite";

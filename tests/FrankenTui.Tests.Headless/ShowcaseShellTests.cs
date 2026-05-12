@@ -9106,9 +9106,21 @@ public sealed class ShowcaseShellTests
             TerminalMouseButton.WheelDown,
             TerminalMouseKind.Scroll);
         Assert.Equal(1, state.AdvancedPatternIndex);
+        Assert.Equal(0, state.AdvancedFocusIndex);
 
         state = ApplyMouse(state, 90, 6, timestamp + TimeSpan.FromMilliseconds(10));
         Assert.Equal(1, state.AdvancedCompositeModeIndex);
+        Assert.Equal(1, state.AdvancedFocusIndex);
+
+        state = ApplyMouse(
+            state,
+            90,
+            6,
+            timestamp + TimeSpan.FromMilliseconds(20),
+            TerminalMouseButton.Right,
+            TerminalMouseKind.Down);
+        Assert.True(state.AdvancedContextArmed);
+        Assert.Equal(1, state.AdvancedFocusIndex);
     }
 
     [Fact]
@@ -9122,7 +9134,9 @@ public sealed class ShowcaseShellTests
             flowDirection: WidgetFlowDirection.LeftToRight) with
         {
             AdvancedPatternIndex = 3,
-            AdvancedCompositeModeIndex = 2
+            AdvancedCompositeModeIndex = 2,
+            AdvancedFocusIndex = 1,
+            AdvancedContextArmed = true
         };
         var buffer = new RenderBuffer(120, 32);
 
@@ -9131,7 +9145,8 @@ public sealed class ShowcaseShellTests
 
         var screen = HeadlessBufferView.ScreenString(buffer);
         Assert.Contains("Patterns [selected 3]", screen);
-        Assert.Contains("Composite [evidence]", screen);
+        Assert.Contains("Composite [focus evidence]", screen);
+        Assert.Contains("advanced mouse focus=1 context=armed", screen);
         Assert.Contains("Selected pattern: 3", screen);
     }
 

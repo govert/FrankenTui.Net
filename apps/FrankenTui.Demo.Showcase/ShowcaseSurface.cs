@@ -803,6 +803,7 @@ internal static class ShowcaseSurface
     {
         var selectedPattern = Math.Clamp(state.AdvancedPatternIndex, 0, 4);
         var compositeMode = Math.Clamp(state.AdvancedCompositeModeIndex, 0, 2);
+        var focus = Math.Clamp(state.AdvancedFocusIndex, 0, 1);
         var compositeLabel = compositeMode switch
         {
             1 => "runtime",
@@ -812,7 +813,7 @@ internal static class ShowcaseSurface
         return TwoColumn(
             new PanelWidget
             {
-                Title = $"Patterns [selected {selectedPattern}]",
+                Title = focus == 0 ? $"Patterns [focus selected {selectedPattern}]" : $"Patterns [selected {selectedPattern}]",
                 Child = new ListWidget
                 {
                     Items = ["inline mode contract", "runtime input pipeline", "evidence capture", "SIMD acceleration", "web parity reuse"],
@@ -820,10 +821,12 @@ internal static class ShowcaseSurface
                 }
             },
             Panel(
-                compositeMode == 0 ? "Composite" : $"Composite [{compositeLabel}]",
+                focus == 1 ? $"Composite [focus {compositeLabel}]" : compositeMode == 0 ? "Composite" : $"Composite [{compositeLabel}]",
                 $"""
+                advanced mouse focus={focus} context={(state.AdvancedContextArmed ? "armed" : "clear")}
                 Selected pattern: {selectedPattern}
                 Composite mode: {compositeLabel}
+                Context action: {(state.AdvancedContextArmed ? "armed" : "clear")}
 
                 This screen groups the port-specific composites that now sit under an upstream-shaped showcase shell instead of the earlier hosted-parity dashboard.
                 """));
