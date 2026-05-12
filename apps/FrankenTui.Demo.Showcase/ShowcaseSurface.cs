@@ -1182,6 +1182,7 @@ internal static class ShowcaseSurface
             4 => "Unicode",
             _ => "Wrap"
         };
+        var contextState = state.MarkdownContextArmed ? "armed" : "clear";
         var wrapMode = Math.Clamp(state.MarkdownWrapModeIndex, 0, 2) switch
         {
             1 => "Character",
@@ -1193,6 +1194,7 @@ internal static class ShowcaseSurface
             Confidence: {(complete ? 100 : Math.Min(95, 35 + state.ScriptFrame * 8))}%
             Chars: {streamChars}/{streamingMarkdown.Length}
             Active: {activePane}
+            Context: {contextState}
             Scrolls: renderer={state.MarkdownRendererScroll} stream={state.MarkdownStreamScroll}
             Space: play/pause | r: restart | f: turbo | Up/Down: scroll stream
             """;
@@ -1220,7 +1222,9 @@ internal static class ShowcaseSurface
             [
                 (LayoutConstraint.Percentage(35), new PanelWidget
                 {
-                    Title = state.MarkdownActivePaneIndex == 0 ? $"Markdown Renderer [scroll {state.MarkdownRendererScroll}]" : "Markdown Renderer",
+                    Title = state.MarkdownActivePaneIndex == 0
+                        ? state.MarkdownContextArmed ? $"Markdown Renderer [context scroll {state.MarkdownRendererScroll}]" : $"Markdown Renderer [scroll {state.MarkdownRendererScroll}]"
+                        : "Markdown Renderer",
                     Child = new ParagraphWidget(string.Empty)
                     {
                         Document = MarkdownDocumentBuilder.ParseCached(sampleMarkdown),
@@ -1233,7 +1237,7 @@ internal static class ShowcaseSurface
                         (LayoutConstraint.Fill(), new PanelWidget
                         {
                             Title = state.MarkdownActivePaneIndex == 1
-                                ? $"LLM Streaming Simulation [scroll {state.MarkdownStreamScroll}]"
+                                ? state.MarkdownContextArmed ? $"LLM Streaming Simulation [context scroll {state.MarkdownStreamScroll}]" : $"LLM Streaming Simulation [scroll {state.MarkdownStreamScroll}]"
                                 : $"LLM Streaming Simulation | {(complete ? "Complete" : $"Streaming... {progress:0}%")}",
                             Child = new ParagraphWidget(string.Empty)
                             {
@@ -1241,15 +1245,15 @@ internal static class ShowcaseSurface
                                 RenderOptions = new TextRenderOptions(TextWrapMode.Word)
                             }
                         }),
-                        (LayoutConstraint.Fixed(5), Panel("Markdown Detection", detection))
+                        (LayoutConstraint.Fixed(5), Panel(state.MarkdownActivePaneIndex == 2 && state.MarkdownContextArmed ? "Markdown Detection [context]" : "Markdown Detection", detection))
                     ])),
                 (LayoutConstraint.Fill(), new StackWidget(
                     LayoutDirection.Vertical,
                     [
-                        (LayoutConstraint.Fixed(8), Panel("Style Sampler", styleSampler)),
+                        (LayoutConstraint.Fixed(8), Panel(state.MarkdownActivePaneIndex == 3 && state.MarkdownContextArmed ? "Style Sampler [context]" : "Style Sampler", styleSampler)),
                         (LayoutConstraint.Fixed(10), new PanelWidget
                         {
-                            Title = "Unicode Showcase",
+                            Title = state.MarkdownActivePaneIndex == 4 && state.MarkdownContextArmed ? "Unicode Showcase [context]" : "Unicode Showcase",
                             Child = new TableWidget
                             {
                                 Headers = ["Text", "Type", "Cells"],
@@ -1257,7 +1261,7 @@ internal static class ShowcaseSurface
                             }
                         }),
                         (LayoutConstraint.Fill(), Panel(
-                            $"Wrap: {wrapMode} | Align: Left",
+                            state.MarkdownActivePaneIndex == 5 && state.MarkdownContextArmed ? $"Wrap [{wrapMode} context]" : $"Wrap: {wrapMode} | Align: Left",
                             "w: cycle wrap | a: cycle alignment\n\nThe quick brown fox jumps over the lazy dog. Supercalifragilisticexpialidocious tests character-level wrapping behavior."))
                     ]))
             ]);

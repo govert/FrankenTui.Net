@@ -938,7 +938,7 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   selected-field/text-area focus/scroll rendering, the Macro Recorder increment adds mouse-mutated
   timeline/scenario/focus/context rendering, the Performance increment adds
   mouse-mutated virtual-list item/focus/context rendering, the Markdown increment adds
-  mouse-mutated pane/scroll/wrap rendering, the Data Viz increment adds
+  mouse-mutated pane/scroll/wrap/context rendering, the Data Viz increment adds
   mouse-mutated metric/narrative/context rendering, the File Browser
   increment adds mouse-mutated tree/focus/preview scroll rendering, the Advanced
   increment adds mouse-mutated pattern/composite/focus/context rendering, the Notifications

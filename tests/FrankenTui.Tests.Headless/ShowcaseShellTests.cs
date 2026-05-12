@@ -8730,10 +8730,21 @@ public sealed class ShowcaseShellTests
             TerminalMouseKind.Scroll);
         Assert.Equal(0, state.MarkdownActivePaneIndex);
         Assert.Equal(1, state.MarkdownRendererScroll);
+        Assert.False(state.MarkdownContextArmed);
 
         state = ApplyMouse(state, 90, 24, timestamp + TimeSpan.FromMilliseconds(10));
         Assert.Equal(5, state.MarkdownActivePaneIndex);
         Assert.Equal(1, state.MarkdownWrapModeIndex);
+
+        state = ApplyMouse(
+            state,
+            90,
+            24,
+            timestamp + TimeSpan.FromMilliseconds(20),
+            TerminalMouseButton.Right,
+            TerminalMouseKind.Down);
+        Assert.Equal(5, state.MarkdownActivePaneIndex);
+        Assert.True(state.MarkdownContextArmed);
     }
 
     [Fact]
@@ -8746,10 +8757,11 @@ public sealed class ShowcaseShellTests
             language: "en",
             flowDirection: WidgetFlowDirection.LeftToRight) with
         {
-            MarkdownActivePaneIndex = 1,
+            MarkdownActivePaneIndex = 5,
             MarkdownRendererScroll = 2,
             MarkdownStreamScroll = 3,
-            MarkdownWrapModeIndex = 1
+            MarkdownWrapModeIndex = 1,
+            MarkdownContextArmed = true
         };
         var buffer = new RenderBuffer(120, 32);
 
@@ -8757,8 +8769,7 @@ public sealed class ShowcaseShellTests
             .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 32), Theme.DefaultTheme));
 
         var screen = HeadlessBufferView.ScreenString(buffer);
-        Assert.Contains("LLM Streaming Simulation [scroll 3]", screen);
-        Assert.Contains("Wrap: Character | Align: Left", screen);
+        Assert.Contains("Wrap [Character context]", screen);
     }
 
     [Fact]

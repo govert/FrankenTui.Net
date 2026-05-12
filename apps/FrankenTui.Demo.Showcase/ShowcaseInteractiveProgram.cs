@@ -139,6 +139,7 @@ internal sealed record ShowcaseDemoState(
     int MarkdownRendererScroll = 0,
     int MarkdownStreamScroll = 0,
     int MarkdownWrapModeIndex = 0,
+    bool MarkdownContextArmed = false,
     int MermaidFocusIndex = 0,
     int MermaidSampleIndex = 0,
     int MermaidZoomStep = 0,
@@ -4168,17 +4169,38 @@ internal sealed record ShowcaseDemoState(
                 "markdown:renderer" => next with
                 {
                     MarkdownActivePaneIndex = 0,
+                    MarkdownContextArmed = false,
                     MarkdownRendererScroll = Math.Clamp(next.MarkdownRendererScroll + delta, 0, 12)
                 },
                 "markdown:stream" => next with
                 {
                     MarkdownActivePaneIndex = 1,
+                    MarkdownContextArmed = false,
                     MarkdownStreamScroll = Math.Clamp(next.MarkdownStreamScroll + delta, 0, 12)
                 },
-                "markdown:unicode" => next with { MarkdownActivePaneIndex = 4 },
+                "markdown:unicode" => next with
+                {
+                    MarkdownActivePaneIndex = 4,
+                    MarkdownContextArmed = false
+                },
                 _ => next
             };
             return hit.LocalHitId is "markdown:renderer" or "markdown:stream" or "markdown:unicode";
+        }
+
+        if (gesture.Button == TerminalMouseButton.Right)
+        {
+            next = hit.LocalHitId switch
+            {
+                "markdown:renderer" => next with { MarkdownActivePaneIndex = 0, MarkdownContextArmed = true },
+                "markdown:stream" => next with { MarkdownActivePaneIndex = 1, MarkdownContextArmed = true },
+                "markdown:detection" => next with { MarkdownActivePaneIndex = 2, MarkdownContextArmed = true },
+                "markdown:style" => next with { MarkdownActivePaneIndex = 3, MarkdownContextArmed = true },
+                "markdown:unicode" => next with { MarkdownActivePaneIndex = 4, MarkdownContextArmed = true },
+                "markdown:wrap" => next with { MarkdownActivePaneIndex = 5, MarkdownContextArmed = true },
+                _ => next
+            };
+            return true;
         }
 
         if (gesture.Button != TerminalMouseButton.Left)
@@ -4188,14 +4210,15 @@ internal sealed record ShowcaseDemoState(
 
         next = hit.LocalHitId switch
         {
-            "markdown:renderer" => next with { MarkdownActivePaneIndex = 0 },
-            "markdown:stream" => next with { MarkdownActivePaneIndex = 1 },
-            "markdown:detection" => next with { MarkdownActivePaneIndex = 2 },
-            "markdown:style" => next with { MarkdownActivePaneIndex = 3 },
-            "markdown:unicode" => next with { MarkdownActivePaneIndex = 4 },
+            "markdown:renderer" => next with { MarkdownActivePaneIndex = 0, MarkdownContextArmed = false },
+            "markdown:stream" => next with { MarkdownActivePaneIndex = 1, MarkdownContextArmed = false },
+            "markdown:detection" => next with { MarkdownActivePaneIndex = 2, MarkdownContextArmed = false },
+            "markdown:style" => next with { MarkdownActivePaneIndex = 3, MarkdownContextArmed = false },
+            "markdown:unicode" => next with { MarkdownActivePaneIndex = 4, MarkdownContextArmed = false },
             "markdown:wrap" => next with
             {
                 MarkdownActivePaneIndex = 5,
+                MarkdownContextArmed = false,
                 MarkdownWrapModeIndex = (next.MarkdownWrapModeIndex + 1) % 3
             },
             _ => next
