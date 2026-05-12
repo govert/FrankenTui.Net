@@ -1913,6 +1913,76 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseMarkdownLiveEditorMouseMutatesFocusSearchEditorPreview()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new FrankenTui.Core.Size(82, 26),
+            screenNumber: 43,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(state, 3, 5, timestamp);
+        Assert.Equal(1, state.MarkdownLiveFocusIndex);
+        Assert.Equal(1, state.MarkdownLiveSearchMatchIndex);
+
+        state = ApplyMouse(
+            state,
+            3,
+            7,
+            timestamp + TimeSpan.FromMilliseconds(10),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(0, state.MarkdownLiveFocusIndex);
+        Assert.Equal(7, state.MarkdownLiveCursorLine);
+
+        state = ApplyMouse(state, 45, 7, timestamp + TimeSpan.FromMilliseconds(20));
+        Assert.Equal(2, state.MarkdownLiveFocusIndex);
+        Assert.True(state.MarkdownLiveDiffMode);
+
+        state = ApplyMouse(
+            state,
+            45,
+            7,
+            timestamp + TimeSpan.FromMilliseconds(30),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(2, state.MarkdownLiveFocusIndex);
+        Assert.Equal(1, state.MarkdownLivePreviewScroll);
+    }
+
+    [Fact]
+    public void ShowcaseMarkdownLiveEditorRendersMouseSelectedState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new FrankenTui.Core.Size(170, 40),
+            screenNumber: 43,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            MarkdownLiveFocusIndex = 1,
+            MarkdownLivePreviewScroll = 3,
+            MarkdownLiveSearchMatchIndex = 2,
+            MarkdownLiveCursorLine = 9,
+            MarkdownLiveDiffMode = true
+        };
+        var buffer = new RenderBuffer(170, 40);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, FrankenTui.Core.Rect.FromSize(170, 40), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("Search [focus match 3/4]", screen);
+        Assert.Contains("3/4 matches", screen);
+        Assert.Contains("cursor_line=9", screen);
+        Assert.Contains("diff_mode=True", screen);
+        Assert.Contains("preview_scroll=3", screen);
+        Assert.Contains("focus=Search focus_idx=1 match=3/4", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryRoutesDragDropTabsAndItems()
     {
         var state = ShowcaseDemoState.Create(

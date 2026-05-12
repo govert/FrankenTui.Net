@@ -3394,20 +3394,23 @@ internal static class ShowcaseSurface
 
     private static IWidget BuildMarkdownLiveEditor(ShowcaseDemoState state)
     {
-        var focus = Math.Abs((state.RuntimeStats?.StepIndex ?? state.ScriptFrame) % 3) switch
+        var focusIndex = Math.Clamp(state.MarkdownLiveFocusIndex, 0, 2);
+        var focus = focusIndex switch
         {
             0 => "Editor",
             1 => "Search",
             _ => "Preview"
         };
-        var diffMode = state.ScriptFrame % 2 == 1;
-        var previewScroll = Math.Abs(state.ScriptFrame % 4);
+        var diffMode = state.MarkdownLiveDiffMode || state.ScriptFrame % 2 == 1;
+        var previewScroll = Math.Clamp(state.MarkdownLivePreviewScroll, 0, 12);
+        var matchIndex = Math.Clamp(state.MarkdownLiveSearchMatchIndex, 0, 3);
+        var cursorLine = Math.Clamp(state.MarkdownLiveCursorLine, 0, 20);
         const string sample = "# Live Markdown Editor\n\nWrite Markdown on the left, preview on the right.\n\n## Goals\n\n- Split view editor + preview\n- Live updates without flicker\n- Search with highlighted matches\n- Diff mode: raw vs rendered width\n\n## Notes\n\nInline math: $E = mc^2$\n\n```rust\nfn render(frame: &mut Frame) {\n    // Draw widgets then diff\n}\n```\n\n| Feature | Status |\n| --- | --- |\n| Live preview | on |\n| Search | on |\n| Diff mode | Ctrl+D |\n";
 
         var search = Panel(
-            focus == "Search" ? "Search [focus]" : "Search",
+            focus == "Search" ? $"Search [focus match {matchIndex + 1}/4]" : $"Search [match {matchIndex + 1}/4]",
             "Query: preview\n" +
-            "2/4 matches | search_ascii_case_insensitive\n" +
+            $"{matchIndex + 1}/4 matches | search_ascii_case_insensitive\n" +
             "Ctrl+F focus search | Ctrl+N/P next/prev match\n" +
             "Selection maps byte range through grapheme CursorPosition\n" +
             "TextInput placeholder: Search in editor (Ctrl+F)\n" +
@@ -3419,9 +3422,9 @@ internal static class ShowcaseSurface
             Child = new TextAreaWidget
             {
                 Document = TextDocument.FromString(sample),
-                Cursor = new TextCursor(6, 2),
+                Cursor = new TextCursor(cursorLine, 2),
                 HasFocus = focus == "Editor",
-                StatusText = "TextArea | line_numbers=true | soft_wrap=true | placeholder=Start writing Markdown..."
+                StatusText = $"TextArea | line_numbers=true | soft_wrap=true | cursor_line={cursorLine} | placeholder=Start writing Markdown..."
             }
         };
 
@@ -3448,7 +3451,7 @@ internal static class ShowcaseSurface
             "Focus + Evidence",
             "MarkdownRenderer + SyntaxHighlighter + table_effect_phase\n" +
             "JSONL fields: run_id, tick, focus, query, diff_mode, preview_scroll, action\n" +
-            $"focus={focus} tick_count={state.ScriptFrame} consumes_text_input={focus is "Editor" or "Search"}\n" +
+            $"focus={focus} focus_idx={focusIndex} match={matchIndex + 1}/4 tick_count={state.ScriptFrame} consumes_text_input={focus is "Editor" or "Search"}\n" +
             "Esc: Preview mode | Down from search returns editor | Up on editor line 0 returns search\n" +
             "Ctrl+D toggles diff mode | Ctrl+Up/Down scroll preview\n" +
             "Mouse: click search/editor/preview rects to focus, wheel preview to scroll\n" +

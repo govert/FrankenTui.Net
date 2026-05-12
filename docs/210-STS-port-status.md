@@ -957,15 +957,16 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   the Accessibility increment adds mouse-mutated toggle/focus/preview/telemetry rendering,
   the Widget Builder increment adds mouse-mutated preset/tree/preview/props/export rendering,
   the Determinism Lab increment adds mouse-mutated strategy/scenario/seed/report/export rendering,
-  the Hyperlink Playground increment adds mouse-mutated focus/hover/copy/activation rendering, the Table Theme
+  the Hyperlink Playground increment adds mouse-mutated focus/hover/copy/activation rendering,
+  the Live Markdown Editor increment adds mouse-mutated focus/search/cursor/diff/preview rendering, the Table Theme
   increment adds mouse-selected active preset mutation/rendering, the Terminal Capabilities
   increment adds mouse-mutated capability/profile selection rendering, and a full-catalog
   registry guard now verifies every showcase screen exposes at least one
   screen-specific content/link/overlay region at the standard 120x32 showcase
   viewport, while still leaving broader generalized screen hit routing open.
-  Focused showcase-shell verification is now `286` tests via
+  Focused showcase-shell verification is now `288` tests via
   `dotnet test tests/FrankenTui.Tests.Headless/FrankenTui.Tests.Headless.csproj --no-restore --filter FullyQualifiedName~ShowcaseShellTests`.
-  Current local verification is `540` headless tests, `9` web tests, and `7`
+  Current local verification is `542` headless tests, `9` web tests, and `7`
   PTY tests via `dotnet test FrankenTui.Net.sln --no-restore`.
   Previous focused registry/evidence verification covered `33`
   registry/evidence

@@ -230,6 +230,11 @@ internal sealed record ShowcaseDemoState(
     int HyperlinkLastActionIndex = 0,
     int HyperlinkActivationCount = 0,
     bool HyperlinkCopied = false,
+    int MarkdownLiveFocusIndex = 0,
+    int MarkdownLivePreviewScroll = 0,
+    int MarkdownLiveSearchMatchIndex = 0,
+    int MarkdownLiveCursorLine = 6,
+    bool MarkdownLiveDiffMode = false,
     bool PaletteLabBenchEnabled = false,
     int PaletteLabBenchFrame = 0,
     int PaletteLabBenchProcessed = 0,
@@ -535,6 +540,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent markdownMouseEvent &&
             HandleMarkdownMouse(markdownMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent markdownLiveMouseEvent &&
+            HandleMarkdownLiveMouse(markdownLiveMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -3568,6 +3579,76 @@ internal sealed record ShowcaseDemoState(
             _ => next
         };
         return true;
+    }
+
+    private static bool HandleMarkdownLiveMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 43 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content ||
+            !hit.LocalHitId.StartsWith("live_markdown:", StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = hit.LocalHitId switch
+            {
+                "live_markdown:search" => next with
+                {
+                    MarkdownLiveFocusIndex = 1,
+                    MarkdownLiveSearchMatchIndex = Math.Clamp(next.MarkdownLiveSearchMatchIndex + delta, 0, 3)
+                },
+                "live_markdown:editor" => next with
+                {
+                    MarkdownLiveFocusIndex = 0,
+                    MarkdownLiveCursorLine = Math.Clamp(next.MarkdownLiveCursorLine + delta, 0, 20)
+                },
+                "live_markdown:preview" => next with
+                {
+                    MarkdownLiveFocusIndex = 2,
+                    MarkdownLivePreviewScroll = Math.Clamp(next.MarkdownLivePreviewScroll + delta, 0, 12)
+                },
+                _ => next
+            };
+            return hit.LocalHitId is "live_markdown:search" or "live_markdown:editor" or "live_markdown:preview";
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        next = hit.LocalHitId switch
+        {
+            "live_markdown:search" => next with
+            {
+                MarkdownLiveFocusIndex = 1,
+                MarkdownLiveSearchMatchIndex = (next.MarkdownLiveSearchMatchIndex + 1) % 4
+            },
+            "live_markdown:editor" => next with
+            {
+                MarkdownLiveFocusIndex = 0,
+                MarkdownLiveCursorLine = Math.Clamp(next.MarkdownLiveCursorLine + 1, 0, 20)
+            },
+            "live_markdown:preview" => next with
+            {
+                MarkdownLiveFocusIndex = 2,
+                MarkdownLiveDiffMode = !next.MarkdownLiveDiffMode
+            },
+            _ => next
+        };
+        return hit.LocalHitId is "live_markdown:search" or "live_markdown:editor" or "live_markdown:preview";
     }
 
     private static bool HandleTourMouse(MouseTerminalEvent mouseEvent, DateTimeOffset now, ref ShowcaseDemoState next)
