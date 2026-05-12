@@ -137,6 +137,10 @@ internal sealed record ShowcaseDemoState(
     int VisualEffectsFocusIndex = 0,
     int VisualEffectsEffectIndex = -1,
     int VisualEffectsHarnessScroll = 0,
+    int ResponsiveFocusIndex = 0,
+    int ResponsiveWidthOffset = 0,
+    bool ResponsiveCustomBreakpoints = false,
+    bool ResponsiveAsideForcedVisible = false,
     int DataVizActivePanelIndex = 0,
     int DataVizMetricRowIndex = 0,
     int DataVizNarrativeDetailIndex = 0,
@@ -607,6 +611,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent visualEffectsMouseEvent &&
             HandleVisualEffectsMouse(visualEffectsMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent responsiveMouseEvent &&
+            HandleResponsiveMouse(responsiveMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -4065,6 +4075,80 @@ internal sealed record ShowcaseDemoState(
         var effect = ShowcaseVfxEffects.NormalizeOrDefault(state.VfxEffect);
         var index = Array.IndexOf(ShowcaseVfxEffects.AllCanonicalKeys, effect);
         return index < 0 ? 0 : index;
+    }
+
+    private static bool HandleResponsiveMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 19 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content ||
+            !hit.LocalHitId.StartsWith("responsive:", StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        var focus = hit.LocalHitId switch
+        {
+            "responsive:indicator" => 0,
+            "responsive:layout_info" => 1,
+            "responsive:values" => 2,
+            "responsive:sidebar" => 3,
+            "responsive:content" => 4,
+            "responsive:aside" => 5,
+            _ => next.ResponsiveFocusIndex
+        };
+
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -10 : 10;
+            next = next with
+            {
+                ResponsiveFocusIndex = focus,
+                ResponsiveWidthOffset = Math.Clamp(next.ResponsiveWidthOffset + delta, -80, 120)
+            };
+            return true;
+        }
+
+        if (gesture.Button == TerminalMouseButton.Right)
+        {
+            next = next with
+            {
+                ResponsiveFocusIndex = focus,
+                ResponsiveWidthOffset = 0,
+                ResponsiveCustomBreakpoints = false,
+                ResponsiveAsideForcedVisible = false
+            };
+            return true;
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        next = hit.LocalHitId switch
+        {
+            "responsive:indicator" => next with
+            {
+                ResponsiveFocusIndex = focus,
+                ResponsiveCustomBreakpoints = !next.ResponsiveCustomBreakpoints
+            },
+            "responsive:aside" => next with
+            {
+                ResponsiveFocusIndex = focus,
+                ResponsiveAsideForcedVisible = !next.ResponsiveAsideForcedVisible
+            },
+            _ => next with { ResponsiveFocusIndex = focus }
+        };
+        return true;
     }
 
     private static bool HandleMarkdownLiveMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)

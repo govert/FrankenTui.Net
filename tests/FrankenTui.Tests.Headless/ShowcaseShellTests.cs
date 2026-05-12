@@ -7813,6 +7813,74 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseResponsiveMouseMutatesBreakpointWidthFocusAndAside()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 19,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(state, 3, 2, timestamp);
+        Assert.Equal(0, state.ResponsiveFocusIndex);
+        Assert.True(state.ResponsiveCustomBreakpoints);
+
+        state = ApplyMouse(
+            state,
+            45,
+            6,
+            timestamp + TimeSpan.FromMilliseconds(10),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(4, state.ResponsiveFocusIndex);
+        Assert.Equal(10, state.ResponsiveWidthOffset);
+
+        state = ApplyMouse(state, 100, 6, timestamp + TimeSpan.FromMilliseconds(20));
+        Assert.Equal(5, state.ResponsiveFocusIndex);
+        Assert.True(state.ResponsiveAsideForcedVisible);
+
+        state = ApplyMouse(
+            state,
+            3,
+            2,
+            timestamp + TimeSpan.FromMilliseconds(30),
+            TerminalMouseButton.Right);
+        Assert.Equal(0, state.ResponsiveFocusIndex);
+        Assert.Equal(0, state.ResponsiveWidthOffset);
+        Assert.False(state.ResponsiveCustomBreakpoints);
+        Assert.False(state.ResponsiveAsideForcedVisible);
+    }
+
+    [Fact]
+    public void ShowcaseResponsiveRendersMouseSelectedState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(100, 32),
+            screenNumber: 19,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            ResponsiveFocusIndex = 5,
+            ResponsiveWidthOffset = 20,
+            ResponsiveCustomBreakpoints = true,
+            ResponsiveAsideForcedVisible = true
+        };
+        var buffer = new RenderBuffer(140, 32);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, Rect.FromSize(140, 32), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("responsive mouse focus=5 width_offset=20 custom_bp=on aside=forced", screen);
+        Assert.Contains("[Current: custom]", screen);
+        Assert.Contains("Offset: 20", screen);
+        Assert.Contains("Aside mode: forced", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryExposesIntrinsicSizingPanels()
     {
         var state = ShowcaseDemoState.Create(

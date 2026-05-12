@@ -1331,23 +1331,29 @@ internal static class ShowcaseSurface
 
     private static IWidget BuildResponsive(ShowcaseDemoState state)
     {
-        var width = state.Viewport.Width;
+        var width = Math.Clamp(state.Viewport.Width + state.ResponsiveWidthOffset, 40, 240);
+        var customBreakpoints = state.ResponsiveCustomBreakpoints;
+        var sm = customBreakpoints ? 50 : 60;
+        var md = customBreakpoints ? 80 : 90;
+        var lg = customBreakpoints ? 110 : 120;
+        var xl = customBreakpoints ? 150 : 160;
         var breakpoint = width switch
         {
-            < 60 => "XS (<60)",
-            < 90 => "SM (60-89)",
-            < 120 => "MD (90-119)",
-            < 160 => "LG (120-159)",
-            _ => "XL (160+)"
+            var value when value < sm => $"XS (<{sm})",
+            var value when value < md => $"SM ({sm}-{md - 1})",
+            var value when value < lg => $"MD ({md}-{lg - 1})",
+            var value when value < xl => $"LG ({lg}-{xl - 1})",
+            _ => $"XL ({xl}+)"
         };
-        var columns = width < 90 ? 1 : width < 120 ? 2 : 3;
-        var sidebarVisible = width >= 90;
-        var asideVisible = width >= 120;
-        var padding = width < 60 ? 1 : width < 90 ? 2 : width < 120 ? 3 : 4;
-        var style = width < 60 ? "compact" : width < 90 ? "normal" : width < 120 ? "comfortable" : "spacious";
-        var thresholds = "sm>=60 md>=90 lg>=120 xl>=160";
+        var sidebarVisible = width >= md;
+        var asideVisible = width >= lg || state.ResponsiveAsideForcedVisible;
+        var columns = asideVisible ? 3 : width >= md ? 2 : 1;
+        var padding = width < sm ? 1 : width < md ? 2 : width < lg ? 3 : 4;
+        var style = width < sm ? "compact" : width < md ? "normal" : width < lg ? "comfortable" : "spacious";
+        var thresholds = $"sm>={sm} md>={md} lg>={lg} xl>={xl}";
 
         var indicator = $"Breakpoint: {breakpoint} | Width: {width} | Thresholds: {thresholds}";
+        var stateLine = $"responsive mouse focus={Math.Clamp(state.ResponsiveFocusIndex, 0, 5)} width_offset={state.ResponsiveWidthOffset} custom_bp={(customBreakpoints ? "on" : "off")} aside={(state.ResponsiveAsideForcedVisible ? "forced" : "auto")}";
         var sidebar = $"""
             Breakpoint: {breakpoint}
             Layout: {(columns == 1 ? "stacked" : columns == 2 ? "2-col" : "3-col")}
@@ -1356,10 +1362,10 @@ internal static class ShowcaseSurface
             Aside:   {(asideVisible ? "visible" : "hidden")} (lg+)
 
             [b] Toggle BPs
-            [Current: default]
+            [Current: {(customBreakpoints ? "custom" : "default")}]
             """;
         var content = $"""
-            Columns: {columns} | Breakpoint: {breakpoint} | {state.Viewport.Width}x{state.Viewport.Height}
+            Columns: {columns} | Breakpoint: {breakpoint} | {width}x{state.Viewport.Height} | Offset: {state.ResponsiveWidthOffset}
 
             Padding: {padding} | Style: {style}
 
@@ -1373,7 +1379,8 @@ internal static class ShowcaseSurface
             Only visible at Lg+ ({breakpoint}).
 
             Tick: {state.ScriptFrame}
-            Custom thresholds: sm>=50 md>=80 lg>=110 xl>=110+
+            Custom thresholds: sm>=50 md>=80 lg>=110 xl>=150
+            Aside mode: {(state.ResponsiveAsideForcedVisible ? "forced" : "auto")}
             Mouse: left toggles, right resets, wheel adjusts width.
             """;
 
@@ -1404,7 +1411,7 @@ internal static class ShowcaseSurface
         return new StackWidget(
             LayoutDirection.Vertical,
             [
-                (LayoutConstraint.Fixed(1), new ParagraphWidget(indicator)),
+                (LayoutConstraint.Fixed(1), new ParagraphWidget($"{stateLine} | {indicator}")),
                 (LayoutConstraint.Fill(), body)
             ]);
     }
