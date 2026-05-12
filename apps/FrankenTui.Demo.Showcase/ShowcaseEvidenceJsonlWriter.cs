@@ -1332,6 +1332,41 @@ public sealed class ShowcaseEvidenceJsonlWriter : IDisposable
             return "inline_mode_hit_test";
         }
 
+        if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 37)
+        {
+            if (gesture.Kind == TerminalMouseKind.Scroll)
+            {
+                return hit.LocalHitId switch
+                {
+                    "accessibility:telemetry" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "accessibility_telemetry_scroll_up"
+                        : "accessibility_telemetry_scroll_down",
+                    "accessibility:preview" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "accessibility_preview_scroll_up"
+                        : "accessibility_preview_scroll_down",
+                    _ => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "accessibility_panel_scroll_up"
+                        : "accessibility_panel_scroll_down"
+                };
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Left)
+            {
+                return hit.LocalHitId switch
+                {
+                    "accessibility:overview" => "accessibility_overview_focus",
+                    "accessibility:toggles" => "accessibility_toggle_select",
+                    "accessibility:preview" => "accessibility_preview_focus",
+                    "accessibility:wcag" => "accessibility_wcag_focus",
+                    "accessibility:telemetry" => "accessibility_telemetry_focus",
+                    "accessibility:footer" => "accessibility_controls_focus",
+                    _ => "accessibility_hit_test"
+                };
+            }
+
+            return "accessibility_hit_test";
+        }
+
         if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 7)
         {
             if (gesture.Kind == TerminalMouseKind.Scroll)

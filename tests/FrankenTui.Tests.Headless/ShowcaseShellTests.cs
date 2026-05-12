@@ -5870,6 +5870,85 @@ public sealed class ShowcaseShellTests
         Assert.Equal(36_210, stateRecord.RootElement.GetProperty("target_id").GetInt32());
     }
 
+    [Fact]
+    public void ShowcaseFrameHitRegistryExposesAccessibilityPanels()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 37,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+
+        var overview = ShowcaseFrameHitRegistry.HitTest(state, 3, 2);
+        var toggles = ShowcaseFrameHitRegistry.HitTest(state, 3, 10);
+        var preview = ShowcaseFrameHitRegistry.HitTest(state, 3, 22);
+        var wcag = ShowcaseFrameHitRegistry.HitTest(state, 70, 10);
+        var telemetry = ShowcaseFrameHitRegistry.HitTest(state, 70, 22);
+        var footer = ShowcaseFrameHitRegistry.HitTest(state, 3, 29);
+
+        Assert.Equal("accessibility:overview", overview.LocalHitId);
+        Assert.Equal((uint)37_000, overview.UpstreamHitId);
+        Assert.Equal("accessibility:toggles", toggles.LocalHitId);
+        Assert.Equal((uint)37_100, toggles.UpstreamHitId);
+        Assert.Equal("accessibility:preview", preview.LocalHitId);
+        Assert.Equal((uint)37_110, preview.UpstreamHitId);
+        Assert.Equal("accessibility:wcag", wcag.LocalHitId);
+        Assert.Equal((uint)37_200, wcag.UpstreamHitId);
+        Assert.Equal("accessibility:telemetry", telemetry.LocalHitId);
+        Assert.Equal((uint)37_210, telemetry.UpstreamHitId);
+        Assert.Equal("accessibility:footer", footer.LocalHitId);
+        Assert.Equal((uint)37_300, footer.UpstreamHitId);
+    }
+
+    [Fact]
+    public void ShowcaseEvidenceJsonlWriterEmitsAccessibilityMouseActions()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"ftui-showcase-accessibility-mouse-{Guid.NewGuid():N}.jsonl");
+        var options = ShowcaseCliOptions.Parse(
+            ["--screen=37", "--evidence-jsonl", path],
+            _ => null);
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 37,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+        var togglesEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 10, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp);
+        var previewEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 22, TerminalMouseButton.WheelUp, TerminalMouseKind.Scroll),
+            timestamp + TimeSpan.FromMilliseconds(10));
+        var telemetryEvent = TerminalEvent.Mouse(
+            new MouseGesture(70, 22, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp + TimeSpan.FromMilliseconds(20));
+
+        using (var writer = ShowcaseEvidenceJsonlWriter.Create(options.EvidenceJsonlPath))
+        {
+            Assert.NotNull(writer);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 1, frame: 1, togglesEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 2, frame: 2, previewEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 3, frame: 3, telemetryEvent, state, state);
+        }
+
+        var lines = File.ReadAllLines(path);
+        Assert.Equal(3, lines.Length);
+        using var togglesRecord = JsonDocument.Parse(lines[0]);
+        using var previewRecord = JsonDocument.Parse(lines[1]);
+        using var telemetryRecord = JsonDocument.Parse(lines[2]);
+        Assert.Equal("accessibility_toggle_select", togglesRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("accessibility:toggles", togglesRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(37_100, togglesRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("accessibility_preview_scroll_up", previewRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("accessibility:preview", previewRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(37_110, previewRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("accessibility_telemetry_focus", telemetryRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("accessibility:telemetry", telemetryRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(37_210, telemetryRecord.RootElement.GetProperty("target_id").GetInt32());
+    }
+
     private static ShowcaseDemoState ApplyKey(ShowcaseDemoState state, KeyGesture gesture, DateTimeOffset timestamp)
     {
         var terminalEvent = TerminalEvent.Key(gesture, timestamp);

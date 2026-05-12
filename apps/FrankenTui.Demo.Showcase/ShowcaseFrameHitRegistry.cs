@@ -1113,6 +1113,47 @@ internal static class ShowcaseFrameHitRegistry
                 new("inline_mode:footer", ShowcaseHitLayer.Content, 36_300));
         }
 
+        if (state.CurrentScreenNumber == 37 && TryResolveContentInnerArea(state.Viewport, out var a11yInner) && a11yInner.Width >= 45 && a11yInner.Height >= 12)
+        {
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(a11yInner.X, a11yInner.Y, a11yInner.Width, (ushort)Math.Min(7, (int)a11yInner.Height)),
+                new("accessibility:overview", ShowcaseHitLayer.Content, 37_000)));
+
+            var bodyY = a11yInner.Y + 7;
+            var bodyHeight = Math.Max(1, a11yInner.Height - 8);
+            var leftWidth = Math.Max(1, a11yInner.Width / 2);
+            var rightX = a11yInner.X + leftWidth;
+            var rightWidth = Math.Max(1, a11yInner.Width - leftWidth);
+            var togglesHeight = Math.Min(8, bodyHeight);
+            var wcagHeight = Math.Min(10, bodyHeight);
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(a11yInner.X, (ushort)bodyY, (ushort)leftWidth, (ushort)Math.Max(1, togglesHeight)),
+                new("accessibility:toggles", ShowcaseHitLayer.Content, 37_100)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(
+                    a11yInner.X,
+                    (ushort)(bodyY + togglesHeight),
+                    (ushort)leftWidth,
+                    (ushort)Math.Max(1, bodyHeight - togglesHeight)),
+                new("accessibility:preview", ShowcaseHitLayer.Content, 37_110)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)rightX, (ushort)bodyY, (ushort)rightWidth, (ushort)Math.Max(1, wcagHeight)),
+                new("accessibility:wcag", ShowcaseHitLayer.Content, 37_200)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(
+                    (ushort)rightX,
+                    (ushort)(bodyY + wcagHeight),
+                    (ushort)rightWidth,
+                    (ushort)Math.Max(1, bodyHeight - wcagHeight)),
+                new("accessibility:telemetry", ShowcaseHitLayer.Content, 37_210)));
+            AddRegion(
+                regions,
+                a11yInner.X,
+                Math.Max(a11yInner.Y, a11yInner.Bottom - 1),
+                a11yInner.Width,
+                new("accessibility:footer", ShowcaseHitLayer.Content, 37_300));
+        }
+
         if (state.CurrentScreenNumber == 7 && TryResolveContentInnerArea(state.Viewport, out var formsInner) && formsInner.Width >= 30 && formsInner.Height >= 8)
         {
             var formWidth = Math.Max(1, formsInner.Width / 2);
