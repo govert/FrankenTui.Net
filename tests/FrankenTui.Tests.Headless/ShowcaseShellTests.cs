@@ -4663,6 +4663,67 @@ public sealed class ShowcaseShellTests
         Assert.Contains("JsonException", screen);
     }
 
+    [Fact]
+    public void ShowcaseFrameHitRegistryExposesFileBrowserTreeAndPreviewRegions()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(80, 20),
+            screenNumber: 9,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+
+        var tree = ShowcaseFrameHitRegistry.HitTest(state, 3, 5);
+        var preview = ShowcaseFrameHitRegistry.HitTest(state, 45, 5);
+
+        Assert.Equal(ShowcaseHitLayer.Content, tree.Layer);
+        Assert.Equal("file_browser:tree:1", tree.LocalHitId);
+        Assert.Equal((uint)9_001, tree.UpstreamHitId);
+        Assert.Equal(ShowcaseHitLayer.Content, preview.Layer);
+        Assert.Equal("file_browser:preview", preview.LocalHitId);
+        Assert.Equal((uint)9_100, preview.UpstreamHitId);
+    }
+
+    [Fact]
+    public void ShowcaseEvidenceJsonlWriterEmitsFileBrowserMouseActions()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"ftui-showcase-file-browser-mouse-{Guid.NewGuid():N}.jsonl");
+        var options = ShowcaseCliOptions.Parse(
+            ["--screen=9", "--evidence-jsonl", path],
+            _ => null);
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(80, 20),
+            screenNumber: 9,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+        var treeEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 5, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp);
+        var previewEvent = TerminalEvent.Mouse(
+            new MouseGesture(45, 5, TerminalMouseButton.WheelDown, TerminalMouseKind.Scroll),
+            timestamp + TimeSpan.FromMilliseconds(10));
+
+        using (var writer = ShowcaseEvidenceJsonlWriter.Create(options.EvidenceJsonlPath))
+        {
+            Assert.NotNull(writer);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 1, frame: 1, treeEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 2, frame: 2, previewEvent, state, state);
+        }
+
+        var lines = File.ReadAllLines(path);
+        Assert.Equal(2, lines.Length);
+        using var treeRecord = JsonDocument.Parse(lines[0]);
+        using var previewRecord = JsonDocument.Parse(lines[1]);
+        Assert.Equal("file_browser_tree_select", treeRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("file_browser:tree:1", treeRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(9_001, treeRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("file_browser_preview_scroll_down", previewRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("file_browser:preview", previewRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(9_100, previewRecord.RootElement.GetProperty("target_id").GetInt32());
+    }
+
     private static ShowcaseDemoState ApplyKey(ShowcaseDemoState state, KeyGesture gesture, DateTimeOffset timestamp)
     {
         var terminalEvent = TerminalEvent.Key(gesture, timestamp);

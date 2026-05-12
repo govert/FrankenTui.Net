@@ -831,8 +831,16 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   `hit_layer`,
   `hit_target_screen_number`, and `hit_target_category` fields alongside the
   existing local string `hit_id`, closing one more piece of the `364-DEM-D`
-  frame-hit registry lane while leaving broader generalized screen hit routing
-  open. Focused showcase-shell verification is now `33` registry/evidence
+  frame-hit registry lane. The follow-on File Browser increment adds
+  screen-specific tree-row and preview-pane content hit regions plus
+  `file_browser_tree_select` and preview/tree scroll evidence actions, while
+  still leaving broader generalized screen hit routing open. Focused
+  showcase-shell verification is now `151` tests via
+  `dotnet test tests/FrankenTui.Tests.Headless/FrankenTui.Tests.Headless.csproj --no-restore --filter FullyQualifiedName~ShowcaseShellTests`.
+  Current local verification is `405` headless tests, `9` web tests, and `7`
+  PTY tests via `dotnet test FrankenTui.Net.sln --no-restore`.
+  Previous focused registry/evidence verification covered `33`
+  registry/evidence
   tests for this lane. Focused `crates/ftui-demo-showcase` drift audit through `f958e59e`
   found only doc-comment-only changes in `screens/async_tasks.rs` and
   `test_logging.rs`, with no `app.rs`, `chrome.rs`, or `screens/dashboard.rs`

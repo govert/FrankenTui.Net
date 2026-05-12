@@ -561,6 +561,29 @@ internal static class ShowcaseFrameHitRegistry
             }
         }
 
+        if (state.CurrentScreenNumber == 9 && TryResolveContentInnerArea(state.Viewport, out var fileBrowserInner) && fileBrowserInner.Width >= 30 && fileBrowserInner.Height >= 8)
+        {
+            var leftWidth = Math.Max(1, fileBrowserInner.Width / 2);
+            var treeRows = Math.Max(1, Math.Min(6, fileBrowserInner.Height - 2));
+            for (var row = 0; row < treeRows; row++)
+            {
+                AddRegion(
+                    regions,
+                    fileBrowserInner.X,
+                    fileBrowserInner.Y + 2 + row,
+                    leftWidth,
+                    new($"file_browser:tree:{row}", ShowcaseHitLayer.Content, (uint)(9_000 + row)));
+            }
+
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(
+                    (ushort)(fileBrowserInner.X + leftWidth),
+                    (ushort)(fileBrowserInner.Y + 1),
+                    (ushort)Math.Max(1, fileBrowserInner.Width - leftWidth),
+                    (ushort)Math.Max(1, fileBrowserInner.Height - 1)),
+                new("file_browser:preview", ShowcaseHitLayer.Content, 9_100)));
+        }
+
         if (state.CurrentScreenNumber == 26 && TryResolveContentInnerArea(state.Viewport, out var mouseInner) && mouseInner.Width >= 16 && mouseInner.Height >= 6)
         {
             var targetPanelWidth = Math.Max(4, mouseInner.Width * 42 / 100);
