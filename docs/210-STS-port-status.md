@@ -837,10 +837,12 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   the Notifications increment adds trigger-row, toast-stack, and lifecycle-panel
   regions plus trigger/toast/lifecycle mouse evidence, and the Forms/Input
   increment adds form-field and text-area regions plus field-focus/text-scroll
-  evidence, while still leaving broader generalized screen hit routing open.
-  Focused showcase-shell verification is now `155` tests via
+  evidence, and the Form Validation increment adds mode, field, touched/dirty,
+  error-summary, rules, controls, notifications, and diagnostics regions plus
+  matching mouse evidence, while still leaving broader generalized screen hit
+  routing open. Focused showcase-shell verification is now `157` tests via
   `dotnet test tests/FrankenTui.Tests.Headless/FrankenTui.Tests.Headless.csproj --no-restore --filter FullyQualifiedName~ShowcaseShellTests`.
-  Current local verification is `409` headless tests, `9` web tests, and `7`
+  Current local verification is `411` headless tests, `9` web tests, and `7`
   PTY tests via `dotnet test FrankenTui.Net.sln --no-restore`.
   Previous focused registry/evidence verification covered `33`
   registry/evidence

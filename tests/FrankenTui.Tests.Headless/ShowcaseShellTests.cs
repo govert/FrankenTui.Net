@@ -4855,6 +4855,88 @@ public sealed class ShowcaseShellTests
         Assert.Equal(7_100, textRecord.RootElement.GetProperty("target_id").GetInt32());
     }
 
+    [Fact]
+    public void ShowcaseFrameHitRegistryExposesFormValidationPanels()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 30),
+            screenNumber: 27,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+
+        var mode = ShowcaseFrameHitRegistry.HitTest(state, 3, 2);
+        var field = ShowcaseFrameHitRegistry.HitTest(state, 3, 8);
+        var error = ShowcaseFrameHitRegistry.HitTest(state, 55, 5);
+        var rules = ShowcaseFrameHitRegistry.HitTest(state, 55, 18);
+        var controls = ShowcaseFrameHitRegistry.HitTest(state, 95, 2);
+        var notifications = ShowcaseFrameHitRegistry.HitTest(state, 95, 11);
+        var diagnostics = ShowcaseFrameHitRegistry.HitTest(state, 95, 19);
+
+        Assert.Equal("form_validation:mode", mode.LocalHitId);
+        Assert.Equal((uint)27_000, mode.UpstreamHitId);
+        Assert.Equal("form_validation:field:2", field.LocalHitId);
+        Assert.Equal((uint)27_012, field.UpstreamHitId);
+        Assert.Equal("form_validation:error:1", error.LocalHitId);
+        Assert.Equal((uint)27_101, error.UpstreamHitId);
+        Assert.Equal("form_validation:rules", rules.LocalHitId);
+        Assert.Equal((uint)27_130, rules.UpstreamHitId);
+        Assert.Equal("form_validation:controls", controls.LocalHitId);
+        Assert.Equal((uint)27_200, controls.UpstreamHitId);
+        Assert.Equal("form_validation:notifications", notifications.LocalHitId);
+        Assert.Equal((uint)27_210, notifications.UpstreamHitId);
+        Assert.Equal("form_validation:diagnostics", diagnostics.LocalHitId);
+        Assert.Equal((uint)27_220, diagnostics.UpstreamHitId);
+    }
+
+    [Fact]
+    public void ShowcaseEvidenceJsonlWriterEmitsFormValidationMouseActions()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"ftui-showcase-form-validation-mouse-{Guid.NewGuid():N}.jsonl");
+        var options = ShowcaseCliOptions.Parse(
+            ["--screen=27", "--evidence-jsonl", path],
+            _ => null);
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 30),
+            screenNumber: 27,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+        var fieldEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 8, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp);
+        var errorEvent = TerminalEvent.Mouse(
+            new MouseGesture(55, 5, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp + TimeSpan.FromMilliseconds(10));
+        var diagnosticsEvent = TerminalEvent.Mouse(
+            new MouseGesture(95, 19, TerminalMouseButton.WheelDown, TerminalMouseKind.Scroll),
+            timestamp + TimeSpan.FromMilliseconds(20));
+
+        using (var writer = ShowcaseEvidenceJsonlWriter.Create(options.EvidenceJsonlPath))
+        {
+            Assert.NotNull(writer);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 1, frame: 1, fieldEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 2, frame: 2, errorEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 3, frame: 3, diagnosticsEvent, state, state);
+        }
+
+        var lines = File.ReadAllLines(path);
+        Assert.Equal(3, lines.Length);
+        using var fieldRecord = JsonDocument.Parse(lines[0]);
+        using var errorRecord = JsonDocument.Parse(lines[1]);
+        using var diagnosticsRecord = JsonDocument.Parse(lines[2]);
+        Assert.Equal("form_validation_field_focus", fieldRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("form_validation:field:2", fieldRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(27_012, fieldRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("form_validation_error_select", errorRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("form_validation:error:1", errorRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(27_101, errorRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("form_validation_diagnostics_scroll_down", diagnosticsRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("form_validation:diagnostics", diagnosticsRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(27_220, diagnosticsRecord.RootElement.GetProperty("target_id").GetInt32());
+    }
+
     private static ShowcaseDemoState ApplyKey(ShowcaseDemoState state, KeyGesture gesture, DateTimeOffset timestamp)
     {
         var terminalEvent = TerminalEvent.Key(gesture, timestamp);

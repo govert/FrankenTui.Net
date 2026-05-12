@@ -644,6 +644,75 @@ internal static class ShowcaseFrameHitRegistry
                 new("forms_input:text_area", ShowcaseHitLayer.Content, 7_100)));
         }
 
+        if (state.CurrentScreenNumber == 27 && TryResolveContentInnerArea(state.Viewport, out var validationInner) && validationInner.Width >= 45 && validationInner.Height >= 10)
+        {
+            var leftWidth = Math.Max(1, validationInner.Width * 42 / 100);
+            var centerWidth = Math.Max(1, validationInner.Width * 34 / 100);
+            var rightWidth = Math.Max(1, validationInner.Width - leftWidth - centerWidth);
+            var centerX = validationInner.X + leftWidth;
+            var rightX = centerX + centerWidth;
+
+            AddRegion(
+                regions,
+                validationInner.X,
+                validationInner.Y,
+                leftWidth,
+                new("form_validation:mode", ShowcaseHitLayer.Content, 27_000));
+            for (var row = 0; row < FormValidationFieldCount; row++)
+            {
+                AddRegion(
+                    regions,
+                    validationInner.X,
+                    validationInner.Y + 4 + row,
+                    leftWidth,
+                    new($"form_validation:field:{row}", ShowcaseHitLayer.Content, (uint)(27_010 + row)));
+            }
+
+            AddRegion(
+                regions,
+                validationInner.X,
+                Math.Max(validationInner.Y, validationInner.Bottom - 4),
+                leftWidth,
+                new("form_validation:touched_dirty", ShowcaseHitLayer.Content, 27_030));
+            var errorRows = Math.Max(1, Math.Min(8, validationInner.Height * 58 / 100 - 2));
+            for (var row = 0; row < errorRows; row++)
+            {
+                AddRegion(
+                    regions,
+                    centerX,
+                    validationInner.Y + 2 + row,
+                    centerWidth,
+                    new($"form_validation:error:{row}", ShowcaseHitLayer.Content, (uint)(27_100 + row)));
+            }
+
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(
+                    (ushort)centerX,
+                    (ushort)(validationInner.Y + Math.Max(1, validationInner.Height * 58 / 100)),
+                    (ushort)centerWidth,
+                    (ushort)Math.Max(1, validationInner.Height - Math.Max(1, validationInner.Height * 58 / 100))),
+                new("form_validation:rules", ShowcaseHitLayer.Content, 27_130)));
+            AddRegion(
+                regions,
+                rightX,
+                validationInner.Y,
+                rightWidth,
+                new("form_validation:controls", ShowcaseHitLayer.Content, 27_200));
+            AddRegion(
+                regions,
+                rightX,
+                validationInner.Y + 9,
+                rightWidth,
+                new("form_validation:notifications", ShowcaseHitLayer.Content, 27_210));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(
+                    (ushort)rightX,
+                    (ushort)(validationInner.Y + 16),
+                    (ushort)rightWidth,
+                    (ushort)Math.Max(1, validationInner.Height - 16)),
+                new("form_validation:diagnostics", ShowcaseHitLayer.Content, 27_220)));
+        }
+
         if (state.CurrentScreenNumber == 26 && TryResolveContentInnerArea(state.Viewport, out var mouseInner) && mouseInner.Width >= 16 && mouseInner.Height >= 6)
         {
             var targetPanelWidth = Math.Max(4, mouseInner.Width * 42 / 100);
@@ -773,6 +842,7 @@ internal static class ShowcaseFrameHitRegistry
     }
 
     private const int FormFieldCount = 3;
+    private const int FormValidationFieldCount = 9;
 
     private static int CategoryIndex(ShowcaseScreenCategory category)
     {

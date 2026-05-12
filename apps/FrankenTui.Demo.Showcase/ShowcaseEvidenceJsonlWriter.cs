@@ -856,6 +856,51 @@ public sealed class ShowcaseEvidenceJsonlWriter : IDisposable
             return "forms_input_hit_test";
         }
 
+        if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 27)
+        {
+            if (gesture.Kind == TerminalMouseKind.Scroll)
+            {
+                return hit.LocalHitId switch
+                {
+                    "form_validation:rules" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "form_validation_rules_scroll_up"
+                        : "form_validation_rules_scroll_down",
+                    "form_validation:diagnostics" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "form_validation_diagnostics_scroll_up"
+                        : "form_validation_diagnostics_scroll_down",
+                    _ => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "form_validation_scroll_up"
+                        : "form_validation_scroll_down"
+                };
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Left)
+            {
+                if (hit.LocalHitId.StartsWith("form_validation:field:", StringComparison.Ordinal))
+                {
+                    return "form_validation_field_focus";
+                }
+
+                if (hit.LocalHitId.StartsWith("form_validation:error:", StringComparison.Ordinal))
+                {
+                    return "form_validation_error_select";
+                }
+
+                return hit.LocalHitId switch
+                {
+                    "form_validation:mode" => "form_validation_mode_toggle",
+                    "form_validation:touched_dirty" => "form_validation_state_focus",
+                    "form_validation:rules" => "form_validation_rules_focus",
+                    "form_validation:controls" => "form_validation_controls_focus",
+                    "form_validation:notifications" => "form_validation_notifications_focus",
+                    "form_validation:diagnostics" => "form_validation_diagnostics_focus",
+                    _ => "form_validation_hit_test"
+                };
+            }
+
+            return "form_validation_hit_test";
+        }
+
         if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 42)
         {
             return gesture.Kind switch
