@@ -2103,6 +2103,72 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseMousePlaygroundMouseMutatesTargetOverlayAndJitterState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new FrankenTui.Core.Size(72, 18),
+            screenNumber: 26,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(state, 16, 7, timestamp);
+        Assert.Equal(6, state.MousePlaygroundSelectedTargetIndex);
+        Assert.Equal(1, state.MousePlaygroundSelectedTargetClicks);
+        Assert.Equal(7, state.MousePlaygroundEventIndex);
+
+        state = ApplyMouse(
+            state,
+            16,
+            7,
+            timestamp + TimeSpan.FromMilliseconds(10),
+            TerminalMouseButton.Right);
+        Assert.True(state.MousePlaygroundOverlayVisible);
+        Assert.Equal(8, state.MousePlaygroundEventIndex);
+
+        state = ApplyMouse(
+            state,
+            16,
+            7,
+            timestamp + TimeSpan.FromMilliseconds(20),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.True(state.MousePlaygroundJitterStatsVisible);
+        Assert.Equal(9, state.MousePlaygroundEventIndex);
+    }
+
+    [Fact]
+    public void ShowcaseMousePlaygroundRendersMouseSelectedState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new FrankenTui.Core.Size(120, 32),
+            screenNumber: 26,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            MousePlaygroundSelectedTargetIndex = 6,
+            MousePlaygroundSelectedTargetClicks = 3,
+            MousePlaygroundEventIndex = 8,
+            MousePlaygroundOverlayVisible = true,
+            MousePlaygroundJitterStatsVisible = true
+        };
+        var buffer = new RenderBuffer(120, 32);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 32), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("Hover: T7", screen);
+        Assert.Contains("Overlay: ON", screen);
+        Assert.Contains("Jitter Stats: ON", screen);
+        Assert.Contains("Selected clicks: 3", screen);
+        Assert.Contains("Stats + Overlay [visible]", screen);
+        Assert.Contains("Controls + Diagnostics", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryRoutesHyperlinkRows()
     {
         var state = ShowcaseDemoState.Create(

@@ -4,6 +4,7 @@ using FrankenTui.Layout;
 using FrankenTui.Runtime;
 using FrankenTui.Text;
 using FrankenTui.Widgets;
+using System.Globalization;
 
 namespace FrankenTui.Demo.Showcase;
 
@@ -1869,15 +1870,20 @@ internal static class ShowcaseSurface
 
     private static IWidget BuildMousePlayground(ShowcaseDemoState state)
     {
-        var selected = state.ScriptFrame % 12;
+        var selected = Math.Clamp(state.MousePlaygroundSelectedTargetIndex, 0, 11);
+        var selectedClicks = Math.Clamp(state.MousePlaygroundSelectedTargetClicks, 0, 99);
+        var selectedTarget = selected + 1;
+        var eventIndex = Math.Clamp(state.MousePlaygroundEventIndex, 0, 9);
+        var overlayVisible = state.MousePlaygroundOverlayVisible;
+        var jitterStatsVisible = state.MousePlaygroundJitterStatsVisible;
         var targets = Enumerable.Range(1, 12)
             .Select(index => new[]
             {
-                index == selected + 1 ? ">" : " ",
+                index == selectedTarget ? ">" : " ",
                 $"T{index}",
                 $"id={index}",
-                index == selected + 1 ? "hover" : "idle",
-                index == 3 ? "2" : index == 7 ? "1" : "0"
+                index == selectedTarget ? "hover" : "idle",
+                index == selectedTarget ? selectedClicks.ToString(CultureInfo.InvariantCulture) : "0"
             })
             .Cast<IReadOnlyList<string>>()
             .ToArray();
@@ -1890,9 +1896,9 @@ internal static class ShowcaseSurface
             new[] { "mouse_scroll", "Scroll Down", "40,12", "target=none" },
             new[] { "hit_test", "Hit Test", "25,9", "target=7" },
             new[] { "hover_change", "Hover", "25,9", "prev=3 curr=7" },
-            new[] { "target_click", "Click", "12,5", "clicks=2" },
-            new[] { "overlay_toggle", "Overlay", "-", "enabled=true" },
-            new[] { "jitter_stats_toggle", "Jitter", "-", "enabled=true" }
+            new[] { "target_click", "Click", $"target={selectedTarget}", $"clicks={selectedClicks}" },
+            new[] { "overlay_toggle", "Overlay", "-", $"enabled={overlayVisible.ToString().ToLowerInvariant()}" },
+            new[] { "jitter_stats_toggle", "Jitter", "-", $"enabled={jitterStatsVisible.ToString().ToLowerInvariant()}" }
         };
         var controls = """
             Tab cycles focus: Targets -> Event Log -> Stats
@@ -1908,16 +1914,17 @@ internal static class ShowcaseSurface
             Telemetry hooks: on_hit_test on_hover_change on_target_click on_any
             """;
         var stats = $"""
-            Hover: T{selected + 1}
+            Hover: T{selectedTarget}
             Pos: ({10 + selected}, {4 + selected % 6})
-            Overlay: ON
-            Jitter Stats: ON
+            Overlay: {(overlayVisible ? "ON" : "OFF")}
+            Jitter Stats: {(jitterStatsVisible ? "ON" : "OFF")}
             Grid: 4 cols x 3 rows
             Event log: max 12
+            Selected clicks: {selectedClicks}
 
             HoverStabilizerConfig: default
             Hit regions registered as Content ids 1..12
-            Overlay draws crosshair at mouse position
+            Overlay draws crosshair at mouse position when enabled
             """;
 
         return new StackWidget(
@@ -1943,12 +1950,12 @@ internal static class ShowcaseSurface
                             {
                                 Headers = ["Kind", "Event", "Pos", "Context"],
                                 Rows = eventRows,
-                                SelectedRow = state.ScriptFrame % eventRows.Length
+                                SelectedRow = eventIndex
                             }
                         }),
-                        (LayoutConstraint.Fill(), Panel("Stats + Overlay", stats))
+                        (LayoutConstraint.Fill(), Panel(overlayVisible ? "Stats + Overlay [visible]" : "Stats + Overlay", stats))
                     ])),
-                (LayoutConstraint.Fill(), Panel("Controls + Diagnostics", controls))
+                (LayoutConstraint.Fill(), Panel(jitterStatsVisible ? "Controls + Diagnostics [jitter]" : "Controls + Diagnostics", controls))
             ]);
     }
 

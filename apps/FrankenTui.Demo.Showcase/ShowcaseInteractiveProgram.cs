@@ -137,6 +137,11 @@ internal sealed record ShowcaseDemoState(
     int AdvancedTextEditorFocusIndex = 0,
     int AdvancedTextEditorHistoryIndex = 0,
     int AdvancedTextEditorDiagnosticsIndex = 0,
+    int MousePlaygroundSelectedTargetIndex = 0,
+    int MousePlaygroundSelectedTargetClicks = 0,
+    int MousePlaygroundEventIndex = 0,
+    bool MousePlaygroundOverlayVisible = false,
+    bool MousePlaygroundJitterStatsVisible = false,
     bool PaletteLabBenchEnabled = false,
     int PaletteLabBenchFrame = 0,
     int PaletteLabBenchProcessed = 0,
@@ -316,6 +321,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent advancedTextEditorMouseEvent &&
             HandleAdvancedTextEditorMouse(advancedTextEditorMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent mousePlaygroundMouseEvent &&
+            HandleMousePlaygroundMouse(mousePlaygroundMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -1665,6 +1676,70 @@ internal sealed record ShowcaseDemoState(
         }
 
         return false;
+    }
+
+    private static bool HandleMousePlaygroundMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 26 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content ||
+            !hit.LocalHitId.StartsWith("target:", StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        var targetText = hit.LocalHitId["target:".Length..];
+        if (!int.TryParse(targetText, CultureInfo.InvariantCulture, out var targetId))
+        {
+            return false;
+        }
+
+        var targetIndex = Math.Clamp(targetId - 1, 0, 11);
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = next with
+            {
+                MousePlaygroundSelectedTargetIndex = targetIndex,
+                MousePlaygroundEventIndex = Math.Clamp(next.MousePlaygroundEventIndex + delta, 0, 9),
+                MousePlaygroundJitterStatsVisible = true
+            };
+            return true;
+        }
+
+        next = gesture.Button switch
+        {
+            TerminalMouseButton.Left => next with
+            {
+                MousePlaygroundSelectedTargetIndex = targetIndex,
+                MousePlaygroundSelectedTargetClicks = next.MousePlaygroundSelectedTargetIndex == targetIndex
+                    ? Math.Clamp(next.MousePlaygroundSelectedTargetClicks + 1, 0, 99)
+                    : 1,
+                MousePlaygroundEventIndex = 7
+            },
+            TerminalMouseButton.Right => next with
+            {
+                MousePlaygroundSelectedTargetIndex = targetIndex,
+                MousePlaygroundOverlayVisible = !next.MousePlaygroundOverlayVisible,
+                MousePlaygroundEventIndex = 8
+            },
+            TerminalMouseButton.Middle => next with
+            {
+                MousePlaygroundSelectedTargetIndex = targetIndex,
+                MousePlaygroundJitterStatsVisible = !next.MousePlaygroundJitterStatsVisible,
+                MousePlaygroundEventIndex = 9
+            },
+            _ => next
+        };
+        return gesture.Button is TerminalMouseButton.Left or TerminalMouseButton.Right or TerminalMouseButton.Middle;
     }
 
     private static bool HandleTerminalCapabilitiesMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
