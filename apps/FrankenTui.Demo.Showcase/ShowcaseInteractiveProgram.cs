@@ -148,6 +148,10 @@ internal sealed record ShowcaseDemoState(
     int FormValidationDiagnosticsScroll = 0,
     bool FormValidationOnSubmitMode = false,
     bool FormValidationSubmitted = false,
+    int VirtualizedSearchSelectedIndex = 0,
+    int VirtualizedSearchDiagnosticsScroll = 0,
+    bool VirtualizedSearchFocusSearch = false,
+    bool VirtualizedSearchStatsFocused = false,
     bool PaletteLabBenchEnabled = false,
     int PaletteLabBenchFrame = 0,
     int PaletteLabBenchProcessed = 0,
@@ -339,6 +343,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent formValidationMouseEvent &&
             HandleFormValidationMouse(formValidationMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent virtualizedSearchMouseEvent &&
+            HandleVirtualizedSearchMouse(virtualizedSearchMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -1841,6 +1851,114 @@ internal sealed record ShowcaseDemoState(
         return hit.LocalHitId is "form_validation:mode" or "form_validation:touched_dirty" or
             "form_validation:controls" or "form_validation:notifications" or
             "form_validation:rules" or "form_validation:diagnostics";
+    }
+
+    private static bool HandleVirtualizedSearchMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 28 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content)
+        {
+            return false;
+        }
+
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = hit.LocalHitId switch
+            {
+                { } value when value.StartsWith("virtualized_search:result:", StringComparison.Ordinal) => next with
+                {
+                    VirtualizedSearchSelectedIndex = Math.Clamp(next.VirtualizedSearchSelectedIndex + delta * 3, 0, 11),
+                    VirtualizedSearchFocusSearch = false,
+                    VirtualizedSearchStatsFocused = false
+                },
+                { } value when value.StartsWith("virtualized_search:diagnostic:", StringComparison.Ordinal) => next with
+                {
+                    VirtualizedSearchDiagnosticsScroll = Math.Clamp(next.VirtualizedSearchDiagnosticsScroll + delta, 0, 8),
+                    VirtualizedSearchStatsFocused = true,
+                    VirtualizedSearchFocusSearch = false
+                },
+                "virtualized_search:stats" => next with
+                {
+                    VirtualizedSearchStatsFocused = true,
+                    VirtualizedSearchFocusSearch = false
+                },
+                _ => next
+            };
+            return hit.LocalHitId == "virtualized_search:stats" ||
+                hit.LocalHitId.StartsWith("virtualized_search:result:", StringComparison.Ordinal) ||
+                hit.LocalHitId.StartsWith("virtualized_search:diagnostic:", StringComparison.Ordinal);
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        if (hit.LocalHitId == "virtualized_search:search_bar")
+        {
+            next = next with
+            {
+                VirtualizedSearchFocusSearch = true,
+                VirtualizedSearchStatsFocused = false
+            };
+            return true;
+        }
+
+        if (hit.LocalHitId == "virtualized_search:stats")
+        {
+            next = next with
+            {
+                VirtualizedSearchStatsFocused = true,
+                VirtualizedSearchFocusSearch = false
+            };
+            return true;
+        }
+
+        if (hit.LocalHitId.StartsWith("virtualized_search:result:", StringComparison.Ordinal))
+        {
+            var rowText = hit.LocalHitId["virtualized_search:result:".Length..];
+            if (!int.TryParse(rowText, CultureInfo.InvariantCulture, out var row))
+            {
+                return false;
+            }
+
+            next = next with
+            {
+                VirtualizedSearchSelectedIndex = Math.Clamp(row, 0, 11),
+                VirtualizedSearchFocusSearch = false,
+                VirtualizedSearchStatsFocused = false
+            };
+            return true;
+        }
+
+        if (hit.LocalHitId.StartsWith("virtualized_search:diagnostic:", StringComparison.Ordinal))
+        {
+            var rowText = hit.LocalHitId["virtualized_search:diagnostic:".Length..];
+            if (!int.TryParse(rowText, CultureInfo.InvariantCulture, out var row))
+            {
+                return false;
+            }
+
+            next = next with
+            {
+                VirtualizedSearchDiagnosticsScroll = Math.Clamp(row, 0, 8),
+                VirtualizedSearchStatsFocused = true,
+                VirtualizedSearchFocusSearch = false
+            };
+            return true;
+        }
+
+        return false;
     }
 
     private static bool HandleTerminalCapabilitiesMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)

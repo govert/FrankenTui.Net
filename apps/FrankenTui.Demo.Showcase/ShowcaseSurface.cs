@@ -2075,7 +2075,10 @@ internal static class ShowcaseSurface
     {
         const int totalItems = 10_000;
         const string query = "cfg";
-        var selected = state.ScriptFrame % 12;
+        var selected = Math.Clamp(state.VirtualizedSearchSelectedIndex, 0, 11);
+        var diagnosticsScroll = Math.Clamp(state.VirtualizedSearchDiagnosticsScroll, 0, 8);
+        var focusSearch = state.VirtualizedSearchFocusSearch;
+        var statsFocused = state.VirtualizedSearchStatsFocused;
         var results = Enumerable.Range(0, 12)
             .Select(index =>
             {
@@ -2109,19 +2112,19 @@ internal static class ShowcaseSurface
             LayoutDirection.Vertical,
             [
                 (LayoutConstraint.Fixed(12), Panel(
-                    "Stats",
-                    $"Total:    {totalItems} items\nMatches:  1250\nSelected: {selected + 1}\nQuery:    \"{query}\"\nTop score: 61\n\nKeybindings:\n  /        Focus search\n  Esc      Clear search\n  j/k      Navigate\n  g/G      Top/Bottom")),
+                    statsFocused ? "Stats [focus]" : "Stats",
+                    $"Total:    {totalItems} items\nMatches:  1250\nSelected: {selected + 1}\nQuery:    \"{query}\"\nFocus:    {(focusSearch ? "Search" : statsFocused ? "Stats" : "List")}\nTop score: 61\n\nKeybindings:\n  /        Focus search\n  Esc      Clear search\n  j/k      Navigate\n  g/G      Top/Bottom")),
                 (LayoutConstraint.Fill(), Panel(
-                    "Diagnostics",
-                    "FTUI_VSEARCH_DIAGNOSTICS=true\nFTUI_VSEARCH_DETERMINISTIC=true\nDataset: Configuration/CoreService/ApiGateway/WorkerPool\nEvents: query_change, filter_update, navigate, focus_change, page_scroll, jump_to_edge, fuzzy_match, render, tick\nJSONL fields: seq, ts_us, kind, query, filtered_count, selected, scroll_offset, focus_search, direction, match_score, checksum\nTelemetryHooks: on_query_change, on_filter_update, on_navigate, on_any"))
+                    diagnosticsScroll > 0 ? $"Diagnostics [scroll {diagnosticsScroll}]" : "Diagnostics",
+                    $"Diagnostics scroll: {diagnosticsScroll}\nFTUI_VSEARCH_DIAGNOSTICS=true\nFTUI_VSEARCH_DETERMINISTIC=true\nDataset: Configuration/CoreService/ApiGateway/WorkerPool\nEvents: query_change, filter_update, navigate, focus_change, page_scroll, jump_to_edge, fuzzy_match, render, tick\nJSONL fields: seq, ts_us, kind, query, filtered_count, selected, scroll_offset, focus_search, direction, match_score, checksum\nTelemetryHooks: on_query_change, on_filter_update, on_navigate, on_any"))
             ]);
 
         return new StackWidget(
             LayoutDirection.Vertical,
             [
                 (LayoutConstraint.Fixed(3), Panel(
-                    "Search (/ to focus, Esc to clear)",
-                    $"Type to search...  query=\"{query}\"  focus=List")),
+                    focusSearch ? "Search (/ to focus, Esc to clear) [focus]" : "Search (/ to focus, Esc to clear)",
+                    $"Type to search...  query=\"{query}\"  focus={(focusSearch ? "Search" : statsFocused ? "Stats" : "List")}")),
                 (LayoutConstraint.Fill(), new StackWidget(
                     LayoutDirection.Horizontal,
                     [

@@ -5631,6 +5631,70 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseVirtualizedSearchMouseMutatesFocusSelectionAndDiagnostics()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 28,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(state, 3, 3, timestamp);
+        Assert.True(state.VirtualizedSearchFocusSearch);
+
+        state = ApplyMouse(state, 3, 8, timestamp + TimeSpan.FromMilliseconds(10));
+        Assert.Equal(3, state.VirtualizedSearchSelectedIndex);
+        Assert.False(state.VirtualizedSearchFocusSearch);
+
+        state = ApplyMouse(
+            state,
+            3,
+            8,
+            timestamp + TimeSpan.FromMilliseconds(20),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(6, state.VirtualizedSearchSelectedIndex);
+
+        state = ApplyMouse(
+            state,
+            90,
+            20,
+            timestamp + TimeSpan.FromMilliseconds(30),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(1, state.VirtualizedSearchDiagnosticsScroll);
+        Assert.True(state.VirtualizedSearchStatsFocused);
+    }
+
+    [Fact]
+    public void ShowcaseVirtualizedSearchRendersMouseSelectedState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 28,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            VirtualizedSearchSelectedIndex = 6,
+            VirtualizedSearchDiagnosticsScroll = 4,
+            VirtualizedSearchFocusSearch = true
+        };
+        var buffer = new RenderBuffer(120, 32);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 32), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("Search (/ to focus, Esc to clear) [focus]", screen);
+        Assert.Contains("Selected: 7", screen);
+        Assert.Contains("Focus:    Search", screen);
+        Assert.Contains("Diagnostics scroll: 4", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryExposesAsyncTaskPanels()
     {
         var state = ShowcaseDemoState.Create(
