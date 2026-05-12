@@ -106,6 +106,8 @@ internal sealed record ShowcaseDemoState(
     int TableThemePresetIndex = 0,
     int TerminalCapabilitiesSelectedRow = 1,
     int TerminalCapabilitiesProfileIndex = 0,
+    int MacroRecorderTimelineIndex = 0,
+    int MacroRecorderScenarioIndex = 0,
     bool PaletteLabBenchEnabled = false,
     int PaletteLabBenchFrame = 0,
     int PaletteLabBenchProcessed = 0,
@@ -255,6 +257,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent formsInputMouseEvent &&
             HandleFormsInputMouse(formsInputMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent macroRecorderMouseEvent &&
+            HandleMacroRecorderMouse(macroRecorderMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -1209,6 +1217,68 @@ internal sealed record ShowcaseDemoState(
 
         next = next with { FormsInputSelectedFieldIndex = Math.Clamp(fieldIndex, 0, 2) };
         return true;
+    }
+
+    private static bool HandleMacroRecorderMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 13 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content)
+        {
+            return false;
+        }
+
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = hit.LocalHitId switch
+            {
+                { } value when value.StartsWith("macro_recorder:timeline:", StringComparison.Ordinal) => next with
+                {
+                    MacroRecorderTimelineIndex = Math.Clamp(next.MacroRecorderTimelineIndex + delta, 0, 4)
+                },
+                "macro_recorder:scenario_runner" => next with
+                {
+                    MacroRecorderScenarioIndex = Math.Clamp(next.MacroRecorderScenarioIndex + delta, 0, 2)
+                },
+                _ => next
+            };
+            return hit.LocalHitId.StartsWith("macro_recorder:timeline:", StringComparison.Ordinal) ||
+                hit.LocalHitId == "macro_recorder:scenario_runner";
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        if (hit.LocalHitId.StartsWith("macro_recorder:timeline:", StringComparison.Ordinal))
+        {
+            var rowText = hit.LocalHitId["macro_recorder:timeline:".Length..];
+            if (!int.TryParse(rowText, CultureInfo.InvariantCulture, out var row))
+            {
+                return false;
+            }
+
+            next = next with { MacroRecorderTimelineIndex = Math.Clamp(row, 0, 4) };
+            return true;
+        }
+
+        if (hit.LocalHitId == "macro_recorder:scenario_runner")
+        {
+            next = next with { MacroRecorderScenarioIndex = Math.Clamp(next.MacroRecorderScenarioIndex + 1, 0, 2) };
+            return true;
+        }
+
+        return false;
     }
 
     private static bool HandleTourMouse(MouseTerminalEvent mouseEvent, DateTimeOffset now, ref ShowcaseDemoState next)

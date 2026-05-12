@@ -782,8 +782,9 @@ internal static class ShowcaseSurface
         }
 
         var replay = MacroRecorder.ReplayPlan(macro, tickMs: 100);
-        var selected = replay.Count == 0 ? 0 : state.ScriptFrame % replay.Count;
+        var selected = replay.Count == 0 ? 0 : Math.Clamp(state.MacroRecorderTimelineIndex, 0, replay.Count - 1);
         var selectedEvent = replay.Count == 0 ? null : replay[selected];
+        var selectedScenario = Math.Clamp(state.MacroRecorderScenarioIndex, 0, 2);
         var effectiveState = state.Session.Macro with { Macro = macro };
         var progress = macro.Events.Count == 0
             ? 0
@@ -825,13 +826,16 @@ internal static class ShowcaseSurface
                 macro_id: {macro.Id}
                 """;
 
-        var scenarios = """
-            Preset scenarios (Enter to load)
-
-            > Tab Tour - cycle tabs and help
-              Search Flow - palette, type, confirm
-              Layout Lab - screens and n/p
-            """;
+        var scenarioRows = new[]
+        {
+            "Tab Tour - cycle tabs and help",
+            "Search Flow - palette, type, confirm",
+            "Layout Lab - screens and n/p"
+        };
+        var scenarios = string.Join(
+            Environment.NewLine,
+            new[] { "Preset scenarios (Enter to load)", "" }
+                .Concat(scenarioRows.Select((row, index) => $"{(index == selectedScenario ? ">" : " ")} {row}")));
 
         return new StackWidget(
             LayoutDirection.Vertical,

@@ -5066,6 +5066,53 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseMacroRecorderMouseMutatesTimelineAndScenarioSelection()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 30),
+            screenNumber: 13,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(state, 3, 12, timestamp);
+        Assert.Equal(2, state.MacroRecorderTimelineIndex);
+
+        state = ApplyMouse(
+            state,
+            90,
+            23,
+            timestamp + TimeSpan.FromMilliseconds(10),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(1, state.MacroRecorderScenarioIndex);
+    }
+
+    [Fact]
+    public void ShowcaseMacroRecorderRendersMouseSelectedTimelineAndScenario()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 30),
+            screenNumber: 13,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            MacroRecorderTimelineIndex = 3,
+            MacroRecorderScenarioIndex = 2
+        };
+        var buffer = new RenderBuffer(120, 30);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 30), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("Selected: #003", screen);
+        Assert.Contains("> Layout Lab - screens and n/p", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryExposesLogSearchPanels()
     {
         var state = ShowcaseDemoState.Create(
