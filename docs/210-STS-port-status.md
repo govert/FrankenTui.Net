@@ -413,9 +413,11 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   screen now shows upstream-shaped filters/follow controls, deterministic event
   timeline rows, selected event details, field/evidence payloads,
   max-event/burst constraints, diagnostic span names, and navigation/mouse
-  affordances; real bounded ring-buffer state, input recording hooks, filter
-  cycling, follow-drop decisions, mouse hit regions, and tracing integration
-  remain tracked under `364-DEM`. The Intrinsic Sizing screen now shows the four
+  affordances, with frame-registered filters, timeline, and detail regions plus
+  matching mouse evidence; real bounded ring-buffer state, input recording
+  hooks, filter cycling, follow-drop decisions, stateful mouse mutation, and
+  tracing integration remain tracked under `364-DEM`. The Intrinsic Sizing
+  screen now shows the four
   upstream scenarios, effective-width breakpoints, adaptive-sidebar/card/table/
   form rules, width override controls, mouse cycle affordances, and embedded
   pane-studio notes, with frame-registered header, scenario-table, detail, and
@@ -878,9 +880,9 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   and the Determinism Lab increment adds header, equivalence, report/env,
   scene-preview, checks, and footer regions plus matching mouse evidence, while
   still leaving broader generalized screen hit routing open.
-  Focused showcase-shell verification is now `195` tests via
+  Focused showcase-shell verification is now `197` tests via
   `dotnet test tests/FrankenTui.Tests.Headless/FrankenTui.Tests.Headless.csproj --no-restore --filter FullyQualifiedName~ShowcaseShellTests`.
-  Current local verification is `449` headless tests, `9` web tests, and `7`
+  Current local verification is `451` headless tests, `9` web tests, and `7`
   PTY tests via `dotnet test FrankenTui.Net.sln --no-restore`.
   Previous focused registry/evidence verification covered `33`
   registry/evidence

@@ -687,6 +687,27 @@ internal static class ShowcaseFrameHitRegistry
             }
         }
 
+        if (state.CurrentScreenNumber == 22 && TryResolveContentInnerArea(state.Viewport, out var timelineInner) && timelineInner.Width >= 40 && timelineInner.Height >= 14)
+        {
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(timelineInner.X, timelineInner.Y, timelineInner.Width, (ushort)Math.Min(14, (int)timelineInner.Height)),
+                new("action_timeline:filters", ShowcaseHitLayer.Content, 22_000)));
+
+            var bodyY = timelineInner.Y + 14;
+            var bodyHeight = Math.Max(1, timelineInner.Height - 14);
+            var timelineWidth = Math.Max(1, timelineInner.Width * 62 / 100);
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(timelineInner.X, (ushort)bodyY, (ushort)timelineWidth, (ushort)bodyHeight),
+                new("action_timeline:timeline", ShowcaseHitLayer.Content, 22_100)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(
+                    (ushort)(timelineInner.X + timelineWidth),
+                    (ushort)bodyY,
+                    (ushort)Math.Max(1, timelineInner.Width - timelineWidth),
+                    (ushort)bodyHeight),
+                new("action_timeline:detail", ShowcaseHitLayer.Content, 22_200)));
+        }
+
         if (state.CurrentScreenNumber == 23 && TryResolveContentInnerArea(state.Viewport, out var intrinsicInner) && intrinsicInner.Width >= 45 && intrinsicInner.Height >= 10)
         {
             regions.Add(new ShowcaseHitRegion(

@@ -6388,6 +6388,76 @@ public sealed class ShowcaseShellTests
         Assert.Equal(24_200, paneRecord.RootElement.GetProperty("target_id").GetInt32());
     }
 
+    [Fact]
+    public void ShowcaseFrameHitRegistryExposesActionTimelinePanels()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 22,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+
+        var filters = ShowcaseFrameHitRegistry.HitTest(state, 3, 6);
+        var timeline = ShowcaseFrameHitRegistry.HitTest(state, 3, 20);
+        var detail = ShowcaseFrameHitRegistry.HitTest(state, 80, 20);
+
+        Assert.Equal("action_timeline:filters", filters.LocalHitId);
+        Assert.Equal((uint)22_000, filters.UpstreamHitId);
+        Assert.Equal("action_timeline:timeline", timeline.LocalHitId);
+        Assert.Equal((uint)22_100, timeline.UpstreamHitId);
+        Assert.Equal("action_timeline:detail", detail.LocalHitId);
+        Assert.Equal((uint)22_200, detail.UpstreamHitId);
+    }
+
+    [Fact]
+    public void ShowcaseEvidenceJsonlWriterEmitsActionTimelineMouseActions()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"ftui-showcase-action-timeline-mouse-{Guid.NewGuid():N}.jsonl");
+        var options = ShowcaseCliOptions.Parse(
+            ["--screen=22", "--evidence-jsonl", path],
+            _ => null);
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 22,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+        var filtersEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 6, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp);
+        var timelineEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 20, TerminalMouseButton.WheelDown, TerminalMouseKind.Scroll),
+            timestamp + TimeSpan.FromMilliseconds(10));
+        var detailEvent = TerminalEvent.Mouse(
+            new MouseGesture(80, 20, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp + TimeSpan.FromMilliseconds(20));
+
+        using (var writer = ShowcaseEvidenceJsonlWriter.Create(options.EvidenceJsonlPath))
+        {
+            Assert.NotNull(writer);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 1, frame: 1, filtersEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 2, frame: 2, timelineEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 3, frame: 3, detailEvent, state, state);
+        }
+
+        var lines = File.ReadAllLines(path);
+        Assert.Equal(3, lines.Length);
+        using var filtersRecord = JsonDocument.Parse(lines[0]);
+        using var timelineRecord = JsonDocument.Parse(lines[1]);
+        using var detailRecord = JsonDocument.Parse(lines[2]);
+        Assert.Equal("action_timeline_filter_cycle", filtersRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("action_timeline:filters", filtersRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(22_000, filtersRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("action_timeline_scroll_down", timelineRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("action_timeline:timeline", timelineRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(22_100, timelineRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("action_timeline_detail_toggle", detailRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("action_timeline:detail", detailRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(22_200, detailRecord.RootElement.GetProperty("target_id").GetInt32());
+    }
+
     private static ShowcaseDemoState ApplyKey(ShowcaseDemoState state, KeyGesture gesture, DateTimeOffset timestamp)
     {
         var terminalEvent = TerminalEvent.Key(gesture, timestamp);
