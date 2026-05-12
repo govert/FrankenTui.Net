@@ -852,6 +852,51 @@ public sealed class ShowcaseEvidenceJsonlWriter : IDisposable
             return "performance_hit_test";
         }
 
+        if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 15)
+        {
+            if (gesture.Kind == TerminalMouseKind.Scroll)
+            {
+                return hit.LocalHitId switch
+                {
+                    "markdown:renderer" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "markdown_renderer_scroll_up"
+                        : "markdown_renderer_scroll_down",
+                    "markdown:stream" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "markdown_stream_scroll_up"
+                        : "markdown_stream_scroll_down",
+                    "markdown:unicode" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "markdown_unicode_scroll_up"
+                        : "markdown_unicode_scroll_down",
+                    _ => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "markdown_panel_scroll_up"
+                        : "markdown_panel_scroll_down"
+                };
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Right)
+            {
+                return hit.LocalHitId == "markdown:wrap"
+                    ? "markdown_wrap_context"
+                    : "markdown_panel_context";
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Left)
+            {
+                return hit.LocalHitId switch
+                {
+                    "markdown:renderer" => "markdown_renderer_focus",
+                    "markdown:stream" => "markdown_stream_focus",
+                    "markdown:detection" => "markdown_detection_focus",
+                    "markdown:style" => "markdown_style_focus",
+                    "markdown:unicode" => "markdown_unicode_focus",
+                    "markdown:wrap" => "markdown_wrap_mode_cycle",
+                    _ => "markdown_hit_test"
+                };
+            }
+
+            return "markdown_hit_test";
+        }
+
         if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 9)
         {
             if (gesture.Kind == TerminalMouseKind.Scroll)

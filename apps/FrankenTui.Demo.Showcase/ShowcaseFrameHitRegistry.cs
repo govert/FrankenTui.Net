@@ -590,6 +590,42 @@ internal static class ShowcaseFrameHitRegistry
                 new("performance:footer", ShowcaseHitLayer.Content, 14_200));
         }
 
+        if (state.CurrentScreenNumber == 15 && TryResolveContentInnerArea(state.Viewport, out var markdownInner) && markdownInner.Width >= 60 && markdownInner.Height >= 12)
+        {
+            var rendererWidth = Math.Max(1, markdownInner.Width * 35 / 100);
+            var streamWidth = Math.Max(1, markdownInner.Width * 35 / 100);
+            var auxWidth = Math.Max(1, markdownInner.Width - rendererWidth - streamWidth);
+            var streamX = markdownInner.X + rendererWidth;
+            var auxX = streamX + streamWidth;
+            var markdownHeight = (int)markdownInner.Height;
+            var detectionHeight = Math.Min(5, markdownHeight);
+            var streamHeight = Math.Max(1, markdownHeight - detectionHeight);
+            var detectionY = markdownInner.Y + streamHeight;
+            var styleHeight = Math.Min(8, markdownHeight);
+            var unicodeHeight = Math.Min(10, Math.Max(1, markdownHeight - styleHeight));
+            var wrapY = markdownInner.Y + styleHeight + unicodeHeight;
+            var wrapHeight = Math.Max(1, markdownHeight - styleHeight - unicodeHeight);
+
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(markdownInner.X, markdownInner.Y, (ushort)rendererWidth, markdownInner.Height),
+                new("markdown:renderer", ShowcaseHitLayer.Content, 15_000)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)streamX, markdownInner.Y, (ushort)streamWidth, (ushort)streamHeight),
+                new("markdown:stream", ShowcaseHitLayer.Content, 15_100)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)streamX, (ushort)detectionY, (ushort)streamWidth, (ushort)detectionHeight),
+                new("markdown:detection", ShowcaseHitLayer.Content, 15_110)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)auxX, markdownInner.Y, (ushort)auxWidth, (ushort)styleHeight),
+                new("markdown:style", ShowcaseHitLayer.Content, 15_200)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)auxX, (ushort)(markdownInner.Y + styleHeight), (ushort)auxWidth, (ushort)unicodeHeight),
+                new("markdown:unicode", ShowcaseHitLayer.Content, 15_210)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)auxX, (ushort)wrapY, (ushort)auxWidth, (ushort)wrapHeight),
+                new("markdown:wrap", ShowcaseHitLayer.Content, 15_220)));
+        }
+
         if (state.CurrentScreenNumber == 42 && TryResolveContentInnerArea(state.Viewport, out var kanbanInner) && kanbanInner.Width >= 30 && kanbanInner.Height >= 8)
         {
             var board = state.KanbanBoard ?? ShowcaseKanbanState.CreateDefault();

@@ -381,9 +381,11 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   regions with matching mouse evidence; live keyboard/mouse list mutation and
   exact upstream styling remain tracked under `364-DEM`. The Markdown/Rich Text screen now has
   a local three-column markdown renderer, LLM streaming/detection panel, style
-  sampler, Unicode table, and wrap/alignment demo; animated backdrop, live
-  scroll/focus controls, exact markdown detection/cache behavior, and full
-  syntax/theme depth remain tracked under `364-DEM`. The Mermaid Showcase
+  sampler, Unicode table, wrap/alignment demo, and frame-registered renderer,
+  stream, detection, style, Unicode, and wrap regions with matching mouse
+  evidence; animated backdrop, live scroll/focus controls, exact markdown
+  detection/cache behavior, and full syntax/theme depth remain tracked under
+  `364-DEM`. The Mermaid Showcase
   surface now exposes upstream-shaped render mode, palette, guard, zoom/pan,
   viewport override, crossings/symmetry/compactness, and `mermaid_render`
   status evidence in the local library/viewport/controls/metrics/status-log
@@ -883,11 +885,12 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   and the Determinism Lab increment adds header, equivalence, report/env,
   scene-preview, checks, and footer regions plus matching mouse evidence, and
   the Performance increment adds list, selected-row, stats, and footer regions
-  plus matching mouse evidence, while still leaving broader generalized screen
-  hit routing open.
-  Focused showcase-shell verification is now `201` tests via
+  plus matching mouse evidence, and the Markdown increment adds renderer,
+  stream, detection, style, Unicode, and wrap regions plus matching mouse
+  evidence, while still leaving broader generalized screen hit routing open.
+  Focused showcase-shell verification is now `203` tests via
   `dotnet test tests/FrankenTui.Tests.Headless/FrankenTui.Tests.Headless.csproj --no-restore --filter FullyQualifiedName~ShowcaseShellTests`.
-  Current local verification is `455` headless tests, `9` web tests, and `7`
+  Current local verification is `457` headless tests, `9` web tests, and `7`
   PTY tests via `dotnet test FrankenTui.Net.sln --no-restore`.
   Previous focused registry/evidence verification covered `33`
   registry/evidence

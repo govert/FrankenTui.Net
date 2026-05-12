@@ -6601,6 +6601,85 @@ public sealed class ShowcaseShellTests
         Assert.Equal(14_000, listRecord.RootElement.GetProperty("target_id").GetInt32());
     }
 
+    [Fact]
+    public void ShowcaseFrameHitRegistryExposesMarkdownPanels()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 15,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+
+        var renderer = ShowcaseFrameHitRegistry.HitTest(state, 3, 6);
+        var stream = ShowcaseFrameHitRegistry.HitTest(state, 45, 6);
+        var detection = ShowcaseFrameHitRegistry.HitTest(state, 45, 26);
+        var style = ShowcaseFrameHitRegistry.HitTest(state, 90, 6);
+        var unicode = ShowcaseFrameHitRegistry.HitTest(state, 90, 12);
+        var wrap = ShowcaseFrameHitRegistry.HitTest(state, 90, 24);
+
+        Assert.Equal("markdown:renderer", renderer.LocalHitId);
+        Assert.Equal((uint)15_000, renderer.UpstreamHitId);
+        Assert.Equal("markdown:stream", stream.LocalHitId);
+        Assert.Equal((uint)15_100, stream.UpstreamHitId);
+        Assert.Equal("markdown:detection", detection.LocalHitId);
+        Assert.Equal((uint)15_110, detection.UpstreamHitId);
+        Assert.Equal("markdown:style", style.LocalHitId);
+        Assert.Equal((uint)15_200, style.UpstreamHitId);
+        Assert.Equal("markdown:unicode", unicode.LocalHitId);
+        Assert.Equal((uint)15_210, unicode.UpstreamHitId);
+        Assert.Equal("markdown:wrap", wrap.LocalHitId);
+        Assert.Equal((uint)15_220, wrap.UpstreamHitId);
+    }
+
+    [Fact]
+    public void ShowcaseEvidenceJsonlWriterEmitsMarkdownMouseActions()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"ftui-showcase-markdown-mouse-{Guid.NewGuid():N}.jsonl");
+        var options = ShowcaseCliOptions.Parse(
+            ["--screen=15", "--evidence-jsonl", path],
+            _ => null);
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 15,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+        var rendererEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 6, TerminalMouseButton.WheelDown, TerminalMouseKind.Scroll),
+            timestamp);
+        var detectionEvent = TerminalEvent.Mouse(
+            new MouseGesture(45, 26, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp + TimeSpan.FromMilliseconds(10));
+        var wrapEvent = TerminalEvent.Mouse(
+            new MouseGesture(90, 24, TerminalMouseButton.Right, TerminalMouseKind.Down),
+            timestamp + TimeSpan.FromMilliseconds(20));
+
+        using (var writer = ShowcaseEvidenceJsonlWriter.Create(options.EvidenceJsonlPath))
+        {
+            Assert.NotNull(writer);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 1, frame: 1, rendererEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 2, frame: 2, detectionEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 3, frame: 3, wrapEvent, state, state);
+        }
+
+        var lines = File.ReadAllLines(path);
+        Assert.Equal(3, lines.Length);
+        using var rendererRecord = JsonDocument.Parse(lines[0]);
+        using var detectionRecord = JsonDocument.Parse(lines[1]);
+        using var wrapRecord = JsonDocument.Parse(lines[2]);
+        Assert.Equal("markdown_renderer_scroll_down", rendererRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("markdown:renderer", rendererRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(15_000, rendererRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("markdown_detection_focus", detectionRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("markdown:detection", detectionRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(15_110, detectionRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("markdown_wrap_context", wrapRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("markdown:wrap", wrapRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(15_220, wrapRecord.RootElement.GetProperty("target_id").GetInt32());
+    }
+
     private static ShowcaseDemoState ApplyKey(ShowcaseDemoState state, KeyGesture gesture, DateTimeOffset timestamp)
     {
         var terminalEvent = TerminalEvent.Key(gesture, timestamp);
