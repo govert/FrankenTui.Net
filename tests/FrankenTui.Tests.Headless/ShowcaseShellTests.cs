@@ -5387,6 +5387,85 @@ public sealed class ShowcaseShellTests
         Assert.Equal(30_310, diagnosticsRecord.RootElement.GetProperty("target_id").GetInt32());
     }
 
+    [Fact]
+    public void ShowcaseFrameHitRegistryExposesSnapshotPlayerPanels()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 31,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+
+        var timeline = ShowcaseFrameHitRegistry.HitTest(state, 3, 3);
+        var preview = ShowcaseFrameHitRegistry.HitTest(state, 3, 8);
+        var compare = ShowcaseFrameHitRegistry.HitTest(state, 40, 8);
+        var frameInfo = ShowcaseFrameHitRegistry.HitTest(state, 90, 6);
+        var controls = ShowcaseFrameHitRegistry.HitTest(state, 90, 16);
+        var diagnostics = ShowcaseFrameHitRegistry.HitTest(state, 90, 24);
+
+        Assert.Equal("snapshot_player:timeline", timeline.LocalHitId);
+        Assert.Equal((uint)31_000, timeline.UpstreamHitId);
+        Assert.Equal("snapshot_player:preview", preview.LocalHitId);
+        Assert.Equal((uint)31_100, preview.UpstreamHitId);
+        Assert.Equal("snapshot_player:compare", compare.LocalHitId);
+        Assert.Equal((uint)31_110, compare.UpstreamHitId);
+        Assert.Equal("snapshot_player:frame_info", frameInfo.LocalHitId);
+        Assert.Equal((uint)31_200, frameInfo.UpstreamHitId);
+        Assert.Equal("snapshot_player:controls", controls.LocalHitId);
+        Assert.Equal((uint)31_210, controls.UpstreamHitId);
+        Assert.Equal("snapshot_player:diagnostics", diagnostics.LocalHitId);
+        Assert.Equal((uint)31_220, diagnostics.UpstreamHitId);
+    }
+
+    [Fact]
+    public void ShowcaseEvidenceJsonlWriterEmitsSnapshotPlayerMouseActions()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"ftui-showcase-snapshot-player-mouse-{Guid.NewGuid():N}.jsonl");
+        var options = ShowcaseCliOptions.Parse(
+            ["--screen=31", "--evidence-jsonl", path],
+            _ => null);
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 31,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+        var timelineEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 3, TerminalMouseButton.Right, TerminalMouseKind.Down),
+            timestamp);
+        var previewEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 8, TerminalMouseButton.Right, TerminalMouseKind.Down),
+            timestamp + TimeSpan.FromMilliseconds(10));
+        var diagnosticsEvent = TerminalEvent.Mouse(
+            new MouseGesture(90, 24, TerminalMouseButton.WheelDown, TerminalMouseKind.Scroll),
+            timestamp + TimeSpan.FromMilliseconds(20));
+
+        using (var writer = ShowcaseEvidenceJsonlWriter.Create(options.EvidenceJsonlPath))
+        {
+            Assert.NotNull(writer);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 1, frame: 1, timelineEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 2, frame: 2, previewEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 3, frame: 3, diagnosticsEvent, state, state);
+        }
+
+        var lines = File.ReadAllLines(path);
+        Assert.Equal(3, lines.Length);
+        using var timelineRecord = JsonDocument.Parse(lines[0]);
+        using var previewRecord = JsonDocument.Parse(lines[1]);
+        using var diagnosticsRecord = JsonDocument.Parse(lines[2]);
+        Assert.Equal("snapshot_player_marker_toggle", timelineRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("snapshot_player:timeline", timelineRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(31_000, timelineRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("snapshot_player_heatmap_toggle", previewRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("snapshot_player:preview", previewRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(31_100, previewRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("snapshot_player_diagnostics_scroll_down", diagnosticsRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("snapshot_player:diagnostics", diagnosticsRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(31_220, diagnosticsRecord.RootElement.GetProperty("target_id").GetInt32());
+    }
+
     private static ShowcaseDemoState ApplyKey(ShowcaseDemoState state, KeyGesture gesture, DateTimeOffset timestamp)
     {
         var terminalEvent = TerminalEvent.Key(gesture, timestamp);

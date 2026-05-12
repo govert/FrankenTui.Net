@@ -867,6 +867,46 @@ internal static class ShowcaseFrameHitRegistry
                 new("theme_studio:footer", ShowcaseHitLayer.Content, 30_400));
         }
 
+        if (state.CurrentScreenNumber == 31 && TryResolveContentInnerArea(state.Viewport, out var snapshotInner) && snapshotInner.Width >= 40 && snapshotInner.Height >= 12)
+        {
+            var leftWidth = Math.Max(1, snapshotInner.Width * 60 / 100);
+            var rightX = snapshotInner.X + leftWidth;
+            var rightWidth = Math.Max(1, snapshotInner.Width - leftWidth);
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(snapshotInner.X, snapshotInner.Y, (ushort)leftWidth, (ushort)Math.Min(4, (int)snapshotInner.Height)),
+                new("snapshot_player:timeline", ShowcaseHitLayer.Content, 31_000)));
+
+            var bodyY = snapshotInner.Y + 4;
+            var bodyHeight = Math.Max(1, snapshotInner.Height - 4);
+            var previewWidth = Math.Max(1, leftWidth / 2);
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(snapshotInner.X, (ushort)bodyY, (ushort)previewWidth, (ushort)bodyHeight),
+                new("snapshot_player:preview", ShowcaseHitLayer.Content, 31_100)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(
+                    (ushort)(snapshotInner.X + previewWidth),
+                    (ushort)bodyY,
+                    (ushort)Math.Max(1, leftWidth - previewWidth),
+                    (ushort)bodyHeight),
+                new("snapshot_player:compare", ShowcaseHitLayer.Content, 31_110)));
+
+            var infoHeight = Math.Max(1, snapshotInner.Height * 45 / 100);
+            var controlsHeight = Math.Max(1, snapshotInner.Height * 28 / 100);
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)rightX, snapshotInner.Y, (ushort)rightWidth, (ushort)infoHeight),
+                new("snapshot_player:frame_info", ShowcaseHitLayer.Content, 31_200)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)rightX, (ushort)(snapshotInner.Y + infoHeight), (ushort)rightWidth, (ushort)controlsHeight),
+                new("snapshot_player:controls", ShowcaseHitLayer.Content, 31_210)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(
+                    (ushort)rightX,
+                    (ushort)(snapshotInner.Y + infoHeight + controlsHeight),
+                    (ushort)rightWidth,
+                    (ushort)Math.Max(1, snapshotInner.Height - infoHeight - controlsHeight)),
+                new("snapshot_player:diagnostics", ShowcaseHitLayer.Content, 31_220)));
+        }
+
         if (state.CurrentScreenNumber == 7 && TryResolveContentInnerArea(state.Viewport, out var formsInner) && formsInner.Width >= 30 && formsInner.Height >= 8)
         {
             var formWidth = Math.Max(1, formsInner.Width / 2);

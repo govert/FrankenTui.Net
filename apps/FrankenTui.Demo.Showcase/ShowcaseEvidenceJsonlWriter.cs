@@ -1100,6 +1100,56 @@ public sealed class ShowcaseEvidenceJsonlWriter : IDisposable
             return "theme_studio_hit_test";
         }
 
+        if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 31)
+        {
+            if (gesture.Kind == TerminalMouseKind.Scroll)
+            {
+                return hit.LocalHitId switch
+                {
+                    "snapshot_player:timeline" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "snapshot_player_timeline_scroll_up"
+                        : "snapshot_player_timeline_scroll_down",
+                    "snapshot_player:diagnostics" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "snapshot_player_diagnostics_scroll_up"
+                        : "snapshot_player_diagnostics_scroll_down",
+                    _ => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "snapshot_player_panel_scroll_up"
+                        : "snapshot_player_panel_scroll_down"
+                };
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Right)
+            {
+                return hit.LocalHitId switch
+                {
+                    "snapshot_player:timeline" => "snapshot_player_marker_toggle",
+                    "snapshot_player:preview" => "snapshot_player_heatmap_toggle",
+                    _ => "snapshot_player_context_action"
+                };
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Drag && hit.LocalHitId == "snapshot_player:timeline")
+            {
+                return "snapshot_player_timeline_scrub";
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Left)
+            {
+                return hit.LocalHitId switch
+                {
+                    "snapshot_player:timeline" => "snapshot_player_timeline_select",
+                    "snapshot_player:preview" => "snapshot_player_preview_focus",
+                    "snapshot_player:compare" => "snapshot_player_compare_focus",
+                    "snapshot_player:frame_info" => "snapshot_player_frame_info_focus",
+                    "snapshot_player:controls" => "snapshot_player_controls_focus",
+                    "snapshot_player:diagnostics" => "snapshot_player_diagnostics_focus",
+                    _ => "snapshot_player_hit_test"
+                };
+            }
+
+            return "snapshot_player_hit_test";
+        }
+
         if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 7)
         {
             if (gesture.Kind == TerminalMouseKind.Scroll)
