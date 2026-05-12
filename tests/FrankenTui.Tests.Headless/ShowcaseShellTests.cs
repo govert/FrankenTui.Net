@@ -6217,6 +6217,91 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcasePerformanceChallengeMouseMutatesStressTierBudgetAndEvidence()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 32,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(state, 90, 16, timestamp);
+        Assert.Equal(2, state.PerformanceChallengeStressModeIndex);
+        Assert.Equal(25, state.PerformanceChallengeStressLoad);
+        Assert.Equal(5, state.PerformanceChallengeFocusIndex);
+
+        state = ApplyMouse(state, 90, 23, timestamp + TimeSpan.FromMilliseconds(10));
+        Assert.Equal(3, state.PerformanceChallengeForcedTierIndex);
+        Assert.Equal(6, state.PerformanceChallengeFocusIndex);
+
+        state = ApplyMouse(
+            state,
+            90,
+            6,
+            timestamp + TimeSpan.FromMilliseconds(20),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(18, state.PerformanceChallengeBudgetMs);
+        Assert.Equal(4, state.PerformanceChallengeFocusIndex);
+
+        state = ApplyMouse(
+            state,
+            45,
+            6,
+            timestamp + TimeSpan.FromMilliseconds(30),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(1, state.PerformanceChallengeSparklineModeIndex);
+        Assert.Equal(2, state.PerformanceChallengeFocusIndex);
+
+        state = ApplyMouse(
+            state,
+            45,
+            20,
+            timestamp + TimeSpan.FromMilliseconds(40),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(1, state.PerformanceChallengeEvidenceScroll);
+        Assert.Equal(3, state.PerformanceChallengeFocusIndex);
+    }
+
+    [Fact]
+    public void ShowcasePerformanceChallengeRendersMouseSelectedState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 32,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            PerformanceChallengeFocusIndex = 6,
+            PerformanceChallengeForcedTierIndex = 3,
+            PerformanceChallengeStressModeIndex = 2,
+            PerformanceChallengeStressLoad = 50,
+            PerformanceChallengeBudgetMs = 24,
+            PerformanceChallengeSparklineModeIndex = 1,
+            PerformanceChallengeEvidenceScroll = 4,
+            PerformanceChallengePaused = true
+        };
+        var buffer = new RenderBuffer(120, 32);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 32), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("PERFORMANCE CHALLENGE MODE - PAUSED", screen);
+        Assert.Contains("Mode: fps", screen);
+        Assert.Contains("Budget: 24.00ms", screen);
+        Assert.Contains("Mode: Peak | Load 50%", screen);
+        Assert.Contains("Degradation Tiers [forced SAFETY MODE]", screen);
+        Assert.Contains("Evidence scroll: 4", screen);
+        Assert.Contains("budget:24ms", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryExposesExplainabilityPanels()
     {
         var state = ShowcaseDemoState.Create(

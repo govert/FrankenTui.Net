@@ -2385,20 +2385,33 @@ internal static class ShowcaseSurface
     {
         var frameMs = state.RuntimeStats?.FrameDurationMs ?? 12.8;
         var observedFps = frameMs > 0 ? 1000.0 / frameMs : 60.0;
-        var stressLevel = (state.ScriptFrame % 12) * 8;
-        var tier = observedFps >= 50
+        var stressModeIndex = Math.Clamp(state.PerformanceChallengeStressModeIndex, 0, 3);
+        string[] stressModes = ["Off", "Ramp", "Peak", "Cool"];
+        var stressMode = stressModes[stressModeIndex];
+        var stressLevel = state.PerformanceChallengeStressLoad > 0
+            ? Math.Clamp(state.PerformanceChallengeStressLoad, 0, 100)
+            : (state.ScriptFrame % 12) * 8;
+        var budgetMs = Math.Clamp(state.PerformanceChallengeBudgetMs, 8, 33);
+        var focusIndex = Math.Clamp(state.PerformanceChallengeFocusIndex, 0, 7);
+        var sparklineMode = Math.Clamp(state.PerformanceChallengeSparklineModeIndex, 0, 1) == 0 ? "intervals" : "fps";
+        var evidenceScroll = Math.Clamp(state.PerformanceChallengeEvidenceScroll, 0, 8);
+        var forcedTierIndex = Math.Clamp(state.PerformanceChallengeForcedTierIndex, -1, 3);
+        string[] tierNames = ["Full Fidelity", "Reduced (no FX)", "Minimal", "SAFETY MODE"];
+        var computedTier = observedFps >= 50
             ? "Full Fidelity"
             : observedFps >= 20
                 ? "Reduced (no FX)"
                 : observedFps >= 5
                     ? "Minimal"
                     : "SAFETY MODE";
+        var tier = forcedTierIndex >= 0 ? tierNames[forcedTierIndex] : computedTier;
+        var paused = state.PerformanceChallengePaused;
         string[][] samples =
         [
             ["avg", $"{frameMs:0.00}ms", "p50", "14.20ms"],
             ["p95", "18.70ms", "p99", "31.40ms"],
             ["min", "8.10ms", "max", "42.80ms"],
-            ["views", $"{state.RuntimeStats?.StepIndex ?? state.ScriptFrame}", "samples", "120"],
+            ["views", $"{state.RuntimeStats?.StepIndex ?? state.ScriptFrame}", "samples", paused ? "paused" : "120"],
             ["V/Tick", "1.30", "Tick Rate", "60.0 tps"]
         ];
         string[][] tiers =
@@ -2410,7 +2423,7 @@ internal static class ShowcaseSurface
         ];
         var metrics = new PanelWidget
         {
-            Title = "Real-Time Metrics",
+            Title = focusIndex == 1 ? "Real-Time Metrics [focus]" : "Real-Time Metrics",
             Child = new TableWidget
             {
                 Headers = ["Metric", "Value", "Metric", "Value"],
@@ -2418,20 +2431,20 @@ internal static class ShowcaseSurface
             }
         };
         var sparkline = Panel(
-            "Tick Intervals (us)",
-            "Sparkline: ▁▂▃▄▅▆▇█▆▄▂\nMode: intervals | alternate: FPS Estimate\nRing buffer: 120 samples\nScroll sparkline: FPS / intervals\nDeterministic: FTUI_DEMO_PERF_HUD_VIEWS_PER_TICK");
+            focusIndex == 2 ? $"Tick Intervals (us) [focus {sparklineMode}]" : "Tick Intervals (us)",
+            $"Sparkline: ▁▂▃▄▅▆▇█▆▄▂\nMode: {sparklineMode} | alternate: FPS Estimate\nRing buffer: 120 samples\nScroll sparkline: FPS / intervals\nDeterministic: FTUI_DEMO_PERF_HUD_VIEWS_PER_TICK");
         var budget = new StackWidget(
             LayoutDirection.Vertical,
             [
                 (LayoutConstraint.Percentage(42), Panel(
-                    "Render Budget",
-                    $"Budget: 16.67ms (60fps target)\nObserved: {frameMs:0.00}ms avg\nSimulated: {frameMs + 12.5:0.00}ms (+12.5ms)\nUsage: {(frameMs / 16.67 * 100):0}%\nTier: {tier}\nBudget bar: ####|....")),
+                    focusIndex == 4 ? "Render Budget [focus]" : "Render Budget",
+                    $"Budget: {budgetMs:0.00}ms (60fps target)\nObserved: {frameMs:0.00}ms avg\nSimulated: {frameMs + stressLevel / 8.0:0.00}ms (+{stressLevel / 8.0:0.0}ms)\nUsage: {(frameMs / budgetMs * 100):0}%\nTier: {tier}\nBudget bar: ####|....")),
                 (LayoutConstraint.Percentage(28), Panel(
-                    "Stress Harness",
-                    $"Mode: Ramp | Load {stressLevel}% | +{stressLevel * 2.0:0.0}ms\nDecision: degrade\nStates: Off, Ramp, Peak, Cool\ns:stress | c:cool | Click stress section")),
+                    focusIndex == 5 ? "Stress Harness [focus]" : "Stress Harness",
+                    $"Mode: {stressMode} | Load {stressLevel}% | +{stressLevel * 2.0:0.0}ms\nDecision: {(stressLevel > 0 ? "degrade" : "hold")}\nStates: Off, Ramp, Peak, Cool\ns:stress | c:cool | Click stress section")),
                 (LayoutConstraint.Fill(), new PanelWidget
                 {
-                    Title = "Degradation Tiers",
+                    Title = focusIndex == 6 ? $"Degradation Tiers [forced {tier}]" : "Degradation Tiers",
                     Child = new TableWidget
                     {
                         Headers = ["", "Tier", "Threshold", "Response"],
@@ -2440,13 +2453,13 @@ internal static class ShowcaseSurface
                 })
             ]);
         var evidence = Panel(
-            "JSONL + Mouse Evidence",
-            "Logger: perf_challenge\nEvent: perf_challenge_tier_change\nFields: tier_from, tier_to, frame_time_ms, penalty_ms, stress_level, stress_mode, decision, outcome\nKeys: r reset, p pause, m mode, s stress, c cool, 1-4 force tier\nMouse: click tier rows, click stress, scroll budget, scroll sparkline");
+            evidenceScroll > 0 ? $"JSONL + Mouse Evidence [scroll {evidenceScroll}]" : focusIndex == 3 ? "JSONL + Mouse Evidence [focus]" : "JSONL + Mouse Evidence",
+            $"Evidence scroll: {evidenceScroll}\nLogger: perf_challenge\nEvent: perf_challenge_tier_change\nFields: tier_from, tier_to, frame_time_ms, penalty_ms, stress_level, stress_mode, decision, outcome\nKeys: r reset, p pause, m mode, s stress, c cool, 1-4 force tier\nMouse: click tier rows, click stress, scroll budget, scroll sparkline");
 
         return new StackWidget(
             LayoutDirection.Vertical,
             [
-                (LayoutConstraint.Fixed(1), new ParagraphWidget("PERFORMANCE CHALLENGE MODE - DEGRADATION TIERS")),
+                (LayoutConstraint.Fixed(1), new ParagraphWidget(paused ? "PERFORMANCE CHALLENGE MODE - PAUSED" : "PERFORMANCE CHALLENGE MODE - DEGRADATION TIERS")),
                 (LayoutConstraint.Fill(), new StackWidget(
                     LayoutDirection.Horizontal,
                     [
@@ -2459,7 +2472,7 @@ internal static class ShowcaseSurface
                             ])),
                         (LayoutConstraint.Fixed(42), budget)
                     ])),
-                (LayoutConstraint.Fixed(1), new ParagraphWidget($"s:stress(Ramp) | c:cool | r:reset | p:pause | m:mode(intervals) | 1-4:tier({tier}) | budget:17ms | samples:120/120"))
+                (LayoutConstraint.Fixed(1), new ParagraphWidget($"s:stress({stressMode}) | c:cool | r:reset | p:pause | m:mode({sparklineMode}) | 1-4:tier({tier}) | budget:{budgetMs}ms | samples:{(paused ? "paused" : "120/120")}"))
             ]);
     }
 

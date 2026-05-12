@@ -169,6 +169,14 @@ internal sealed record ShowcaseDemoState(
     bool SnapshotPlayerMarkerEnabled = false,
     bool SnapshotPlayerHeatmapEnabled = true,
     bool SnapshotPlayerPlaying = false,
+    int PerformanceChallengeFocusIndex = 0,
+    int PerformanceChallengeForcedTierIndex = -1,
+    int PerformanceChallengeStressModeIndex = 1,
+    int PerformanceChallengeStressLoad = 0,
+    int PerformanceChallengeBudgetMs = 17,
+    int PerformanceChallengeSparklineModeIndex = 0,
+    int PerformanceChallengeEvidenceScroll = 0,
+    bool PerformanceChallengePaused = false,
     bool PaletteLabBenchEnabled = false,
     int PaletteLabBenchFrame = 0,
     int PaletteLabBenchProcessed = 0,
@@ -384,6 +392,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent snapshotPlayerMouseEvent &&
             HandleSnapshotPlayerMouse(snapshotPlayerMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent performanceChallengeMouseEvent &&
+            HandlePerformanceChallengeMouse(performanceChallengeMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -2280,6 +2294,119 @@ internal sealed record ShowcaseDemoState(
             _ => next
         };
         return hit.LocalHitId is "snapshot_player:compare" or "snapshot_player:frame_info" or "snapshot_player:controls" or "snapshot_player:diagnostics";
+    }
+
+    private static bool HandlePerformanceChallengeMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 32 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content)
+        {
+            return false;
+        }
+
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = hit.LocalHitId switch
+            {
+                "performance_challenge:sparkline" => next with
+                {
+                    PerformanceChallengeSparklineModeIndex = Math.Clamp(next.PerformanceChallengeSparklineModeIndex + delta, 0, 1),
+                    PerformanceChallengeFocusIndex = 2
+                },
+                "performance_challenge:evidence" => next with
+                {
+                    PerformanceChallengeEvidenceScroll = Math.Clamp(next.PerformanceChallengeEvidenceScroll + delta, 0, 8),
+                    PerformanceChallengeFocusIndex = 3
+                },
+                "performance_challenge:budget" => next with
+                {
+                    PerformanceChallengeBudgetMs = Math.Clamp(next.PerformanceChallengeBudgetMs + delta, 8, 33),
+                    PerformanceChallengeFocusIndex = 4
+                },
+                _ => next
+            };
+            return hit.LocalHitId is "performance_challenge:sparkline" or "performance_challenge:evidence" or "performance_challenge:budget";
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        if (hit.LocalHitId.StartsWith("performance_challenge:tier:", StringComparison.Ordinal))
+        {
+            var rowText = hit.LocalHitId["performance_challenge:tier:".Length..];
+            if (!int.TryParse(rowText, CultureInfo.InvariantCulture, out var row))
+            {
+                return false;
+            }
+
+            next = next with
+            {
+                PerformanceChallengeForcedTierIndex = Math.Clamp(row, 0, 3),
+                PerformanceChallengeFocusIndex = 6
+            };
+            return true;
+        }
+
+        next = hit.LocalHitId switch
+        {
+            "performance_challenge:header" => next with
+            {
+                PerformanceChallengePaused = !next.PerformanceChallengePaused,
+                PerformanceChallengeFocusIndex = 0
+            },
+            "performance_challenge:metrics" => next with
+            {
+                PerformanceChallengeFocusIndex = 1
+            },
+            "performance_challenge:sparkline" => next with
+            {
+                PerformanceChallengeSparklineModeIndex = (next.PerformanceChallengeSparklineModeIndex + 1) % 2,
+                PerformanceChallengeFocusIndex = 2
+            },
+            "performance_challenge:evidence" => next with
+            {
+                PerformanceChallengeEvidenceScroll = Math.Clamp(next.PerformanceChallengeEvidenceScroll + 1, 0, 8),
+                PerformanceChallengeFocusIndex = 3
+            },
+            "performance_challenge:budget" => next with
+            {
+                PerformanceChallengeBudgetMs = Math.Clamp(next.PerformanceChallengeBudgetMs + 1, 8, 33),
+                PerformanceChallengeFocusIndex = 4
+            },
+            "performance_challenge:stress" => next with
+            {
+                PerformanceChallengeStressModeIndex = (next.PerformanceChallengeStressModeIndex + 1) % 4,
+                PerformanceChallengeStressLoad = Math.Clamp(next.PerformanceChallengeStressLoad + 25, 0, 100),
+                PerformanceChallengeFocusIndex = 5
+            },
+            "performance_challenge:footer" => next with
+            {
+                PerformanceChallengeForcedTierIndex = -1,
+                PerformanceChallengeStressLoad = 0,
+                PerformanceChallengeFocusIndex = 7
+            },
+            _ => next
+        };
+        return hit.LocalHitId is
+            "performance_challenge:header" or
+            "performance_challenge:metrics" or
+            "performance_challenge:sparkline" or
+            "performance_challenge:evidence" or
+            "performance_challenge:budget" or
+            "performance_challenge:stress" or
+            "performance_challenge:footer";
     }
 
     private static bool HandleTerminalCapabilitiesMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
