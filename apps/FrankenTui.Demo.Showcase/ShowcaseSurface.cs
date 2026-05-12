@@ -2153,6 +2153,7 @@ internal static class ShowcaseSurface
         var selectedError = Math.Clamp(state.FormValidationSelectedErrorIndex, 0, 8);
         var rulesScroll = Math.Clamp(state.FormValidationRulesScroll, 0, 6);
         var diagnosticsScroll = Math.Clamp(state.FormValidationDiagnosticsScroll, 0, 8);
+        var focus = Math.Clamp(state.FormValidationFocusIndex, 0, 7);
         var validationMode = state.FormValidationOnSubmitMode ? "On Submit" : "Real-time";
         var submitted = state.FormValidationSubmitted;
         var fields =
@@ -2203,11 +2204,11 @@ internal static class ShowcaseSurface
             LayoutDirection.Vertical,
             [
                 (LayoutConstraint.Fixed(3), Panel(
-                    "Mode",
+                    focus == 0 ? "Mode [focus]" : "Mode",
                     $"Mode: {validationMode} [M to toggle]\nStatus: {(submitted ? "Submitted with validation errors" : "Error injection active")}")),
                 (LayoutConstraint.Fill(), new PanelWidget
                 {
-                    Title = $"Registration Form [focus {selectedField.Label}]",
+                    Title = focus == 1 ? $"Registration Form [focus {selectedField.Label}]" : $"Registration Form [{selectedField.Label}]",
                     Child = new TableWidget
                     {
                         Headers = ["", "Field", "Value", "State"],
@@ -2216,15 +2217,15 @@ internal static class ShowcaseSurface
                     }
                 }),
                 (LayoutConstraint.Fixed(4), Panel(
-                    "Touched / Dirty",
-                    $"Touched: {Math.Max(1, selected + 1)}/9 | Dirty: 8/9\nSubmitted: {submitted.ToString().ToLowerInvariant()} | Focused: {selectedField.Id}"))
+                    focus == 2 ? "Touched / Dirty [focus]" : "Touched / Dirty",
+                    $"Touched: {Math.Max(1, selected + 1)}/9 | Dirty: 8/9\nSubmitted: {submitted.ToString().ToLowerInvariant()} | Focused: {selectedField.Id} | Panel: {focus}"))
             ]);
         var center = new StackWidget(
             LayoutDirection.Vertical,
             [
                 (LayoutConstraint.Percentage(58), new PanelWidget
                 {
-                    Title = "Error Summary",
+                    Title = focus == 3 ? "Error Summary [focus]" : "Error Summary",
                     Child = new TableWidget
                     {
                         Headers = ["Field", "Message"],
@@ -2233,20 +2234,20 @@ internal static class ShowcaseSurface
                     }
                 }),
                 (LayoutConstraint.Fill(), Panel(
-                    rulesScroll > 0 ? $"Validation Rules [scroll {rulesScroll}]" : "Validation Rules",
+                    focus == 4 ? $"Validation Rules [focus {rulesScroll}]" : rulesScroll > 0 ? $"Validation Rules [scroll {rulesScroll}]" : "Validation Rules",
                     $"Selected error: {selectedError}\nUsername: required, min 3\nEmail: required, contains @ and .\nPassword: required, min 8\nConfirm Password: match password\nAge: bounded 13..120\nBio: max 100 characters\nWebsite: http:// or https://\nRole: not placeholder\nAccept Terms: checked"))
             ]);
         var right = new StackWidget(
             LayoutDirection.Vertical,
             [
                 (LayoutConstraint.Fixed(9), Panel(
-                    "Controls",
+                    focus == 5 ? "Controls [focus]" : "Controls",
                     "Tab/S-Tab: navigate fields\nUp/Down: change value / navigate\nSpace: toggle checkbox\nEnter: submit form\nM: Toggle validation mode\nE: Inject errors\nR: Reset form\nC: Clear errors")),
                 (LayoutConstraint.Fixed(7), Panel(
-                    "Notifications",
+                    focus == 6 ? "Notifications [focus]" : "Notifications",
                     $"QueueConfig: max_visible=3 max_queued=10\nPosition: TopRight\nLatest toast: {(submitted ? "Validation Failed" : "Validation Failed / Registration pending")}\nPriority: High on submit errors")),
                 (LayoutConstraint.Fill(), Panel(
-                    diagnosticsScroll > 0 ? $"Mouse + Diagnostics [scroll {diagnosticsScroll}]" : "Mouse + Diagnostics",
+                    focus == 7 ? $"Mouse + Diagnostics [focus {diagnosticsScroll}]" : diagnosticsScroll > 0 ? $"Mouse + Diagnostics [scroll {diagnosticsScroll}]" : "Mouse + Diagnostics",
                     $"Diagnostics scroll: {diagnosticsScroll}\nClick error panel: toggle mode\nScroll form: navigate focused field\nEvents: mode_toggled, form_submitted, errors_injected, errors_cleared\nState hooks: touched_fields, dirty_fields, focused\nValidationMode: {validationMode} | Submitted: {submitted.ToString().ToLowerInvariant()}"))
             ]);
 

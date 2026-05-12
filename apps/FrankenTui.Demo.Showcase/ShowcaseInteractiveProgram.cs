@@ -209,6 +209,7 @@ internal sealed record ShowcaseDemoState(
     bool MousePlaygroundOverlayVisible = false,
     bool MousePlaygroundJitterStatsVisible = false,
     bool MousePlaygroundContextArmed = false,
+    int FormValidationFocusIndex = 0,
     int FormValidationSelectedFieldIndex = 0,
     int FormValidationSelectedErrorIndex = 0,
     int FormValidationRulesScroll = 0,
@@ -2568,14 +2569,17 @@ internal sealed record ShowcaseDemoState(
             {
                 { } value when value.StartsWith("form_validation:field:", StringComparison.Ordinal) => next with
                 {
+                    FormValidationFocusIndex = 1,
                     FormValidationSelectedFieldIndex = Math.Clamp(next.FormValidationSelectedFieldIndex + delta, 0, 8)
                 },
                 "form_validation:rules" => next with
                 {
+                    FormValidationFocusIndex = 4,
                     FormValidationRulesScroll = Math.Clamp(next.FormValidationRulesScroll + delta, 0, 6)
                 },
                 "form_validation:diagnostics" => next with
                 {
+                    FormValidationFocusIndex = 7,
                     FormValidationDiagnosticsScroll = Math.Clamp(next.FormValidationDiagnosticsScroll + delta, 0, 8)
                 },
                 _ => next
@@ -2598,7 +2602,11 @@ internal sealed record ShowcaseDemoState(
                 return false;
             }
 
-            next = next with { FormValidationSelectedFieldIndex = Math.Clamp(row, 0, 8) };
+            next = next with
+            {
+                FormValidationFocusIndex = 1,
+                FormValidationSelectedFieldIndex = Math.Clamp(row, 0, 8)
+            };
             return true;
         }
 
@@ -2612,6 +2620,7 @@ internal sealed record ShowcaseDemoState(
 
             next = next with
             {
+                FormValidationFocusIndex = 3,
                 FormValidationSelectedErrorIndex = Math.Clamp(row, 0, 8),
                 FormValidationOnSubmitMode = !next.FormValidationOnSubmitMode
             };
@@ -2620,12 +2629,36 @@ internal sealed record ShowcaseDemoState(
 
         next = hit.LocalHitId switch
         {
-            "form_validation:mode" => next with { FormValidationOnSubmitMode = !next.FormValidationOnSubmitMode },
-            "form_validation:touched_dirty" => next with { FormValidationSubmitted = !next.FormValidationSubmitted },
-            "form_validation:controls" => next with { FormValidationSubmitted = true },
-            "form_validation:notifications" => next with { FormValidationSubmitted = !next.FormValidationSubmitted },
-            "form_validation:rules" => next with { FormValidationRulesScroll = Math.Clamp(next.FormValidationRulesScroll + 1, 0, 6) },
-            "form_validation:diagnostics" => next with { FormValidationDiagnosticsScroll = Math.Clamp(next.FormValidationDiagnosticsScroll + 1, 0, 8) },
+            "form_validation:mode" => next with
+            {
+                FormValidationFocusIndex = 0,
+                FormValidationOnSubmitMode = !next.FormValidationOnSubmitMode
+            },
+            "form_validation:touched_dirty" => next with
+            {
+                FormValidationFocusIndex = 2,
+                FormValidationSubmitted = !next.FormValidationSubmitted
+            },
+            "form_validation:controls" => next with
+            {
+                FormValidationFocusIndex = 5,
+                FormValidationSubmitted = true
+            },
+            "form_validation:notifications" => next with
+            {
+                FormValidationFocusIndex = 6,
+                FormValidationSubmitted = !next.FormValidationSubmitted
+            },
+            "form_validation:rules" => next with
+            {
+                FormValidationFocusIndex = 4,
+                FormValidationRulesScroll = Math.Clamp(next.FormValidationRulesScroll + 1, 0, 6)
+            },
+            "form_validation:diagnostics" => next with
+            {
+                FormValidationFocusIndex = 7,
+                FormValidationDiagnosticsScroll = Math.Clamp(next.FormValidationDiagnosticsScroll + 1, 0, 8)
+            },
             _ => next
         };
         return hit.LocalHitId is "form_validation:mode" or "form_validation:touched_dirty" or

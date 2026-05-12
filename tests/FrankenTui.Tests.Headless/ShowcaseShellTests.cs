@@ -5455,13 +5455,16 @@ public sealed class ShowcaseShellTests
 
         state = ApplyMouse(state, 3, 8, timestamp);
         Assert.Equal(2, state.FormValidationSelectedFieldIndex);
+        Assert.Equal(1, state.FormValidationFocusIndex);
 
         state = ApplyMouse(state, 55, 5, timestamp + TimeSpan.FromMilliseconds(10));
         Assert.Equal(1, state.FormValidationSelectedErrorIndex);
         Assert.True(state.FormValidationOnSubmitMode);
+        Assert.Equal(3, state.FormValidationFocusIndex);
 
         state = ApplyMouse(state, 95, 2, timestamp + TimeSpan.FromMilliseconds(20));
         Assert.True(state.FormValidationSubmitted);
+        Assert.Equal(5, state.FormValidationFocusIndex);
 
         state = ApplyMouse(
             state,
@@ -5471,6 +5474,7 @@ public sealed class ShowcaseShellTests
             TerminalMouseButton.WheelDown,
             TerminalMouseKind.Scroll);
         Assert.Equal(1, state.FormValidationDiagnosticsScroll);
+        Assert.Equal(7, state.FormValidationFocusIndex);
     }
 
     [Fact]
@@ -5485,6 +5489,7 @@ public sealed class ShowcaseShellTests
         {
             FormValidationSelectedFieldIndex = 2,
             FormValidationSelectedErrorIndex = 1,
+            FormValidationFocusIndex = 7,
             FormValidationRulesScroll = 2,
             FormValidationDiagnosticsScroll = 3,
             FormValidationOnSubmitMode = true,
@@ -5497,8 +5502,9 @@ public sealed class ShowcaseShellTests
 
         var screen = HeadlessBufferView.ScreenString(buffer);
         Assert.Contains("Mode: On Submit", screen);
-        Assert.Contains("Registration Form [focus Password]", screen);
+        Assert.Contains("Registration Form [Password]", screen);
         Assert.Contains("Submitted: true", screen);
+        Assert.Contains("Panel: 7", screen);
         Assert.Contains("Selected error: 1", screen);
         Assert.Contains("Validation Rules [scroll 2]", screen);
         Assert.Contains("Diagnostics scroll: 3", screen);
