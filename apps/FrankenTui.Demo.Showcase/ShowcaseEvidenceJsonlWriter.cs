@@ -942,6 +942,49 @@ public sealed class ShowcaseEvidenceJsonlWriter : IDisposable
             return "mermaid_hit_test";
         }
 
+        if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 17)
+        {
+            if (gesture.Kind == TerminalMouseKind.Scroll)
+            {
+                return hit.LocalHitId switch
+                {
+                    "mermaid_mega:library" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "mermaid_mega_sample_prev"
+                        : "mermaid_mega_sample_next",
+                    "mermaid_mega:shared_showcase" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "mermaid_mega_viewport_zoom_in"
+                        : "mermaid_mega_viewport_zoom_out",
+                    "mermaid_mega:node_detail" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "mermaid_mega_detail_scroll_up"
+                        : "mermaid_mega_detail_scroll_down",
+                    _ => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "mermaid_mega_panel_scroll_up"
+                        : "mermaid_mega_panel_scroll_down"
+                };
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Right)
+            {
+                return hit.LocalHitId == "mermaid_mega:shared_showcase"
+                    ? "mermaid_mega_viewport_reset"
+                    : "mermaid_mega_context_action";
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Left)
+            {
+                return hit.LocalHitId switch
+                {
+                    "mermaid_mega:shared_showcase" => "mermaid_mega_viewport_focus",
+                    "mermaid_mega:library" => "mermaid_mega_sample_select",
+                    "mermaid_mega:controls" => "mermaid_mega_controls_focus",
+                    "mermaid_mega:node_detail" => "mermaid_mega_node_detail_focus",
+                    _ => "mermaid_mega_hit_test"
+                };
+            }
+
+            return "mermaid_mega_hit_test";
+        }
+
         if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 9)
         {
             if (gesture.Kind == TerminalMouseKind.Scroll)

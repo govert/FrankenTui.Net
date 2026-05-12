@@ -665,6 +665,32 @@ internal static class ShowcaseFrameHitRegistry
                 new("mermaid:status", ShowcaseHitLayer.Content, 16_500)));
         }
 
+        if (state.CurrentScreenNumber == 17 && TryResolveContentInnerArea(state.Viewport, out var megaInner) && megaInner.Width >= 70 && megaInner.Height >= 12)
+        {
+            var sharedWidth = Math.Max(1, megaInner.Width * 58 / 100);
+            var detailX = megaInner.X + sharedWidth;
+            var detailWidth = Math.Max(1, megaInner.Width - sharedWidth);
+            var megaHeight = (int)megaInner.Height;
+            var libraryHeight = Math.Min(11, megaHeight);
+            var controlsHeight = Math.Min(12, Math.Max(1, megaHeight - libraryHeight));
+            var controlsY = megaInner.Y + libraryHeight;
+            var detailY = controlsY + controlsHeight;
+            var nodeDetailHeight = Math.Max(1, megaHeight - libraryHeight - controlsHeight);
+
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(megaInner.X, megaInner.Y, (ushort)sharedWidth, megaInner.Height),
+                new("mermaid_mega:shared_showcase", ShowcaseHitLayer.Content, 17_000)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)detailX, megaInner.Y, (ushort)detailWidth, (ushort)libraryHeight),
+                new("mermaid_mega:library", ShowcaseHitLayer.Content, 17_100)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)detailX, (ushort)controlsY, (ushort)detailWidth, (ushort)controlsHeight),
+                new("mermaid_mega:controls", ShowcaseHitLayer.Content, 17_200)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)detailX, (ushort)detailY, (ushort)detailWidth, (ushort)nodeDetailHeight),
+                new("mermaid_mega:node_detail", ShowcaseHitLayer.Content, 17_300)));
+        }
+
         if (state.CurrentScreenNumber == 42 && TryResolveContentInnerArea(state.Viewport, out var kanbanInner) && kanbanInner.Width >= 30 && kanbanInner.Height >= 8)
         {
             var board = state.KanbanBoard ?? ShowcaseKanbanState.CreateDefault();

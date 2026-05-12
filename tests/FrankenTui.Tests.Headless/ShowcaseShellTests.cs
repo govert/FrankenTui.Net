@@ -6759,6 +6759,79 @@ public sealed class ShowcaseShellTests
         Assert.Equal(16_500, statusRecord.RootElement.GetProperty("target_id").GetInt32());
     }
 
+    [Fact]
+    public void ShowcaseFrameHitRegistryExposesMermaidMegaPanels()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 17,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+
+        var shared = ShowcaseFrameHitRegistry.HitTest(state, 3, 6);
+        var library = ShowcaseFrameHitRegistry.HitTest(state, 90, 6);
+        var controls = ShowcaseFrameHitRegistry.HitTest(state, 90, 16);
+        var detail = ShowcaseFrameHitRegistry.HitTest(state, 90, 26);
+
+        Assert.Equal("mermaid_mega:shared_showcase", shared.LocalHitId);
+        Assert.Equal((uint)17_000, shared.UpstreamHitId);
+        Assert.Equal("mermaid_mega:library", library.LocalHitId);
+        Assert.Equal((uint)17_100, library.UpstreamHitId);
+        Assert.Equal("mermaid_mega:controls", controls.LocalHitId);
+        Assert.Equal((uint)17_200, controls.UpstreamHitId);
+        Assert.Equal("mermaid_mega:node_detail", detail.LocalHitId);
+        Assert.Equal((uint)17_300, detail.UpstreamHitId);
+    }
+
+    [Fact]
+    public void ShowcaseEvidenceJsonlWriterEmitsMermaidMegaMouseActions()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"ftui-showcase-mermaid-mega-mouse-{Guid.NewGuid():N}.jsonl");
+        var options = ShowcaseCliOptions.Parse(
+            ["--screen=17", "--evidence-jsonl", path],
+            _ => null);
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 17,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+        var libraryEvent = TerminalEvent.Mouse(
+            new MouseGesture(90, 6, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp);
+        var sharedEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 6, TerminalMouseButton.Right, TerminalMouseKind.Down),
+            timestamp + TimeSpan.FromMilliseconds(10));
+        var detailEvent = TerminalEvent.Mouse(
+            new MouseGesture(90, 26, TerminalMouseButton.WheelDown, TerminalMouseKind.Scroll),
+            timestamp + TimeSpan.FromMilliseconds(20));
+
+        using (var writer = ShowcaseEvidenceJsonlWriter.Create(options.EvidenceJsonlPath))
+        {
+            Assert.NotNull(writer);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 1, frame: 1, libraryEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 2, frame: 2, sharedEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 3, frame: 3, detailEvent, state, state);
+        }
+
+        var lines = File.ReadAllLines(path);
+        Assert.Equal(3, lines.Length);
+        using var libraryRecord = JsonDocument.Parse(lines[0]);
+        using var sharedRecord = JsonDocument.Parse(lines[1]);
+        using var detailRecord = JsonDocument.Parse(lines[2]);
+        Assert.Equal("mermaid_mega_sample_select", libraryRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("mermaid_mega:library", libraryRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(17_100, libraryRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("mermaid_mega_viewport_reset", sharedRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("mermaid_mega:shared_showcase", sharedRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(17_000, sharedRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("mermaid_mega_detail_scroll_down", detailRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("mermaid_mega:node_detail", detailRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(17_300, detailRecord.RootElement.GetProperty("target_id").GetInt32());
+    }
+
     private static ShowcaseDemoState ApplyKey(ShowcaseDemoState state, KeyGesture gesture, DateTimeOffset timestamp)
     {
         var terminalEvent = TerminalEvent.Key(gesture, timestamp);

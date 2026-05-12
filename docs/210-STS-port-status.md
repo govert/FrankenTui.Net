@@ -396,10 +396,12 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   mouse/key control parity remain tracked under `364-DEM`. The Mermaid Mega
   Showcase now combines the shared Mermaid viewport with sample-library
   metadata, filter/category summary, controls/keymap panel, node-detail summary,
-  and `mermaid_mega_recompute` metrics evidence; full upstream generated sample
-  corpus, interactive node navigation, edge highlighting, search/inspect modes,
-  minimap, debounced recompute cache, palette rendering, and exact JSONL/keymap
-  parity remain tracked under `364-DEM`. The Responsive Layout screen now has
+  `mermaid_mega_recompute` metrics evidence, and frame-registered shared
+  showcase, sample-library, controls, and node-detail regions with matching
+  mouse evidence; full upstream generated sample corpus, interactive node
+  navigation, edge highlighting, search/inspect modes, minimap, debounced
+  recompute cache, palette rendering, stateful mouse mutation, and exact
+  JSONL/keymap parity remain tracked under `364-DEM`. The Responsive Layout screen now has
   a local breakpoint indicator, default/custom-threshold notes,
   sidebar/content/aside adaptive layout, visibility rules, responsive values,
   simulated-width controls, and frame-registered indicator, compact body, and
@@ -890,11 +892,13 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   plus matching mouse evidence, and the Markdown increment adds renderer,
   stream, detection, style, Unicode, and wrap regions plus matching mouse
   evidence, and the Mermaid Showcase increment adds header, library, viewport,
-  controls, metrics, and status-log regions plus matching mouse evidence, while
-  still leaving broader generalized screen hit routing open.
-  Focused showcase-shell verification is now `205` tests via
+  controls, metrics, and status-log regions plus matching mouse evidence, and
+  the Mermaid Mega increment adds shared-showcase, library, controls, and
+  node-detail regions plus matching mouse evidence, while still leaving broader
+  generalized screen hit routing open.
+  Focused showcase-shell verification is now `207` tests via
   `dotnet test tests/FrankenTui.Tests.Headless/FrankenTui.Tests.Headless.csproj --no-restore --filter FullyQualifiedName~ShowcaseShellTests`.
-  Current local verification is `459` headless tests, `9` web tests, and `7`
+  Current local verification is `461` headless tests, `9` web tests, and `7`
   PTY tests via `dotnet test FrankenTui.Net.sln --no-restore`.
   Previous focused registry/evidence verification covered `33`
   registry/evidence
