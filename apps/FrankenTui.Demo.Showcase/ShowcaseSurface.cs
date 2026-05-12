@@ -2726,39 +2726,44 @@ internal static class ShowcaseSurface
     private static IWidget BuildInlineModeStory(ShowcaseDemoState state)
     {
         var tick = state.RuntimeStats?.StepIndex ?? state.ScriptFrame;
-        var rate = tick % 4 switch
-        {
-            0 => 1,
-            1 => 2,
-            2 => 5,
-            _ => 10
-        };
-        var uiHeight = 1 + Math.Abs(tick % 4);
+        int[] rateOptions = [1, 2, 5, 10];
+        var rateIndex = state.InlineModeLogRateIndex >= 0
+            ? Math.Clamp(state.InlineModeLogRateIndex, 0, rateOptions.Length - 1)
+            : Math.Abs(tick % 4);
+        var uiHeightIndex = state.InlineModeUiHeightIndex >= 0
+            ? Math.Clamp(state.InlineModeUiHeightIndex, 0, 3)
+            : Math.Abs(tick % 4);
+        var focusIndex = Math.Clamp(state.InlineModeFocusIndex, 0, 5);
+        var stateScroll = Math.Clamp(state.InlineModeStateScroll, 0, 8);
+        var rate = rateOptions[rateIndex];
+        var uiHeight = 1 + uiHeightIndex;
         var linesGenerated = 60 + Math.Max(0, tick * rate);
-        var anchor = tick % 2 == 0 ? "Bottom" : "Top";
+        var anchor = state.InlineModeAnchorBottom ? "Bottom" : "Top";
+        var compare = state.InlineModeCompareEnabled;
+        var paused = state.InlineModePaused;
 
         var header = new ParagraphWidget(
-            $"Mode: Inline | Compare: OFF | Anchor: {anchor} | UI height: {uiHeight} | Rate: {rate}/tick\n" +
-            $"Status: Live | Lines: {linesGenerated} | Scrollback preserved in inline mode");
+            $"Mode: Inline | Compare: {(compare ? "ON" : "OFF")} | Anchor: {anchor} | UI height: {uiHeight} | Rate: {rate}/tick | focus={focusIndex}\n" +
+            $"Status: {(paused ? "Paused" : "Live")} | Lines: {linesGenerated} | Scrollback preserved in inline mode");
 
         var inlinePane = Panel(
-            "Inline Mode Story",
+            focusIndex == 1 ? $"Inline Mode Story [focus rate={rate}/tick]" : "Inline Mode Story",
             "000060 [INFO ] core    scrollback ok\n" +
             "000061 [WARN ] render  inline anchor\n" +
             "000062 [ERROR] runtime budget check\n" +
             "000063 [DEBUG] widgets diff pass\n\n" +
             $"INLINE MODE - SCROLLBACK PRESERVED\nAnchor: {anchor.ToUpperInvariant()} | UI height: {uiHeight} | Log rate: {rate}/tick\n" +
-            "Logs stream underneath while the stable chrome bar remains anchored.");
+            $"Logs stream underneath while the stable chrome bar remains anchored. Stream: {(paused ? "paused" : "live")}");
 
         var altPane = Panel(
-            "Alt-screen Story",
+            focusIndex == 2 ? "Alt-screen Story [focus]" : "Alt-screen Story",
             "ALT-SCREEN MODE - SCROLLBACK HIDDEN\n" +
             "Full-screen takeover (logs do not persist)\n\n" +
-            "Compare mode renders Inline (scrollback preserved) beside Alt-screen (scrollback hidden).\n" +
+            $"Compare mode: {(compare ? "enabled" : "disabled")} renders Inline (scrollback preserved) beside Alt-screen (scrollback hidden).\n" +
             "Clicking the alt header drills into alt-screen mode when comparing.");
 
         var controls = Panel(
-            "Controls + Mouse",
+            focusIndex == 3 ? $"Controls + Mouse [focus height={uiHeight}]" : "Controls + Mouse",
             "Space pause/resume stream\n" +
             "A toggle chrome anchor (top/bottom)\n" +
             "C toggle inline vs alt comparison\n" +
@@ -2767,7 +2772,8 @@ internal static class ShowcaseSurface
             "Mouse: click header=compare, click bar=anchor, click log=pause, wheel=log rate");
 
         var statePanel = Panel(
-            "State + Limits",
+            stateScroll > 0 ? $"State + Limits [scroll {stateScroll}]" : focusIndex == 4 ? "State + Limits [focus]" : "State + Limits",
+            $"State scroll: {stateScroll}\n" +
             "MAX_LOG_LINES=2000 | INITIAL_LOG_LINES=60\n" +
             "LOG_RATE_OPTIONS=[1,2,5,10]\n" +
             "UI_HEIGHT_OPTIONS=[1,2,3,4]\n" +
@@ -2792,7 +2798,7 @@ internal static class ShowcaseSurface
                                 (LayoutConstraint.Percentage(50), statePanel)
                             ]))
                     ])),
-                (LayoutConstraint.Fixed(1), new ParagraphWidget("Space pause | A anchor | C compare | D defaults | H height | M mode | R rate | T burst | mouse hit regions preserve scrollback"))
+                (LayoutConstraint.Fixed(1), new ParagraphWidget($"Space pause({(paused ? "paused" : "live")}) | A anchor({anchor}) | C compare({(compare ? "on" : "off")}) | D defaults | H height({uiHeight}) | M mode | R rate({rate}) | T burst | mouse hit regions preserve scrollback"))
             ]);
     }
 

@@ -195,6 +195,13 @@ internal sealed record ShowcaseDemoState(
     int VoiOverlayResetCount = 0,
     bool VoiOverlayDetailExpanded = false,
     bool VoiOverlayVisible = true,
+    int InlineModeFocusIndex = 0,
+    int InlineModeLogRateIndex = -1,
+    int InlineModeUiHeightIndex = -1,
+    int InlineModeStateScroll = 0,
+    bool InlineModeCompareEnabled = false,
+    bool InlineModePaused = false,
+    bool InlineModeAnchorBottom = true,
     bool PaletteLabBenchEnabled = false,
     int PaletteLabBenchFrame = 0,
     int PaletteLabBenchProcessed = 0,
@@ -434,6 +441,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent voiOverlayMouseEvent &&
             HandleVoiOverlayMouse(voiOverlayMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent inlineModeMouseEvent &&
+            HandleInlineModeMouse(inlineModeMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -2702,6 +2715,93 @@ internal sealed record ShowcaseDemoState(
             "voi_overlay:controls" or
             "voi_overlay:footer";
     }
+
+    private static bool HandleInlineModeMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 36 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content)
+        {
+            return false;
+        }
+
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = hit.LocalHitId switch
+            {
+                "inline_mode:inline_story" => next with
+                {
+                    InlineModeLogRateIndex = Math.Clamp(ResolveInlineModeLogRateIndex(next) + delta, 0, 3),
+                    InlineModeFocusIndex = 1
+                },
+                "inline_mode:state_limits" => next with
+                {
+                    InlineModeStateScroll = Math.Clamp(next.InlineModeStateScroll + delta, 0, 8),
+                    InlineModeFocusIndex = 4
+                },
+                _ => next
+            };
+            return hit.LocalHitId is "inline_mode:inline_story" or "inline_mode:state_limits";
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        next = hit.LocalHitId switch
+        {
+            "inline_mode:header" => next with
+            {
+                InlineModeCompareEnabled = !next.InlineModeCompareEnabled,
+                InlineModeFocusIndex = 0
+            },
+            "inline_mode:inline_story" => next with
+            {
+                InlineModePaused = !next.InlineModePaused,
+                InlineModeFocusIndex = 1
+            },
+            "inline_mode:alt_story" => next with
+            {
+                InlineModeAnchorBottom = !next.InlineModeAnchorBottom,
+                InlineModeFocusIndex = 2
+            },
+            "inline_mode:controls" => next with
+            {
+                InlineModeUiHeightIndex = Math.Clamp(ResolveInlineModeUiHeightIndex(next) + 1, 0, 3),
+                InlineModeFocusIndex = 3
+            },
+            "inline_mode:state_limits" => next with
+            {
+                InlineModeStateScroll = Math.Clamp(next.InlineModeStateScroll + 1, 0, 8),
+                InlineModeFocusIndex = 4
+            },
+            "inline_mode:footer" => next with
+            {
+                InlineModeCompareEnabled = false,
+                InlineModePaused = false,
+                InlineModeStateScroll = 0,
+                InlineModeFocusIndex = 5
+            },
+            _ => next
+        };
+        return hit.LocalHitId is "inline_mode:header" or "inline_mode:inline_story" or "inline_mode:alt_story" or "inline_mode:controls" or "inline_mode:state_limits" or "inline_mode:footer";
+    }
+
+    private static int ResolveInlineModeLogRateIndex(ShowcaseDemoState state) =>
+        state.InlineModeLogRateIndex >= 0 ? state.InlineModeLogRateIndex : Math.Abs(state.ScriptFrame % 4);
+
+    private static int ResolveInlineModeUiHeightIndex(ShowcaseDemoState state) =>
+        state.InlineModeUiHeightIndex >= 0 ? state.InlineModeUiHeightIndex : Math.Abs(state.ScriptFrame % 4);
 
     private static bool HandleTerminalCapabilitiesMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
     {

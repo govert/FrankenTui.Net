@@ -6840,6 +6840,82 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseInlineModeMouseMutatesComparePauseRateHeightAndScroll()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 36,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(state, 3, 2, timestamp);
+        Assert.True(state.InlineModeCompareEnabled);
+        Assert.Equal(0, state.InlineModeFocusIndex);
+
+        state = ApplyMouse(state, 3, 6, timestamp + TimeSpan.FromMilliseconds(10));
+        Assert.True(state.InlineModePaused);
+        Assert.Equal(1, state.InlineModeFocusIndex);
+
+        state = ApplyMouse(
+            state,
+            3,
+            6,
+            timestamp + TimeSpan.FromMilliseconds(20),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(1, state.InlineModeLogRateIndex);
+        Assert.Equal(1, state.InlineModeFocusIndex);
+
+        state = ApplyMouse(state, 90, 6, timestamp + TimeSpan.FromMilliseconds(30));
+        Assert.Equal(1, state.InlineModeUiHeightIndex);
+        Assert.Equal(3, state.InlineModeFocusIndex);
+
+        state = ApplyMouse(
+            state,
+            90,
+            20,
+            timestamp + TimeSpan.FromMilliseconds(40),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(1, state.InlineModeStateScroll);
+        Assert.Equal(4, state.InlineModeFocusIndex);
+    }
+
+    [Fact]
+    public void ShowcaseInlineModeRendersMouseSelectedState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 36,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            InlineModeFocusIndex = 4,
+            InlineModeLogRateIndex = 3,
+            InlineModeUiHeightIndex = 2,
+            InlineModeStateScroll = 4,
+            InlineModeCompareEnabled = true,
+            InlineModePaused = true,
+            InlineModeAnchorBottom = false
+        };
+        var buffer = new RenderBuffer(120, 32);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 32), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("Compare: ON", screen);
+        Assert.Contains("Anchor: Top", screen);
+        Assert.Contains("Status: Paused", screen);
+        Assert.Contains("Rate: 10/tick", screen);
+        Assert.Contains("State scroll: 4", screen);
+        Assert.Contains("C compare(on)", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryExposesAccessibilityPanels()
     {
         var state = ShowcaseDemoState.Create(
