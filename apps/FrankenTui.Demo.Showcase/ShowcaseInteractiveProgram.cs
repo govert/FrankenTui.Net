@@ -117,6 +117,8 @@ internal sealed record ShowcaseDemoState(
     int LayoutLabMetricsScroll = 0,
     int LayoutLabSelectedPaneIndex = 0,
     bool LayoutLabContextArmed = false,
+    int WidgetGalleryFocusIndex = 0,
+    bool WidgetGalleryContextArmed = false,
     int WidgetGalleryListIndex = 4,
     int WidgetGalleryTabIndex = 2,
     int WidgetGalleryTableRow = 1,
@@ -3805,19 +3807,42 @@ internal sealed record ShowcaseDemoState(
             {
                 "widget_gallery:list" => next with
                 {
+                    WidgetGalleryFocusIndex = 1,
+                    WidgetGalleryContextArmed = false,
                     WidgetGalleryListIndex = Math.Clamp(next.WidgetGalleryListIndex + delta, 0, 6)
                 },
                 "widget_gallery:tabs" => next with
                 {
+                    WidgetGalleryFocusIndex = 2,
+                    WidgetGalleryContextArmed = false,
                     WidgetGalleryTabIndex = Math.Clamp(next.WidgetGalleryTabIndex + delta, 0, 3)
                 },
                 "widget_gallery:table" => next with
                 {
+                    WidgetGalleryFocusIndex = 3,
+                    WidgetGalleryContextArmed = false,
                     WidgetGalleryTableRow = Math.Clamp(next.WidgetGalleryTableRow + delta, 0, 3)
                 },
                 _ => next
             };
             return hit.LocalHitId is "widget_gallery:list" or "widget_gallery:tabs" or "widget_gallery:table";
+        }
+
+        if (gesture.Button == TerminalMouseButton.Right &&
+            hit.LocalHitId is "widget_gallery:progress" or "widget_gallery:list" or "widget_gallery:tabs" or "widget_gallery:table")
+        {
+            next = next with
+            {
+                WidgetGalleryFocusIndex = hit.LocalHitId switch
+                {
+                    "widget_gallery:list" => 1,
+                    "widget_gallery:tabs" => 2,
+                    "widget_gallery:table" => 3,
+                    _ => 0
+                },
+                WidgetGalleryContextArmed = true
+            };
+            return true;
         }
 
         if (gesture.Button != TerminalMouseButton.Left)
@@ -3827,21 +3852,32 @@ internal sealed record ShowcaseDemoState(
 
         next = hit.LocalHitId switch
         {
+            "widget_gallery:progress" => next with
+            {
+                WidgetGalleryFocusIndex = 0,
+                WidgetGalleryContextArmed = false
+            },
             "widget_gallery:list" => next with
             {
+                WidgetGalleryFocusIndex = 1,
+                WidgetGalleryContextArmed = false,
                 WidgetGalleryListIndex = Math.Clamp(next.WidgetGalleryListIndex + 1, 0, 6)
             },
             "widget_gallery:tabs" => next with
             {
+                WidgetGalleryFocusIndex = 2,
+                WidgetGalleryContextArmed = false,
                 WidgetGalleryTabIndex = Math.Clamp(next.WidgetGalleryTabIndex + 1, 0, 3)
             },
             "widget_gallery:table" => next with
             {
+                WidgetGalleryFocusIndex = 3,
+                WidgetGalleryContextArmed = false,
                 WidgetGalleryTableRow = Math.Clamp(next.WidgetGalleryTableRow + 1, 0, 3)
             },
             _ => next
         };
-        return hit.LocalHitId is "widget_gallery:list" or "widget_gallery:tabs" or "widget_gallery:table";
+        return hit.LocalHitId is "widget_gallery:progress" or "widget_gallery:list" or "widget_gallery:tabs" or "widget_gallery:table";
     }
 
     private static bool HandleFormsInputMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)

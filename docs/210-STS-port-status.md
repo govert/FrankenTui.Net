@@ -934,7 +934,7 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   the Code Explorer increment adds mouse-mutated tree/editor/path/context rendering,
   the Layout Lab increment adds mouse-mutated focus/zoom/selected-pane/metrics/context rendering,
   the Widget Gallery increment adds mouse-mutated
-  list/tab/table selections, the Forms & Input increment adds mouse-mutated
+  list/tab/table/focus/context rendering, the Forms & Input increment adds mouse-mutated
   selected-field/text-area focus/scroll rendering, the Macro Recorder increment adds mouse-mutated
   timeline/scenario selection rendering, the Performance increment adds
   mouse-mutated virtual-list item rendering, the Markdown increment adds

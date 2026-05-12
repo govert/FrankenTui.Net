@@ -586,21 +586,23 @@ internal static class ShowcaseSurface
         var listIndex = Math.Clamp(state.WidgetGalleryListIndex, 0, 6);
         var tabIndex = Math.Clamp(state.WidgetGalleryTabIndex, 0, 3);
         var tableRow = Math.Clamp(state.WidgetGalleryTableRow, 0, 3);
+        var focus = Math.Clamp(state.WidgetGalleryFocusIndex, 0, 3);
+        var context = state.WidgetGalleryContextArmed ? "context" : "focus";
         var left = new StackWidget(
             LayoutDirection.Vertical,
             [
                 (LayoutConstraint.Fixed((ushort)6), new PanelWidget
                 {
-                    Title = "Progress",
+                    Title = focus == 0 ? $"Progress [{context}]" : "Progress",
                     Child = new ProgressWidget
                     {
                         Value = ((state.ScriptFrame % 9) + 1) / 10.0,
-                        Label = "render completeness"
+                        Label = state.WidgetGalleryContextArmed && focus == 0 ? "render completeness | context" : "render completeness"
                     }
                 }),
                 (LayoutConstraint.Fill(), new PanelWidget
                 {
-                    Title = "List",
+                    Title = focus == 1 ? $"List [{context} {listIndex}]" : $"List [{listIndex}]",
                     Child = new ListWidget
                     {
                         Items = ["Paragraph", "Panel", "Table", "Tabs", "Tree", "TextArea", "Progress"],
@@ -614,7 +616,7 @@ internal static class ShowcaseSurface
             [
                 (LayoutConstraint.Fixed((ushort)6), new PanelWidget
                 {
-                    Title = "Tabs",
+                    Title = focus == 2 ? $"Tabs [{context} {tabIndex}]" : $"Tabs [{tabIndex}]",
                     Child = new TabsWidget
                     {
                         Tabs = ["Core", "Text", "Layout", "Extras"],
@@ -623,7 +625,7 @@ internal static class ShowcaseSurface
                 }),
                 (LayoutConstraint.Fill(), new PanelWidget
                 {
-                    Title = "Table",
+                    Title = focus == 3 ? $"Table [{context} {tableRow}]" : $"Table [{tableRow}]",
                     Child = new TableWidget
                     {
                         Headers = ["Widget", "State", "Notes"],

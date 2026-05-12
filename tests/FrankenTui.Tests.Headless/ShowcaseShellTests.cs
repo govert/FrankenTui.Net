@@ -10061,9 +10061,12 @@ public sealed class ShowcaseShellTests
             TerminalMouseButton.WheelDown,
             TerminalMouseKind.Scroll);
         Assert.Equal(5, state.WidgetGalleryListIndex);
+        Assert.Equal(1, state.WidgetGalleryFocusIndex);
+        Assert.False(state.WidgetGalleryContextArmed);
 
         state = ApplyMouse(state, 90, 4, timestamp + TimeSpan.FromMilliseconds(10));
         Assert.Equal(3, state.WidgetGalleryTabIndex);
+        Assert.Equal(2, state.WidgetGalleryFocusIndex);
 
         state = ApplyMouse(
             state,
@@ -10073,6 +10076,17 @@ public sealed class ShowcaseShellTests
             TerminalMouseButton.WheelUp,
             TerminalMouseKind.Scroll);
         Assert.Equal(0, state.WidgetGalleryTableRow);
+        Assert.Equal(3, state.WidgetGalleryFocusIndex);
+
+        state = ApplyMouse(
+            state,
+            90,
+            4,
+            timestamp + TimeSpan.FromMilliseconds(30),
+            TerminalMouseButton.Right,
+            TerminalMouseKind.Down);
+        Assert.Equal(2, state.WidgetGalleryFocusIndex);
+        Assert.True(state.WidgetGalleryContextArmed);
     }
 
     [Fact]
@@ -10086,7 +10100,9 @@ public sealed class ShowcaseShellTests
             flowDirection: WidgetFlowDirection.LeftToRight) with
         {
             WidgetGalleryTabIndex = 3,
-            WidgetGalleryTableRow = 3
+            WidgetGalleryTableRow = 3,
+            WidgetGalleryFocusIndex = 2,
+            WidgetGalleryContextArmed = true
         };
         var buffer = new RenderBuffer(120, 32);
 
@@ -10094,6 +10110,8 @@ public sealed class ShowcaseShellTests
             .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 32), Theme.DefaultTheme));
 
         var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("Tabs [context 3]", screen);
+        Assert.Contains("Table [3]", screen);
         Assert.Contains("[Extras]", screen);
         Assert.Contains("Mermaid", screen);
     }
