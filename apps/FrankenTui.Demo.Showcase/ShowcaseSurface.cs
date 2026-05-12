@@ -526,32 +526,60 @@ internal static class ShowcaseSurface
             ]);
     }
 
-    private static IWidget BuildCodeExplorer(ShowcaseDemoState state) =>
-        TwoColumn(
-            new PanelWidget
-            {
-                Title = "Tree",
-                Child = new TreeWidget
-                {
-                    Nodes =
-                    [
-                        new TreeNode("src", [new TreeNode("app.rs", []), new TreeNode("chrome.rs", []), new TreeNode("screens", [new TreeNode("widget_gallery.rs", []), new TreeNode("theme_studio.rs", [])])]),
-                        new TreeNode("docs", [new TreeNode("spec", []), new TreeNode("adr", [])]),
-                        new TreeNode("tests", [new TreeNode("showcase_smoke.rs", [])])
-                    ]
-                }
-            },
-            new TextAreaWidget
-            {
-                Document = TextDocument.FromString(
-                    "fn render_gallery(frame: &mut Frame) {\n" +
-                    "    let tabs = screen_registry();\n" +
-                    "    chrome::render_tab_bar(frame, &tabs);\n" +
-                    "}\n"),
-                Cursor = new TextCursor(1, 7),
-                HasFocus = true,
-                StatusText = "Rust syntax preview"
-            });
+    private static IWidget BuildCodeExplorer(ShowcaseDemoState state)
+    {
+        var focus = Math.Clamp(state.CodeExplorerFocusIndex, 0, 1);
+        var selectedNode = Math.Clamp(state.CodeExplorerSelectedNodeIndex, 0, 6);
+        var editorScroll = Math.Clamp(state.CodeExplorerEditorScroll, 0, 12);
+        var selectedPath = selectedNode switch
+        {
+            1 => "src/app.rs",
+            2 => "src/chrome.rs",
+            3 => "src/screens/widget_gallery.rs",
+            4 => "src/screens/theme_studio.rs",
+            5 => "docs/spec",
+            6 => "tests/showcase_smoke.rs",
+            _ => "src"
+        };
+        var source = selectedNode switch
+        {
+            1 => "fn app_model() {\n    dispatch_input();\n    render_frame();\n}\n",
+            2 => "pub fn render_chrome(frame: &mut Frame) {\n    tab_bar(frame);\n    status_line(frame);\n}\n",
+            3 => "fn render_gallery(frame: &mut Frame) {\n    let tabs = screen_registry();\n    chrome::render_tab_bar(frame, &tabs);\n}\n",
+            4 => "fn theme_studio(tokens: ThemeTokens) {\n    inspect_palette(tokens);\n    export_ghostty(tokens);\n}\n",
+            5 => "# spec\n\n- preserve upstream layout\n- record divergences\n",
+            6 => "#[test]\nfn showcase_smoke() {\n    assert_snapshot();\n}\n",
+            _ => "mod app;\nmod chrome;\nmod screens;\n"
+        };
+
+        return new StackWidget(
+            LayoutDirection.Vertical,
+            [
+                (LayoutConstraint.Fixed(1), new ParagraphWidget(
+                    $"code mouse focus={focus} selected_node={selectedNode} editor_scroll={editorScroll} context={(state.CodeExplorerContextArmed ? "armed" : "idle")} path={selectedPath}")),
+                (LayoutConstraint.Fill(), TwoColumn(
+                    new PanelWidget
+                    {
+                        Title = focus == 0 ? $"Tree [selected {selectedNode}]" : "Tree",
+                        Child = new TreeWidget
+                        {
+                            Nodes =
+                            [
+                                new TreeNode("src", [new TreeNode("app.rs", []), new TreeNode("chrome.rs", []), new TreeNode("screens", [new TreeNode("widget_gallery.rs", []), new TreeNode("theme_studio.rs", [])])]),
+                                new TreeNode("docs", [new TreeNode("spec", []), new TreeNode("adr", [])]),
+                                new TreeNode("tests", [new TreeNode("showcase_smoke.rs", [])])
+                            ]
+                        }
+                    },
+                    new TextAreaWidget
+                    {
+                        Document = TextDocument.FromString(source + $"\n// path: {selectedPath}\n// scroll: {editorScroll}\n"),
+                        Cursor = new TextCursor(Math.Min(1 + editorScroll % 3, 3), 7),
+                        HasFocus = focus == 1,
+                        StatusText = $"Rust syntax preview | scroll={editorScroll} | context={(state.CodeExplorerContextArmed ? "armed" : "idle")}"
+                    }))
+            ]);
+    }
 
     private static IWidget BuildWidgetGallery(ShowcaseDemoState state)
     {

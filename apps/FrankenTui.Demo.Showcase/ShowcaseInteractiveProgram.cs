@@ -108,6 +108,10 @@ internal sealed record ShowcaseDemoState(
     int ShakespeareSearchScroll = 0,
     int ShakespeareNotesScroll = 0,
     bool ShakespeareContextArmed = false,
+    int CodeExplorerFocusIndex = 0,
+    int CodeExplorerSelectedNodeIndex = 0,
+    int CodeExplorerEditorScroll = 0,
+    bool CodeExplorerContextArmed = false,
     int LayoutLabFocusIndex = 0,
     int LayoutLabWorkspaceZoom = 0,
     int LayoutLabMetricsScroll = 0,
@@ -418,6 +422,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent shakespeareMouseEvent &&
             HandleShakespeareMouse(shakespeareMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent codeExplorerMouseEvent &&
+            HandleCodeExplorerMouse(codeExplorerMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -1364,6 +1374,74 @@ internal sealed record ShowcaseDemoState(
             {
                 ShakespeareFocusIndex = focus,
                 ShakespeareContextArmed = false
+            };
+        return true;
+    }
+
+    private static bool HandleCodeExplorerMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 4 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content ||
+            hit.LocalHitId is not ("code_explorer:tree" or "code_explorer:editor"))
+        {
+            return false;
+        }
+
+        var focus = hit.LocalHitId == "code_explorer:tree" ? 0 : 1;
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = hit.LocalHitId == "code_explorer:tree"
+                ? next with
+                {
+                    CodeExplorerFocusIndex = focus,
+                    CodeExplorerSelectedNodeIndex = Math.Clamp(next.CodeExplorerSelectedNodeIndex + delta, 0, 6),
+                    CodeExplorerContextArmed = false
+                }
+                : next with
+                {
+                    CodeExplorerFocusIndex = focus,
+                    CodeExplorerEditorScroll = Math.Clamp(next.CodeExplorerEditorScroll + delta, 0, 12),
+                    CodeExplorerContextArmed = false
+                };
+            return true;
+        }
+
+        if (gesture.Button == TerminalMouseButton.Right)
+        {
+            next = next with
+            {
+                CodeExplorerFocusIndex = focus,
+                CodeExplorerContextArmed = true
+            };
+            return true;
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        next = hit.LocalHitId == "code_explorer:tree"
+            ? next with
+            {
+                CodeExplorerFocusIndex = focus,
+                CodeExplorerSelectedNodeIndex = (next.CodeExplorerSelectedNodeIndex + 1) % 7,
+                CodeExplorerContextArmed = false
+            }
+            : next with
+            {
+                CodeExplorerFocusIndex = focus,
+                CodeExplorerContextArmed = false
             };
         return true;
     }

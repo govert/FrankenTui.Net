@@ -9425,6 +9425,77 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseCodeExplorerMouseMutatesTreeEditorAndContext()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 4,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(state, 3, 6, timestamp);
+        Assert.Equal(0, state.CodeExplorerFocusIndex);
+        Assert.Equal(1, state.CodeExplorerSelectedNodeIndex);
+
+        state = ApplyMouse(
+            state,
+            3,
+            6,
+            timestamp + TimeSpan.FromMilliseconds(10),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(0, state.CodeExplorerFocusIndex);
+        Assert.Equal(2, state.CodeExplorerSelectedNodeIndex);
+
+        state = ApplyMouse(
+            state,
+            90,
+            6,
+            timestamp + TimeSpan.FromMilliseconds(20),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(1, state.CodeExplorerFocusIndex);
+        Assert.Equal(1, state.CodeExplorerEditorScroll);
+
+        state = ApplyMouse(
+            state,
+            90,
+            6,
+            timestamp + TimeSpan.FromMilliseconds(30),
+            TerminalMouseButton.Right);
+        Assert.Equal(1, state.CodeExplorerFocusIndex);
+        Assert.True(state.CodeExplorerContextArmed);
+    }
+
+    [Fact]
+    public void ShowcaseCodeExplorerRendersMouseSelectedState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 4,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            CodeExplorerFocusIndex = 1,
+            CodeExplorerSelectedNodeIndex = 4,
+            CodeExplorerEditorScroll = 3,
+            CodeExplorerContextArmed = true
+        };
+        var buffer = new RenderBuffer(120, 32);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 32), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("code mouse focus=1 selected_node=4 editor_scroll=3 context=armed", screen);
+        Assert.Contains("src/screens/theme_studio.rs", screen);
+        Assert.Contains("scroll=3", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryExposesShakespearePanes()
     {
         var state = ShowcaseDemoState.Create(
