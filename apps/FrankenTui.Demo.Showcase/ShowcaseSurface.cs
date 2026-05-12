@@ -1193,8 +1193,23 @@ internal static class ShowcaseSurface
             ]);
     }
 
-    private static IWidget BuildMermaid(ShowcaseDemoState state) =>
-        MermaidShowcaseSurface.CreateWidget(MermaidShowcaseSurface.BuildState(state.Session));
+    private static IWidget BuildMermaid(ShowcaseDemoState state)
+    {
+        var catalog = MermaidShowcaseSurface.Catalog();
+        var sampleIndex = Math.Clamp(state.MermaidSampleIndex, 0, catalog.Count - 1);
+        var session = state.Session with
+        {
+            Mermaid = state.Session.Mermaid with { SelectedSampleIndex = sampleIndex }
+        };
+        var mermaidState = MermaidShowcaseSurface.BuildState(session);
+        return new StackWidget(
+            LayoutDirection.Vertical,
+            [
+                (LayoutConstraint.Fixed(1), new ParagraphWidget(
+                    $"mouse focus={Math.Clamp(state.MermaidFocusIndex, 0, 5)} sample_idx={sampleIndex} zoom_step={state.MermaidZoomStep} panel_scroll={state.MermaidPanelScroll} status_scroll={state.MermaidStatusScroll} context={(state.MermaidContextArmed ? "armed" : "idle")}")),
+                (LayoutConstraint.Fill(), MermaidShowcaseSurface.CreateWidget(mermaidState))
+            ]);
+    }
 
     private static IWidget BuildMermaidMega(ShowcaseDemoState state)
     {

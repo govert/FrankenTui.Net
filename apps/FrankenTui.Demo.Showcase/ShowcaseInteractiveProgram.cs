@@ -122,6 +122,12 @@ internal sealed record ShowcaseDemoState(
     int MarkdownRendererScroll = 0,
     int MarkdownStreamScroll = 0,
     int MarkdownWrapModeIndex = 0,
+    int MermaidFocusIndex = 0,
+    int MermaidSampleIndex = 0,
+    int MermaidZoomStep = 0,
+    int MermaidPanelScroll = 0,
+    int MermaidStatusScroll = 0,
+    bool MermaidContextArmed = false,
     int DataVizActivePanelIndex = 0,
     int DataVizMetricRowIndex = 0,
     int DataVizNarrativeDetailIndex = 0,
@@ -574,6 +580,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent markdownMouseEvent &&
             HandleMarkdownMouse(markdownMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent mermaidMouseEvent &&
+            HandleMermaidMouse(mermaidMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -3772,6 +3784,105 @@ internal sealed record ShowcaseDemoState(
             },
             _ => next
         };
+        return true;
+    }
+
+    private static bool HandleMermaidMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 16 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content ||
+            !hit.LocalHitId.StartsWith("mermaid:", StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        var focus = hit.LocalHitId switch
+        {
+            "mermaid:header" => 0,
+            "mermaid:library" => 1,
+            "mermaid:viewport" => 2,
+            "mermaid:controls" => 3,
+            "mermaid:metrics" => 4,
+            "mermaid:status" => 5,
+            _ => next.MermaidFocusIndex
+        };
+
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = hit.LocalHitId switch
+            {
+                "mermaid:library" => next with
+                {
+                    MermaidFocusIndex = focus,
+                    MermaidSampleIndex = Math.Clamp(next.MermaidSampleIndex + delta, 0, MermaidShowcaseSurface.Catalog().Count - 1),
+                    MermaidContextArmed = false
+                },
+                "mermaid:viewport" => next with
+                {
+                    MermaidFocusIndex = focus,
+                    MermaidZoomStep = Math.Clamp(next.MermaidZoomStep + delta, -5, 5),
+                    MermaidContextArmed = false
+                },
+                "mermaid:status" => next with
+                {
+                    MermaidFocusIndex = focus,
+                    MermaidStatusScroll = Math.Clamp(next.MermaidStatusScroll + delta, 0, 12),
+                    MermaidContextArmed = false
+                },
+                _ => next with
+                {
+                    MermaidFocusIndex = focus,
+                    MermaidPanelScroll = Math.Clamp(next.MermaidPanelScroll + delta, 0, 12),
+                    MermaidContextArmed = false
+                }
+            };
+            return true;
+        }
+
+        if (gesture.Button == TerminalMouseButton.Right)
+        {
+            next = hit.LocalHitId == "mermaid:viewport"
+                ? next with
+                {
+                    MermaidFocusIndex = focus,
+                    MermaidZoomStep = 0,
+                    MermaidContextArmed = true
+                }
+                : next with
+                {
+                    MermaidFocusIndex = focus,
+                    MermaidContextArmed = true
+                };
+            return true;
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        next = hit.LocalHitId == "mermaid:library"
+            ? next with
+            {
+                MermaidFocusIndex = focus,
+                MermaidSampleIndex = (next.MermaidSampleIndex + 1) % MermaidShowcaseSurface.Catalog().Count,
+                MermaidContextArmed = false
+            }
+            : next with
+            {
+                MermaidFocusIndex = focus,
+                MermaidContextArmed = false
+            };
         return true;
     }
 
