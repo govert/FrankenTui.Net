@@ -1033,6 +1033,47 @@ internal static class ShowcaseFrameHitRegistry
                 new("i18n:footer", ShowcaseHitLayer.Content, 34_200));
         }
 
+        if (state.CurrentScreenNumber == 35 && TryResolveContentInnerArea(state.Viewport, out var voiInner) && voiInner.Width >= 45 && voiInner.Height >= 12)
+        {
+            AddRegion(
+                regions,
+                voiInner.X,
+                voiInner.Y,
+                voiInner.Width,
+                new("voi_overlay:header", ShowcaseHitLayer.Content, 35_000));
+
+            var bodyY = voiInner.Y + 1;
+            var bodyHeight = Math.Max(1, voiInner.Height - 2);
+            var leftWidth = Math.Max(1, voiInner.Width * 34 / 100);
+            var middleWidth = Math.Max(1, voiInner.Width * 33 / 100);
+            var rightWidth = Math.Max(1, voiInner.Width - leftWidth - middleWidth);
+            var middleX = voiInner.X + leftWidth;
+            var rightX = middleX + middleWidth;
+            var halfHeight = Math.Max(1, bodyHeight / 2);
+            var lowerHeight = Math.Max(1, bodyHeight - halfHeight);
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(voiInner.X, (ushort)bodyY, (ushort)leftWidth, (ushort)halfHeight),
+                new("voi_overlay:decision", ShowcaseHitLayer.Content, 35_100)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(voiInner.X, (ushort)(bodyY + halfHeight), (ushort)leftWidth, (ushort)lowerHeight),
+                new("voi_overlay:posterior", ShowcaseHitLayer.Content, 35_110)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)middleX, (ushort)bodyY, (ushort)middleWidth, (ushort)halfHeight),
+                new("voi_overlay:observation", ShowcaseHitLayer.Content, 35_120)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)middleX, (ushort)(bodyY + halfHeight), (ushort)middleWidth, (ushort)lowerHeight),
+                new("voi_overlay:ledger", ShowcaseHitLayer.Content, 35_130)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)rightX, (ushort)bodyY, (ushort)rightWidth, (ushort)bodyHeight),
+                new("voi_overlay:controls", ShowcaseHitLayer.Content, 35_200)));
+            AddRegion(
+                regions,
+                voiInner.X,
+                Math.Max(voiInner.Y, voiInner.Bottom - 1),
+                voiInner.Width,
+                new("voi_overlay:footer", ShowcaseHitLayer.Content, 35_300));
+        }
+
         if (state.CurrentScreenNumber == 7 && TryResolveContentInnerArea(state.Viewport, out var formsInner) && formsInner.Width >= 30 && formsInner.Height >= 8)
         {
             var formWidth = Math.Max(1, formsInner.Width / 2);

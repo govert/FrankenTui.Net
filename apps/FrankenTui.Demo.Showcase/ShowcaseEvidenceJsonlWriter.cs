@@ -1261,6 +1261,42 @@ public sealed class ShowcaseEvidenceJsonlWriter : IDisposable
             return "i18n_hit_test";
         }
 
+        if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 35)
+        {
+            if (gesture.Kind == TerminalMouseKind.Scroll)
+            {
+                return hit.LocalHitId switch
+                {
+                    "voi_overlay:ledger" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "voi_overlay_ledger_scroll_up"
+                        : "voi_overlay_ledger_scroll_down",
+                    "voi_overlay:controls" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "voi_overlay_controls_scroll_up"
+                        : "voi_overlay_controls_scroll_down",
+                    _ => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "voi_overlay_panel_scroll_up"
+                        : "voi_overlay_panel_scroll_down"
+                };
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Left)
+            {
+                return hit.LocalHitId switch
+                {
+                    "voi_overlay:header" => "voi_overlay_header_focus",
+                    "voi_overlay:decision" => "voi_overlay_decision_focus",
+                    "voi_overlay:posterior" => "voi_overlay_posterior_focus",
+                    "voi_overlay:observation" => "voi_overlay_observation_focus",
+                    "voi_overlay:ledger" => "voi_overlay_ledger_focus",
+                    "voi_overlay:controls" => "voi_overlay_controls_focus",
+                    "voi_overlay:footer" => "voi_overlay_footer_focus",
+                    _ => "voi_overlay_hit_test"
+                };
+            }
+
+            return "voi_overlay_hit_test";
+        }
+
         if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 7)
         {
             if (gesture.Kind == TerminalMouseKind.Scroll)

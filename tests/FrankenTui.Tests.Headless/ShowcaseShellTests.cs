@@ -5709,6 +5709,88 @@ public sealed class ShowcaseShellTests
         Assert.Equal(34_130, stressRecord.RootElement.GetProperty("target_id").GetInt32());
     }
 
+    [Fact]
+    public void ShowcaseFrameHitRegistryExposesVoiOverlayPanels()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 35,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+
+        var header = ShowcaseFrameHitRegistry.HitTest(state, 3, 2);
+        var decision = ShowcaseFrameHitRegistry.HitTest(state, 3, 5);
+        var posterior = ShowcaseFrameHitRegistry.HitTest(state, 3, 20);
+        var observation = ShowcaseFrameHitRegistry.HitTest(state, 45, 5);
+        var ledger = ShowcaseFrameHitRegistry.HitTest(state, 45, 20);
+        var controls = ShowcaseFrameHitRegistry.HitTest(state, 90, 5);
+        var footer = ShowcaseFrameHitRegistry.HitTest(state, 3, 29);
+
+        Assert.Equal("voi_overlay:header", header.LocalHitId);
+        Assert.Equal((uint)35_000, header.UpstreamHitId);
+        Assert.Equal("voi_overlay:decision", decision.LocalHitId);
+        Assert.Equal((uint)35_100, decision.UpstreamHitId);
+        Assert.Equal("voi_overlay:posterior", posterior.LocalHitId);
+        Assert.Equal((uint)35_110, posterior.UpstreamHitId);
+        Assert.Equal("voi_overlay:observation", observation.LocalHitId);
+        Assert.Equal((uint)35_120, observation.UpstreamHitId);
+        Assert.Equal("voi_overlay:ledger", ledger.LocalHitId);
+        Assert.Equal((uint)35_130, ledger.UpstreamHitId);
+        Assert.Equal("voi_overlay:controls", controls.LocalHitId);
+        Assert.Equal((uint)35_200, controls.UpstreamHitId);
+        Assert.Equal("voi_overlay:footer", footer.LocalHitId);
+        Assert.Equal((uint)35_300, footer.UpstreamHitId);
+    }
+
+    [Fact]
+    public void ShowcaseEvidenceJsonlWriterEmitsVoiOverlayMouseActions()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"ftui-showcase-voi-overlay-mouse-{Guid.NewGuid():N}.jsonl");
+        var options = ShowcaseCliOptions.Parse(
+            ["--screen=35", "--evidence-jsonl", path],
+            _ => null);
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 35,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+        var decisionEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 5, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp);
+        var ledgerEvent = TerminalEvent.Mouse(
+            new MouseGesture(45, 20, TerminalMouseButton.WheelDown, TerminalMouseKind.Scroll),
+            timestamp + TimeSpan.FromMilliseconds(10));
+        var controlsEvent = TerminalEvent.Mouse(
+            new MouseGesture(90, 5, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp + TimeSpan.FromMilliseconds(20));
+
+        using (var writer = ShowcaseEvidenceJsonlWriter.Create(options.EvidenceJsonlPath))
+        {
+            Assert.NotNull(writer);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 1, frame: 1, decisionEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 2, frame: 2, ledgerEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 3, frame: 3, controlsEvent, state, state);
+        }
+
+        var lines = File.ReadAllLines(path);
+        Assert.Equal(3, lines.Length);
+        using var decisionRecord = JsonDocument.Parse(lines[0]);
+        using var ledgerRecord = JsonDocument.Parse(lines[1]);
+        using var controlsRecord = JsonDocument.Parse(lines[2]);
+        Assert.Equal("voi_overlay_decision_focus", decisionRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("voi_overlay:decision", decisionRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(35_100, decisionRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("voi_overlay_ledger_scroll_down", ledgerRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("voi_overlay:ledger", ledgerRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(35_130, ledgerRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("voi_overlay_controls_focus", controlsRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("voi_overlay:controls", controlsRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(35_200, controlsRecord.RootElement.GetProperty("target_id").GetInt32());
+    }
+
     private static ShowcaseDemoState ApplyKey(ShowcaseDemoState state, KeyGesture gesture, DateTimeOffset timestamp)
     {
         var terminalEvent = TerminalEvent.Key(gesture, timestamp);
