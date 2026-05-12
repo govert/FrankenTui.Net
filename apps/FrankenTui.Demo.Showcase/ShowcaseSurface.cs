@@ -2058,6 +2058,8 @@ internal static class ShowcaseSurface
         var selected = Math.Clamp(state.MousePlaygroundSelectedTargetIndex, 0, 11);
         var selectedClicks = Math.Clamp(state.MousePlaygroundSelectedTargetClicks, 0, 99);
         var selectedTarget = selected + 1;
+        var focus = Math.Clamp(state.MousePlaygroundFocusIndex, 0, 2);
+        var focusLabel = state.MousePlaygroundContextArmed ? "ctx" : "focus";
         var eventIndex = Math.Clamp(state.MousePlaygroundEventIndex, 0, 9);
         var overlayVisible = state.MousePlaygroundOverlayVisible;
         var jitterStatsVisible = state.MousePlaygroundJitterStatsVisible;
@@ -2103,6 +2105,7 @@ internal static class ShowcaseSurface
             Pos: ({10 + selected}, {4 + selected % 6})
             Overlay: {(overlayVisible ? "ON" : "OFF")}
             Jitter Stats: {(jitterStatsVisible ? "ON" : "OFF")}
+            Focus: {focus} {focusLabel}
             Grid: 4 cols x 3 rows
             Event log: max 12
             Selected clicks: {selectedClicks}
@@ -2117,7 +2120,7 @@ internal static class ShowcaseSurface
             [
                 (LayoutConstraint.Percentage(42), new PanelWidget
                 {
-                    Title = "Hit-Test Targets",
+                    Title = focus == 0 ? $"Hit-Test Targets [{focusLabel}]" : "Hit-Test Targets",
                     Child = new TableWidget
                     {
                         Headers = ["", "Target", "HitId", "State", "Clicks"],
@@ -2138,9 +2141,9 @@ internal static class ShowcaseSurface
                                 SelectedRow = eventIndex
                             }
                         }),
-                        (LayoutConstraint.Fill(), Panel(overlayVisible ? "Stats + Overlay [visible]" : "Stats + Overlay", stats))
+                        (LayoutConstraint.Fill(), Panel(focus == 1 ? $"Stats + Overlay [{focusLabel}]" : overlayVisible ? "Stats + Overlay [visible]" : "Stats + Overlay", stats))
                     ])),
-                (LayoutConstraint.Fill(), Panel(jitterStatsVisible ? "Controls + Diagnostics [jitter]" : "Controls + Diagnostics", controls))
+                (LayoutConstraint.Fill(), Panel(focus == 2 ? $"Controls + Diagnostics [{focusLabel}]" : jitterStatsVisible ? "Controls + Diagnostics [jitter]" : "Controls + Diagnostics", controls))
             ]);
     }
 

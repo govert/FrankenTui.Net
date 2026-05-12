@@ -2261,6 +2261,8 @@ public sealed class ShowcaseShellTests
         Assert.Equal(6, state.MousePlaygroundSelectedTargetIndex);
         Assert.Equal(1, state.MousePlaygroundSelectedTargetClicks);
         Assert.Equal(7, state.MousePlaygroundEventIndex);
+        Assert.Equal(0, state.MousePlaygroundFocusIndex);
+        Assert.False(state.MousePlaygroundContextArmed);
 
         state = ApplyMouse(
             state,
@@ -2270,6 +2272,8 @@ public sealed class ShowcaseShellTests
             TerminalMouseButton.Right);
         Assert.True(state.MousePlaygroundOverlayVisible);
         Assert.Equal(8, state.MousePlaygroundEventIndex);
+        Assert.Equal(1, state.MousePlaygroundFocusIndex);
+        Assert.True(state.MousePlaygroundContextArmed);
 
         state = ApplyMouse(
             state,
@@ -2280,6 +2284,8 @@ public sealed class ShowcaseShellTests
             TerminalMouseKind.Scroll);
         Assert.True(state.MousePlaygroundJitterStatsVisible);
         Assert.Equal(9, state.MousePlaygroundEventIndex);
+        Assert.Equal(2, state.MousePlaygroundFocusIndex);
+        Assert.False(state.MousePlaygroundContextArmed);
     }
 
     [Fact]
@@ -2294,9 +2300,11 @@ public sealed class ShowcaseShellTests
         {
             MousePlaygroundSelectedTargetIndex = 6,
             MousePlaygroundSelectedTargetClicks = 3,
+            MousePlaygroundFocusIndex = 1,
             MousePlaygroundEventIndex = 8,
             MousePlaygroundOverlayVisible = true,
-            MousePlaygroundJitterStatsVisible = true
+            MousePlaygroundJitterStatsVisible = true,
+            MousePlaygroundContextArmed = true
         };
         var buffer = new RenderBuffer(120, 32);
 
@@ -2306,9 +2314,10 @@ public sealed class ShowcaseShellTests
         var screen = HeadlessBufferView.ScreenString(buffer);
         Assert.Contains("Hover: T7", screen);
         Assert.Contains("Overlay: ON", screen);
+        Assert.Contains("Focus: 1 ctx", screen);
         Assert.Contains("Jitter Stats: ON", screen);
         Assert.Contains("Selected clicks: 3", screen);
-        Assert.Contains("Stats + Overlay [visible]", screen);
+        Assert.Contains("Stats + Overlay [ctx]", screen);
         Assert.Contains("Controls + Diagnostics", screen);
     }
 

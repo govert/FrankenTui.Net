@@ -202,11 +202,13 @@ internal sealed record ShowcaseDemoState(
     int AdvancedTextEditorFocusIndex = 0,
     int AdvancedTextEditorHistoryIndex = 0,
     int AdvancedTextEditorDiagnosticsIndex = 0,
+    int MousePlaygroundFocusIndex = 0,
     int MousePlaygroundSelectedTargetIndex = 0,
     int MousePlaygroundSelectedTargetClicks = 0,
     int MousePlaygroundEventIndex = 0,
     bool MousePlaygroundOverlayVisible = false,
     bool MousePlaygroundJitterStatsVisible = false,
+    bool MousePlaygroundContextArmed = false,
     int FormValidationSelectedFieldIndex = 0,
     int FormValidationSelectedErrorIndex = 0,
     int FormValidationRulesScroll = 0,
@@ -2500,9 +2502,11 @@ internal sealed record ShowcaseDemoState(
             var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
             next = next with
             {
+                MousePlaygroundFocusIndex = 2,
                 MousePlaygroundSelectedTargetIndex = targetIndex,
                 MousePlaygroundEventIndex = Math.Clamp(next.MousePlaygroundEventIndex + delta, 0, 9),
-                MousePlaygroundJitterStatsVisible = true
+                MousePlaygroundJitterStatsVisible = true,
+                MousePlaygroundContextArmed = false
             };
             return true;
         }
@@ -2511,23 +2515,29 @@ internal sealed record ShowcaseDemoState(
         {
             TerminalMouseButton.Left => next with
             {
+                MousePlaygroundFocusIndex = 0,
                 MousePlaygroundSelectedTargetIndex = targetIndex,
                 MousePlaygroundSelectedTargetClicks = next.MousePlaygroundSelectedTargetIndex == targetIndex
                     ? Math.Clamp(next.MousePlaygroundSelectedTargetClicks + 1, 0, 99)
                     : 1,
-                MousePlaygroundEventIndex = 7
+                MousePlaygroundEventIndex = 7,
+                MousePlaygroundContextArmed = false
             },
             TerminalMouseButton.Right => next with
             {
+                MousePlaygroundFocusIndex = 1,
                 MousePlaygroundSelectedTargetIndex = targetIndex,
                 MousePlaygroundOverlayVisible = !next.MousePlaygroundOverlayVisible,
-                MousePlaygroundEventIndex = 8
+                MousePlaygroundEventIndex = 8,
+                MousePlaygroundContextArmed = true
             },
             TerminalMouseButton.Middle => next with
             {
+                MousePlaygroundFocusIndex = 2,
                 MousePlaygroundSelectedTargetIndex = targetIndex,
                 MousePlaygroundJitterStatsVisible = !next.MousePlaygroundJitterStatsVisible,
-                MousePlaygroundEventIndex = 9
+                MousePlaygroundEventIndex = 9,
+                MousePlaygroundContextArmed = false
             },
             _ => next
         };
