@@ -7031,6 +7031,79 @@ public sealed class ShowcaseShellTests
         Assert.Equal(8_200, narrativeRecord.RootElement.GetProperty("target_id").GetInt32());
     }
 
+    [Fact]
+    public void ShowcaseFrameHitRegistryExposesWidgetGalleryPanels()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 5,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+
+        var progress = ShowcaseFrameHitRegistry.HitTest(state, 3, 4);
+        var list = ShowcaseFrameHitRegistry.HitTest(state, 3, 12);
+        var tabs = ShowcaseFrameHitRegistry.HitTest(state, 90, 4);
+        var table = ShowcaseFrameHitRegistry.HitTest(state, 90, 12);
+
+        Assert.Equal("widget_gallery:progress", progress.LocalHitId);
+        Assert.Equal((uint)5_000, progress.UpstreamHitId);
+        Assert.Equal("widget_gallery:list", list.LocalHitId);
+        Assert.Equal((uint)5_100, list.UpstreamHitId);
+        Assert.Equal("widget_gallery:tabs", tabs.LocalHitId);
+        Assert.Equal((uint)5_200, tabs.UpstreamHitId);
+        Assert.Equal("widget_gallery:table", table.LocalHitId);
+        Assert.Equal((uint)5_300, table.UpstreamHitId);
+    }
+
+    [Fact]
+    public void ShowcaseEvidenceJsonlWriterEmitsWidgetGalleryMouseActions()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"ftui-showcase-widget-gallery-mouse-{Guid.NewGuid():N}.jsonl");
+        var options = ShowcaseCliOptions.Parse(
+            ["--screen=5", "--evidence-jsonl", path],
+            _ => null);
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 5,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+        var listEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 12, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp);
+        var tableEvent = TerminalEvent.Mouse(
+            new MouseGesture(90, 12, TerminalMouseButton.WheelDown, TerminalMouseKind.Scroll),
+            timestamp + TimeSpan.FromMilliseconds(10));
+        var tabsEvent = TerminalEvent.Mouse(
+            new MouseGesture(90, 4, TerminalMouseButton.Right, TerminalMouseKind.Down),
+            timestamp + TimeSpan.FromMilliseconds(20));
+
+        using (var writer = ShowcaseEvidenceJsonlWriter.Create(options.EvidenceJsonlPath))
+        {
+            Assert.NotNull(writer);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 1, frame: 1, listEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 2, frame: 2, tableEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 3, frame: 3, tabsEvent, state, state);
+        }
+
+        var lines = File.ReadAllLines(path);
+        Assert.Equal(3, lines.Length);
+        using var listRecord = JsonDocument.Parse(lines[0]);
+        using var tableRecord = JsonDocument.Parse(lines[1]);
+        using var tabsRecord = JsonDocument.Parse(lines[2]);
+        Assert.Equal("widget_gallery_item_select", listRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("widget_gallery:list", listRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(5_100, listRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("widget_gallery_table_scroll_down", tableRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("widget_gallery:table", tableRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(5_300, tableRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("widget_gallery_context_action", tabsRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("widget_gallery:tabs", tabsRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(5_200, tabsRecord.RootElement.GetProperty("target_id").GetInt32());
+    }
+
     private static ShowcaseDemoState ApplyKey(ShowcaseDemoState state, KeyGesture gesture, DateTimeOffset timestamp)
     {
         var terminalEvent = TerminalEvent.Key(gesture, timestamp);

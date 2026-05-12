@@ -879,6 +879,44 @@ public sealed class ShowcaseEvidenceJsonlWriter : IDisposable
             return "data_viz_hit_test";
         }
 
+        if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 5)
+        {
+            if (gesture.Kind == TerminalMouseKind.Scroll)
+            {
+                return hit.LocalHitId switch
+                {
+                    "widget_gallery:list" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "widget_gallery_list_prev"
+                        : "widget_gallery_list_next",
+                    "widget_gallery:table" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "widget_gallery_table_scroll_up"
+                        : "widget_gallery_table_scroll_down",
+                    _ => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "widget_gallery_panel_scroll_up"
+                        : "widget_gallery_panel_scroll_down"
+                };
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Right)
+            {
+                return "widget_gallery_context_action";
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Left)
+            {
+                return hit.LocalHitId switch
+                {
+                    "widget_gallery:progress" => "widget_gallery_progress_focus",
+                    "widget_gallery:list" => "widget_gallery_item_select",
+                    "widget_gallery:tabs" => "widget_gallery_tab_select",
+                    "widget_gallery:table" => "widget_gallery_table_focus",
+                    _ => "widget_gallery_hit_test"
+                };
+            }
+
+            return "widget_gallery_hit_test";
+        }
+
         if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 11)
         {
             if (gesture.Kind == TerminalMouseKind.Scroll)

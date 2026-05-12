@@ -595,6 +595,29 @@ internal static class ShowcaseFrameHitRegistry
                 new("data_viz:narrative", ShowcaseHitLayer.Content, 8_200)));
         }
 
+        if (state.CurrentScreenNumber == 5 && TryResolveContentInnerArea(state.Viewport, out var galleryInner) && galleryInner.Width >= 40 && galleryInner.Height >= 10)
+        {
+            var leftWidth = Math.Max(1, galleryInner.Width / 2);
+            var rightWidth = Math.Max(1, galleryInner.Width - leftWidth);
+            var topHeight = Math.Min(6, (int)galleryInner.Height);
+            var bottomHeight = Math.Max(1, galleryInner.Height - topHeight);
+            var rightX = galleryInner.X + leftWidth;
+            var bottomY = galleryInner.Y + topHeight;
+
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(galleryInner.X, galleryInner.Y, (ushort)leftWidth, (ushort)topHeight),
+                new("widget_gallery:progress", ShowcaseHitLayer.Content, 5_000)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(galleryInner.X, (ushort)bottomY, (ushort)leftWidth, (ushort)bottomHeight),
+                new("widget_gallery:list", ShowcaseHitLayer.Content, 5_100)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)rightX, galleryInner.Y, (ushort)rightWidth, (ushort)topHeight),
+                new("widget_gallery:tabs", ShowcaseHitLayer.Content, 5_200)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)rightX, (ushort)bottomY, (ushort)rightWidth, (ushort)bottomHeight),
+                new("widget_gallery:table", ShowcaseHitLayer.Content, 5_300)));
+        }
+
         if (state.CurrentScreenNumber == 11 && TryResolveContentInnerArea(state.Viewport, out var tableThemeInner) && tableThemeInner.Width >= 45 && tableThemeInner.Height >= 8)
         {
             var presetWidth = Math.Max(1, tableThemeInner.Width / 3);
