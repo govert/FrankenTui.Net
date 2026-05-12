@@ -945,7 +945,7 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   increment adds mouse-mutated trigger/toast/lifecycle/focus/context rendering, the Action Timeline
   increment adds mouse-mutated filter/event/detail/focus/context rendering, the Intrinsic Sizing
   increment adds mouse-mutated scenario/width/detail/focus/context rendering, the Layout Inspector
-  increment adds mouse-mutated scenario/step/overlay/tree rendering, the Advanced
+  increment adds mouse-mutated scenario/step/overlay/tree/focus/context rendering, the Advanced
   Text Editor increment adds mouse-mutated cursor/focus/history/diagnostics rendering,
   the Mouse Playground increment adds mouse-mutated target/overlay/jitter/event rendering,
   the Form Validation increment adds mouse-mutated field/mode/submission/scroll rendering,

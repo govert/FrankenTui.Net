@@ -8236,9 +8236,12 @@ public sealed class ShowcaseShellTests
 
         state = ApplyMouse(state, 3, 6, timestamp);
         Assert.Equal(1, state.LayoutInspectorScenarioIndex);
+        Assert.Equal(0, state.LayoutInspectorFocusIndex);
+        Assert.False(state.LayoutInspectorContextArmed);
 
         state = ApplyMouse(state, 45, 6, timestamp + TimeSpan.FromMilliseconds(10));
         Assert.Equal(1, state.LayoutInspectorStepIndex);
+        Assert.Equal(1, state.LayoutInspectorFocusIndex);
 
         state = ApplyMouse(
             state,
@@ -8247,9 +8250,13 @@ public sealed class ShowcaseShellTests
             timestamp + TimeSpan.FromMilliseconds(20),
             TerminalMouseButton.Right);
         Assert.False(state.LayoutInspectorOverlayVisible);
+        Assert.Equal(1, state.LayoutInspectorFocusIndex);
+        Assert.True(state.LayoutInspectorContextArmed);
 
         state = ApplyMouse(state, 45, 18, timestamp + TimeSpan.FromMilliseconds(30));
         Assert.False(state.LayoutInspectorTreeVisible);
+        Assert.Equal(2, state.LayoutInspectorFocusIndex);
+        Assert.False(state.LayoutInspectorContextArmed);
     }
 
     [Fact]
@@ -8264,8 +8271,10 @@ public sealed class ShowcaseShellTests
         {
             LayoutInspectorScenarioIndex = 2,
             LayoutInspectorStepIndex = 2,
+            LayoutInspectorFocusIndex = 1,
             LayoutInspectorOverlayVisible = false,
-            LayoutInspectorTreeVisible = false
+            LayoutInspectorTreeVisible = false,
+            LayoutInspectorContextArmed = true
         };
         var buffer = new RenderBuffer(120, 32);
 
@@ -8276,6 +8285,7 @@ public sealed class ShowcaseShellTests
         Assert.Contains("Scenario: FitContent Clamp", screen);
         Assert.Contains("Step: Final", screen);
         Assert.Contains("Overlay: off", screen);
+        Assert.Contains("Focus: 1 ctx", screen);
         Assert.Contains("Tree: off", screen);
         Assert.Contains("Pane Studio [overlay off]", screen);
     }

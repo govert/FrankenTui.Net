@@ -1867,6 +1867,8 @@ internal static class ShowcaseSurface
     {
         var scenario = Math.Clamp(state.LayoutInspectorScenarioIndex, 0, 2);
         var step = Math.Clamp(state.LayoutInspectorStepIndex, 0, 2);
+        var focus = Math.Clamp(state.LayoutInspectorFocusIndex, 0, 3);
+        var focusLabel = state.LayoutInspectorContextArmed ? "ctx" : "focus";
         var overlayVisible = state.LayoutInspectorOverlayVisible;
         var treeVisible = state.LayoutInspectorTreeVisible;
         var scenarios = new[]
@@ -1905,6 +1907,7 @@ internal static class ShowcaseSurface
             Details: {scenarios[scenario][1]}
             Step: {steps[step]}
             Overlay: {(overlayVisible ? "on" : "off")}   Tree: {(treeVisible ? "on" : "off")}
+            Focus: {focus} {focusLabel}
 
             Keys: n/p scenario  [/] step  o overlay  t tree  r reset
             Mouse: click info cycles scenario | click viz steps | right click toggles overlay
@@ -1926,24 +1929,24 @@ internal static class ShowcaseSurface
         return new StackWidget(
             LayoutDirection.Horizontal,
             [
-                (LayoutConstraint.Percentage(34), Panel("Layout Inspector", inspector)),
+                (LayoutConstraint.Percentage(34), Panel(focus == 0 ? $"Layout Inspector [{focusLabel}]" : "Layout Inspector", inspector)),
                 (LayoutConstraint.Percentage(40), new StackWidget(
                     LayoutDirection.Vertical,
                     [
-                        (LayoutConstraint.Fixed(10), Panel("Constraint Overlay", overlay)),
+                        (LayoutConstraint.Fixed(10), Panel(focus == 1 ? $"Constraint Overlay [{focusLabel}]" : "Constraint Overlay", overlay)),
                         (LayoutConstraint.Fill(), treeVisible ? new PanelWidget
                         {
-                            Title = "Layout Tree",
+                            Title = focus == 2 ? $"Layout Tree [{focusLabel}]" : "Layout Tree",
                             Child = new TableWidget
                             {
                                 Headers = ["Widget", "Requested", "Received", "Status"],
                                 Rows = records,
                                 SelectedRow = Math.Min(step + 1, records.Count - 1)
                             }
-                        } : Panel("Layout Tree", "Tree: off\n\nClick tree or press t to restore layout records.\n\nConstraintOverlay remains available above."))
+                        } : Panel(focus == 2 ? $"Layout Tree [{focusLabel}]" : "Layout Tree", "Tree: off\n\nClick tree or press t to restore layout records.\n\nConstraintOverlay remains available above."))
                     ])),
                 (LayoutConstraint.Fill(), Panel(
-                    overlayVisible ? "Pane Studio" : "Pane Studio [overlay off]",
+                    focus == 3 ? $"Pane Studio [{focusLabel}]" : overlayVisible ? "Pane Studio" : "Pane Studio [overlay off]",
                     "Embedded workspace visible at wide sizes.\n\nFlexRoot / GridRoot / FitRoot records are compared against requested and received rects.\n\nDrag panes | Right click mode | Wheel magnetism\n\nConstraintOverlay and LayoutDebugger parity hooks remain tracked under 364-DEM."))
             ]);
     }

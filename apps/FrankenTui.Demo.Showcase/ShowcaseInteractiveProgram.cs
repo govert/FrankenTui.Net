@@ -194,8 +194,10 @@ internal sealed record ShowcaseDemoState(
     bool IntrinsicSizingContextArmed = false,
     int LayoutInspectorScenarioIndex = 0,
     int LayoutInspectorStepIndex = 0,
+    int LayoutInspectorFocusIndex = 0,
     bool LayoutInspectorOverlayVisible = true,
     bool LayoutInspectorTreeVisible = true,
+    bool LayoutInspectorContextArmed = false,
     int AdvancedTextEditorCursorLine = 8,
     int AdvancedTextEditorFocusIndex = 0,
     int AdvancedTextEditorHistoryIndex = 0,
@@ -2293,14 +2295,20 @@ internal sealed record ShowcaseDemoState(
             {
                 "layout_inspector:info" or "layout_inspector:pane_studio" => next with
                 {
+                    LayoutInspectorFocusIndex = hit.LocalHitId == "layout_inspector:pane_studio" ? 3 : 0,
+                    LayoutInspectorContextArmed = false,
                     LayoutInspectorScenarioIndex = (next.LayoutInspectorScenarioIndex + delta + 3) % 3
                 },
                 "layout_inspector:overlay" => next with
                 {
+                    LayoutInspectorFocusIndex = 1,
+                    LayoutInspectorContextArmed = false,
                     LayoutInspectorStepIndex = (next.LayoutInspectorStepIndex + delta + 3) % 3
                 },
                 "layout_inspector:tree" => next with
                 {
+                    LayoutInspectorFocusIndex = 2,
+                    LayoutInspectorContextArmed = false,
                     LayoutInspectorTreeVisible = !next.LayoutInspectorTreeVisible
                 },
                 _ => next
@@ -2312,26 +2320,38 @@ internal sealed record ShowcaseDemoState(
         {
             ("layout_inspector:info", TerminalMouseButton.Left) => next with
             {
+                LayoutInspectorFocusIndex = 0,
+                LayoutInspectorContextArmed = false,
                 LayoutInspectorScenarioIndex = (next.LayoutInspectorScenarioIndex + 1) % 3
             },
             ("layout_inspector:overlay", TerminalMouseButton.Left) => next with
             {
+                LayoutInspectorFocusIndex = 1,
+                LayoutInspectorContextArmed = false,
                 LayoutInspectorStepIndex = (next.LayoutInspectorStepIndex + 1) % 3
             },
             ("layout_inspector:overlay", TerminalMouseButton.Right) => next with
             {
+                LayoutInspectorFocusIndex = 1,
+                LayoutInspectorContextArmed = true,
                 LayoutInspectorOverlayVisible = !next.LayoutInspectorOverlayVisible
             },
             ("layout_inspector:tree", TerminalMouseButton.Left) => next with
             {
+                LayoutInspectorFocusIndex = 2,
+                LayoutInspectorContextArmed = false,
                 LayoutInspectorTreeVisible = !next.LayoutInspectorTreeVisible
             },
             ("layout_inspector:pane_studio", TerminalMouseButton.Right) => next with
             {
+                LayoutInspectorFocusIndex = 3,
+                LayoutInspectorContextArmed = true,
                 LayoutInspectorOverlayVisible = !next.LayoutInspectorOverlayVisible
             },
             ("layout_inspector:pane_studio", TerminalMouseButton.Left) => next with
             {
+                LayoutInspectorFocusIndex = 3,
+                LayoutInspectorContextArmed = false,
                 LayoutInspectorStepIndex = (next.LayoutInspectorStepIndex + 1) % 3
             },
             _ => next
