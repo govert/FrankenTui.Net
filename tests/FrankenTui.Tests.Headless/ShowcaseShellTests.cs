@@ -6032,6 +6032,7 @@ public sealed class ShowcaseShellTests
             TerminalMouseButton.WheelDown,
             TerminalMouseKind.Scroll);
         Assert.Equal(1, state.VirtualizedSearchDiagnosticsScroll);
+        Assert.Equal(1, state.VirtualizedSearchDiagnosticIndex);
         Assert.True(state.VirtualizedSearchStatsFocused);
     }
 
@@ -6046,8 +6047,10 @@ public sealed class ShowcaseShellTests
             flowDirection: WidgetFlowDirection.LeftToRight) with
         {
             VirtualizedSearchSelectedIndex = 6,
+            VirtualizedSearchDiagnosticIndex = 4,
             VirtualizedSearchDiagnosticsScroll = 4,
-            VirtualizedSearchFocusSearch = true
+            VirtualizedSearchFocusSearch = false,
+            VirtualizedSearchStatsFocused = true
         };
         var buffer = new RenderBuffer(120, 32);
 
@@ -6055,9 +6058,9 @@ public sealed class ShowcaseShellTests
             .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 32), Theme.DefaultTheme));
 
         var screen = HeadlessBufferView.ScreenString(buffer);
-        Assert.Contains("Search (/ to focus, Esc to clear) [focus]", screen);
         Assert.Contains("Selected: 7", screen);
-        Assert.Contains("Focus:    Search", screen);
+        Assert.Contains("Focus:    Stats", screen);
+        Assert.Contains("Selected diagnostic: 4", screen);
         Assert.Contains("Diagnostics scroll: 4", screen);
     }
 

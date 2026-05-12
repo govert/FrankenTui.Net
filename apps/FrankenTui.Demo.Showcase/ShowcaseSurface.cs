@@ -2265,6 +2265,7 @@ internal static class ShowcaseSurface
         const int totalItems = 10_000;
         const string query = "cfg";
         var selected = Math.Clamp(state.VirtualizedSearchSelectedIndex, 0, 11);
+        var diagnosticIndex = Math.Clamp(state.VirtualizedSearchDiagnosticIndex, 0, 8);
         var diagnosticsScroll = Math.Clamp(state.VirtualizedSearchDiagnosticsScroll, 0, 8);
         var focusSearch = state.VirtualizedSearchFocusSearch;
         var statsFocused = state.VirtualizedSearchStatsFocused;
@@ -2304,8 +2305,8 @@ internal static class ShowcaseSurface
                     statsFocused ? "Stats [focus]" : "Stats",
                     $"Total:    {totalItems} items\nMatches:  1250\nSelected: {selected + 1}\nQuery:    \"{query}\"\nFocus:    {(focusSearch ? "Search" : statsFocused ? "Stats" : "List")}\nTop score: 61\n\nKeybindings:\n  /        Focus search\n  Esc      Clear search\n  j/k      Navigate\n  g/G      Top/Bottom")),
                 (LayoutConstraint.Fill(), Panel(
-                    diagnosticsScroll > 0 ? $"Diagnostics [scroll {diagnosticsScroll}]" : "Diagnostics",
-                    $"Diagnostics scroll: {diagnosticsScroll}\nFTUI_VSEARCH_DIAGNOSTICS=true\nFTUI_VSEARCH_DETERMINISTIC=true\nDataset: Configuration/CoreService/ApiGateway/WorkerPool\nEvents: query_change, filter_update, navigate, focus_change, page_scroll, jump_to_edge, fuzzy_match, render, tick\nJSONL fields: seq, ts_us, kind, query, filtered_count, selected, scroll_offset, focus_search, direction, match_score, checksum\nTelemetryHooks: on_query_change, on_filter_update, on_navigate, on_any"))
+                    statsFocused ? $"Diagnostics [selected {diagnosticIndex} scroll {diagnosticsScroll}]" : diagnosticsScroll > 0 ? $"Diagnostics [scroll {diagnosticsScroll}]" : "Diagnostics",
+                    $"Selected diagnostic: {diagnosticIndex}\nDiagnostics scroll: {diagnosticsScroll}\nFTUI_VSEARCH_DIAGNOSTICS=true\nFTUI_VSEARCH_DETERMINISTIC=true\nDataset: Configuration/CoreService/ApiGateway/WorkerPool\nEvents: query_change, filter_update, navigate, focus_change, page_scroll, jump_to_edge, fuzzy_match, render, tick\nJSONL fields: seq, ts_us, kind, query, filtered_count, selected, scroll_offset, focus_search, direction, match_score, checksum\nTelemetryHooks: on_query_change, on_filter_update, on_navigate, on_any"))
             ]);
 
         return new StackWidget(

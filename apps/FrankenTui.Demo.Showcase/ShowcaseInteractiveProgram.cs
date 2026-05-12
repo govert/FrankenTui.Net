@@ -217,6 +217,7 @@ internal sealed record ShowcaseDemoState(
     bool FormValidationOnSubmitMode = false,
     bool FormValidationSubmitted = false,
     int VirtualizedSearchSelectedIndex = 0,
+    int VirtualizedSearchDiagnosticIndex = 0,
     int VirtualizedSearchDiagnosticsScroll = 0,
     bool VirtualizedSearchFocusSearch = false,
     bool VirtualizedSearchStatsFocused = false,
@@ -2697,6 +2698,7 @@ internal sealed record ShowcaseDemoState(
                 { } value when value.StartsWith("virtualized_search:diagnostic:", StringComparison.Ordinal) => next with
                 {
                     VirtualizedSearchDiagnosticsScroll = Math.Clamp(next.VirtualizedSearchDiagnosticsScroll + delta, 0, 8),
+                    VirtualizedSearchDiagnosticIndex = Math.Clamp(next.VirtualizedSearchDiagnosticIndex + delta, 0, 8),
                     VirtualizedSearchStatsFocused = true,
                     VirtualizedSearchFocusSearch = false
                 },
@@ -2765,6 +2767,7 @@ internal sealed record ShowcaseDemoState(
             next = next with
             {
                 VirtualizedSearchDiagnosticsScroll = Math.Clamp(row, 0, 8),
+                VirtualizedSearchDiagnosticIndex = Math.Clamp(row, 0, 8),
                 VirtualizedSearchStatsFocused = true,
                 VirtualizedSearchFocusSearch = false
             };

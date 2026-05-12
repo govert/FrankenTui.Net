@@ -949,7 +949,7 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   Text Editor increment adds mouse-mutated cursor/focus/history/diagnostics rendering,
   the Mouse Playground increment adds mouse-mutated target/overlay/jitter/event/focus/context rendering,
   the Form Validation increment adds mouse-mutated field/mode/submission/scroll/focus rendering,
-  the Virtualized Search increment adds mouse-mutated focus/result/diagnostic rendering,
+  the Virtualized Search increment adds mouse-mutated focus/result/diagnostic selection rendering,
   the Async Tasks increment adds mouse-mutated selection/policy/focus/hazard rendering,
   the Theme Studio increment adds mouse-mutated preset/token/export/diagnostics rendering,
   the Time-Travel Studio increment adds mouse-mutated frame/focus/playback/diagnostics rendering,
