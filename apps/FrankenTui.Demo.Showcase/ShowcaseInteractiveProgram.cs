@@ -965,6 +965,11 @@ internal sealed record ShowcaseDemoState(
             return true;
         }
 
+        if (HandleHyperlinkKey(gesture, ref next))
+        {
+            return true;
+        }
+
         if (HandlePaletteLabKey(gesture, ref next))
         {
             return true;
@@ -4257,6 +4262,70 @@ internal sealed record ShowcaseDemoState(
                 HyperlinkHoverIndex = linkIndex,
                 HyperlinkLastActionIndex = 4,
                 HyperlinkActivationCount = next.HyperlinkActivationCount + 1
+            };
+            return true;
+        }
+
+        return false;
+    }
+
+    private static bool HandleHyperlinkKey(KeyGesture gesture, ref ShowcaseDemoState next)
+    {
+        if (next.CurrentScreenNumber != 41 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Modifiers.HasFlag(TerminalModifiers.Control) ||
+            gesture.Modifiers.HasFlag(TerminalModifiers.Alt))
+        {
+            return false;
+        }
+
+        var active = next.HyperlinkHoverIndex >= 0
+            ? Math.Clamp(next.HyperlinkHoverIndex, 0, 4)
+            : Math.Clamp(next.HyperlinkFocusIndex, 0, 4);
+
+        if (gesture.Key == TerminalKey.Up || (gesture.Key == TerminalKey.Tab && gesture.Modifiers.HasFlag(TerminalModifiers.Shift)))
+        {
+            next = next with
+            {
+                HyperlinkFocusIndex = active == 0 ? 4 : active - 1,
+                HyperlinkHoverIndex = -1,
+                HyperlinkLastActionIndex = 1
+            };
+            return true;
+        }
+
+        if (gesture.Key == TerminalKey.Down || gesture.Key == TerminalKey.Tab)
+        {
+            next = next with
+            {
+                HyperlinkFocusIndex = (active + 1) % 5,
+                HyperlinkHoverIndex = -1,
+                HyperlinkLastActionIndex = 1
+            };
+            return true;
+        }
+
+        if (gesture.Key == TerminalKey.Enter || IsCharacter(gesture, ' '))
+        {
+            next = next with
+            {
+                HyperlinkFocusIndex = active,
+                HyperlinkHoverIndex = -1,
+                HyperlinkLastActionIndex = 4,
+                HyperlinkActivationCount = next.HyperlinkActivationCount + 1
+            };
+            return true;
+        }
+
+        if (IsCharacter(gesture, 'c'))
+        {
+            next = next with
+            {
+                HyperlinkFocusIndex = active,
+                HyperlinkHoverIndex = -1,
+                HyperlinkLastActionIndex = 3,
+                HyperlinkCopied = true
             };
             return true;
         }

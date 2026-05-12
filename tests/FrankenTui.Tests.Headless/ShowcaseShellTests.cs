@@ -2435,6 +2435,40 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseHyperlinkPlaygroundKeysMutateFocusActivationAndCopy()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new FrankenTui.Core.Size(72, 18),
+            screenNumber: 41,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyKey(state, new KeyGesture(TerminalKey.Down, TerminalModifiers.None), timestamp);
+        Assert.Equal(1, state.HyperlinkFocusIndex);
+        Assert.Equal(-1, state.HyperlinkHoverIndex);
+        Assert.Equal(1, state.HyperlinkLastActionIndex);
+
+        state = ApplyKey(state, new KeyGesture(TerminalKey.Tab, TerminalModifiers.None), timestamp.AddMilliseconds(10));
+        Assert.Equal(2, state.HyperlinkFocusIndex);
+
+        state = ApplyKey(state, new KeyGesture(TerminalKey.Enter, TerminalModifiers.None), timestamp.AddMilliseconds(20));
+        Assert.Equal(2, state.HyperlinkFocusIndex);
+        Assert.Equal(4, state.HyperlinkLastActionIndex);
+        Assert.Equal(1, state.HyperlinkActivationCount);
+
+        state = ApplyKey(state, new KeyGesture(TerminalKey.Character, TerminalModifiers.None, new Rune('c')), timestamp.AddMilliseconds(30));
+        Assert.Equal(2, state.HyperlinkFocusIndex);
+        Assert.Equal(3, state.HyperlinkLastActionIndex);
+        Assert.True(state.HyperlinkCopied);
+
+        state = ApplyKey(state, new KeyGesture(TerminalKey.Tab, TerminalModifiers.Shift), timestamp.AddMilliseconds(40));
+        Assert.Equal(1, state.HyperlinkFocusIndex);
+        Assert.Equal(1, state.HyperlinkLastActionIndex);
+    }
+
+    [Fact]
     public void ShowcaseHyperlinkPlaygroundRendersMouseSelectedState()
     {
         var state = ShowcaseDemoState.Create(

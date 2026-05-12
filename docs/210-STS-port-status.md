@@ -581,10 +581,10 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   tab/list-row content hit regions plus tab-select/item-select/scroll/context
   evidence, `link_id` / `target_id` JSONL aliases, and `target_click` evidence,
   hover/action state labels, keybindings, mouse action labels, logging env vars,
-  JSONL fields, action names, and hit-id base; real `LinkRegistry` rendering,
-  hit-region registration, hover/click/focus state, keyboard activation/copy
-  mutation, JSONL file output, and exact upstream styling remain tracked under
-  `364-DEM`.
+  JSONL fields, action names, and hit-id base; keyboard navigation, Tab cycling,
+  Enter/Space activation, and URL-copy controls now mutate focus, action,
+  activation-count, and copied state; real `LinkRegistry` rendering, JSONL file
+  output, and exact upstream styling remain tracked under `364-DEM`.
   The Kanban Board screen now uses the upstream app chrome and compact board
   frame for the default 80x24 app snapshot. `tools/FrankenTui.ShowcaseCompare
   --screens 42` reports an exact match against upstream
