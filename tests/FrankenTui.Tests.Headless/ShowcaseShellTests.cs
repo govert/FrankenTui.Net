@@ -5649,6 +5649,78 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseLogSearchMouseMutatesSelectionScrollFocusAndPause()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 20,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(state, 3, 6, timestamp);
+        Assert.Equal(0, state.LogSearchFocusIndex);
+        Assert.Equal(4, state.LogSearchSelectedResultIndex);
+
+        state = ApplyMouse(
+            state,
+            3,
+            6,
+            timestamp + TimeSpan.FromMilliseconds(10),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(0, state.LogSearchFocusIndex);
+        Assert.Equal(1, state.LogSearchResultScroll);
+
+        state = ApplyMouse(state, 80, 4, timestamp + TimeSpan.FromMilliseconds(20));
+        Assert.Equal(1, state.LogSearchFocusIndex);
+        Assert.True(state.LogSearchPaused);
+
+        state = ApplyMouse(
+            state,
+            80,
+            20,
+            timestamp + TimeSpan.FromMilliseconds(30),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(3, state.LogSearchFocusIndex);
+        Assert.Equal(1, state.LogSearchDiagnosticsScroll);
+
+        state = ApplyMouse(state, 80, 20, timestamp + TimeSpan.FromMilliseconds(40));
+        Assert.Equal(3, state.LogSearchFocusIndex);
+        Assert.Equal(3, state.LogSearchSelectedDiagnosticIndex);
+    }
+
+    [Fact]
+    public void ShowcaseLogSearchRendersMouseSelectedState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(140, 34),
+            screenNumber: 20,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            LogSearchFocusIndex = 3,
+            LogSearchSelectedResultIndex = 4,
+            LogSearchSelectedDiagnosticIndex = 2,
+            LogSearchResultScroll = 5,
+            LogSearchDiagnosticsScroll = 6,
+            LogSearchPaused = true
+        };
+        var buffer = new RenderBuffer(180, 36);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, Rect.FromSize(180, 36), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("Paused: true", screen);
+        Assert.Contains("result_scroll=5", screen);
+        Assert.Contains("diagnostics_scroll=6", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryExposesAdvancedTextEditorPanels()
     {
         var state = ShowcaseDemoState.Create(

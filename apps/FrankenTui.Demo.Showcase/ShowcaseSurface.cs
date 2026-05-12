@@ -1418,27 +1418,35 @@ internal static class ShowcaseSurface
 
     private static IWidget BuildLogSearch(ShowcaseDemoState state)
     {
+        var focus = Math.Clamp(state.LogSearchFocusIndex, 0, 3);
         var searchState = state.Session.LogSearch with
         {
             Query = string.IsNullOrWhiteSpace(state.Session.LogSearch.Query) ? "info" : state.Session.LogSearch.Query,
             SearchOpen = true
         };
         var result = LogSearchEngine.Apply(LogLines, searchState);
+        var selectedResult = result.Lines.Count == 0
+            ? 0
+            : Math.Clamp(state.LogSearchSelectedResultIndex, 0, result.Lines.Count - 1);
+        var selectedDiagnostic = Math.Clamp(state.LogSearchSelectedDiagnosticIndex, 0, 9);
         var liveStream = $"""
+            Focus: {focus} | selected_result={selectedResult} | selected_diagnostic={selectedDiagnostic}
             Max lines: 5000
             Burst: every 3 ticks / 2 lines
             Follow mode: on
-            Paused: false
+            Paused: {state.LogSearchPaused.ToString().ToLowerInvariant()} result_scroll={state.LogSearchResultScroll} diagnostics_scroll={state.LogSearchDiagnosticsScroll}
             Generated: {LogLines.Count + (state.ScriptFrame % 3) * 2}
             Query: {searchState.Query} | Matches: {result.MatchCount} | Tier: {result.Tier.ToString().ToLowerInvariant()}
             """;
-        var controls = """
+        var controls = $"""
+            focus={focus} selected_result={selectedResult} selected_diagnostic={selectedDiagnostic}
             / open search | Enter submit | Esc close
             n/N next/prev match | f filter
             Ctrl+C case sensitivity
             Ctrl+X context lines
             Up/Down scroll | Home/End jump
             FTUI_LOGSEARCH_DETERMINISTIC=true
+            result_scroll={state.LogSearchResultScroll}
             """;
         var diagnosticsRows = new[]
         {
@@ -1455,33 +1463,43 @@ internal static class ShowcaseSurface
         };
 
         return new StackWidget(
-            LayoutDirection.Horizontal,
+            LayoutDirection.Vertical,
             [
-                (LayoutConstraint.Percentage(55), new LogSearchWidget
-                {
-                    State = searchState,
-                    SourceLines = LogLines
-                }),
                 (LayoutConstraint.Fill(), new StackWidget(
-                    LayoutDirection.Vertical,
+                    LayoutDirection.Horizontal,
                     [
-                        (LayoutConstraint.Fixed(8), Panel("Live Stream", liveStream)),
-                        (LayoutConstraint.Fixed(8), Panel("Search Controls", controls)),
-                        (LayoutConstraint.Fill(), new PanelWidget
-                        {
-                            Title = "Diagnostics",
-                            Child = new StackWidget(
-                                LayoutDirection.Vertical,
-                                [
-                                    (LayoutConstraint.Fixed(2), new ParagraphWidget("FTUI_LOGSEARCH_DIAGNOSTICS=true\nJSONL fields: seq timestamp_us query result_count match_position checksum")),
-                                    (LayoutConstraint.Fill(), new TableWidget
-                                    {
-                                        Headers = ["Event", "Field", "Value"],
-                                        Rows = diagnosticsRows,
-                                        SelectedRow = state.ScriptFrame % diagnosticsRows.Length
-                                    })
-                                ])
-                        })
+                        (LayoutConstraint.Percentage(55), new StackWidget(
+                            LayoutDirection.Vertical,
+                            [
+                                (LayoutConstraint.Fixed(1), new ParagraphWidget(
+                                    $"log focus={focus} result={selectedResult} diag={selectedDiagnostic} rscroll={state.LogSearchResultScroll} dscroll={state.LogSearchDiagnosticsScroll} paused={state.LogSearchPaused.ToString().ToLowerInvariant()}")),
+                                (LayoutConstraint.Fill(), new LogSearchWidget
+                                {
+                                    State = searchState,
+                                    SourceLines = LogLines
+                                })
+                            ])),
+                        (LayoutConstraint.Fill(), new StackWidget(
+                            LayoutDirection.Vertical,
+                            [
+                                (LayoutConstraint.Fixed(8), Panel("Live Stream", liveStream)),
+                                (LayoutConstraint.Fixed(8), Panel($"Search Controls f{focus} r{selectedResult} d{selectedDiagnostic}", controls)),
+                                (LayoutConstraint.Fill(), new PanelWidget
+                                {
+                                    Title = "Diagnostics",
+                                    Child = new StackWidget(
+                                        LayoutDirection.Vertical,
+                                        [
+                                            (LayoutConstraint.Fixed(2), new ParagraphWidget($"FTUI_LOGSEARCH_DIAGNOSTICS=true\nJSONL fields: seq timestamp_us query result_count match_position checksum | diagnostics_scroll={state.LogSearchDiagnosticsScroll}")),
+                                            (LayoutConstraint.Fill(), new TableWidget
+                                            {
+                                                Headers = ["Event", "Field", "Value"],
+                                                Rows = diagnosticsRows,
+                                                SelectedRow = selectedDiagnostic
+                                            })
+                                        ])
+                                })
+                            ]))
                     ]))
             ]);
     }

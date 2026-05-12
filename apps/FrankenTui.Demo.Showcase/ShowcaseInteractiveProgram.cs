@@ -141,6 +141,12 @@ internal sealed record ShowcaseDemoState(
     int ResponsiveWidthOffset = 0,
     bool ResponsiveCustomBreakpoints = false,
     bool ResponsiveAsideForcedVisible = false,
+    int LogSearchFocusIndex = 0,
+    int LogSearchSelectedResultIndex = 0,
+    int LogSearchSelectedDiagnosticIndex = 0,
+    int LogSearchResultScroll = 0,
+    int LogSearchDiagnosticsScroll = 0,
+    bool LogSearchPaused = false,
     int DataVizActivePanelIndex = 0,
     int DataVizMetricRowIndex = 0,
     int DataVizNarrativeDetailIndex = 0,
@@ -617,6 +623,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent responsiveMouseEvent &&
             HandleResponsiveMouse(responsiveMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent logSearchMouseEvent &&
+            HandleLogSearchMouse(logSearchMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -4149,6 +4161,89 @@ internal sealed record ShowcaseDemoState(
             _ => next with { ResponsiveFocusIndex = focus }
         };
         return true;
+    }
+
+    private static bool HandleLogSearchMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 20 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content ||
+            !hit.LocalHitId.StartsWith("log_search:", StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        var isResult = TryParseLogSearchRow(hit.LocalHitId, "log_search:result:", out var resultRow);
+        var isDiagnostic = TryParseLogSearchRow(hit.LocalHitId, "log_search:diagnostic:", out var diagnosticRow);
+        var focus = isResult
+            ? 0
+            : hit.LocalHitId switch
+            {
+                "log_search:live_stream" => 1,
+                "log_search:controls" => 2,
+                _ when isDiagnostic => 3,
+                _ => next.LogSearchFocusIndex
+            };
+
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = isResult
+                ? next with
+                {
+                    LogSearchFocusIndex = focus,
+                    LogSearchResultScroll = Math.Clamp(next.LogSearchResultScroll + delta, 0, 40)
+                }
+                : isDiagnostic
+                    ? next with
+                    {
+                        LogSearchFocusIndex = focus,
+                        LogSearchDiagnosticsScroll = Math.Clamp(next.LogSearchDiagnosticsScroll + delta, 0, 12)
+                    }
+                    : next with { LogSearchFocusIndex = focus };
+            return true;
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        next = hit.LocalHitId switch
+        {
+            _ when isResult => next with
+            {
+                LogSearchFocusIndex = focus,
+                LogSearchSelectedResultIndex = Math.Clamp(resultRow + next.LogSearchResultScroll, 0, 99)
+            },
+            _ when isDiagnostic => next with
+            {
+                LogSearchFocusIndex = focus,
+                LogSearchSelectedDiagnosticIndex = Math.Clamp(diagnosticRow + next.LogSearchDiagnosticsScroll, 0, 99)
+            },
+            "log_search:live_stream" => next with
+            {
+                LogSearchFocusIndex = focus,
+                LogSearchPaused = !next.LogSearchPaused
+            },
+            _ => next with { LogSearchFocusIndex = focus }
+        };
+        return true;
+    }
+
+    private static bool TryParseLogSearchRow(string localHitId, string prefix, out int row)
+    {
+        row = 0;
+        return localHitId.StartsWith(prefix, StringComparison.Ordinal) &&
+            int.TryParse(localHitId[prefix.Length..], System.Globalization.NumberStyles.None, System.Globalization.CultureInfo.InvariantCulture, out row);
     }
 
     private static bool HandleMarkdownLiveMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
