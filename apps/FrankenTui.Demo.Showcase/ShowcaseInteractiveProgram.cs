@@ -100,6 +100,8 @@ internal sealed record ShowcaseDemoState(
     bool MouseCaptureEnabled = false,
     ShowcasePaletteLabMatchFilter PaletteLabMatchFilter = ShowcasePaletteLabMatchFilter.All,
     int TableThemePresetIndex = 0,
+    int TerminalCapabilitiesSelectedRow = 1,
+    int TerminalCapabilitiesProfileIndex = 0,
     bool PaletteLabBenchEnabled = false,
     int PaletteLabBenchFrame = 0,
     int PaletteLabBenchProcessed = 0,
@@ -231,6 +233,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent tableThemeMouseEvent &&
             HandleTableThemeGalleryMouse(tableThemeMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent terminalCapabilitiesMouseEvent &&
+            HandleTerminalCapabilitiesMouse(terminalCapabilitiesMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -1026,6 +1034,61 @@ internal sealed record ShowcaseDemoState(
 
         next = next with { TableThemePresetIndex = Math.Clamp(preset, 0, 2) };
         return true;
+    }
+
+    private static bool HandleTerminalCapabilitiesMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 12 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content)
+        {
+            return false;
+        }
+
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = hit.LocalHitId switch
+            {
+                "terminal_capabilities:matrix" => next with
+                {
+                    TerminalCapabilitiesSelectedRow = Math.Clamp(next.TerminalCapabilitiesSelectedRow + delta, 0, 5)
+                },
+                "terminal_capabilities:simulation" => next with
+                {
+                    TerminalCapabilitiesProfileIndex = Math.Clamp(next.TerminalCapabilitiesProfileIndex + delta, 0, 5)
+                },
+                _ => next
+            };
+            return hit.LocalHitId is "terminal_capabilities:matrix" or "terminal_capabilities:simulation";
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        next = hit.LocalHitId switch
+        {
+            "terminal_capabilities:matrix" => next with
+            {
+                TerminalCapabilitiesSelectedRow = Math.Clamp(gesture.Row - 5, 0, 5)
+            },
+            "terminal_capabilities:simulation" => next with
+            {
+                TerminalCapabilitiesProfileIndex = Math.Clamp(next.TerminalCapabilitiesProfileIndex + 1, 0, 5)
+            },
+            _ => next
+        };
+        return hit.LocalHitId is "terminal_capabilities:matrix" or "terminal_capabilities:simulation";
     }
 
     private static bool HandleTourMouse(MouseTerminalEvent mouseEvent, DateTimeOffset now, ref ShowcaseDemoState next)

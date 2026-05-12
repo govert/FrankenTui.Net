@@ -6529,6 +6529,62 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseTerminalCapabilitiesMouseMutatesSelectionAndProfile()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 12,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(state, 3, 7, timestamp);
+        Assert.Equal(2, state.TerminalCapabilitiesSelectedRow);
+
+        state = ApplyMouse(
+            state,
+            3,
+            7,
+            timestamp + TimeSpan.FromMilliseconds(10),
+            TerminalMouseButton.WheelUp,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(1, state.TerminalCapabilitiesSelectedRow);
+
+        state = ApplyMouse(
+            state,
+            90,
+            6,
+            timestamp + TimeSpan.FromMilliseconds(20),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(1, state.TerminalCapabilitiesProfileIndex);
+    }
+
+    [Fact]
+    public void ShowcaseTerminalCapabilitiesRendersMouseSelectedState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 12,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            TerminalCapabilitiesSelectedRow = 2,
+            TerminalCapabilitiesProfileIndex = 2
+        };
+        var buffer = new RenderBuffer(120, 32);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 32), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("Selected: hyperlinks", screen);
+        Assert.Contains("active=xterm-256color", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryExposesPerformancePanels()
     {
         var state = ShowcaseDemoState.Create(

@@ -699,7 +699,9 @@ internal static class ShowcaseSurface
             ["focus_events", "probe", "tracked", "input pipeline"],
             ["mouse_sgr", mouseState, mouseState, "user toggle"]
         ];
-        var selectedRow = state.ScriptFrame % rows.Count;
+        var selectedRow = Math.Clamp(state.TerminalCapabilitiesSelectedRow, 0, rows.Count - 1);
+        var profiles = new[] { "detected", "modern", "xterm-256color", "tmux/screen", "kitty", "windows-console" };
+        var selectedProfile = profiles[Math.Clamp(state.TerminalCapabilitiesProfileIndex, 0, profiles.Length - 1)];
 
         var evidence = $"""
             View modes: Matrix -> Evidence -> Simulation
@@ -713,6 +715,7 @@ internal static class ShowcaseSurface
             osc color and hyperlink probes
             timeout bounded terminal reads
             prior profile={host}
+            active profile={selectedProfile}
 
             diagnostics:
             view_mode_changed
@@ -723,6 +726,7 @@ internal static class ShowcaseSurface
 
         var simulation = $"""
             Profile Simulation
+            active={selectedProfile}
             detected -> modern -> xterm-256color
             xterm -> vt100 -> dumb
             tmux -> screen -> zellij
