@@ -917,6 +917,39 @@ public sealed class ShowcaseEvidenceJsonlWriter : IDisposable
             return "widget_gallery_hit_test";
         }
 
+        if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 6)
+        {
+            if (gesture.Kind == TerminalMouseKind.Scroll)
+            {
+                return hit.LocalHitId == "layout_lab:workspace"
+                    ? gesture.Button == TerminalMouseButton.WheelUp
+                        ? "layout_lab_workspace_zoom_in"
+                        : "layout_lab_workspace_zoom_out"
+                    : gesture.Button == TerminalMouseButton.WheelUp
+                        ? "layout_lab_metrics_scroll_up"
+                        : "layout_lab_metrics_scroll_down";
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Right)
+            {
+                return hit.LocalHitId == "layout_lab:workspace"
+                    ? "layout_lab_workspace_context"
+                    : "layout_lab_metrics_context";
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Left)
+            {
+                return hit.LocalHitId switch
+                {
+                    "layout_lab:workspace" => "layout_lab_workspace_focus",
+                    "layout_lab:metrics" => "layout_lab_metrics_focus",
+                    _ => "layout_lab_hit_test"
+                };
+            }
+
+            return "layout_lab_hit_test";
+        }
+
         if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 11)
         {
             if (gesture.Kind == TerminalMouseKind.Scroll)

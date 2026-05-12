@@ -369,6 +369,10 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   panels with frame-registered regions plus matching mouse evidence; richer
   upstream gallery state, stateful mouse mutation, and exact styling remain
   tracked under `364-DEM`.
+  The Layout Lab screen now has frame-registered pane-workspace and workspace
+  metrics regions plus matching mouse evidence; full upstream pane interaction,
+  stateful mouse mutation, and broader persistence/control parity remain
+  tracked under `364-DEM`.
   The Data Viz screen now has a local progress/metrics/narrative surface with
   frame-registered progress, metrics-table, and narrative regions plus matching
   mouse evidence; real upstream chart/canvas widgets, stateful mouse mutation,
@@ -916,10 +920,12 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   evidence, and the Data Viz increment adds progress, metrics-table, and
   narrative regions plus matching mouse evidence, and the Widget Gallery
   increment adds progress, list, tabs, and table regions plus matching mouse
-  evidence, while still leaving broader generalized screen hit routing open.
-  Focused showcase-shell verification is now `215` tests via
+  evidence, and the Layout Lab increment adds pane-workspace and workspace
+  metrics regions plus matching mouse evidence, while still leaving broader
+  generalized screen hit routing open.
+  Focused showcase-shell verification is now `217` tests via
   `dotnet test tests/FrankenTui.Tests.Headless/FrankenTui.Tests.Headless.csproj --no-restore --filter FullyQualifiedName~ShowcaseShellTests`.
-  Current local verification is `469` headless tests, `9` web tests, and `7`
+  Current local verification is `471` headless tests, `9` web tests, and `7`
   PTY tests via `dotnet test FrankenTui.Net.sln --no-restore`.
   Previous focused registry/evidence verification covered `33`
   registry/evidence

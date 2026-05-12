@@ -618,6 +618,22 @@ internal static class ShowcaseFrameHitRegistry
                 new("widget_gallery:table", ShowcaseHitLayer.Content, 5_300)));
         }
 
+        if (state.CurrentScreenNumber == 6 && TryResolveContentInnerArea(state.Viewport, out var layoutInner) && layoutInner.Width >= 30 && layoutInner.Height >= 8)
+        {
+            var workspaceWidth = Math.Max(1, layoutInner.Width / 2);
+            var metricsWidth = Math.Max(1, layoutInner.Width - workspaceWidth);
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(layoutInner.X, layoutInner.Y, (ushort)workspaceWidth, layoutInner.Height),
+                new("layout_lab:workspace", ShowcaseHitLayer.Content, 6_000)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(
+                    (ushort)(layoutInner.X + workspaceWidth),
+                    layoutInner.Y,
+                    (ushort)metricsWidth,
+                    layoutInner.Height),
+                new("layout_lab:metrics", ShowcaseHitLayer.Content, 6_100)));
+        }
+
         if (state.CurrentScreenNumber == 11 && TryResolveContentInnerArea(state.Viewport, out var tableThemeInner) && tableThemeInner.Width >= 45 && tableThemeInner.Height >= 8)
         {
             var presetWidth = Math.Max(1, tableThemeInner.Width / 3);
