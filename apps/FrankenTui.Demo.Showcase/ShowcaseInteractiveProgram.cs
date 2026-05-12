@@ -99,6 +99,10 @@ internal sealed record ShowcaseDemoState(
     bool A11yLargeText = false,
     bool MouseCaptureEnabled = false,
     ShowcasePaletteLabMatchFilter PaletteLabMatchFilter = ShowcasePaletteLabMatchFilter.All,
+    int DashboardFocusIndex = 0,
+    int DashboardOverviewScroll = 0,
+    int DashboardHighlightIndex = 0,
+    bool DashboardContextArmed = false,
     int WidgetGalleryListIndex = 4,
     int WidgetGalleryTabIndex = 2,
     int WidgetGalleryTableRow = 1,
@@ -367,6 +371,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent mouseEvent &&
             HandleChromeMouse(mouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent dashboardMouseEvent &&
+            HandleDashboardMouse(dashboardMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -1138,6 +1148,80 @@ internal sealed record ShowcaseDemoState(
             TourPaused = false,
             CurrentScreenNumber = ShowcaseCatalog.Move(state.CurrentScreenNumber, delta)
         };
+
+    private static bool HandleDashboardMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 2 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content ||
+            hit.LocalHitId is not ("dashboard:overview" or "dashboard:highlights"))
+        {
+            return false;
+        }
+
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = hit.LocalHitId switch
+            {
+                "dashboard:overview" => next with
+                {
+                    DashboardFocusIndex = 0,
+                    DashboardOverviewScroll = Math.Clamp(next.DashboardOverviewScroll + delta, 0, 6),
+                    DashboardContextArmed = false
+                },
+                "dashboard:highlights" => next with
+                {
+                    DashboardFocusIndex = 1,
+                    DashboardHighlightIndex = Math.Clamp(next.DashboardHighlightIndex + delta, 0, 7),
+                    DashboardContextArmed = false
+                },
+                _ => next
+            };
+            return true;
+        }
+
+        if (gesture.Button == TerminalMouseButton.Right)
+        {
+            next = next with
+            {
+                DashboardFocusIndex = hit.LocalHitId == "dashboard:overview" ? 0 : 1,
+                DashboardContextArmed = true
+            };
+            return true;
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        next = hit.LocalHitId switch
+        {
+            "dashboard:overview" => next with
+            {
+                DashboardFocusIndex = 0,
+                DashboardOverviewScroll = Math.Clamp(next.DashboardOverviewScroll + 1, 0, 6),
+                DashboardContextArmed = false
+            },
+            "dashboard:highlights" => next with
+            {
+                DashboardFocusIndex = 1,
+                DashboardHighlightIndex = (next.DashboardHighlightIndex + 1) % 8,
+                DashboardContextArmed = false
+            },
+            _ => next
+        };
+        return true;
+    }
 
     private static bool HandleKanbanBoardMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
     {

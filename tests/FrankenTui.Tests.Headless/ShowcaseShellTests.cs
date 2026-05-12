@@ -9214,6 +9214,71 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseDashboardMouseMutatesOverviewHighlightsAndContext()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 2,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(state, 3, 4, timestamp);
+        Assert.Equal(0, state.DashboardFocusIndex);
+        Assert.Equal(1, state.DashboardOverviewScroll);
+        Assert.False(state.DashboardContextArmed);
+
+        state = ApplyMouse(
+            state,
+            90,
+            18,
+            timestamp + TimeSpan.FromMilliseconds(10),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(1, state.DashboardFocusIndex);
+        Assert.Equal(1, state.DashboardHighlightIndex);
+
+        state = ApplyMouse(
+            state,
+            90,
+            18,
+            timestamp + TimeSpan.FromMilliseconds(20),
+            TerminalMouseButton.Right);
+        Assert.Equal(1, state.DashboardFocusIndex);
+        Assert.True(state.DashboardContextArmed);
+    }
+
+    [Fact]
+    public void ShowcaseDashboardRendersMouseSelectedState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 2,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            DashboardFocusIndex = 1,
+            DashboardOverviewScroll = 3,
+            DashboardHighlightIndex = 5,
+            DashboardContextArmed = true
+        };
+        var buffer = new RenderBuffer(120, 32);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 32), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("Overview", screen);
+        Assert.Contains("scroll=3", screen);
+        Assert.Contains("context=armed", screen);
+        Assert.Contains("Highlights [focus]", screen);
+        Assert.Contains("> Drag & Drop lab", screen);
+        Assert.Contains("selected=5 focus=1", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryExposesQuakePanels()
     {
         var state = ShowcaseDemoState.Create(

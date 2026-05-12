@@ -452,34 +452,44 @@ internal static class ShowcaseSurface
         };
     }
 
-    private static IWidget BuildDashboard(ShowcaseDemoState state) =>
-        TwoColumn(
-            DashboardSurface.CreateDefault(
-                "Overview",
-                [
-                    "45-screen showcase catalog",
-                    "upstream-shaped numbering and titles",
-                    "runtime-backed interactive loop",
-                    "Windows Terminal viewport support"
-                ]),
-            new PanelWidget
-            {
-                Title = "Highlights",
-                Child = new ListWidget
-                {
-                    Items =
-                    [
-                        "Visual Effects canvas",
-                        "Data Viz charts",
-                        "Code Explorer panes",
-                        "Performance metrics",
-                        "Layout Lab workspace",
-                        "Drag & Drop lab",
-                        "Action Timeline",
-                        "Markdown rich text"
-                    ]
-                }
-            });
+    private static IWidget BuildDashboard(ShowcaseDemoState state)
+    {
+        var focus = Math.Clamp(state.DashboardFocusIndex, 0, 1);
+        var overviewScroll = Math.Clamp(state.DashboardOverviewScroll, 0, 6);
+        var highlightIndex = Math.Clamp(state.DashboardHighlightIndex, 0, 7);
+        string[] overviewItems =
+        [
+            "45-screen showcase catalog",
+            "upstream-shaped numbering and titles",
+            "runtime-backed interactive loop",
+            "Windows Terminal viewport support"
+        ];
+        string[] highlights =
+        [
+            "Visual Effects canvas",
+            "Data Viz charts",
+            "Code Explorer panes",
+            "Performance metrics",
+            "Layout Lab workspace",
+            "Drag & Drop lab",
+            "Action Timeline",
+            "Markdown rich text"
+        ];
+
+        var overviewText =
+            $"Mode: Autorun | scroll={overviewScroll} | context={(state.DashboardContextArmed ? "armed" : "idle")}\n" +
+            string.Join('\n', overviewItems.Select((item, index) => $"{(focus == 0 && overviewScroll % overviewItems.Length == index ? "> " : "  ")}{item}")) +
+            "\nPort baseline: 60%\n## Dashboard\n- cached markdown summary\n- width-stable render path";
+
+        var highlightsText = string.Join(
+            '\n',
+            highlights.Select((item, index) => $"{(focus == 1 && highlightIndex == index ? "> " : "  ")}{item}")) +
+            $"\nselected={highlightIndex} focus={focus} mouse panel=dashboard:highlights";
+
+        return TwoColumn(
+            Panel(focus == 0 ? "Overview [focus]" : "Overview", overviewText),
+            Panel(focus == 1 ? "Highlights [focus]" : "Highlights", highlightsText));
+    }
 
     private static IWidget BuildShakespeare(ShowcaseDemoState state)
     {
