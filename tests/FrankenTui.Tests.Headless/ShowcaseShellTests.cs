@@ -4856,6 +4856,61 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseFormsInputMouseMutatesSelectedField()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(80, 20),
+            screenNumber: 7,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(state, 3, 3, timestamp);
+        Assert.Equal(0, state.FormsInputSelectedFieldIndex);
+
+        state = ApplyMouse(
+            state,
+            45,
+            5,
+            timestamp + TimeSpan.FromMilliseconds(10),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(1, state.FormsInputSelectedFieldIndex);
+    }
+
+    [Fact]
+    public void ShowcaseFormsInputRendersMouseSelectedField()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(80, 20),
+            screenNumber: 7,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            FormsInputSelectedFieldIndex = 2
+        };
+        var buffer = new RenderBuffer(80, 20);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, Rect.FromSize(80, 20), Theme.DefaultTheme));
+
+        var rows = HeadlessBufferView.ScreenText(buffer);
+        var seedRow = rows
+            .Select((text, index) => (text, index))
+            .Single(row => row.text.Contains("Seed:", StringComparison.Ordinal));
+        var seedColumn = (ushort)seedRow.text.IndexOf("Seed:", StringComparison.Ordinal);
+        var seedCell = buffer.Get(seedColumn, (ushort)seedRow.index);
+
+        Assert.NotNull(seedCell);
+        Assert.Equal("S", buffer.ResolveText(seedCell.Value));
+        Assert.Equal(Theme.DefaultTheme.Selection.Foreground, seedCell.Value.Foreground);
+        Assert.Equal(Theme.DefaultTheme.Selection.Background, seedCell.Value.Background);
+        Assert.Equal(Theme.DefaultTheme.Selection.Flags, seedCell.Value.Attributes.Flags);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryExposesFormValidationPanels()
     {
         var state = ShowcaseDemoState.Create(

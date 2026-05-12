@@ -102,6 +102,7 @@ internal sealed record ShowcaseDemoState(
     int WidgetGalleryListIndex = 4,
     int WidgetGalleryTabIndex = 2,
     int WidgetGalleryTableRow = 1,
+    int FormsInputSelectedFieldIndex = 1,
     int TableThemePresetIndex = 0,
     int TerminalCapabilitiesSelectedRow = 1,
     int TerminalCapabilitiesProfileIndex = 0,
@@ -248,6 +249,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent widgetGalleryMouseEvent &&
             HandleWidgetGalleryMouse(widgetGalleryMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent formsInputMouseEvent &&
+            HandleFormsInputMouse(formsInputMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -1161,6 +1168,47 @@ internal sealed record ShowcaseDemoState(
             _ => next
         };
         return hit.LocalHitId is "widget_gallery:list" or "widget_gallery:tabs" or "widget_gallery:table";
+    }
+
+    private static bool HandleFormsInputMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 7 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content)
+        {
+            return false;
+        }
+
+        if (gesture.Kind == TerminalMouseKind.Scroll && hit.LocalHitId == "forms_input:text_area")
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = next with { FormsInputSelectedFieldIndex = Math.Clamp(next.FormsInputSelectedFieldIndex + delta, 0, 2) };
+            return true;
+        }
+
+        if (gesture.Kind != TerminalMouseKind.Down ||
+            gesture.Button != TerminalMouseButton.Left ||
+            !hit.LocalHitId.StartsWith("forms_input:field:", StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        var fieldText = hit.LocalHitId["forms_input:field:".Length..];
+        if (!int.TryParse(fieldText, CultureInfo.InvariantCulture, out var fieldIndex))
+        {
+            return false;
+        }
+
+        next = next with { FormsInputSelectedFieldIndex = Math.Clamp(fieldIndex, 0, 2) };
+        return true;
     }
 
     private static bool HandleTourMouse(MouseTerminalEvent mouseEvent, DateTimeOffset now, ref ShowcaseDemoState next)

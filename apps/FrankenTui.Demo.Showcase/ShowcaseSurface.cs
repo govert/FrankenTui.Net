@@ -607,7 +607,7 @@ internal static class ShowcaseSurface
             {
                 Fields = FormFields,
                 Validation = validation,
-                SelectedFieldIndex = 1
+                SelectedFieldIndex = Math.Clamp(state.FormsInputSelectedFieldIndex, 0, FormFields.Count - 1)
             },
             new TextAreaWidget
             {
