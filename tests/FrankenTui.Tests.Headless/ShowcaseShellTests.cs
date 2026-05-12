@@ -6635,7 +6635,7 @@ public sealed class ShowcaseShellTests
             timestamp + TimeSpan.FromMilliseconds(20),
             TerminalMouseButton.WheelDown,
             TerminalMouseKind.Scroll);
-        Assert.Equal(18, state.PerformanceChallengeBudgetMs);
+        Assert.Equal(16, state.PerformanceChallengeBudgetMs);
         Assert.Equal(4, state.PerformanceChallengeFocusIndex);
 
         state = ApplyMouse(

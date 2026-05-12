@@ -953,7 +953,7 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   the Async Tasks increment adds mouse-mutated selection/policy-description/focus/hazard rendering,
   the Theme Studio increment adds mouse-mutated preset/full-token-inventory/export/diagnostics rendering,
   the Time-Travel Studio increment adds mouse-mutated frame/timeline-scrub/focus/playback/diagnostics rendering,
-  the Performance Challenge increment adds mouse-mutated stress/tier/budget/sparkline/evidence rendering,
+  the Performance Challenge increment adds mouse-mutated stress/tier/upstream budget-wheel/sparkline/evidence rendering,
   the Explainability Cockpit increment adds mouse-mutated focus/timeline/source/pause/overlay rendering,
   the i18n Stress Lab increment adds mouse-mutated locale/plural/RTL/stress/export rendering,
   the VOI Overlay increment adds mouse-mutated focus/ledger/detail/controls/reset rendering,

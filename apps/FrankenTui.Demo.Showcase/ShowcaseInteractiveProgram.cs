@@ -3118,7 +3118,7 @@ internal sealed record ShowcaseDemoState(
                 },
                 "performance_challenge:budget" => next with
                 {
-                    PerformanceChallengeBudgetMs = Math.Clamp(next.PerformanceChallengeBudgetMs + delta, 8, 33),
+                    PerformanceChallengeBudgetMs = Math.Clamp(next.PerformanceChallengeBudgetMs - delta, 1, 100),
                     PerformanceChallengeFocusIndex = 4
                 },
                 _ => next
@@ -3170,7 +3170,7 @@ internal sealed record ShowcaseDemoState(
             },
             "performance_challenge:budget" => next with
             {
-                PerformanceChallengeBudgetMs = Math.Clamp(next.PerformanceChallengeBudgetMs + 1, 8, 33),
+                PerformanceChallengeBudgetMs = Math.Clamp(next.PerformanceChallengeBudgetMs + 1, 1, 100),
                 PerformanceChallengeFocusIndex = 4
             },
             "performance_challenge:stress" => next with

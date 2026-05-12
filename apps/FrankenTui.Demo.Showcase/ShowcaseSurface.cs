@@ -2604,7 +2604,7 @@ internal static class ShowcaseSurface
         var stressLevel = state.PerformanceChallengeStressLoad > 0
             ? Math.Clamp(state.PerformanceChallengeStressLoad, 0, 100)
             : (state.ScriptFrame % 12) * 8;
-        var budgetMs = Math.Clamp(state.PerformanceChallengeBudgetMs, 8, 33);
+        var budgetMs = Math.Clamp(state.PerformanceChallengeBudgetMs, 1, 100);
         var focusIndex = Math.Clamp(state.PerformanceChallengeFocusIndex, 0, 7);
         var sparklineMode = Math.Clamp(state.PerformanceChallengeSparklineModeIndex, 0, 1) == 0 ? "intervals" : "fps";
         var evidenceScroll = Math.Clamp(state.PerformanceChallengeEvidenceScroll, 0, 8);
