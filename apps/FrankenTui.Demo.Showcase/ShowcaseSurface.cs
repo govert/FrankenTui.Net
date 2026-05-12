@@ -1586,6 +1586,8 @@ internal static class ShowcaseSurface
         var selectedTrigger = Math.Clamp(state.NotificationsTriggerIndex, 0, 5);
         var selectedToast = Math.Clamp(state.NotificationsToastIndex, 0, 4);
         var lifecycleScroll = Math.Clamp(state.NotificationsLifecycleScroll, 0, 6);
+        var focus = Math.Clamp(state.NotificationsFocusIndex, 0, 2);
+        var focusLabel = state.NotificationsContextArmed ? "ctx" : "focus";
         var triggerLabel = selectedTrigger switch
         {
             1 => "error",
@@ -1618,6 +1620,7 @@ internal static class ShowcaseSurface
             Position: TopRight
             Selected trigger: {triggerLabel}
             Selected toast: {selectedToast}
+            Focus: {focus} {focusLabel}
             Total shown: {totalShown}
             Last action: {(state.ScriptFrame % 5 == 0 ? "retry" : "(none)")}
 
@@ -1642,13 +1645,13 @@ internal static class ShowcaseSurface
         return new StackWidget(
             LayoutDirection.Horizontal,
             [
-                (LayoutConstraint.Percentage(40), Panel($"Notification Demo [{triggerLabel}]", instructions)),
+                (LayoutConstraint.Percentage(40), Panel(focus == 0 ? $"Notification Demo [{triggerLabel} {focusLabel}]" : $"Notification Demo [{triggerLabel}]", instructions)),
                 (LayoutConstraint.Fill(), new StackWidget(
                     LayoutDirection.Vertical,
                     [
                         (LayoutConstraint.Fixed(11), new PanelWidget
                         {
-                            Title = $"Notification Stack [toast {selectedToast}]",
+                            Title = focus == 1 ? $"Notification Stack [toast {selectedToast} {focusLabel}]" : $"Notification Stack [toast {selectedToast}]",
                             Child = new TableWidget
                             {
                                 Headers = ["Priority", "Toast", "Actions", "TTL"],
@@ -1656,7 +1659,7 @@ internal static class ShowcaseSurface
                                 SelectedRow = selectedToast
                             }
                         }),
-                        (LayoutConstraint.Fill(), Panel(lifecycleScroll > 0 ? $"Toast Queue Lifecycle [scroll {lifecycleScroll}]" : "Toast Queue Lifecycle", lifecycle))
+                        (LayoutConstraint.Fill(), Panel(focus == 2 ? $"Toast Queue Lifecycle [{focusLabel} {lifecycleScroll}]" : lifecycleScroll > 0 ? $"Toast Queue Lifecycle [scroll {lifecycleScroll}]" : "Toast Queue Lifecycle", lifecycle))
                     ]))
             ]);
     }

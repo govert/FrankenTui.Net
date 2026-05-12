@@ -5169,9 +5169,12 @@ public sealed class ShowcaseShellTests
 
         state = ApplyMouse(state, 3, 5, timestamp);
         Assert.Equal(0, state.NotificationsTriggerIndex);
+        Assert.Equal(0, state.NotificationsFocusIndex);
+        Assert.False(state.NotificationsContextArmed);
 
         state = ApplyMouse(state, 45, 5, timestamp + TimeSpan.FromMilliseconds(10));
         Assert.Equal(1, state.NotificationsToastIndex);
+        Assert.Equal(1, state.NotificationsFocusIndex);
 
         state = ApplyMouse(
             state,
@@ -5181,6 +5184,17 @@ public sealed class ShowcaseShellTests
             TerminalMouseButton.WheelDown,
             TerminalMouseKind.Scroll);
         Assert.Equal(1, state.NotificationsLifecycleScroll);
+        Assert.Equal(2, state.NotificationsFocusIndex);
+
+        state = ApplyMouse(
+            state,
+            45,
+            14,
+            timestamp + TimeSpan.FromMilliseconds(30),
+            TerminalMouseButton.Right,
+            TerminalMouseKind.Down);
+        Assert.Equal(2, state.NotificationsFocusIndex);
+        Assert.True(state.NotificationsContextArmed);
     }
 
     [Fact]
@@ -5195,7 +5209,9 @@ public sealed class ShowcaseShellTests
         {
             NotificationsTriggerIndex = 4,
             NotificationsToastIndex = 2,
-            NotificationsLifecycleScroll = 3
+            NotificationsLifecycleScroll = 3,
+            NotificationsFocusIndex = 2,
+            NotificationsContextArmed = true
         };
         var buffer = new RenderBuffer(80, 20);
 
@@ -5205,7 +5221,7 @@ public sealed class ShowcaseShellTests
         var screen = HeadlessBufferView.ScreenString(buffer);
         Assert.Contains("Notification Demo [urgent]", screen);
         Assert.Contains("Notification Stack [toast 2]", screen);
-        Assert.Contains("Toast Queue Lifecycle [scroll 3]", screen);
+        Assert.Contains("Toast Queue Lifecycle [ctx 3]", screen);
     }
 
     [Fact]

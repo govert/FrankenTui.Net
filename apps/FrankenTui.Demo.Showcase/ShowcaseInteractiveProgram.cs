@@ -177,9 +177,11 @@ internal sealed record ShowcaseDemoState(
     int AdvancedCompositeModeIndex = 0,
     int AdvancedFocusIndex = 0,
     bool AdvancedContextArmed = false,
+    int NotificationsFocusIndex = 0,
     int NotificationsTriggerIndex = 0,
     int NotificationsToastIndex = 0,
     int NotificationsLifecycleScroll = 0,
+    bool NotificationsContextArmed = false,
     int ActionTimelineFilterIndex = 0,
     int ActionTimelineSelectedIndex = 0,
     bool ActionTimelineDetailExpanded = false,
@@ -1990,16 +1992,38 @@ internal sealed record ShowcaseDemoState(
             {
                 { } value when value.StartsWith("notifications:toast:", StringComparison.Ordinal) => next with
                 {
+                    NotificationsFocusIndex = 1,
+                    NotificationsContextArmed = false,
                     NotificationsToastIndex = Math.Clamp(next.NotificationsToastIndex + delta, 0, 4)
                 },
                 "notifications:lifecycle" => next with
                 {
+                    NotificationsFocusIndex = 2,
+                    NotificationsContextArmed = false,
                     NotificationsLifecycleScroll = Math.Clamp(next.NotificationsLifecycleScroll + delta, 0, 6)
                 },
                 _ => next
             };
             return hit.LocalHitId.StartsWith("notifications:toast:", StringComparison.Ordinal) ||
                 hit.LocalHitId == "notifications:lifecycle";
+        }
+
+        if (gesture.Button == TerminalMouseButton.Right &&
+            (hit.LocalHitId.StartsWith("notifications:trigger:", StringComparison.Ordinal) ||
+                hit.LocalHitId.StartsWith("notifications:toast:", StringComparison.Ordinal) ||
+                hit.LocalHitId == "notifications:lifecycle"))
+        {
+            next = next with
+            {
+                NotificationsFocusIndex = hit.LocalHitId switch
+                {
+                    { } value when value.StartsWith("notifications:toast:", StringComparison.Ordinal) => 1,
+                    "notifications:lifecycle" => 2,
+                    _ => 0
+                },
+                NotificationsContextArmed = true
+            };
+            return true;
         }
 
         if (gesture.Button != TerminalMouseButton.Left)
@@ -2019,7 +2043,12 @@ internal sealed record ShowcaseDemoState(
                 "dismiss_all" => 5,
                 _ => 0
             };
-            next = next with { NotificationsTriggerIndex = triggerIndex };
+            next = next with
+            {
+                NotificationsFocusIndex = 0,
+                NotificationsContextArmed = false,
+                NotificationsTriggerIndex = triggerIndex
+            };
             return true;
         }
 
@@ -2031,13 +2060,23 @@ internal sealed record ShowcaseDemoState(
                 return false;
             }
 
-            next = next with { NotificationsToastIndex = Math.Clamp(row, 0, 4) };
+            next = next with
+            {
+                NotificationsFocusIndex = 1,
+                NotificationsContextArmed = false,
+                NotificationsToastIndex = Math.Clamp(row, 0, 4)
+            };
             return true;
         }
 
         if (hit.LocalHitId == "notifications:lifecycle")
         {
-            next = next with { NotificationsLifecycleScroll = Math.Clamp(next.NotificationsLifecycleScroll + 1, 0, 6) };
+            next = next with
+            {
+                NotificationsFocusIndex = 2,
+                NotificationsContextArmed = false,
+                NotificationsLifecycleScroll = Math.Clamp(next.NotificationsLifecycleScroll + 1, 0, 6)
+            };
             return true;
         }
 
