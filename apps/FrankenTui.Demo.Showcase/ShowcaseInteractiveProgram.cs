@@ -129,6 +129,10 @@ internal sealed record ShowcaseDemoState(
     int IntrinsicSizingScenarioIndex = 0,
     int IntrinsicSizingWidthPresetIndex = 2,
     int IntrinsicSizingDetailScroll = 0,
+    int LayoutInspectorScenarioIndex = 0,
+    int LayoutInspectorStepIndex = 0,
+    bool LayoutInspectorOverlayVisible = true,
+    bool LayoutInspectorTreeVisible = true,
     bool PaletteLabBenchEnabled = false,
     int PaletteLabBenchFrame = 0,
     int PaletteLabBenchProcessed = 0,
@@ -296,6 +300,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent intrinsicSizingMouseEvent &&
             HandleIntrinsicSizingMouse(intrinsicSizingMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent layoutInspectorMouseEvent &&
+            HandleLayoutInspectorMouse(layoutInspectorMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -1464,6 +1474,76 @@ internal sealed record ShowcaseDemoState(
             _ => next
         };
         return hit.LocalHitId is "intrinsic_sizing:scenarios" or "intrinsic_sizing:detail" or "intrinsic_sizing:controls";
+    }
+
+    private static bool HandleLayoutInspectorMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 24 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content)
+        {
+            return false;
+        }
+
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = hit.LocalHitId switch
+            {
+                "layout_inspector:info" or "layout_inspector:pane_studio" => next with
+                {
+                    LayoutInspectorScenarioIndex = (next.LayoutInspectorScenarioIndex + delta + 3) % 3
+                },
+                "layout_inspector:overlay" => next with
+                {
+                    LayoutInspectorStepIndex = (next.LayoutInspectorStepIndex + delta + 3) % 3
+                },
+                "layout_inspector:tree" => next with
+                {
+                    LayoutInspectorTreeVisible = !next.LayoutInspectorTreeVisible
+                },
+                _ => next
+            };
+            return hit.LocalHitId is "layout_inspector:info" or "layout_inspector:overlay" or "layout_inspector:tree" or "layout_inspector:pane_studio";
+        }
+
+        next = (hit.LocalHitId, gesture.Button) switch
+        {
+            ("layout_inspector:info", TerminalMouseButton.Left) => next with
+            {
+                LayoutInspectorScenarioIndex = (next.LayoutInspectorScenarioIndex + 1) % 3
+            },
+            ("layout_inspector:overlay", TerminalMouseButton.Left) => next with
+            {
+                LayoutInspectorStepIndex = (next.LayoutInspectorStepIndex + 1) % 3
+            },
+            ("layout_inspector:overlay", TerminalMouseButton.Right) => next with
+            {
+                LayoutInspectorOverlayVisible = !next.LayoutInspectorOverlayVisible
+            },
+            ("layout_inspector:tree", TerminalMouseButton.Left) => next with
+            {
+                LayoutInspectorTreeVisible = !next.LayoutInspectorTreeVisible
+            },
+            ("layout_inspector:pane_studio", TerminalMouseButton.Right) => next with
+            {
+                LayoutInspectorOverlayVisible = !next.LayoutInspectorOverlayVisible
+            },
+            ("layout_inspector:pane_studio", TerminalMouseButton.Left) => next with
+            {
+                LayoutInspectorStepIndex = (next.LayoutInspectorStepIndex + 1) % 3
+            },
+            _ => next
+        };
+        return hit.LocalHitId is "layout_inspector:info" or "layout_inspector:overlay" or "layout_inspector:tree" or "layout_inspector:pane_studio";
     }
 
     private static bool HandleTerminalCapabilitiesMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)

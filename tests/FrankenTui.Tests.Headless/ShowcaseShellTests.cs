@@ -257,7 +257,18 @@ public sealed class ShowcaseShellTests
     public void ShowcaseLayoutInspectorRendersScenarioStepsOverlayTreeAndPaneStudio()
     {
         var buffer = new RenderBuffer(170, 34);
-        ShowcaseViewFactory.Build(inlineMode: false, screenNumber: 24, frame: 4)
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(170, 34),
+            screenNumber: 24,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            LayoutInspectorScenarioIndex = 1,
+            LayoutInspectorStepIndex = 1
+        };
+
+        ShowcaseSurface.Create(state)
             .Render(new RuntimeRenderContext(buffer, FrankenTui.Core.Rect.FromSize(170, 34), Theme.DefaultTheme));
 
         var screen = HeadlessBufferView.ScreenString(buffer);
@@ -6640,6 +6651,63 @@ public sealed class ShowcaseShellTests
         Assert.Equal("layout_inspector_pane_mode", paneRecord.RootElement.GetProperty("mouse_action").GetString());
         Assert.Equal("layout_inspector:pane_studio", paneRecord.RootElement.GetProperty("hit_id").GetString());
         Assert.Equal(24_200, paneRecord.RootElement.GetProperty("target_id").GetInt32());
+    }
+
+    [Fact]
+    public void ShowcaseLayoutInspectorMouseMutatesScenarioStepOverlayAndTree()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 24,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(state, 3, 6, timestamp);
+        Assert.Equal(1, state.LayoutInspectorScenarioIndex);
+
+        state = ApplyMouse(state, 45, 6, timestamp + TimeSpan.FromMilliseconds(10));
+        Assert.Equal(1, state.LayoutInspectorStepIndex);
+
+        state = ApplyMouse(
+            state,
+            45,
+            6,
+            timestamp + TimeSpan.FromMilliseconds(20),
+            TerminalMouseButton.Right);
+        Assert.False(state.LayoutInspectorOverlayVisible);
+
+        state = ApplyMouse(state, 45, 18, timestamp + TimeSpan.FromMilliseconds(30));
+        Assert.False(state.LayoutInspectorTreeVisible);
+    }
+
+    [Fact]
+    public void ShowcaseLayoutInspectorRendersMouseSelectedState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 24,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            LayoutInspectorScenarioIndex = 2,
+            LayoutInspectorStepIndex = 2,
+            LayoutInspectorOverlayVisible = false,
+            LayoutInspectorTreeVisible = false
+        };
+        var buffer = new RenderBuffer(120, 32);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 32), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("Scenario: FitContent Clamp", screen);
+        Assert.Contains("Step: Final", screen);
+        Assert.Contains("Overlay: off", screen);
+        Assert.Contains("Tree: off", screen);
+        Assert.Contains("Pane Studio [overlay off]", screen);
     }
 
     [Fact]

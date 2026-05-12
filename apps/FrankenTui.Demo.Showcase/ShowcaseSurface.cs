@@ -1682,8 +1682,10 @@ internal static class ShowcaseSurface
 
     private static IWidget BuildLayoutInspector(ShowcaseDemoState state)
     {
-        var scenario = state.ScriptFrame % 3;
-        var step = state.ScriptFrame % 3;
+        var scenario = Math.Clamp(state.LayoutInspectorScenarioIndex, 0, 2);
+        var step = Math.Clamp(state.LayoutInspectorStepIndex, 0, 2);
+        var overlayVisible = state.LayoutInspectorOverlayVisible;
+        var treeVisible = state.LayoutInspectorTreeVisible;
         var scenarios = new[]
         {
             new[] { "Flex Trio", "Vertical flex: Fixed + Min + Max" },
@@ -1719,7 +1721,7 @@ internal static class ShowcaseSurface
             Scenario: {scenarios[scenario][0]}
             Details: {scenarios[scenario][1]}
             Step: {steps[step]}
-            Overlay: on   Tree: on
+            Overlay: {(overlayVisible ? "on" : "off")}   Tree: {(treeVisible ? "on" : "off")}
 
             Keys: n/p scenario  [/] step  o overlay  t tree  r reset
             Mouse: click info cycles scenario | click viz steps | right click toggles overlay
@@ -1727,7 +1729,7 @@ internal static class ShowcaseSurface
             """;
         var overlay = $"""
             Constraint Overlay
-            Step {steps[step]} style:
+            {(overlayVisible ? "visible" : "hidden")} | Step {steps[step]} style:
               show_borders={(step == 0 ? "false" : "true")}
               show_size_diff={(step == 2 ? "false" : "true")}
               show_labels=true
@@ -1746,7 +1748,7 @@ internal static class ShowcaseSurface
                     LayoutDirection.Vertical,
                     [
                         (LayoutConstraint.Fixed(10), Panel("Constraint Overlay", overlay)),
-                        (LayoutConstraint.Fill(), new PanelWidget
+                        (LayoutConstraint.Fill(), treeVisible ? new PanelWidget
                         {
                             Title = "Layout Tree",
                             Child = new TableWidget
@@ -1755,10 +1757,10 @@ internal static class ShowcaseSurface
                                 Rows = records,
                                 SelectedRow = Math.Min(step + 1, records.Count - 1)
                             }
-                        })
+                        } : Panel("Layout Tree", "Tree: off\n\nClick tree or press t to restore layout records.\n\nConstraintOverlay remains available above."))
                     ])),
                 (LayoutConstraint.Fill(), Panel(
-                    "Pane Studio",
+                    overlayVisible ? "Pane Studio" : "Pane Studio [overlay off]",
                     "Embedded workspace visible at wide sizes.\n\nFlexRoot / GridRoot / FitRoot records are compared against requested and received rects.\n\nDrag panes | Right click mode | Wheel magnetism\n\nConstraintOverlay and LayoutDebugger parity hooks remain tracked under 364-DEM."))
             ]);
     }
