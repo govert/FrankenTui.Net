@@ -1213,9 +1213,13 @@ internal static class ShowcaseSurface
 
     private static IWidget BuildMermaidMega(ShowcaseDemoState state)
     {
-        var mermaidState = MermaidShowcaseSurface.BuildState(state.Session);
         var catalog = MermaidShowcaseSurface.Catalog();
-        var selected = Math.Clamp(state.Session.Mermaid.SelectedSampleIndex, 0, catalog.Count - 1);
+        var selected = Math.Clamp(state.MermaidMegaSampleIndex, 0, catalog.Count - 1);
+        var session = state.Session with
+        {
+            Mermaid = state.Session.Mermaid with { SelectedSampleIndex = selected }
+        };
+        var mermaidState = MermaidShowcaseSurface.BuildState(session);
         var categories = catalog
             .GroupBy(static sample => sample.Category, StringComparer.Ordinal)
             .Select(static group => $"{group.Key}:{group.Count()}")
@@ -1243,6 +1247,7 @@ internal static class ShowcaseSurface
             Node navigation: h/j/k/l or arrows
             Inspect/search: / query | n/N match | Enter inspect
             Viewport: zoom=100% pan=0,0 override=off
+            mouse_focus={Math.Clamp(state.MermaidMegaFocusIndex, 0, 3)} panel_scroll={state.MermaidMegaPanelScroll} context={(state.MermaidMegaContextArmed ? "armed" : "idle")}
             Debounce: 50ms | Layout budget: 16ms
             Keymap: m metrics | c controls | i status | p palette | g guard
             """;
@@ -1250,6 +1255,7 @@ internal static class ShowcaseSurface
         var detailText = $"""
             Node Detail
             selected_node: 0
+            detail_scroll={state.MermaidMegaDetailScroll}
             incoming_edges: 0
             outgoing_edges: {mermaidState.Diagram.Edges.Count}
             clusters: 0
@@ -1265,24 +1271,30 @@ internal static class ShowcaseSurface
             """;
 
         return new StackWidget(
-            LayoutDirection.Horizontal,
+            LayoutDirection.Vertical,
             [
-                (LayoutConstraint.Percentage(58), MermaidShowcaseSurface.CreateWidget(mermaidState)),
+                (LayoutConstraint.Fixed(1), new ParagraphWidget(
+                    $"mega mouse focus={Math.Clamp(state.MermaidMegaFocusIndex, 0, 3)} sample_idx={selected} zoom_step={state.MermaidMegaZoomStep} detail_scroll={state.MermaidMegaDetailScroll} panel_scroll={state.MermaidMegaPanelScroll} context={(state.MermaidMegaContextArmed ? "armed" : "idle")}")),
                 (LayoutConstraint.Fill(), new StackWidget(
-                    LayoutDirection.Vertical,
+                    LayoutDirection.Horizontal,
                     [
-                        (LayoutConstraint.Fixed(11), new PanelWidget
-                        {
-                            Title = "Mega Sample Library",
-                            Child = new TableWidget
-                            {
-                                Headers = ["", "Sample", "Family", "Tier", "N/E"],
-                                Rows = libraryRows,
-                                SelectedRow = Math.Min(selected, libraryRows.Length - 1)
-                            }
-                        }),
-                        (LayoutConstraint.Fixed(12), Panel("Mega Controls", controlText)),
-                        (LayoutConstraint.Fill(), Panel("Node Detail / Recompute", detailText))
+                        (LayoutConstraint.Percentage(58), MermaidShowcaseSurface.CreateWidget(mermaidState)),
+                        (LayoutConstraint.Fill(), new StackWidget(
+                            LayoutDirection.Vertical,
+                            [
+                                (LayoutConstraint.Fixed(10), new PanelWidget
+                                {
+                                    Title = "Mega Sample Library",
+                                    Child = new TableWidget
+                                    {
+                                        Headers = ["", "Sample", "Family", "Tier", "N/E"],
+                                        Rows = libraryRows,
+                                        SelectedRow = Math.Min(selected, libraryRows.Length - 1)
+                                    }
+                                }),
+                                (LayoutConstraint.Fixed(11), Panel("Mega Controls", controlText)),
+                                (LayoutConstraint.Fill(), Panel("Node Detail / Recompute", detailText))
+                            ]))
                     ]))
             ]);
     }

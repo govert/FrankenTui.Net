@@ -128,6 +128,12 @@ internal sealed record ShowcaseDemoState(
     int MermaidPanelScroll = 0,
     int MermaidStatusScroll = 0,
     bool MermaidContextArmed = false,
+    int MermaidMegaFocusIndex = 0,
+    int MermaidMegaSampleIndex = 0,
+    int MermaidMegaZoomStep = 0,
+    int MermaidMegaDetailScroll = 0,
+    int MermaidMegaPanelScroll = 0,
+    bool MermaidMegaContextArmed = false,
     int DataVizActivePanelIndex = 0,
     int DataVizMetricRowIndex = 0,
     int DataVizNarrativeDetailIndex = 0,
@@ -586,6 +592,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent mermaidMouseEvent &&
             HandleMermaidMouse(mermaidMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent mermaidMegaMouseEvent &&
+            HandleMermaidMegaMouse(mermaidMegaMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -3882,6 +3894,103 @@ internal sealed record ShowcaseDemoState(
             {
                 MermaidFocusIndex = focus,
                 MermaidContextArmed = false
+            };
+        return true;
+    }
+
+    private static bool HandleMermaidMegaMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 17 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content ||
+            !hit.LocalHitId.StartsWith("mermaid_mega:", StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        var focus = hit.LocalHitId switch
+        {
+            "mermaid_mega:shared_showcase" => 0,
+            "mermaid_mega:library" => 1,
+            "mermaid_mega:controls" => 2,
+            "mermaid_mega:node_detail" => 3,
+            _ => next.MermaidMegaFocusIndex
+        };
+
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = hit.LocalHitId switch
+            {
+                "mermaid_mega:library" => next with
+                {
+                    MermaidMegaFocusIndex = focus,
+                    MermaidMegaSampleIndex = Math.Clamp(next.MermaidMegaSampleIndex + delta, 0, MermaidShowcaseSurface.Catalog().Count - 1),
+                    MermaidMegaContextArmed = false
+                },
+                "mermaid_mega:shared_showcase" => next with
+                {
+                    MermaidMegaFocusIndex = focus,
+                    MermaidMegaZoomStep = Math.Clamp(next.MermaidMegaZoomStep + delta, -5, 5),
+                    MermaidMegaContextArmed = false
+                },
+                "mermaid_mega:node_detail" => next with
+                {
+                    MermaidMegaFocusIndex = focus,
+                    MermaidMegaDetailScroll = Math.Clamp(next.MermaidMegaDetailScroll + delta, 0, 12),
+                    MermaidMegaContextArmed = false
+                },
+                _ => next with
+                {
+                    MermaidMegaFocusIndex = focus,
+                    MermaidMegaPanelScroll = Math.Clamp(next.MermaidMegaPanelScroll + delta, 0, 12),
+                    MermaidMegaContextArmed = false
+                }
+            };
+            return true;
+        }
+
+        if (gesture.Button == TerminalMouseButton.Right)
+        {
+            next = hit.LocalHitId == "mermaid_mega:shared_showcase"
+                ? next with
+                {
+                    MermaidMegaFocusIndex = focus,
+                    MermaidMegaZoomStep = 0,
+                    MermaidMegaContextArmed = true
+                }
+                : next with
+                {
+                    MermaidMegaFocusIndex = focus,
+                    MermaidMegaContextArmed = true
+                };
+            return true;
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        next = hit.LocalHitId == "mermaid_mega:library"
+            ? next with
+            {
+                MermaidMegaFocusIndex = focus,
+                MermaidMegaSampleIndex = (next.MermaidMegaSampleIndex + 1) % MermaidShowcaseSurface.Catalog().Count,
+                MermaidMegaContextArmed = false
+            }
+            : next with
+            {
+                MermaidMegaFocusIndex = focus,
+                MermaidMegaContextArmed = false
             };
         return true;
     }

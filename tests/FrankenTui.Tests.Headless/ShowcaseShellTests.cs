@@ -8731,6 +8731,80 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseMermaidMegaMouseMutatesSampleViewportDetailAndContext()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 17,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(state, 90, 6, timestamp);
+        Assert.Equal(1, state.MermaidMegaFocusIndex);
+        Assert.Equal(1, state.MermaidMegaSampleIndex);
+
+        state = ApplyMouse(
+            state,
+            3,
+            6,
+            timestamp + TimeSpan.FromMilliseconds(10),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(0, state.MermaidMegaFocusIndex);
+        Assert.Equal(1, state.MermaidMegaZoomStep);
+
+        state = ApplyMouse(
+            state,
+            90,
+            26,
+            timestamp + TimeSpan.FromMilliseconds(20),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(3, state.MermaidMegaFocusIndex);
+        Assert.Equal(1, state.MermaidMegaDetailScroll);
+
+        state = ApplyMouse(
+            state,
+            3,
+            6,
+            timestamp + TimeSpan.FromMilliseconds(30),
+            TerminalMouseButton.Right);
+        Assert.Equal(0, state.MermaidMegaFocusIndex);
+        Assert.Equal(0, state.MermaidMegaZoomStep);
+        Assert.True(state.MermaidMegaContextArmed);
+    }
+
+    [Fact]
+    public void ShowcaseMermaidMegaRendersMouseSelectedState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(150, 38),
+            screenNumber: 17,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            MermaidMegaFocusIndex = 3,
+            MermaidMegaSampleIndex = 2,
+            MermaidMegaZoomStep = 2,
+            MermaidMegaDetailScroll = 4,
+            MermaidMegaPanelScroll = 5,
+            MermaidMegaContextArmed = true
+        };
+        var buffer = new RenderBuffer(150, 38);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, Rect.FromSize(150, 38), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("mega mouse focus=3 sample_idx=2 zoom_step=2 detail_scroll=4 panel_scroll=5 context=armed", screen);
+        Assert.Contains("Mega Sample Library", screen);
+        Assert.Contains("detail_scroll=4", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryExposesAdvancedPanels()
     {
         var state = ShowcaseDemoState.Create(
