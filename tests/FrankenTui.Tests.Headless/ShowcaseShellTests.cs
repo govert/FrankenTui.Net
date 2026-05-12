@@ -6381,6 +6381,79 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseExplainabilityMouseMutatesFocusTimelineSourceAndPause()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 33,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(state, 3, 2, timestamp);
+        Assert.True(state.ExplainabilityPaused);
+        Assert.False(state.ExplainabilityAutoRefresh);
+        Assert.Equal(0, state.ExplainabilityFocusIndex);
+
+        state = ApplyMouse(state, 90, 6, timestamp + TimeSpan.FromMilliseconds(10));
+        Assert.Equal(3, state.ExplainabilityFocusIndex);
+
+        state = ApplyMouse(
+            state,
+            3,
+            18,
+            timestamp + TimeSpan.FromMilliseconds(20),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(1, state.ExplainabilityTimelineScroll);
+        Assert.Equal(4, state.ExplainabilityFocusIndex);
+
+        state = ApplyMouse(
+            state,
+            3,
+            25,
+            timestamp + TimeSpan.FromMilliseconds(30),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(1, state.ExplainabilitySourceScroll);
+        Assert.Equal(5, state.ExplainabilityFocusIndex);
+
+        state = ApplyMouse(state, 3, 25, timestamp + TimeSpan.FromMilliseconds(40));
+        Assert.True(state.ExplainabilityOverlayMode);
+        Assert.Equal(5, state.ExplainabilityFocusIndex);
+    }
+
+    [Fact]
+    public void ShowcaseExplainabilityRendersMouseSelectedState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 33,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            ExplainabilityFocusIndex = 5,
+            ExplainabilityTimelineScroll = 4,
+            ExplainabilitySourceScroll = 2,
+            ExplainabilityPaused = true,
+            ExplainabilityOverlayMode = true,
+            ExplainabilityAutoRefresh = false
+        };
+        var buffer = new RenderBuffer(120, 32);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 32), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("state=paused", screen);
+        Assert.Contains("Timeline scroll: 4", screen);
+        Assert.Contains("Source + Controls [scroll 2]", screen);
+        Assert.Contains("State: paused | Auto-refresh: off | Overlay: on", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryExposesI18nPanels()
     {
         var state = ShowcaseDemoState.Create(

@@ -2490,9 +2490,15 @@ internal static class ShowcaseSurface
         var action = regime == "burst" ? "coalesce" : "apply";
         var decision = presentMs + diffMs > 12.0 ? "degrade" : "hold";
         var eValue = Math.Clamp((diffMs + presentMs) / 16.7, 0.05, 4.0);
+        var focusIndex = Math.Clamp(state.ExplainabilityFocusIndex, 0, 5);
+        var timelineScroll = Math.Clamp(state.ExplainabilityTimelineScroll, 0, 8);
+        var sourceScroll = Math.Clamp(state.ExplainabilitySourceScroll, 0, 8);
+        var paused = state.ExplainabilityPaused;
+        var overlayMode = state.ExplainabilityOverlayMode;
+        var autoRefresh = state.ExplainabilityAutoRefresh;
 
         var diff = Panel(
-            "Diff Strategy",
+            focusIndex == 1 ? "Diff Strategy [focus]" : "Diff Strategy",
             $"Decision: {strategy}\n" +
             $"Why: strategy {strategy}; guard_reason=none; fallback_reason=none\n" +
             $"Posterior: mu=0.{(sampleIndex % 7) + 31:00} sigma2=0.12 alpha=1.20 beta=2.30\n" +
@@ -2502,7 +2508,7 @@ internal static class ShowcaseSurface
             $"JSONL: event=diff_decision event_idx={frame} strategy posterior_mean posterior_variance alpha beta dirty_rows total_rows");
 
         var resize = Panel(
-            "Resize Regime (BOCPD)",
+            focusIndex == 2 ? "Resize Regime (BOCPD) [focus]" : "Resize Regime (BOCPD)",
             $"Decision: {action} ({regime})\n" +
             $"Why: burst regime; dt_ms=5.0; event_rate=20.0/s\n" +
             $"Evidence: log_bayes_factor=1.23 (regime 0.50, timing 0.30, rate 0.20)\n" +
@@ -2511,7 +2517,7 @@ internal static class ShowcaseSurface
             "JSONL: event=decision_evidence event=decision regime action time_since_render_ms forced");
 
         var budget = Panel(
-            "Budget Decisions",
+            focusIndex == 3 ? "Budget Decisions [focus]" : "Budget Decisions",
             $"Decision: {decision}\n" +
             $"Frame: {(diffMs + presentMs):0.00}ms / 16.00ms\n" +
             $"E-value: {eValue:0.000}\n" +
@@ -2521,16 +2527,17 @@ internal static class ShowcaseSurface
             "JSONL: event=budget_decision frame_idx decision_controller degradation_before degradation_after frame_time_us budget_us risk");
 
         var timeline = Panel(
-            "Decision Timeline",
+            timelineScroll > 0 ? $"Decision Timeline [scroll {timelineScroll}]" : focusIndex == 4 ? "Decision Timeline [focus]" : "Decision Timeline",
+            $"Timeline scroll: {timelineScroll}\n" +
             $"diff   #{frame,3} strategy {strategy} | mu=0.{(sampleIndex % 7) + 31:00} sigma2=0.12\n" +
             $"resize #{frame + 1,3} {action} {regime} | LBF=1.23\n" +
             $"budget #{frame + 2,3} {decision} budget | e={eValue:0.00}\n" +
             "scroll: n/p or Up/Down; click panels to focus; mouse wheel over timeline");
 
         var source = Panel(
-            "Source + Controls",
+            sourceScroll > 0 ? $"Source + Controls [scroll {sourceScroll}]" : focusIndex == 5 ? "Source + Controls [focus]" : "Source + Controls",
             "Explainability Cockpit | source: (disabled)\n" +
-            "Evidence source disabled; enable evidence logging to populate this cockpit.\n" +
+            $"State: {(paused ? "paused" : "live")} | Auto-refresh: {(autoRefresh ? "on" : "off")} | Overlay: {(overlayMode ? "on" : "off")} | Source scroll: {sourceScroll}\n" +
             "Set FTUI_DEMO_EVIDENCE_JSONL or FTUI_HARNESS_EVIDENCE_JSONL to a writable path.\n" +
             "Refresh every 5 ticks unless paused; max evidence lines=400; max timeline rows=10.\n" +
             "r refresh | Space pause/resume | c clear+re-read | 1/2/3/4 focus panels | n/p scroll timeline");
@@ -2538,7 +2545,7 @@ internal static class ShowcaseSurface
         return new StackWidget(
             LayoutDirection.Vertical,
             [
-                (LayoutConstraint.Fixed(2), new ParagraphWidget("Explainability Cockpit | source: (disabled)\nLoaded deterministic sample evidence for diff, resize, budget, and timeline panels")),
+                (LayoutConstraint.Fixed(2), new ParagraphWidget($"Explainability Cockpit | source: (disabled) | state={(paused ? "paused" : "live")} | focus={focusIndex}\nLoaded deterministic sample evidence for diff, resize, budget, and timeline panels")),
                 (LayoutConstraint.Fill(), new StackWidget(
                     LayoutDirection.Horizontal,
                     [

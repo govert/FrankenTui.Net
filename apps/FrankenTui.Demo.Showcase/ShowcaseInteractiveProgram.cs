@@ -177,6 +177,12 @@ internal sealed record ShowcaseDemoState(
     int PerformanceChallengeSparklineModeIndex = 0,
     int PerformanceChallengeEvidenceScroll = 0,
     bool PerformanceChallengePaused = false,
+    int ExplainabilityFocusIndex = 0,
+    int ExplainabilityTimelineScroll = 0,
+    int ExplainabilitySourceScroll = 0,
+    bool ExplainabilityPaused = false,
+    bool ExplainabilityOverlayMode = false,
+    bool ExplainabilityAutoRefresh = true,
     bool PaletteLabBenchEnabled = false,
     int PaletteLabBenchFrame = 0,
     int PaletteLabBenchProcessed = 0,
@@ -398,6 +404,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent performanceChallengeMouseEvent &&
             HandlePerformanceChallengeMouse(performanceChallengeMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent explainabilityMouseEvent &&
+            HandleExplainabilityMouse(explainabilityMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -2407,6 +2419,89 @@ internal sealed record ShowcaseDemoState(
             "performance_challenge:budget" or
             "performance_challenge:stress" or
             "performance_challenge:footer";
+    }
+
+    private static bool HandleExplainabilityMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 33 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content)
+        {
+            return false;
+        }
+
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = hit.LocalHitId switch
+            {
+                "explainability:timeline" => next with
+                {
+                    ExplainabilityTimelineScroll = Math.Clamp(next.ExplainabilityTimelineScroll + delta, 0, 8),
+                    ExplainabilityFocusIndex = 4
+                },
+                "explainability:source_controls" => next with
+                {
+                    ExplainabilitySourceScroll = Math.Clamp(next.ExplainabilitySourceScroll + delta, 0, 8),
+                    ExplainabilityFocusIndex = 5
+                },
+                _ => next
+            };
+            return hit.LocalHitId is "explainability:timeline" or "explainability:source_controls";
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        next = hit.LocalHitId switch
+        {
+            "explainability:header" => next with
+            {
+                ExplainabilityPaused = !next.ExplainabilityPaused,
+                ExplainabilityAutoRefresh = next.ExplainabilityPaused,
+                ExplainabilityFocusIndex = 0
+            },
+            "explainability:diff_strategy" => next with
+            {
+                ExplainabilityFocusIndex = 1
+            },
+            "explainability:resize_regime" => next with
+            {
+                ExplainabilityFocusIndex = 2
+            },
+            "explainability:budget_decisions" => next with
+            {
+                ExplainabilityFocusIndex = 3
+            },
+            "explainability:timeline" => next with
+            {
+                ExplainabilityTimelineScroll = Math.Clamp(next.ExplainabilityTimelineScroll + 1, 0, 8),
+                ExplainabilityFocusIndex = 4
+            },
+            "explainability:source_controls" => next with
+            {
+                ExplainabilityOverlayMode = !next.ExplainabilityOverlayMode,
+                ExplainabilityFocusIndex = 5
+            },
+            _ => next
+        };
+        return hit.LocalHitId is
+            "explainability:header" or
+            "explainability:diff_strategy" or
+            "explainability:resize_regime" or
+            "explainability:budget_decisions" or
+            "explainability:timeline" or
+            "explainability:source_controls";
     }
 
     private static bool HandleTerminalCapabilitiesMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
