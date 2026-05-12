@@ -773,6 +773,45 @@ public sealed class ShowcaseEvidenceJsonlWriter : IDisposable
             return "drag_drop_hit_test";
         }
 
+        if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 12)
+        {
+            if (gesture.Kind == TerminalMouseKind.Scroll)
+            {
+                return hit.LocalHitId switch
+                {
+                    "terminal_capabilities:matrix" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "terminal_capabilities_selection_prev"
+                        : "terminal_capabilities_selection_next",
+                    "terminal_capabilities:simulation" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "terminal_capabilities_profile_prev"
+                        : "terminal_capabilities_profile_next",
+                    _ => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "terminal_capabilities_panel_scroll_up"
+                        : "terminal_capabilities_panel_scroll_down"
+                };
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Right)
+            {
+                return hit.LocalHitId == "terminal_capabilities:simulation"
+                    ? "terminal_capabilities_profile_reset"
+                    : "terminal_capabilities_context_action";
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Left)
+            {
+                return hit.LocalHitId switch
+                {
+                    "terminal_capabilities:matrix" => "terminal_capabilities_inspect",
+                    "terminal_capabilities:evidence" => "terminal_capabilities_evidence_focus",
+                    "terminal_capabilities:simulation" => "terminal_capabilities_profile_cycle",
+                    _ => "terminal_capabilities_hit_test"
+                };
+            }
+
+            return "terminal_capabilities_hit_test";
+        }
+
         if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 9)
         {
             if (gesture.Kind == TerminalMouseKind.Scroll)

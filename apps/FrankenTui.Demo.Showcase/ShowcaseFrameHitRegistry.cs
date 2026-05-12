@@ -540,6 +540,24 @@ internal static class ShowcaseFrameHitRegistry
             }
         }
 
+        if (state.CurrentScreenNumber == 12 && TryResolveContentInnerArea(state.Viewport, out var capsInner) && capsInner.Width >= 45 && capsInner.Height >= 8)
+        {
+            var matrixWidth = Math.Max(1, capsInner.Width / 3);
+            var evidenceWidth = Math.Max(1, capsInner.Width / 3);
+            var simulationWidth = Math.Max(1, capsInner.Width - matrixWidth - evidenceWidth);
+            var evidenceX = capsInner.X + matrixWidth;
+            var simulationX = evidenceX + evidenceWidth;
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(capsInner.X, capsInner.Y, (ushort)matrixWidth, capsInner.Height),
+                new("terminal_capabilities:matrix", ShowcaseHitLayer.Content, 12_000)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)evidenceX, capsInner.Y, (ushort)evidenceWidth, capsInner.Height),
+                new("terminal_capabilities:evidence", ShowcaseHitLayer.Content, 12_100)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)simulationX, capsInner.Y, (ushort)simulationWidth, capsInner.Height),
+                new("terminal_capabilities:simulation", ShowcaseHitLayer.Content, 12_200)));
+        }
+
         if (state.CurrentScreenNumber == 42 && TryResolveContentInnerArea(state.Viewport, out var kanbanInner) && kanbanInner.Width >= 30 && kanbanInner.Height >= 8)
         {
             var board = state.KanbanBoard ?? ShowcaseKanbanState.CreateDefault();

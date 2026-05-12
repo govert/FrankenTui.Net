@@ -368,8 +368,10 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   The Terminal Capabilities screen now has a local upstream-shaped
   matrix/evidence/simulation tri-panel with deterministic capability rows,
   evidence-source labels, diagnostic event names, simulated profile controls,
-  and environment summary; exact probing, input-driven mode switching, and
-  report export remain tracked under `364-DEM`. The Macro Recorder screen now
+  environment summary, and frame-registered matrix, evidence-ledger, and
+  simulation regions with matching mouse evidence; exact probing, input-driven
+  mode switching, report export, and stateful mouse mutation remain tracked
+  under `364-DEM`. The Macro Recorder screen now
   has a local controls/timeline/event-detail/scenario-runner layout with
   deterministic preset macro rows and upstream-shaped key labels; live recorder
   focus routing, mouse focus, playback queue, and exact tracing remain tracked
@@ -880,9 +882,9 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   and the Determinism Lab increment adds header, equivalence, report/env,
   scene-preview, checks, and footer regions plus matching mouse evidence, while
   still leaving broader generalized screen hit routing open.
-  Focused showcase-shell verification is now `197` tests via
+  Focused showcase-shell verification is now `199` tests via
   `dotnet test tests/FrankenTui.Tests.Headless/FrankenTui.Tests.Headless.csproj --no-restore --filter FullyQualifiedName~ShowcaseShellTests`.
-  Current local verification is `451` headless tests, `9` web tests, and `7`
+  Current local verification is `453` headless tests, `9` web tests, and `7`
   PTY tests via `dotnet test FrankenTui.Net.sln --no-restore`.
   Previous focused registry/evidence verification covered `33`
   registry/evidence

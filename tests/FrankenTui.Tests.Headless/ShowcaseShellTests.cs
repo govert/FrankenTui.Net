@@ -6458,6 +6458,76 @@ public sealed class ShowcaseShellTests
         Assert.Equal(22_200, detailRecord.RootElement.GetProperty("target_id").GetInt32());
     }
 
+    [Fact]
+    public void ShowcaseFrameHitRegistryExposesTerminalCapabilitiesPanels()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 12,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+
+        var matrix = ShowcaseFrameHitRegistry.HitTest(state, 3, 6);
+        var evidence = ShowcaseFrameHitRegistry.HitTest(state, 45, 6);
+        var simulation = ShowcaseFrameHitRegistry.HitTest(state, 90, 6);
+
+        Assert.Equal("terminal_capabilities:matrix", matrix.LocalHitId);
+        Assert.Equal((uint)12_000, matrix.UpstreamHitId);
+        Assert.Equal("terminal_capabilities:evidence", evidence.LocalHitId);
+        Assert.Equal((uint)12_100, evidence.UpstreamHitId);
+        Assert.Equal("terminal_capabilities:simulation", simulation.LocalHitId);
+        Assert.Equal((uint)12_200, simulation.UpstreamHitId);
+    }
+
+    [Fact]
+    public void ShowcaseEvidenceJsonlWriterEmitsTerminalCapabilitiesMouseActions()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"ftui-showcase-terminal-capabilities-mouse-{Guid.NewGuid():N}.jsonl");
+        var options = ShowcaseCliOptions.Parse(
+            ["--screen=12", "--evidence-jsonl", path],
+            _ => null);
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 12,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+        var matrixEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 6, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp);
+        var evidenceEvent = TerminalEvent.Mouse(
+            new MouseGesture(45, 6, TerminalMouseButton.WheelDown, TerminalMouseKind.Scroll),
+            timestamp + TimeSpan.FromMilliseconds(10));
+        var simulationEvent = TerminalEvent.Mouse(
+            new MouseGesture(90, 6, TerminalMouseButton.Right, TerminalMouseKind.Down),
+            timestamp + TimeSpan.FromMilliseconds(20));
+
+        using (var writer = ShowcaseEvidenceJsonlWriter.Create(options.EvidenceJsonlPath))
+        {
+            Assert.NotNull(writer);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 1, frame: 1, matrixEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 2, frame: 2, evidenceEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 3, frame: 3, simulationEvent, state, state);
+        }
+
+        var lines = File.ReadAllLines(path);
+        Assert.Equal(3, lines.Length);
+        using var matrixRecord = JsonDocument.Parse(lines[0]);
+        using var evidenceRecord = JsonDocument.Parse(lines[1]);
+        using var simulationRecord = JsonDocument.Parse(lines[2]);
+        Assert.Equal("terminal_capabilities_inspect", matrixRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("terminal_capabilities:matrix", matrixRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(12_000, matrixRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("terminal_capabilities_panel_scroll_down", evidenceRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("terminal_capabilities:evidence", evidenceRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(12_100, evidenceRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("terminal_capabilities_profile_reset", simulationRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("terminal_capabilities:simulation", simulationRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(12_200, simulationRecord.RootElement.GetProperty("target_id").GetInt32());
+    }
+
     private static ShowcaseDemoState ApplyKey(ShowcaseDemoState state, KeyGesture gesture, DateTimeOffset timestamp)
     {
         var terminalEvent = TerminalEvent.Key(gesture, timestamp);
