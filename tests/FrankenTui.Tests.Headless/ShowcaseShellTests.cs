@@ -6518,6 +6518,58 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseIntrinsicSizingMouseMutatesScenarioWidthAndDetailScroll()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 23,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(state, 3, 8, timestamp);
+        Assert.Equal(1, state.IntrinsicSizingScenarioIndex);
+
+        state = ApplyMouse(state, 95, 8, timestamp + TimeSpan.FromMilliseconds(10));
+        Assert.Equal(3, state.IntrinsicSizingWidthPresetIndex);
+
+        state = ApplyMouse(
+            state,
+            50,
+            8,
+            timestamp + TimeSpan.FromMilliseconds(20),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(1, state.IntrinsicSizingDetailScroll);
+    }
+
+    [Fact]
+    public void ShowcaseIntrinsicSizingRendersMouseSelectedState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 23,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            IntrinsicSizingScenarioIndex = 2,
+            IntrinsicSizingWidthPresetIndex = 1,
+            IntrinsicSizingDetailScroll = 3
+        };
+        var buffer = new RenderBuffer(120, 32);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 32), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("Scenario: Auto-Sizing Table (3/4)", screen);
+        Assert.Contains("Width preset: 1", screen);
+        Assert.Contains("Auto-Sizing Table [scroll 3]", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryExposesLayoutInspectorPanels()
     {
         var state = ShowcaseDemoState.Create(

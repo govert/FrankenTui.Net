@@ -126,6 +126,9 @@ internal sealed record ShowcaseDemoState(
     int ActionTimelineFilterIndex = 0,
     int ActionTimelineSelectedIndex = 0,
     bool ActionTimelineDetailExpanded = false,
+    int IntrinsicSizingScenarioIndex = 0,
+    int IntrinsicSizingWidthPresetIndex = 2,
+    int IntrinsicSizingDetailScroll = 0,
     bool PaletteLabBenchEnabled = false,
     int PaletteLabBenchFrame = 0,
     int PaletteLabBenchProcessed = 0,
@@ -287,6 +290,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent actionTimelineMouseEvent &&
             HandleActionTimelineMouse(actionTimelineMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent intrinsicSizingMouseEvent &&
+            HandleIntrinsicSizingMouse(intrinsicSizingMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -1401,6 +1410,60 @@ internal sealed record ShowcaseDemoState(
             _ => next
         };
         return hit.LocalHitId is "action_timeline:filters" or "action_timeline:timeline" or "action_timeline:detail";
+    }
+
+    private static bool HandleIntrinsicSizingMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 23 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content)
+        {
+            return false;
+        }
+
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = hit.LocalHitId switch
+            {
+                "intrinsic_sizing:scenarios" => next with
+                {
+                    IntrinsicSizingScenarioIndex = Math.Clamp(next.IntrinsicSizingScenarioIndex + delta, 0, 3)
+                },
+                "intrinsic_sizing:detail" => next with
+                {
+                    IntrinsicSizingDetailScroll = Math.Clamp(next.IntrinsicSizingDetailScroll + delta, 0, 6)
+                },
+                "intrinsic_sizing:controls" => next with
+                {
+                    IntrinsicSizingWidthPresetIndex = Math.Clamp(next.IntrinsicSizingWidthPresetIndex + delta, 0, 3)
+                },
+                _ => next
+            };
+            return hit.LocalHitId is "intrinsic_sizing:scenarios" or "intrinsic_sizing:detail" or "intrinsic_sizing:controls";
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        next = hit.LocalHitId switch
+        {
+            "intrinsic_sizing:scenarios" => next with { IntrinsicSizingScenarioIndex = (next.IntrinsicSizingScenarioIndex + 1) % 4 },
+            "intrinsic_sizing:detail" => next with { IntrinsicSizingDetailScroll = Math.Clamp(next.IntrinsicSizingDetailScroll + 1, 0, 6) },
+            "intrinsic_sizing:controls" => next with { IntrinsicSizingWidthPresetIndex = (next.IntrinsicSizingWidthPresetIndex + 1) % 4 },
+            _ => next
+        };
+        return hit.LocalHitId is "intrinsic_sizing:scenarios" or "intrinsic_sizing:detail" or "intrinsic_sizing:controls";
     }
 
     private static bool HandleTerminalCapabilitiesMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)

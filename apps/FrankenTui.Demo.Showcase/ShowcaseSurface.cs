@@ -1580,12 +1580,20 @@ internal static class ShowcaseSurface
 
     private static IWidget BuildIntrinsicSizing(ShowcaseDemoState state)
     {
-        var scenario = state.ScriptFrame % 4;
-        var effectiveWidth = state.Viewport.Width switch
+        var scenario = Math.Clamp(state.IntrinsicSizingScenarioIndex, 0, 3);
+        var widthPreset = Math.Clamp(state.IntrinsicSizingWidthPresetIndex, 0, 3);
+        var detailScroll = Math.Clamp(state.IntrinsicSizingDetailScroll, 0, 6);
+        var effectiveWidth = widthPreset switch
         {
-            < 70 => 50,
-            < 110 => 80,
-            _ => 120
+            0 => 50,
+            1 => 80,
+            2 => 120,
+            _ => state.Viewport.Width switch
+            {
+                < 70 => 50,
+                < 110 => 80,
+                _ => 120
+            }
         };
         var scenarioRows = new[]
         {
@@ -1638,6 +1646,7 @@ internal static class ShowcaseSurface
             w cycle width preset: 50 -> 80 -> 120 -> auto
             +/- adjust simulated width by 10 | r reset
             Click/Scroll content cycles scenario
+            Width preset: {widthPreset} | Detail scroll: {detailScroll}
 
             Embedded Pane Studio
             visible when content >=72x12
@@ -1650,7 +1659,7 @@ internal static class ShowcaseSurface
                 (LayoutConstraint.Fixed(4), new PanelWidget
                 {
                     Title = "Intrinsic Sizing Demo",
-                    Child = new ParagraphWidget($"Scenario: {activeScenario[1]} ({scenario + 1}/4) | Effective width: {effectiveWidth} | Terminal: {state.Viewport.Width}x{state.Viewport.Height}")
+                    Child = new ParagraphWidget($"Scenario: {activeScenario[1]} ({scenario + 1}/4) | Effective width: {effectiveWidth} | Width preset: {widthPreset} | Terminal: {state.Viewport.Width}x{state.Viewport.Height}")
                 }),
                 (LayoutConstraint.Fill(), new StackWidget(
                     LayoutDirection.Horizontal,
@@ -1665,7 +1674,7 @@ internal static class ShowcaseSurface
                                 SelectedRow = scenario
                             }
                         }),
-                        (LayoutConstraint.Percentage(34), Panel(activeScenario[1], scenarioDetail)),
+                        (LayoutConstraint.Percentage(34), Panel(detailScroll > 0 ? $"{activeScenario[1]} [scroll {detailScroll}]" : activeScenario[1], scenarioDetail)),
                         (LayoutConstraint.Fill(), Panel("Controls + Pane Studio", controls))
                     ]))
             ]);
