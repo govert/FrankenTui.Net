@@ -9624,6 +9624,80 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseLayoutLabMouseMutatesWorkspaceAndMetricsState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 6,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(state, 3, 6, timestamp);
+        Assert.Equal(0, state.LayoutLabFocusIndex);
+        Assert.Equal(1, state.LayoutLabSelectedPaneIndex);
+
+        state = ApplyMouse(
+            state,
+            3,
+            6,
+            timestamp + TimeSpan.FromMilliseconds(10),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(0, state.LayoutLabFocusIndex);
+        Assert.Equal(1, state.LayoutLabWorkspaceZoom);
+
+        state = ApplyMouse(
+            state,
+            90,
+            6,
+            timestamp + TimeSpan.FromMilliseconds(20),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(1, state.LayoutLabFocusIndex);
+        Assert.Equal(1, state.LayoutLabMetricsScroll);
+
+        state = ApplyMouse(
+            state,
+            90,
+            6,
+            timestamp + TimeSpan.FromMilliseconds(30),
+            TerminalMouseButton.Right);
+        Assert.Equal(1, state.LayoutLabFocusIndex);
+        Assert.True(state.LayoutLabContextArmed);
+    }
+
+    [Fact]
+    public void ShowcaseLayoutLabRendersMouseSelectedState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 6,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            LayoutLabFocusIndex = 1,
+            LayoutLabWorkspaceZoom = 2,
+            LayoutLabMetricsScroll = 3,
+            LayoutLabSelectedPaneIndex = 2,
+            LayoutLabContextArmed = true
+        };
+        var buffer = new RenderBuffer(120, 32);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 32), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("Pane Workspace [zoom=2]", screen);
+        Assert.Contains("selected_pane_index=2", screen);
+        Assert.Contains("Workspace Metrics [focus scroll=3]", screen);
+        Assert.Contains("local_index=2", screen);
+        Assert.Contains("Context: armed", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryExposesSpecificRegionsForEveryCatalogScreen()
     {
         var missingScreens = new List<string>();

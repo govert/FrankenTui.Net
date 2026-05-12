@@ -596,19 +596,40 @@ internal static class ShowcaseSurface
         return TwoColumn(left, right);
     }
 
-    private static IWidget BuildLayoutLab(ShowcaseDemoState state) =>
-        TwoColumn(
-            new PaneWorkspaceWidget
-            {
-                Workspace = state.Session.PaneWorkspace
-            },
-            Panel(
-                "Workspace Metrics",
-                $"Selected: {state.Session.PaneWorkspace.SelectedPaneId}\n" +
-                $"Mode: {state.Session.PaneWorkspace.Mode}\n" +
-                $"Hash: {state.Session.PaneWorkspace.SnapshotHash()}\n" +
-                $"Timeline: {state.Session.PaneWorkspace.Timeline.Count} actions\n" +
-                $"Load: {PaneWorkspaceLoadStatus(state)}"));
+    private static IWidget BuildLayoutLab(ShowcaseDemoState state)
+    {
+        var focus = Math.Clamp(state.LayoutLabFocusIndex, 0, 1);
+        var selectedPane = Math.Clamp(state.LayoutLabSelectedPaneIndex, 0, 3);
+        var metricsScroll = Math.Clamp(state.LayoutLabMetricsScroll, 0, 8);
+        var zoom = Math.Clamp(state.LayoutLabWorkspaceZoom, -3, 3);
+
+        var workspace = new PanelWidget
+        {
+            Title = focus == 0 ? $"Pane Workspace [focus zoom={zoom}]" : $"Pane Workspace [zoom={zoom}]",
+            Child = new StackWidget(
+                LayoutDirection.Vertical,
+                [
+                    (LayoutConstraint.Fixed(2), new ParagraphWidget($"selected_pane_index={selectedPane} context={(state.LayoutLabContextArmed ? "armed" : "idle")} mouse=layout_lab:workspace")),
+                    (LayoutConstraint.Fill(), new PaneWorkspaceWidget
+                    {
+                        Workspace = state.Session.PaneWorkspace
+                    })
+                ])
+        };
+
+        var metricsText =
+            $"Selected: {state.Session.PaneWorkspace.SelectedPaneId} local_index={selectedPane}\n" +
+            $"Mode: {state.Session.PaneWorkspace.Mode} focus={focus} zoom={zoom}\n" +
+            $"Hash: {state.Session.PaneWorkspace.SnapshotHash()}\n" +
+            $"Timeline: {state.Session.PaneWorkspace.Timeline.Count} actions scroll={metricsScroll}\n" +
+            $"Load: {PaneWorkspaceLoadStatus(state)}\n" +
+            $"Context: {(state.LayoutLabContextArmed ? "armed" : "idle")}\n" +
+            "Mouse: workspace click cycles pane, wheel zooms; metrics wheel scrolls";
+
+        return TwoColumn(
+            workspace,
+            Panel(focus == 1 ? $"Workspace Metrics [focus scroll={metricsScroll}]" : $"Workspace Metrics [scroll={metricsScroll}]", metricsText));
+    }
 
     private static IWidget BuildFormsInput(ShowcaseDemoState state)
     {

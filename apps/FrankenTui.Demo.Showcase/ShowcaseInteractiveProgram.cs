@@ -103,6 +103,11 @@ internal sealed record ShowcaseDemoState(
     int DashboardOverviewScroll = 0,
     int DashboardHighlightIndex = 0,
     bool DashboardContextArmed = false,
+    int LayoutLabFocusIndex = 0,
+    int LayoutLabWorkspaceZoom = 0,
+    int LayoutLabMetricsScroll = 0,
+    int LayoutLabSelectedPaneIndex = 0,
+    bool LayoutLabContextArmed = false,
     int WidgetGalleryListIndex = 4,
     int WidgetGalleryTabIndex = 2,
     int WidgetGalleryTableRow = 1,
@@ -377,6 +382,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent dashboardMouseEvent &&
             HandleDashboardMouse(dashboardMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent layoutLabMouseEvent &&
+            HandleLayoutLabMouse(layoutLabMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -1217,6 +1228,80 @@ internal sealed record ShowcaseDemoState(
                 DashboardFocusIndex = 1,
                 DashboardHighlightIndex = (next.DashboardHighlightIndex + 1) % 8,
                 DashboardContextArmed = false
+            },
+            _ => next
+        };
+        return true;
+    }
+
+    private static bool HandleLayoutLabMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 6 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content ||
+            hit.LocalHitId is not ("layout_lab:workspace" or "layout_lab:metrics"))
+        {
+            return false;
+        }
+
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = hit.LocalHitId switch
+            {
+                "layout_lab:workspace" => next with
+                {
+                    LayoutLabFocusIndex = 0,
+                    LayoutLabWorkspaceZoom = Math.Clamp(next.LayoutLabWorkspaceZoom + delta, -3, 3),
+                    LayoutLabContextArmed = false
+                },
+                "layout_lab:metrics" => next with
+                {
+                    LayoutLabFocusIndex = 1,
+                    LayoutLabMetricsScroll = Math.Clamp(next.LayoutLabMetricsScroll + delta, 0, 8),
+                    LayoutLabContextArmed = false
+                },
+                _ => next
+            };
+            return true;
+        }
+
+        if (gesture.Button == TerminalMouseButton.Right)
+        {
+            next = next with
+            {
+                LayoutLabFocusIndex = hit.LocalHitId == "layout_lab:workspace" ? 0 : 1,
+                LayoutLabContextArmed = true
+            };
+            return true;
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        next = hit.LocalHitId switch
+        {
+            "layout_lab:workspace" => next with
+            {
+                LayoutLabFocusIndex = 0,
+                LayoutLabSelectedPaneIndex = (next.LayoutLabSelectedPaneIndex + 1) % 4,
+                LayoutLabContextArmed = false
+            },
+            "layout_lab:metrics" => next with
+            {
+                LayoutLabFocusIndex = 1,
+                LayoutLabMetricsScroll = Math.Clamp(next.LayoutLabMetricsScroll + 1, 0, 8),
+                LayoutLabContextArmed = false
             },
             _ => next
         };
