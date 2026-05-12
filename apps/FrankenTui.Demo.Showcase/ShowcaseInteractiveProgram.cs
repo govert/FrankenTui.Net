@@ -235,6 +235,12 @@ internal sealed record ShowcaseDemoState(
     int MarkdownLiveSearchMatchIndex = 0,
     int MarkdownLiveCursorLine = 6,
     bool MarkdownLiveDiffMode = false,
+    int DragDropModeIndex = 0,
+    int DragDropSelectedIndex = 0,
+    int DragDropFocusedList = 0,
+    int DragDropMoveCount = 0,
+    bool DragDropKeyboardActive = false,
+    bool DragDropContextAction = false,
     bool PaletteLabBenchEnabled = false,
     int PaletteLabBenchFrame = 0,
     int PaletteLabBenchProcessed = 0,
@@ -546,6 +552,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent markdownLiveMouseEvent &&
             HandleMarkdownLiveMouse(markdownLiveMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent dragDropMouseEvent &&
+            HandleDragDropMouse(dragDropMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -3649,6 +3661,105 @@ internal sealed record ShowcaseDemoState(
             _ => next
         };
         return hit.LocalHitId is "live_markdown:search" or "live_markdown:editor" or "live_markdown:preview";
+    }
+
+    private static bool HandleDragDropMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 44 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content ||
+            !hit.LocalHitId.StartsWith("drag_drop:", StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            if (!TryParseDragDropItem(hit.LocalHitId, out var list, out _))
+            {
+                return false;
+            }
+
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = next with
+            {
+                DragDropFocusedList = list,
+                DragDropSelectedIndex = Math.Clamp(next.DragDropSelectedIndex + delta, 0, 7),
+                DragDropContextAction = false
+            };
+            return true;
+        }
+
+        if (hit.LocalHitId.StartsWith("drag_drop:tab:", StringComparison.Ordinal))
+        {
+            var tabText = hit.LocalHitId["drag_drop:tab:".Length..];
+            if (!int.TryParse(tabText, CultureInfo.InvariantCulture, out var tab))
+            {
+                return false;
+            }
+
+            next = next with
+            {
+                DragDropModeIndex = Math.Clamp(tab, 0, 2),
+                DragDropKeyboardActive = tab == 2 && !next.DragDropKeyboardActive,
+                DragDropContextAction = false
+            };
+            return true;
+        }
+
+        if (!TryParseDragDropItem(hit.LocalHitId, out var focusedList, out var row))
+        {
+            return false;
+        }
+
+        if (gesture.Button == TerminalMouseButton.Right)
+        {
+            next = next with
+            {
+                DragDropFocusedList = focusedList,
+                DragDropSelectedIndex = Math.Clamp(row, 0, 7),
+                DragDropMoveCount = next.DragDropMoveCount + 1,
+                DragDropContextAction = true
+            };
+            return true;
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        next = next with
+        {
+            DragDropFocusedList = focusedList,
+            DragDropSelectedIndex = Math.Clamp(row, 0, 7),
+            DragDropContextAction = false
+        };
+        return true;
+    }
+
+    private static bool TryParseDragDropItem(string localHitId, out int list, out int row)
+    {
+        list = 0;
+        row = 0;
+        const string prefix = "drag_drop:item:";
+        if (!localHitId.StartsWith(prefix, StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        var parts = localHitId[prefix.Length..].Split(':', 2);
+        return parts.Length == 2 &&
+            int.TryParse(parts[0], CultureInfo.InvariantCulture, out list) &&
+            int.TryParse(parts[1], CultureInfo.InvariantCulture, out row);
     }
 
     private static bool HandleTourMouse(MouseTerminalEvent mouseEvent, DateTimeOffset now, ref ShowcaseDemoState next)

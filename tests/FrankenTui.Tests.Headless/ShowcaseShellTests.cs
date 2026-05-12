@@ -2046,6 +2046,80 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseDragDropMouseMutatesModeSelectionAndContextAction()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new FrankenTui.Core.Size(82, 26),
+            screenNumber: 44,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(state, 58, 2, timestamp);
+        Assert.Equal(2, state.DragDropModeIndex);
+        Assert.True(state.DragDropKeyboardActive);
+
+        state = ApplyMouse(state, 45, 7, timestamp + TimeSpan.FromMilliseconds(10));
+        Assert.Equal(1, state.DragDropFocusedList);
+        Assert.Equal(2, state.DragDropSelectedIndex);
+        Assert.False(state.DragDropContextAction);
+
+        state = ApplyMouse(
+            state,
+            45,
+            7,
+            timestamp + TimeSpan.FromMilliseconds(20),
+            TerminalMouseButton.Right);
+        Assert.Equal(1, state.DragDropFocusedList);
+        Assert.Equal(2, state.DragDropSelectedIndex);
+        Assert.Equal(1, state.DragDropMoveCount);
+        Assert.True(state.DragDropContextAction);
+
+        state = ApplyMouse(
+            state,
+            45,
+            7,
+            timestamp + TimeSpan.FromMilliseconds(30),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(3, state.DragDropSelectedIndex);
+        Assert.False(state.DragDropContextAction);
+    }
+
+    [Fact]
+    public void ShowcaseDragDropRendersMouseSelectedState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new FrankenTui.Core.Size(170, 38),
+            screenNumber: 44,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            DragDropModeIndex = 2,
+            DragDropSelectedIndex = 3,
+            DragDropFocusedList = 1,
+            DragDropMoveCount = 4,
+            DragDropKeyboardActive = true,
+            DragDropContextAction = true
+        };
+        var buffer = new RenderBuffer(170, 38);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, FrankenTui.Core.Rect.FromSize(170, 38), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("[Keyboard Drag]", screen);
+        Assert.Contains("List B [focus]", screen);
+        Assert.Contains("> File 4 id=11", screen);
+        Assert.Contains("KeyboardDragManager active=True", screen);
+        Assert.Contains("Context action applied 3 in list 1; moves=4", screen);
+        Assert.Contains("source_id=11", screen);
+        Assert.Contains("mode=Keyboard Drag selected_index=3 focused_list=1 context=True", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryRoutesKanbanCards()
     {
         var state = ShowcaseDemoState.Create(

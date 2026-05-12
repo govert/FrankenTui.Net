@@ -3480,16 +3480,16 @@ internal static class ShowcaseSurface
 
     private static IWidget BuildDragDrop(ShowcaseDemoState state)
     {
-        var modeIndex = Math.Abs((state.RuntimeStats?.StepIndex ?? state.ScriptFrame) % 3);
+        var modeIndex = Math.Clamp(state.DragDropModeIndex, 0, 2);
         var mode = modeIndex switch
         {
             0 => "Sortable List",
             1 => "Cross-Container",
             _ => "Keyboard Drag"
         };
-        var selected = Math.Abs(state.ScriptFrame % 8);
-        var focusedList = modeIndex == 1 && state.ScriptFrame % 2 == 1 ? 1 : 0;
-        var keyboardActive = mode == "Keyboard Drag" && state.ScriptFrame % 2 == 0;
+        var selected = Math.Clamp(state.DragDropSelectedIndex, 0, 7);
+        var focusedList = Math.Clamp(state.DragDropFocusedList, 0, 1);
+        var keyboardActive = mode == "Keyboard Drag" && state.DragDropKeyboardActive;
 
         var tabs = new ParagraphWidget(
             $"[{(mode == "Sortable List" ? "Sortable List" : "sortable list")}]  " +
@@ -3520,13 +3520,13 @@ internal static class ShowcaseSurface
             $"KeyboardDragManager active={keyboardActive} mode={(keyboardActive ? "Holding item" : "Inactive")}\n" +
             "Space/Enter: start or drop | arrows navigate DropTargetInfo | Esc cancels\n" +
             "Drop targets: WidgetId, target name, Rect from rendered list rows\n" +
-            "Announcements: Started dragging Item 1; Target: Right: File 1; Dropped item at target 8\n" +
-            "Payload: DragPayload::text(label); source_id from item id\n" +
+            $"Announcements: {(state.DragDropContextAction ? "Context action applied" : "Selected row")} {selected} in list {focusedList}; moves={state.DragDropMoveCount}\n" +
+            $"Payload: DragPayload::text(label); source_id={(focusedList * 8) + selected}\n" +
             "A11y mode: fully keyboard-accessible drag-and-drop");
 
         var controls = Panel(
             "Modes + Mouse Evidence",
-            $"mode={mode} selected_index={selected} focused_list={focusedList} tick_count={state.ScriptFrame}\n" +
+            $"mode={mode} selected_index={selected} focused_list={focusedList} context={state.DragDropContextAction} tick_count={state.ScriptFrame}\n" +
             "Sortable: j/k navigate, u/d or Shift+K/J reorder items within list\n" +
             "Cross-container: h/l switches list, Enter transfers selected item\n" +
             "Mouse: click tabs/list rows, wheel selects, right-click reorders or transfers\n" +
