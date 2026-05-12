@@ -4843,6 +4843,58 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseNotificationsMouseMutatesTriggerToastAndLifecycleState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(80, 20),
+            screenNumber: 21,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(state, 3, 5, timestamp);
+        Assert.Equal(0, state.NotificationsTriggerIndex);
+
+        state = ApplyMouse(state, 45, 5, timestamp + TimeSpan.FromMilliseconds(10));
+        Assert.Equal(1, state.NotificationsToastIndex);
+
+        state = ApplyMouse(
+            state,
+            45,
+            14,
+            timestamp + TimeSpan.FromMilliseconds(20),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(1, state.NotificationsLifecycleScroll);
+    }
+
+    [Fact]
+    public void ShowcaseNotificationsRendersMouseSelectedState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(80, 20),
+            screenNumber: 21,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            NotificationsTriggerIndex = 4,
+            NotificationsToastIndex = 2,
+            NotificationsLifecycleScroll = 3
+        };
+        var buffer = new RenderBuffer(80, 20);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, Rect.FromSize(80, 20), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("Notification Demo [urgent]", screen);
+        Assert.Contains("Notification Stack [toast 2]", screen);
+        Assert.Contains("Toast Queue Lifecycle [scroll 3]", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryExposesFormsInputFieldAndTextAreaRegions()
     {
         var state = ShowcaseDemoState.Create(

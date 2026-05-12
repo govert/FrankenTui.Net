@@ -120,6 +120,9 @@ internal sealed record ShowcaseDemoState(
     int FileBrowserPreviewScroll = 0,
     int AdvancedPatternIndex = 0,
     int AdvancedCompositeModeIndex = 0,
+    int NotificationsTriggerIndex = 0,
+    int NotificationsToastIndex = 0,
+    int NotificationsLifecycleScroll = 0,
     bool PaletteLabBenchEnabled = false,
     int PaletteLabBenchFrame = 0,
     int PaletteLabBenchProcessed = 0,
@@ -269,6 +272,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent advancedMouseEvent &&
             HandleAdvancedMouse(advancedMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent notificationsMouseEvent &&
+            HandleNotificationsMouse(notificationsMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -1255,6 +1264,84 @@ internal sealed record ShowcaseDemoState(
             _ => next
         };
         return hit.LocalHitId is "advanced:patterns" or "advanced:composite";
+    }
+
+    private static bool HandleNotificationsMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 21 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content)
+        {
+            return false;
+        }
+
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = hit.LocalHitId switch
+            {
+                { } value when value.StartsWith("notifications:toast:", StringComparison.Ordinal) => next with
+                {
+                    NotificationsToastIndex = Math.Clamp(next.NotificationsToastIndex + delta, 0, 4)
+                },
+                "notifications:lifecycle" => next with
+                {
+                    NotificationsLifecycleScroll = Math.Clamp(next.NotificationsLifecycleScroll + delta, 0, 6)
+                },
+                _ => next
+            };
+            return hit.LocalHitId.StartsWith("notifications:toast:", StringComparison.Ordinal) ||
+                hit.LocalHitId == "notifications:lifecycle";
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        if (hit.LocalHitId.StartsWith("notifications:trigger:", StringComparison.Ordinal))
+        {
+            var trigger = hit.LocalHitId["notifications:trigger:".Length..];
+            var triggerIndex = trigger switch
+            {
+                "error" => 1,
+                "warning" => 2,
+                "info" => 3,
+                "urgent" => 4,
+                "dismiss_all" => 5,
+                _ => 0
+            };
+            next = next with { NotificationsTriggerIndex = triggerIndex };
+            return true;
+        }
+
+        if (hit.LocalHitId.StartsWith("notifications:toast:", StringComparison.Ordinal))
+        {
+            var rowText = hit.LocalHitId["notifications:toast:".Length..];
+            if (!int.TryParse(rowText, CultureInfo.InvariantCulture, out var row))
+            {
+                return false;
+            }
+
+            next = next with { NotificationsToastIndex = Math.Clamp(row, 0, 4) };
+            return true;
+        }
+
+        if (hit.LocalHitId == "notifications:lifecycle")
+        {
+            next = next with { NotificationsLifecycleScroll = Math.Clamp(next.NotificationsLifecycleScroll + 1, 0, 6) };
+            return true;
+        }
+
+        return false;
     }
 
     private static bool HandleTerminalCapabilitiesMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)

@@ -1409,6 +1409,18 @@ internal static class ShowcaseSurface
         var visible = Math.Min(4, 1 + state.ScriptFrame % 4);
         var pending = Math.Max(0, NotificationLines.Count - visible);
         var totalShown = 12 + state.ScriptFrame;
+        var selectedTrigger = Math.Clamp(state.NotificationsTriggerIndex, 0, 5);
+        var selectedToast = Math.Clamp(state.NotificationsToastIndex, 0, 4);
+        var lifecycleScroll = Math.Clamp(state.NotificationsLifecycleScroll, 0, 6);
+        var triggerLabel = selectedTrigger switch
+        {
+            1 => "error",
+            2 => "warning",
+            3 => "info",
+            4 => "urgent",
+            5 => "dismiss_all",
+            _ => "success"
+        };
         var toastRows = new[]
         {
             new[] { "Urgent", "Critical Alert", "Ack / Snooze", "persistent" },
@@ -1430,6 +1442,8 @@ internal static class ShowcaseSurface
             Queue: {visible} visible, {pending} pending
             Config: max_visible=4 max_queued=20
             Position: TopRight
+            Selected trigger: {triggerLabel}
+            Selected toast: {selectedToast}
             Total shown: {totalShown}
             Last action: {(state.ScriptFrame % 5 == 0 ? "retry" : "(none)")}
 
@@ -1437,11 +1451,12 @@ internal static class ShowcaseSurface
             Click stack dismisses all | Scroll pushes info/success
             Tick: queue expiry + promotion at 100ms
             """;
-        var lifecycle = """
+        var lifecycle = $"""
             Lifecycle
             push -> display -> auto-dismiss
             manual dismiss -> promote pending
             action invocation -> last_action
+            Scroll offset: {lifecycleScroll}
 
             Toast styles
             Success | Error | Warning | Info | Urgent
@@ -1453,21 +1468,21 @@ internal static class ShowcaseSurface
         return new StackWidget(
             LayoutDirection.Horizontal,
             [
-                (LayoutConstraint.Percentage(40), Panel("Notification Demo", instructions)),
+                (LayoutConstraint.Percentage(40), Panel($"Notification Demo [{triggerLabel}]", instructions)),
                 (LayoutConstraint.Fill(), new StackWidget(
                     LayoutDirection.Vertical,
                     [
                         (LayoutConstraint.Fixed(11), new PanelWidget
                         {
-                            Title = "Notification Stack",
+                            Title = $"Notification Stack [toast {selectedToast}]",
                             Child = new TableWidget
                             {
                                 Headers = ["Priority", "Toast", "Actions", "TTL"],
                                 Rows = toastRows,
-                                SelectedRow = state.ScriptFrame % toastRows.Length
+                                SelectedRow = selectedToast
                             }
                         }),
-                        (LayoutConstraint.Fill(), Panel("Toast Queue Lifecycle", lifecycle))
+                        (LayoutConstraint.Fill(), Panel(lifecycleScroll > 0 ? $"Toast Queue Lifecycle [scroll {lifecycleScroll}]" : "Toast Queue Lifecycle", lifecycle))
                     ]))
             ]);
     }
