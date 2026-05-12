@@ -2805,12 +2805,16 @@ internal static class ShowcaseSurface
     private static IWidget BuildAccessibility(ShowcaseDemoState state)
     {
         var tick = state.RuntimeStats?.StepIndex ?? state.ScriptFrame;
-        var highContrast = tick % 2 == 0;
-        var reducedMotion = tick % 3 == 0;
-        var largeText = tick % 4 == 0;
+        var highContrast = state.A11yHighContrast || tick % 2 == 0;
+        var reducedMotion = state.A11yReducedMotion || tick % 3 == 0;
+        var largeText = state.A11yLargeText || tick % 4 == 0;
+        var focusIndex = Math.Clamp(state.AccessibilityFocusIndex, 0, 5);
+        var selectedToggle = Math.Clamp(state.AccessibilitySelectedToggleIndex, 0, 2);
+        var previewScroll = Math.Clamp(state.AccessibilityPreviewScroll, 0, 8);
+        var telemetryScroll = Math.Clamp(state.AccessibilityTelemetryScroll, 0, 8);
 
         var overview = Panel(
-            "Accessibility Control Panel",
+            focusIndex == 0 ? "Accessibility Control Panel [focus]" : "Accessibility Control Panel",
             "Active Theme: current_theme\n" +
             "Base Theme: CyberpunkAurora\n" +
             $"Mode: {(highContrast ? "High Contrast" : "Standard")}\n" +
@@ -2819,15 +2823,15 @@ internal static class ShowcaseSurface
             "Shortcuts: h = contrast, m = motion, l = large text");
 
         var toggles = Panel(
-            "Toggles",
-            $"[h] High Contrast: {(highContrast ? "ON" : "OFF")}\n" +
-            $"[m] Reduced Motion: {(reducedMotion ? "ON" : "OFF")}\n" +
-            $"[l] Large Text: {(largeText ? "ON" : "OFF")}\n" +
+            focusIndex == 1 ? $"Toggles [selected {selectedToggle}]" : "Toggles",
+            $"{(selectedToggle == 0 ? "> " : "  ")}[h] High Contrast: {(highContrast ? "ON" : "OFF")}\n" +
+            $"{(selectedToggle == 1 ? "> " : "  ")}[m] Reduced Motion: {(reducedMotion ? "ON" : "OFF")}\n" +
+            $"{(selectedToggle == 2 ? "> " : "  ")}[l] Large Text: {(largeText ? "ON" : "OFF")}\n" +
             "Shift+A opens the compact overlay\n" +
             "Click rows dispatch A11yToggleAction: HighContrast, ReducedMotion, LargeText");
 
         var wcag = Panel(
-            "WCAG Contrast",
+            focusIndex == 3 ? "WCAG Contrast [focus]" : "WCAG Contrast",
             "Primary on Base     12.4:1 AAA\n" +
             "Secondary on Base    8.8:1 AAA\n" +
             "Accent Primary       5.7:1 AA\n" +
@@ -2837,7 +2841,8 @@ internal static class ShowcaseSurface
             "AA >= 4.5, AAA >= 7.0, Large Text >= 3.0");
 
         var preview = Panel(
-            "Live Preview",
+            previewScroll > 0 ? $"Live Preview [scroll {previewScroll}]" : focusIndex == 2 ? "Live Preview [focus]" : "Live Preview",
+            $"Preview scroll: {previewScroll}\n" +
             "Preview text\n" +
             "The quick brown fox jumps over the lazy dog.\n" +
             "Links look like this and code looks like fn main()\n" +
@@ -2846,7 +2851,8 @@ internal static class ShowcaseSurface
             "theme::apply_large_text adjusts label/key styles");
 
         var telemetry = Panel(
-            "A11y Telemetry",
+            telemetryScroll > 0 ? $"A11y Telemetry [scroll {telemetryScroll}]" : focusIndex == 4 ? "A11y Telemetry [focus]" : "A11y Telemetry",
+            $"Telemetry scroll: {telemetryScroll}\n" +
             $"[{tick,4}] Panel | HC:{(highContrast ? "ON" : "OFF")} RM:{(reducedMotion ? "ON" : "OFF")} LT:{(largeText ? "ON" : "OFF")}\n" +
             $"[{tick + 1,4}] High Contrast | HC:ON RM:{(reducedMotion ? "ON" : "OFF")} LT:{(largeText ? "ON" : "OFF")}\n" +
             $"[{tick + 2,4}] Reduced Motion | HC:{(highContrast ? "ON" : "OFF")} RM:ON LT:{(largeText ? "ON" : "OFF")}\n" +
@@ -2873,7 +2879,7 @@ internal static class ShowcaseSurface
                                 (LayoutConstraint.Fill(), telemetry)
                             ]))
                     ])),
-                (LayoutConstraint.Fixed(1), new ParagraphWidget("h contrast | m motion | l large text | Shift+A overlay | Ctrl+T theme | Click toggle setting | layout_toggles hit rows"))
+                (LayoutConstraint.Fixed(1), new ParagraphWidget($"h contrast | m motion | l large text | Shift+A overlay | Ctrl+T theme | selected={selectedToggle} focus={focusIndex} | layout_toggles hit rows"))
             ]);
     }
 

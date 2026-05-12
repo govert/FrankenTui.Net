@@ -202,6 +202,10 @@ internal sealed record ShowcaseDemoState(
     bool InlineModeCompareEnabled = false,
     bool InlineModePaused = false,
     bool InlineModeAnchorBottom = true,
+    int AccessibilityFocusIndex = 0,
+    int AccessibilitySelectedToggleIndex = 0,
+    int AccessibilityPreviewScroll = 0,
+    int AccessibilityTelemetryScroll = 0,
     bool PaletteLabBenchEnabled = false,
     int PaletteLabBenchFrame = 0,
     int PaletteLabBenchProcessed = 0,
@@ -447,6 +451,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent inlineModeMouseEvent &&
             HandleInlineModeMouse(inlineModeMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent accessibilityMouseEvent &&
+            HandleAccessibilityMouse(accessibilityMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -2802,6 +2812,109 @@ internal sealed record ShowcaseDemoState(
 
     private static int ResolveInlineModeUiHeightIndex(ShowcaseDemoState state) =>
         state.InlineModeUiHeightIndex >= 0 ? state.InlineModeUiHeightIndex : Math.Abs(state.ScriptFrame % 4);
+
+    private static bool HandleAccessibilityMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 37 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content)
+        {
+            return false;
+        }
+
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = hit.LocalHitId switch
+            {
+                "accessibility:preview" => next with
+                {
+                    AccessibilityPreviewScroll = Math.Clamp(next.AccessibilityPreviewScroll + delta, 0, 8),
+                    AccessibilityFocusIndex = 2
+                },
+                "accessibility:telemetry" => next with
+                {
+                    AccessibilityTelemetryScroll = Math.Clamp(next.AccessibilityTelemetryScroll + delta, 0, 8),
+                    AccessibilityFocusIndex = 4
+                },
+                _ => next
+            };
+            return hit.LocalHitId is "accessibility:preview" or "accessibility:telemetry";
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        if (hit.LocalHitId == "accessibility:toggles")
+        {
+            var selected = Math.Clamp((gesture.Row - 9) / 2, 0, 2);
+            next = selected switch
+            {
+                0 => next with
+                {
+                    A11yHighContrast = !next.A11yHighContrast,
+                    AccessibilitySelectedToggleIndex = 0,
+                    AccessibilityFocusIndex = 1
+                },
+                1 => next with
+                {
+                    A11yReducedMotion = !next.A11yReducedMotion,
+                    AccessibilitySelectedToggleIndex = 1,
+                    AccessibilityFocusIndex = 1
+                },
+                _ => next with
+                {
+                    A11yLargeText = !next.A11yLargeText,
+                    AccessibilitySelectedToggleIndex = 2,
+                    AccessibilityFocusIndex = 1
+                }
+            };
+            return true;
+        }
+
+        next = hit.LocalHitId switch
+        {
+            "accessibility:overview" => next with
+            {
+                AccessibilityFocusIndex = 0
+            },
+            "accessibility:preview" => next with
+            {
+                AccessibilityPreviewScroll = Math.Clamp(next.AccessibilityPreviewScroll + 1, 0, 8),
+                AccessibilityFocusIndex = 2
+            },
+            "accessibility:wcag" => next with
+            {
+                AccessibilityFocusIndex = 3
+            },
+            "accessibility:telemetry" => next with
+            {
+                AccessibilityTelemetryScroll = Math.Clamp(next.AccessibilityTelemetryScroll + 1, 0, 8),
+                AccessibilityFocusIndex = 4
+            },
+            "accessibility:footer" => next with
+            {
+                A11yHighContrast = false,
+                A11yReducedMotion = false,
+                A11yLargeText = false,
+                AccessibilityPreviewScroll = 0,
+                AccessibilityTelemetryScroll = 0,
+                AccessibilityFocusIndex = 5
+            },
+            _ => next
+        };
+        return hit.LocalHitId is "accessibility:overview" or "accessibility:preview" or "accessibility:wcag" or "accessibility:telemetry" or "accessibility:footer";
+    }
 
     private static bool HandleTerminalCapabilitiesMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
     {

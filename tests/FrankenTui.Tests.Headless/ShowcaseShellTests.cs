@@ -6995,6 +6995,82 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseAccessibilityMouseMutatesTogglesPreviewAndTelemetry()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 37,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(state, 3, 10, timestamp);
+        Assert.True(state.A11yHighContrast);
+        Assert.Equal(0, state.AccessibilitySelectedToggleIndex);
+        Assert.Equal(1, state.AccessibilityFocusIndex);
+
+        state = ApplyMouse(state, 3, 12, timestamp + TimeSpan.FromMilliseconds(10));
+        Assert.True(state.A11yReducedMotion);
+        Assert.Equal(1, state.AccessibilitySelectedToggleIndex);
+
+        state = ApplyMouse(state, 3, 14, timestamp + TimeSpan.FromMilliseconds(20));
+        Assert.True(state.A11yLargeText);
+        Assert.Equal(2, state.AccessibilitySelectedToggleIndex);
+
+        state = ApplyMouse(
+            state,
+            3,
+            22,
+            timestamp + TimeSpan.FromMilliseconds(30),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(1, state.AccessibilityPreviewScroll);
+        Assert.Equal(2, state.AccessibilityFocusIndex);
+
+        state = ApplyMouse(
+            state,
+            70,
+            22,
+            timestamp + TimeSpan.FromMilliseconds(40),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(1, state.AccessibilityTelemetryScroll);
+        Assert.Equal(4, state.AccessibilityFocusIndex);
+    }
+
+    [Fact]
+    public void ShowcaseAccessibilityRendersMouseSelectedState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 37,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            A11yHighContrast = true,
+            A11yReducedMotion = true,
+            A11yLargeText = true,
+            AccessibilityFocusIndex = 4,
+            AccessibilitySelectedToggleIndex = 2,
+            AccessibilityPreviewScroll = 3,
+            AccessibilityTelemetryScroll = 4
+        };
+        var buffer = new RenderBuffer(120, 32);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 32), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("Toggles", screen);
+        Assert.Contains("> [l] Large Text: ON", screen);
+        Assert.Contains("Live Preview [scroll 3]", screen);
+        Assert.Contains("Telemetry scroll: 4", screen);
+        Assert.Contains("selected=2 focus=4", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryExposesWidgetBuilderPanels()
     {
         var state = ShowcaseDemoState.Create(
