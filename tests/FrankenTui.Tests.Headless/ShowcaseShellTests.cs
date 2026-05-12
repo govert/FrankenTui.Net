@@ -7195,6 +7195,54 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseAdvancedMouseMutatesPatternAndCompositeSelection()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 10,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(
+            state,
+            3,
+            6,
+            timestamp,
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(1, state.AdvancedPatternIndex);
+
+        state = ApplyMouse(state, 90, 6, timestamp + TimeSpan.FromMilliseconds(10));
+        Assert.Equal(1, state.AdvancedCompositeModeIndex);
+    }
+
+    [Fact]
+    public void ShowcaseAdvancedRendersMouseSelectedState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 10,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            AdvancedPatternIndex = 3,
+            AdvancedCompositeModeIndex = 2
+        };
+        var buffer = new RenderBuffer(120, 32);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 32), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("Patterns [selected 3]", screen);
+        Assert.Contains("Composite [evidence]", screen);
+        Assert.Contains("Selected pattern: 3", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryExposesTableThemeGalleryPresets()
     {
         var state = ShowcaseDemoState.Create(

@@ -709,17 +709,35 @@ internal static class ShowcaseSurface
                 """));
     }
 
-    private static IWidget BuildAdvancedFeatures(ShowcaseDemoState state) =>
-        TwoColumn(
+    private static IWidget BuildAdvancedFeatures(ShowcaseDemoState state)
+    {
+        var selectedPattern = Math.Clamp(state.AdvancedPatternIndex, 0, 4);
+        var compositeMode = Math.Clamp(state.AdvancedCompositeModeIndex, 0, 2);
+        var compositeLabel = compositeMode switch
+        {
+            1 => "runtime",
+            2 => "evidence",
+            _ => "porting"
+        };
+        return TwoColumn(
             new PanelWidget
             {
-                Title = "Patterns",
+                Title = $"Patterns [selected {selectedPattern}]",
                 Child = new ListWidget
                 {
-                    Items = ["inline mode contract", "runtime input pipeline", "evidence capture", "SIMD acceleration", "web parity reuse"]
+                    Items = ["inline mode contract", "runtime input pipeline", "evidence capture", "SIMD acceleration", "web parity reuse"],
+                    SelectedIndex = selectedPattern
                 }
             },
-            Panel("Composite", "This screen groups the port-specific composites that now sit under an upstream-shaped showcase shell instead of the earlier hosted-parity dashboard."));
+            Panel(
+                compositeMode == 0 ? "Composite" : $"Composite [{compositeLabel}]",
+                $"""
+                Selected pattern: {selectedPattern}
+                Composite mode: {compositeLabel}
+
+                This screen groups the port-specific composites that now sit under an upstream-shaped showcase shell instead of the earlier hosted-parity dashboard.
+                """));
+    }
 
     private static IWidget BuildTableThemeGallery(ShowcaseDemoState state)
     {

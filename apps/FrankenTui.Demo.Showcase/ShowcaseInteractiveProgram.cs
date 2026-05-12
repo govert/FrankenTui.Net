@@ -118,6 +118,8 @@ internal sealed record ShowcaseDemoState(
     int DataVizNarrativeDetailIndex = 0,
     int FileBrowserSelectedRowIndex = 0,
     int FileBrowserPreviewScroll = 0,
+    int AdvancedPatternIndex = 0,
+    int AdvancedCompositeModeIndex = 0,
     bool PaletteLabBenchEnabled = false,
     int PaletteLabBenchFrame = 0,
     int PaletteLabBenchProcessed = 0,
@@ -261,6 +263,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent fileBrowserMouseEvent &&
             HandleFileBrowserMouse(fileBrowserMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent advancedMouseEvent &&
+            HandleAdvancedMouse(advancedMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -1204,6 +1212,49 @@ internal sealed record ShowcaseDemoState(
 
         next = next with { FileBrowserSelectedRowIndex = Math.Clamp(row, 0, 5) };
         return true;
+    }
+
+    private static bool HandleAdvancedMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 10 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content)
+        {
+            return false;
+        }
+
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = hit.LocalHitId switch
+            {
+                "advanced:patterns" => next with { AdvancedPatternIndex = Math.Clamp(next.AdvancedPatternIndex + delta, 0, 4) },
+                "advanced:composite" => next with { AdvancedCompositeModeIndex = Math.Clamp(next.AdvancedCompositeModeIndex + delta, 0, 2) },
+                _ => next
+            };
+            return hit.LocalHitId is "advanced:patterns" or "advanced:composite";
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        next = hit.LocalHitId switch
+        {
+            "advanced:patterns" => next with { AdvancedPatternIndex = Math.Clamp(next.AdvancedPatternIndex + 1, 0, 4) },
+            "advanced:composite" => next with { AdvancedCompositeModeIndex = Math.Clamp(next.AdvancedCompositeModeIndex + 1, 0, 2) },
+            _ => next
+        };
+        return hit.LocalHitId is "advanced:patterns" or "advanced:composite";
     }
 
     private static bool HandleTerminalCapabilitiesMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
