@@ -756,6 +756,8 @@ internal static class ShowcaseSurface
     private static IWidget BuildFileBrowser(ShowcaseDemoState state)
     {
         var selectedRow = Math.Clamp(state.FileBrowserSelectedRowIndex, 0, 5);
+        var focus = Math.Clamp(state.FileBrowserFocusIndex, 0, 1);
+        var treeScroll = Math.Clamp(state.FileBrowserTreeScroll, 0, 8);
         var selectedPath = selectedRow switch
         {
             1 => ".external/frankentui",
@@ -768,7 +770,7 @@ internal static class ShowcaseSurface
         return TwoColumn(
             new PanelWidget
             {
-                Title = $"Files [row {selectedRow}]",
+                Title = focus == 0 ? $"Files [row {selectedRow} scroll {treeScroll}]" : $"Files [row {selectedRow}]",
                 Child = new TreeWidget
                 {
                     Nodes =
@@ -781,10 +783,12 @@ internal static class ShowcaseSurface
                 }
             },
             Panel(
-                state.FileBrowserPreviewScroll > 0 ? $"Preview [scroll {state.FileBrowserPreviewScroll}]" : "Preview",
+                focus == 1 ? $"Preview [focus scroll {state.FileBrowserPreviewScroll}]" : state.FileBrowserPreviewScroll > 0 ? $"Preview [scroll {state.FileBrowserPreviewScroll}]" : "Preview",
                 $"""
+                file mouse focus={focus} tree_scroll={treeScroll} preview_scroll={state.FileBrowserPreviewScroll}
                 Selected row: {selectedRow}
                 Selected: {selectedPath}
+                Tree scroll: {treeScroll}
                 Preview scroll: {state.FileBrowserPreviewScroll}
 
                 README.md

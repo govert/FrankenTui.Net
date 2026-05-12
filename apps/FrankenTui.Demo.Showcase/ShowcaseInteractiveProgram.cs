@@ -162,6 +162,8 @@ internal sealed record ShowcaseDemoState(
     int DataVizMetricRowIndex = 0,
     int DataVizNarrativeDetailIndex = 0,
     int FileBrowserSelectedRowIndex = 0,
+    int FileBrowserFocusIndex = 0,
+    int FileBrowserTreeScroll = 0,
     int FileBrowserPreviewScroll = 0,
     int AdvancedPatternIndex = 0,
     int AdvancedCompositeModeIndex = 0,
@@ -1835,10 +1837,12 @@ internal sealed record ShowcaseDemoState(
             {
                 { } value when value.StartsWith("file_browser:tree:", StringComparison.Ordinal) => next with
                 {
-                    FileBrowserSelectedRowIndex = Math.Clamp(next.FileBrowserSelectedRowIndex + delta, 0, 5)
+                    FileBrowserFocusIndex = 0,
+                    FileBrowserTreeScroll = Math.Clamp(next.FileBrowserTreeScroll + delta, 0, 8)
                 },
                 "file_browser:preview" => next with
                 {
+                    FileBrowserFocusIndex = 1,
                     FileBrowserPreviewScroll = Math.Clamp(next.FileBrowserPreviewScroll + delta, 0, 8)
                 },
                 _ => next
@@ -1850,7 +1854,13 @@ internal sealed record ShowcaseDemoState(
         if (gesture.Button != TerminalMouseButton.Left ||
             !hit.LocalHitId.StartsWith("file_browser:tree:", StringComparison.Ordinal))
         {
-            return hit.LocalHitId == "file_browser:preview";
+            if (hit.LocalHitId == "file_browser:preview")
+            {
+                next = next with { FileBrowserFocusIndex = 1 };
+                return true;
+            }
+
+            return false;
         }
 
         var rowText = hit.LocalHitId["file_browser:tree:".Length..];
@@ -1859,7 +1869,11 @@ internal sealed record ShowcaseDemoState(
             return false;
         }
 
-        next = next with { FileBrowserSelectedRowIndex = Math.Clamp(row, 0, 5) };
+        next = next with
+        {
+            FileBrowserFocusIndex = 0,
+            FileBrowserSelectedRowIndex = Math.Clamp(row + next.FileBrowserTreeScroll, 0, 5)
+        };
         return true;
     }
 
