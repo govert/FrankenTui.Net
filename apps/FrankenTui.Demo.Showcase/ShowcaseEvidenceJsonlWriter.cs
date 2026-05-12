@@ -897,6 +897,51 @@ public sealed class ShowcaseEvidenceJsonlWriter : IDisposable
             return "markdown_hit_test";
         }
 
+        if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 16)
+        {
+            if (gesture.Kind == TerminalMouseKind.Scroll)
+            {
+                return hit.LocalHitId switch
+                {
+                    "mermaid:library" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "mermaid_sample_prev"
+                        : "mermaid_sample_next",
+                    "mermaid:viewport" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "mermaid_viewport_zoom_in"
+                        : "mermaid_viewport_zoom_out",
+                    "mermaid:status" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "mermaid_status_scroll_up"
+                        : "mermaid_status_scroll_down",
+                    _ => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "mermaid_panel_scroll_up"
+                        : "mermaid_panel_scroll_down"
+                };
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Right)
+            {
+                return hit.LocalHitId == "mermaid:viewport"
+                    ? "mermaid_viewport_reset"
+                    : "mermaid_context_action";
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Left)
+            {
+                return hit.LocalHitId switch
+                {
+                    "mermaid:header" => "mermaid_header_focus",
+                    "mermaid:library" => "mermaid_sample_select",
+                    "mermaid:viewport" => "mermaid_viewport_focus",
+                    "mermaid:controls" => "mermaid_controls_focus",
+                    "mermaid:metrics" => "mermaid_metrics_focus",
+                    "mermaid:status" => "mermaid_status_focus",
+                    _ => "mermaid_hit_test"
+                };
+            }
+
+            return "mermaid_hit_test";
+        }
+
         if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 9)
         {
             if (gesture.Kind == TerminalMouseKind.Scroll)

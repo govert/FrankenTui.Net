@@ -626,6 +626,45 @@ internal static class ShowcaseFrameHitRegistry
                 new("markdown:wrap", ShowcaseHitLayer.Content, 15_220)));
         }
 
+        if (state.CurrentScreenNumber == 16 && TryResolveContentInnerArea(state.Viewport, out var mermaidInner) && mermaidInner.Width >= 60 && mermaidInner.Height >= 12)
+        {
+            AddRegion(
+                regions,
+                mermaidInner.X,
+                mermaidInner.Y,
+                mermaidInner.Width,
+                new("mermaid:header", ShowcaseHitLayer.Content, 16_000));
+
+            var bodyY = mermaidInner.Y + 1;
+            var bodyHeight = Math.Max(1, mermaidInner.Height - 1);
+            var libraryWidth = Math.Max(1, mermaidInner.Width * 24 / 100);
+            var viewportWidth = Math.Max(1, mermaidInner.Width * 46 / 100);
+            var detailWidth = Math.Max(1, mermaidInner.Width - libraryWidth - viewportWidth);
+            var viewportX = mermaidInner.X + libraryWidth;
+            var detailX = viewportX + viewportWidth;
+            var controlsHeight = Math.Min(12, bodyHeight);
+            var metricsHeight = Math.Min(10, Math.Max(1, bodyHeight - controlsHeight));
+            var metricsY = bodyY + controlsHeight;
+            var statusY = metricsY + metricsHeight;
+            var statusHeight = Math.Max(1, bodyHeight - controlsHeight - metricsHeight);
+
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(mermaidInner.X, (ushort)bodyY, (ushort)libraryWidth, (ushort)bodyHeight),
+                new("mermaid:library", ShowcaseHitLayer.Content, 16_100)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)viewportX, (ushort)bodyY, (ushort)viewportWidth, (ushort)bodyHeight),
+                new("mermaid:viewport", ShowcaseHitLayer.Content, 16_200)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)detailX, (ushort)bodyY, (ushort)detailWidth, (ushort)controlsHeight),
+                new("mermaid:controls", ShowcaseHitLayer.Content, 16_300)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)detailX, (ushort)metricsY, (ushort)detailWidth, (ushort)metricsHeight),
+                new("mermaid:metrics", ShowcaseHitLayer.Content, 16_400)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)detailX, (ushort)statusY, (ushort)detailWidth, (ushort)statusHeight),
+                new("mermaid:status", ShowcaseHitLayer.Content, 16_500)));
+        }
+
         if (state.CurrentScreenNumber == 42 && TryResolveContentInnerArea(state.Viewport, out var kanbanInner) && kanbanInner.Width >= 30 && kanbanInner.Height >= 8)
         {
             var board = state.KanbanBoard ?? ShowcaseKanbanState.CreateDefault();
