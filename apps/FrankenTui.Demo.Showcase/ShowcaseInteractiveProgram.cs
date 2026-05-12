@@ -3440,8 +3440,7 @@ internal sealed record ShowcaseDemoState(
             "voi_overlay:footer" => next with
             {
                 VoiOverlayResetCount = next.VoiOverlayResetCount + 1,
-                VoiOverlayLedgerIndex = 0,
-                VoiOverlayFocusIndex = 6
+                VoiOverlayLedgerIndex = 0
             },
             _ => next
         };

@@ -7118,7 +7118,7 @@ public sealed class ShowcaseShellTests
         state = ApplyMouse(state, 3, 29, timestamp + TimeSpan.FromMilliseconds(40));
         Assert.Equal(1, state.VoiOverlayResetCount);
         Assert.Equal(0, state.VoiOverlayLedgerIndex);
-        Assert.Equal(6, state.VoiOverlayFocusIndex);
+        Assert.Equal(5, state.VoiOverlayFocusIndex);
     }
 
     [Fact]
