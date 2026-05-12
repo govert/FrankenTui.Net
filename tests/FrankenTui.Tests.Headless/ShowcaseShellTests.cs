@@ -6528,6 +6528,79 @@ public sealed class ShowcaseShellTests
         Assert.Equal(12_200, simulationRecord.RootElement.GetProperty("target_id").GetInt32());
     }
 
+    [Fact]
+    public void ShowcaseFrameHitRegistryExposesPerformancePanels()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 14,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+
+        var list = ShowcaseFrameHitRegistry.HitTest(state, 3, 6);
+        var selected = ShowcaseFrameHitRegistry.HitTest(state, 3, 15);
+        var stats = ShowcaseFrameHitRegistry.HitTest(state, 92, 6);
+        var footer = ShowcaseFrameHitRegistry.HitTest(state, 3, 29);
+
+        Assert.Equal("performance:list", list.LocalHitId);
+        Assert.Equal((uint)14_000, list.UpstreamHitId);
+        Assert.Equal("performance:list:selected", selected.LocalHitId);
+        Assert.Equal((uint)14_010, selected.UpstreamHitId);
+        Assert.Equal("performance:stats", stats.LocalHitId);
+        Assert.Equal((uint)14_100, stats.UpstreamHitId);
+        Assert.Equal("performance:footer", footer.LocalHitId);
+        Assert.Equal((uint)14_200, footer.UpstreamHitId);
+    }
+
+    [Fact]
+    public void ShowcaseEvidenceJsonlWriterEmitsPerformanceMouseActions()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"ftui-showcase-performance-mouse-{Guid.NewGuid():N}.jsonl");
+        var options = ShowcaseCliOptions.Parse(
+            ["--screen=14", "--evidence-jsonl", path],
+            _ => null);
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 14,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+        var selectedEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 15, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp);
+        var statsEvent = TerminalEvent.Mouse(
+            new MouseGesture(92, 6, TerminalMouseButton.Right, TerminalMouseKind.Down),
+            timestamp + TimeSpan.FromMilliseconds(10));
+        var listEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 6, TerminalMouseButton.WheelDown, TerminalMouseKind.Scroll),
+            timestamp + TimeSpan.FromMilliseconds(20));
+
+        using (var writer = ShowcaseEvidenceJsonlWriter.Create(options.EvidenceJsonlPath))
+        {
+            Assert.NotNull(writer);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 1, frame: 1, selectedEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 2, frame: 2, statsEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 3, frame: 3, listEvent, state, state);
+        }
+
+        var lines = File.ReadAllLines(path);
+        Assert.Equal(3, lines.Length);
+        using var selectedRecord = JsonDocument.Parse(lines[0]);
+        using var statsRecord = JsonDocument.Parse(lines[1]);
+        using var listRecord = JsonDocument.Parse(lines[2]);
+        Assert.Equal("performance_row_select", selectedRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("performance:list:selected", selectedRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(14_010, selectedRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("performance_stats_context", statsRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("performance:stats", statsRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(14_100, statsRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("performance_list_scroll_down", listRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("performance:list", listRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(14_000, listRecord.RootElement.GetProperty("target_id").GetInt32());
+    }
+
     private static ShowcaseDemoState ApplyKey(ShowcaseDemoState state, KeyGesture gesture, DateTimeOffset timestamp)
     {
         var terminalEvent = TerminalEvent.Key(gesture, timestamp);

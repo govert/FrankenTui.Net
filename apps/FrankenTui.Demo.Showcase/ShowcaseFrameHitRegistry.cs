@@ -558,6 +558,38 @@ internal static class ShowcaseFrameHitRegistry
                 new("terminal_capabilities:simulation", ShowcaseHitLayer.Content, 12_200)));
         }
 
+        if (state.CurrentScreenNumber == 14 && TryResolveContentInnerArea(state.Viewport, out var performanceInner) && performanceInner.Width >= 45 && performanceInner.Height >= 8)
+        {
+            var footerY = performanceInner.Y + performanceInner.Height - 1;
+            var bodyHeight = Math.Max(1, performanceInner.Height - 1);
+            var listWidth = Math.Max(1, performanceInner.Width * 68 / 100);
+            var statsWidth = Math.Max(1, performanceInner.Width - listWidth);
+            var selectedRow = performanceInner.Y + Math.Min(bodyHeight - 1, Math.Max(2, bodyHeight / 2));
+
+            AddRegion(
+                regions,
+                performanceInner.X,
+                selectedRow,
+                listWidth,
+                new("performance:list:selected", ShowcaseHitLayer.Content, 14_010));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(performanceInner.X, performanceInner.Y, (ushort)listWidth, (ushort)bodyHeight),
+                new("performance:list", ShowcaseHitLayer.Content, 14_000)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(
+                    (ushort)(performanceInner.X + listWidth),
+                    performanceInner.Y,
+                    (ushort)statsWidth,
+                    (ushort)bodyHeight),
+                new("performance:stats", ShowcaseHitLayer.Content, 14_100)));
+            AddRegion(
+                regions,
+                performanceInner.X,
+                footerY,
+                performanceInner.Width,
+                new("performance:footer", ShowcaseHitLayer.Content, 14_200));
+        }
+
         if (state.CurrentScreenNumber == 42 && TryResolveContentInnerArea(state.Viewport, out var kanbanInner) && kanbanInner.Width >= 30 && kanbanInner.Height >= 8)
         {
             var board = state.KanbanBoard ?? ShowcaseKanbanState.CreateDefault();

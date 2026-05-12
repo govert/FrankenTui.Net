@@ -812,6 +812,46 @@ public sealed class ShowcaseEvidenceJsonlWriter : IDisposable
             return "terminal_capabilities_hit_test";
         }
 
+        if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 14)
+        {
+            if (gesture.Kind == TerminalMouseKind.Scroll)
+            {
+                return hit.LocalHitId switch
+                {
+                    "performance:list" or "performance:list:selected" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "performance_list_scroll_up"
+                        : "performance_list_scroll_down",
+                    "performance:stats" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "performance_stats_scroll_up"
+                        : "performance_stats_scroll_down",
+                    _ => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "performance_panel_scroll_up"
+                        : "performance_panel_scroll_down"
+                };
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Right)
+            {
+                return hit.LocalHitId == "performance:stats"
+                    ? "performance_stats_context"
+                    : "performance_row_context";
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Left)
+            {
+                return hit.LocalHitId switch
+                {
+                    "performance:list" => "performance_list_focus",
+                    "performance:list:selected" => "performance_row_select",
+                    "performance:stats" => "performance_stats_focus",
+                    "performance:footer" => "performance_controls_focus",
+                    _ => "performance_hit_test"
+                };
+            }
+
+            return "performance_hit_test";
+        }
+
         if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 9)
         {
             if (gesture.Kind == TerminalMouseKind.Scroll)
