@@ -327,7 +327,10 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   The local Visual Effects screen now uses those primitives for a deterministic
   frame-driven Braille canvas instead of static placeholder art, and scripted
   rendering threads parsed `--vfx-effect` names into distinct local canvas
-  patterns for every upstream effect key. VFX harness launch/frame records now
+  patterns for every upstream effect key. The Visual Effects increment now also
+  registers canvas and harness metadata pane hit regions with matching mouse
+  evidence while richer renderer-equivalent output remains open. VFX harness
+  launch/frame records now
   carry normalized effect labels, descriptions, renderer name, canvas mode,
   local quality, and FPS-effect classification fields, and the Quake E1M1
   screen now renders through the same deterministic FPS Braille canvas rather
@@ -870,9 +873,9 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   and the Determinism Lab increment adds header, equivalence, report/env,
   scene-preview, checks, and footer regions plus matching mouse evidence, while
   still leaving broader generalized screen hit routing open.
-  Focused showcase-shell verification is now `187` tests via
+  Focused showcase-shell verification is now `189` tests via
   `dotnet test tests/FrankenTui.Tests.Headless/FrankenTui.Tests.Headless.csproj --no-restore --filter FullyQualifiedName~ShowcaseShellTests`.
-  Current local verification is `441` headless tests, `9` web tests, and `7`
+  Current local verification is `443` headless tests, `9` web tests, and `7`
   PTY tests via `dotnet test FrankenTui.Net.sln --no-restore`.
   Previous focused registry/evidence verification covered `33`
   registry/evidence

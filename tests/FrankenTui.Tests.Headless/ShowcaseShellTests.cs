@@ -6110,6 +6110,65 @@ public sealed class ShowcaseShellTests
         Assert.Equal(40_210, checksRecord.RootElement.GetProperty("target_id").GetInt32());
     }
 
+    [Fact]
+    public void ShowcaseFrameHitRegistryExposesVisualEffectsPanels()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 18,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+
+        var canvas = ShowcaseFrameHitRegistry.HitTest(state, 3, 6);
+        var harness = ShowcaseFrameHitRegistry.HitTest(state, 70, 6);
+
+        Assert.Equal("visual_effects:canvas", canvas.LocalHitId);
+        Assert.Equal((uint)18_000, canvas.UpstreamHitId);
+        Assert.Equal("visual_effects:harness", harness.LocalHitId);
+        Assert.Equal((uint)18_100, harness.UpstreamHitId);
+    }
+
+    [Fact]
+    public void ShowcaseEvidenceJsonlWriterEmitsVisualEffectsMouseActions()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"ftui-showcase-visual-effects-mouse-{Guid.NewGuid():N}.jsonl");
+        var options = ShowcaseCliOptions.Parse(
+            ["--screen=18", "--evidence-jsonl", path],
+            _ => null);
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 18,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+        var canvasEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 6, TerminalMouseButton.WheelDown, TerminalMouseKind.Scroll),
+            timestamp);
+        var harnessEvent = TerminalEvent.Mouse(
+            new MouseGesture(70, 6, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp + TimeSpan.FromMilliseconds(10));
+
+        using (var writer = ShowcaseEvidenceJsonlWriter.Create(options.EvidenceJsonlPath))
+        {
+            Assert.NotNull(writer);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 1, frame: 1, canvasEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 2, frame: 2, harnessEvent, state, state);
+        }
+
+        var lines = File.ReadAllLines(path);
+        Assert.Equal(2, lines.Length);
+        using var canvasRecord = JsonDocument.Parse(lines[0]);
+        using var harnessRecord = JsonDocument.Parse(lines[1]);
+        Assert.Equal("visual_effects_effect_next", canvasRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("visual_effects:canvas", canvasRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(18_000, canvasRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("visual_effects_harness_focus", harnessRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("visual_effects:harness", harnessRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(18_100, harnessRecord.RootElement.GetProperty("target_id").GetInt32());
+    }
+
     private static ShowcaseDemoState ApplyKey(ShowcaseDemoState state, KeyGesture gesture, DateTimeOffset timestamp)
     {
         var terminalEvent = TerminalEvent.Key(gesture, timestamp);

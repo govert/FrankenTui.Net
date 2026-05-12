@@ -622,6 +622,21 @@ internal static class ShowcaseFrameHitRegistry
                 new("notifications:lifecycle", ShowcaseHitLayer.Content, 21_200)));
         }
 
+        if (state.CurrentScreenNumber == 18 && TryResolveContentInnerArea(state.Viewport, out var visualInner) && visualInner.Width >= 40 && visualInner.Height >= 8)
+        {
+            var canvasWidth = Math.Max(1, visualInner.Width / 2);
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(visualInner.X, visualInner.Y, (ushort)canvasWidth, visualInner.Height),
+                new("visual_effects:canvas", ShowcaseHitLayer.Content, 18_000)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(
+                    (ushort)(visualInner.X + canvasWidth),
+                    visualInner.Y,
+                    (ushort)Math.Max(1, visualInner.Width - canvasWidth),
+                    visualInner.Height),
+                new("visual_effects:harness", ShowcaseHitLayer.Content, 18_100)));
+        }
+
         if (state.CurrentScreenNumber == 13 && TryResolveContentInnerArea(state.Viewport, out var macroInner) && macroInner.Width >= 40 && macroInner.Height >= 12)
         {
             regions.Add(new ShowcaseHitRegion(
