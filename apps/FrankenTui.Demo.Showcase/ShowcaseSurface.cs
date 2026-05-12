@@ -1668,6 +1668,8 @@ internal static class ShowcaseSurface
     {
         var selected = Math.Clamp(state.ActionTimelineSelectedIndex, 0, 7);
         var filter = Math.Clamp(state.ActionTimelineFilterIndex, 0, 3);
+        var focus = Math.Clamp(state.ActionTimelineFocusIndex, 0, 2);
+        var focusLabel = state.ActionTimelineContextArmed ? "context" : "focus";
         var filterLabel = filter switch
         {
             1 => "severity:warn+",
@@ -1720,6 +1722,7 @@ internal static class ShowcaseSurface
         var controls = $"""
             Follow[F]: ON  Component[C]: all  Severity[S]: all  Type[T]: all  Clear[X]
             Active filter: {filterLabel} | Selected event: {selected}
+            Focus: {focus} {focusLabel}
             Max events: 500 | Burst: every 2 ticks | Initial events: 12
             Enter toggles detail expansion | Up/Down or j/k navigate
             PgUp/PgDn page | Home/End jump | Click select | Scroll navigate
@@ -1736,13 +1739,13 @@ internal static class ShowcaseSurface
         return new StackWidget(
             LayoutDirection.Vertical,
             [
-                (LayoutConstraint.Fixed(14), Panel("Filters + Follow", controls)),
+                (LayoutConstraint.Fixed(14), Panel(focus == 0 ? $"Filters + Follow [{focusLabel}]" : "Filters + Follow", controls)),
                 (LayoutConstraint.Fill(), new StackWidget(
                     LayoutDirection.Horizontal,
                     [
                         (LayoutConstraint.Percentage(62), new PanelWidget
                         {
-                            Title = $"Event Timeline [selected {selected}]",
+                            Title = focus == 1 ? $"Event Timeline [{focusLabel} {selected}]" : $"Event Timeline [selected {selected}]",
                             Child = new TableWidget
                             {
                                 Headers = ["Tick", "Severity", "Component", "Type", "Summary"],
@@ -1750,7 +1753,7 @@ internal static class ShowcaseSurface
                                 SelectedRow = selected
                             }
                         }),
-                        (LayoutConstraint.Fill(), Panel(state.ActionTimelineDetailExpanded ? "Event Detail [expanded]" : "Event Detail", details))
+                        (LayoutConstraint.Fill(), Panel(focus == 2 ? $"Event Detail [{focusLabel}]" : state.ActionTimelineDetailExpanded ? "Event Detail [expanded]" : "Event Detail", details))
                     ]))
             ]);
     }

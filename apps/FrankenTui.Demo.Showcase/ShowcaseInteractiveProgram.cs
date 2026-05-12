@@ -182,9 +182,11 @@ internal sealed record ShowcaseDemoState(
     int NotificationsToastIndex = 0,
     int NotificationsLifecycleScroll = 0,
     bool NotificationsContextArmed = false,
+    int ActionTimelineFocusIndex = 0,
     int ActionTimelineFilterIndex = 0,
     int ActionTimelineSelectedIndex = 0,
     bool ActionTimelineDetailExpanded = false,
+    bool ActionTimelineContextArmed = false,
     int IntrinsicSizingScenarioIndex = 0,
     int IntrinsicSizingWidthPresetIndex = 2,
     int IntrinsicSizingDetailScroll = 0,
@@ -2107,15 +2109,35 @@ internal sealed record ShowcaseDemoState(
             {
                 "action_timeline:timeline" => next with
                 {
+                    ActionTimelineFocusIndex = 1,
+                    ActionTimelineContextArmed = false,
                     ActionTimelineSelectedIndex = Math.Clamp(next.ActionTimelineSelectedIndex + delta, 0, 7)
                 },
                 "action_timeline:filters" => next with
                 {
+                    ActionTimelineFocusIndex = 0,
+                    ActionTimelineContextArmed = false,
                     ActionTimelineFilterIndex = Math.Clamp(next.ActionTimelineFilterIndex + delta, 0, 3)
                 },
                 _ => next
             };
             return hit.LocalHitId is "action_timeline:timeline" or "action_timeline:filters";
+        }
+
+        if (gesture.Button == TerminalMouseButton.Right &&
+            hit.LocalHitId is "action_timeline:filters" or "action_timeline:timeline" or "action_timeline:detail")
+        {
+            next = next with
+            {
+                ActionTimelineFocusIndex = hit.LocalHitId switch
+                {
+                    "action_timeline:timeline" => 1,
+                    "action_timeline:detail" => 2,
+                    _ => 0
+                },
+                ActionTimelineContextArmed = true
+            };
+            return true;
         }
 
         if (gesture.Button != TerminalMouseButton.Left)
@@ -2125,9 +2147,24 @@ internal sealed record ShowcaseDemoState(
 
         next = hit.LocalHitId switch
         {
-            "action_timeline:filters" => next with { ActionTimelineFilterIndex = (next.ActionTimelineFilterIndex + 1) % 4 },
-            "action_timeline:timeline" => next with { ActionTimelineSelectedIndex = Math.Clamp(next.ActionTimelineSelectedIndex + 1, 0, 7) },
-            "action_timeline:detail" => next with { ActionTimelineDetailExpanded = !next.ActionTimelineDetailExpanded },
+            "action_timeline:filters" => next with
+            {
+                ActionTimelineFocusIndex = 0,
+                ActionTimelineContextArmed = false,
+                ActionTimelineFilterIndex = (next.ActionTimelineFilterIndex + 1) % 4
+            },
+            "action_timeline:timeline" => next with
+            {
+                ActionTimelineFocusIndex = 1,
+                ActionTimelineContextArmed = false,
+                ActionTimelineSelectedIndex = Math.Clamp(next.ActionTimelineSelectedIndex + 1, 0, 7)
+            },
+            "action_timeline:detail" => next with
+            {
+                ActionTimelineFocusIndex = 2,
+                ActionTimelineContextArmed = false,
+                ActionTimelineDetailExpanded = !next.ActionTimelineDetailExpanded
+            },
             _ => next
         };
         return hit.LocalHitId is "action_timeline:filters" or "action_timeline:timeline" or "action_timeline:detail";

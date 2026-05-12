@@ -8346,6 +8346,8 @@ public sealed class ShowcaseShellTests
 
         state = ApplyMouse(state, 3, 6, timestamp);
         Assert.Equal(1, state.ActionTimelineFilterIndex);
+        Assert.Equal(0, state.ActionTimelineFocusIndex);
+        Assert.False(state.ActionTimelineContextArmed);
 
         state = ApplyMouse(
             state,
@@ -8355,9 +8357,21 @@ public sealed class ShowcaseShellTests
             TerminalMouseButton.WheelDown,
             TerminalMouseKind.Scroll);
         Assert.Equal(1, state.ActionTimelineSelectedIndex);
+        Assert.Equal(1, state.ActionTimelineFocusIndex);
 
         state = ApplyMouse(state, 80, 20, timestamp + TimeSpan.FromMilliseconds(20));
         Assert.True(state.ActionTimelineDetailExpanded);
+        Assert.Equal(2, state.ActionTimelineFocusIndex);
+
+        state = ApplyMouse(
+            state,
+            80,
+            20,
+            timestamp + TimeSpan.FromMilliseconds(30),
+            TerminalMouseButton.Right,
+            TerminalMouseKind.Down);
+        Assert.Equal(2, state.ActionTimelineFocusIndex);
+        Assert.True(state.ActionTimelineContextArmed);
     }
 
     [Fact]
@@ -8372,7 +8386,9 @@ public sealed class ShowcaseShellTests
         {
             ActionTimelineFilterIndex = 2,
             ActionTimelineSelectedIndex = 3,
-            ActionTimelineDetailExpanded = true
+            ActionTimelineDetailExpanded = true,
+            ActionTimelineFocusIndex = 2,
+            ActionTimelineContextArmed = true
         };
         var buffer = new RenderBuffer(120, 32);
 
@@ -8381,8 +8397,9 @@ public sealed class ShowcaseShellTests
 
         var screen = HeadlessBufferView.ScreenString(buffer);
         Assert.Contains("Active filter: component:runtime", screen);
+        Assert.Contains("Focus: 2 context", screen);
         Assert.Contains("Event Timeline [selected 3]", screen);
-        Assert.Contains("Event Detail [expanded]", screen);
+        Assert.Contains("Event Detail [context]", screen);
     }
 
     [Fact]
