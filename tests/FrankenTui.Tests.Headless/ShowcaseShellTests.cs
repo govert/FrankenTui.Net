@@ -7867,6 +7867,51 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseDeterminismLabKeysMutateStrategySeedRunAndReset()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 40,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyKey(state, new KeyGesture(TerminalKey.Character, TerminalModifiers.None, new Rune('3')), timestamp);
+        Assert.Equal(2, state.DeterminismStrategyIndex);
+        Assert.Equal(1, state.DeterminismFocusIndex);
+
+        state = ApplyKey(state, new KeyGesture(TerminalKey.Character, TerminalModifiers.None, new Rune(']')), timestamp.AddMilliseconds(10));
+        Assert.Equal(1, state.DeterminismSeedOffset);
+        Assert.Equal(3, state.DeterminismFocusIndex);
+
+        state = ApplyKey(state, new KeyGesture(TerminalKey.Character, TerminalModifiers.None, new Rune(' ')), timestamp.AddMilliseconds(20));
+        state = ApplyKey(state, new KeyGesture(TerminalKey.Character, TerminalModifiers.None, new Rune('f')), timestamp.AddMilliseconds(30));
+        state = ApplyKey(state, new KeyGesture(TerminalKey.Character, TerminalModifiers.None, new Rune('e')), timestamp.AddMilliseconds(40));
+        state = ApplyKey(state, new KeyGesture(TerminalKey.Enter, TerminalModifiers.None), timestamp.AddMilliseconds(50));
+        state = ApplyKey(state, new KeyGesture(TerminalKey.Character, TerminalModifiers.None, new Rune('a')), timestamp.AddMilliseconds(60));
+        state = ApplyKey(state, new KeyGesture(TerminalKey.Character, TerminalModifiers.None, new Rune('c')), timestamp.AddMilliseconds(70));
+
+        Assert.True(state.DeterminismPaused);
+        Assert.True(state.DeterminismFaultEnabled);
+        Assert.True(state.DeterminismExportArmed);
+        Assert.Equal(4, state.DeterminismRunCount);
+        Assert.True(state.DeterminismChecksumLogged);
+        Assert.Equal(2, state.DeterminismFocusIndex);
+
+        state = ApplyKey(state, new KeyGesture(TerminalKey.Character, TerminalModifiers.None, new Rune('x')), timestamp.AddMilliseconds(80));
+
+        Assert.Equal(1, state.DeterminismStrategyIndex);
+        Assert.Equal(0, state.DeterminismSeedOffset);
+        Assert.Equal(0, state.DeterminismRunCount);
+        Assert.False(state.DeterminismPaused);
+        Assert.False(state.DeterminismFaultEnabled);
+        Assert.False(state.DeterminismExportArmed);
+        Assert.False(state.DeterminismChecksumLogged);
+        Assert.Equal(5, state.DeterminismFocusIndex);
+    }
+
+    [Fact]
     public void ShowcaseDeterminismLabRendersMouseSelectedState()
     {
         var state = ShowcaseDemoState.Create(
@@ -7884,7 +7929,9 @@ public sealed class ShowcaseShellTests
             DeterminismChecksScroll = 4,
             DeterminismRunCount = 5,
             DeterminismFaultEnabled = true,
-            DeterminismExportArmed = true
+            DeterminismExportArmed = true,
+            DeterminismPaused = true,
+            DeterminismChecksumLogged = true
         };
         var buffer = new RenderBuffer(120, 32);
 
@@ -7894,8 +7941,10 @@ public sealed class ShowcaseShellTests
         var screen = HeadlessBufferView.ScreenString(buffer);
         Assert.Contains("active=FullRedraw", screen);
         Assert.Contains("fault=ON", screen);
+        Assert.Contains("paused=yes", screen);
         Assert.Contains("> FullRedraw", screen);
         Assert.Contains("Report scroll: 2 | export=ready", screen);
+        Assert.Contains("Manual checksum log: armed", screen);
         Assert.Contains("Checks [scroll 4]", screen);
         Assert.Contains("run_count=5", screen);
     }

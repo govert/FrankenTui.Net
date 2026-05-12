@@ -3383,6 +3383,8 @@ internal static class ShowcaseSurface
         var checksScroll = Math.Clamp(state.DeterminismChecksScroll, 0, 8);
         var seed = 7 + Math.Abs(frame % 11) + Math.Clamp(state.DeterminismSeedOffset, 0, 10);
         var fault = state.DeterminismFaultEnabled || frame % 5 == 0;
+        var paused = state.DeterminismPaused;
+        var checksumLogged = state.DeterminismChecksumLogged;
         string[] strategies = ["Full", "DirtyRows", "FullRedraw"];
         string[] scenarios = ["Baseline (10f)", "Drift (30f)", "Fault Injection (1f)"];
         var activeStrategy = strategies[strategyIndex];
@@ -3393,7 +3395,7 @@ internal static class ShowcaseSurface
         var status = fault ? "MISMATCH" : "OK";
 
         var header = new ParagraphWidget(
-            $"Determinism Lab | seed={seed} | frame={frame} | active={activeStrategy} | fault={(fault ? "ON" : "OFF")} | focus={focusIndex}\n" +
+            $"Determinism Lab | seed={seed} | frame={frame} | active={activeStrategy} | fault={(fault ? "ON" : "OFF")} | paused={(paused ? "yes" : "no")} | focus={focusIndex}\n" +
             $"Checksum equivalence across Full, DirtyRows, and FullRedraw diff strategies | scenario={activeScenario}");
 
         var equivalence = Panel(
@@ -3432,11 +3434,13 @@ internal static class ShowcaseSurface
             reportScroll > 0 ? $"Report + Determinism Env [scroll {reportScroll}]" : focusIndex == 2 ? "Report + Determinism Env [focus]" : "Report + Determinism Env",
             $"Report scroll: {reportScroll} | export={(state.DeterminismExportArmed ? "ready" : "idle")}\n" +
             "JSONL export path: FTUI_DETERMINISM_LAB_REPORT or determinism_lab_report.jsonl\n" +
+            $"Manual checksum log: {(checksumLogged ? "armed" : "idle")}\n" +
             "event=determinism_env timestamp run_id hash_key seed width height env\n" +
             "event=determinism_report scenario frame strategy checksum change_count status first_mismatch\n" +
             "demo env keys: FTUI_DEMO_DETERMINISTIC, FTUI_DEMO_SEED, FTUI_SEED, E2E_SEED, FTUI_DEMO_TICK_MS\n" +
             "hash_key format: screen_mode-60x18-seedN\n" +
-            "checksum_buffer uses FNV-1a over cell content, fg, bg, attrs");
+            "checksum_buffer uses FNV-1a over cell content, fg, bg, attrs\n" +
+            "mouse hit regions preserve scenario/run/detail routing");
 
         return new StackWidget(
             LayoutDirection.Vertical,
@@ -3458,7 +3462,7 @@ internal static class ShowcaseSurface
                                 (LayoutConstraint.Percentage(48), checks)
                             ]))
                     ])),
-                (LayoutConstraint.Fixed(1), new ParagraphWidget($"1/2/3 strategy({activeStrategy}) | [/] seed({seed}) | F fault({(fault ? "on" : "off")}) | E export({(state.DeterminismExportArmed ? "ready" : "idle")}) | A all scenarios | C log checksum | mouse hit regions"))
+                (LayoutConstraint.Fixed(1), new ParagraphWidget($"1/2/3 strategy({activeStrategy}) | [/] seed({seed}) | Space pause({(paused ? "paused" : "live")}) | F fault({(fault ? "on" : "off")}) | E export({(state.DeterminismExportArmed ? "ready" : "idle")}) | C checksum({(checksumLogged ? "logged" : "idle")})"))
             ]);
     }
 

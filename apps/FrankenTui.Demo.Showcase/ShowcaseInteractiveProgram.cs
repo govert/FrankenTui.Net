@@ -298,6 +298,8 @@ internal sealed record ShowcaseDemoState(
     int DeterminismRunCount = 0,
     bool DeterminismFaultEnabled = false,
     bool DeterminismExportArmed = false,
+    bool DeterminismPaused = false,
+    bool DeterminismChecksumLogged = false,
     int HyperlinkFocusIndex = 0,
     int HyperlinkHoverIndex = -1,
     int HyperlinkLastActionIndex = 0,
@@ -954,6 +956,11 @@ internal sealed record ShowcaseDemoState(
         }
 
         if (HandleWidgetBuilderKey(gesture, ref next))
+        {
+            return true;
+        }
+
+        if (HandleDeterminismKey(gesture, ref next))
         {
             return true;
         }
@@ -4044,6 +4051,130 @@ internal sealed record ShowcaseDemoState(
             _ => next
         };
         return hit.LocalHitId is "determinism:header" or "determinism:equivalence" or "determinism:report" or "determinism:preview" or "determinism:checks" or "determinism:footer";
+    }
+
+    private static bool HandleDeterminismKey(KeyGesture gesture, ref ShowcaseDemoState next)
+    {
+        if (next.CurrentScreenNumber != 40 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Modifiers.HasFlag(TerminalModifiers.Control) ||
+            gesture.Modifiers.HasFlag(TerminalModifiers.Alt))
+        {
+            return false;
+        }
+
+        if (IsCharacter(gesture, '1') || IsCharacter(gesture, '2') || IsCharacter(gesture, '3'))
+        {
+            var strategy = gesture.Character!.Value.Value - '1';
+            next = next with
+            {
+                DeterminismStrategyIndex = Math.Clamp(strategy, 0, 2),
+                DeterminismFocusIndex = 1
+            };
+            return true;
+        }
+
+        if (IsCharacter(gesture, '['))
+        {
+            next = next with
+            {
+                DeterminismSeedOffset = Math.Clamp(next.DeterminismSeedOffset - 1, 0, 10),
+                DeterminismFocusIndex = 3
+            };
+            return true;
+        }
+
+        if (IsCharacter(gesture, ']'))
+        {
+            next = next with
+            {
+                DeterminismSeedOffset = Math.Clamp(next.DeterminismSeedOffset + 1, 0, 10),
+                DeterminismFocusIndex = 3
+            };
+            return true;
+        }
+
+        if (IsCharacter(gesture, ' '))
+        {
+            next = next with
+            {
+                DeterminismPaused = !next.DeterminismPaused,
+                DeterminismFocusIndex = 0
+            };
+            return true;
+        }
+
+        if (IsCharacter(gesture, 'f') || IsShiftCharacter(gesture, 'f'))
+        {
+            next = next with
+            {
+                DeterminismFaultEnabled = !next.DeterminismFaultEnabled,
+                DeterminismFocusIndex = 0
+            };
+            return true;
+        }
+
+        if (IsCharacter(gesture, 'e') || IsShiftCharacter(gesture, 'e'))
+        {
+            next = next with
+            {
+                DeterminismExportArmed = true,
+                DeterminismFocusIndex = 2
+            };
+            return true;
+        }
+
+        if (gesture.Key == TerminalKey.Enter || IsCharacter(gesture, 'r') || IsShiftCharacter(gesture, 'r'))
+        {
+            next = next with
+            {
+                DeterminismRunCount = next.DeterminismRunCount + 1,
+                DeterminismFocusIndex = 4
+            };
+            return true;
+        }
+
+        if (IsCharacter(gesture, 'a') || IsShiftCharacter(gesture, 'a'))
+        {
+            next = next with
+            {
+                DeterminismRunCount = next.DeterminismRunCount + 3,
+                DeterminismFocusIndex = 4
+            };
+            return true;
+        }
+
+        if (IsCharacter(gesture, 'c') || IsShiftCharacter(gesture, 'c'))
+        {
+            next = next with
+            {
+                DeterminismChecksumLogged = true,
+                DeterminismFocusIndex = 2
+            };
+            return true;
+        }
+
+        if (IsCharacter(gesture, 'x') || IsShiftCharacter(gesture, 'x'))
+        {
+            next = next with
+            {
+                DeterminismStrategyIndex = 1,
+                DeterminismScenarioIndex = 0,
+                DeterminismSeedOffset = 0,
+                DeterminismReportScroll = 0,
+                DeterminismChecksScroll = 0,
+                DeterminismRunCount = 0,
+                DeterminismFaultEnabled = false,
+                DeterminismExportArmed = false,
+                DeterminismPaused = false,
+                DeterminismChecksumLogged = false,
+                DeterminismFocusIndex = 5
+            };
+            return true;
+        }
+
+        return false;
     }
 
     private static bool HandleHyperlinkMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)

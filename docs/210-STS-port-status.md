@@ -565,10 +565,12 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   scene preview, checks, and report/env layout with Full/DirtyRows/FullRedraw
   strategy rows, checksum timeline, mismatch fields, scenario/run labels, JSONL
   export fields, deterministic env keys, hash-key format, FNV checksum notes,
-  keybindings, and mouse hit-region labels; real buffer generation, diff
+  keybindings, and mouse hit-region labels; screen-local keyboard controls now
+  mutate strategy, seed, pause, fault injection, export arming, single/all run
+  counts, checksum-log state, and reset state; real buffer generation, diff
   application, checksum comparison, scenario simulation, run history/details
-  scrolling, JSONL file export, hit-region registration, and exact upstream
-  styling remain tracked under `364-DEM`.
+  persistence, JSONL file export, and exact upstream styling remain tracked under
+  `364-DEM`.
   The Hyperlink Playground screen now follows the upstream header plus OSC-8
   links, details/registry, and controls/JSONL layout with upstream link
   labels/URLs, `LinkRegistry` and `HitRegion` labels, OSC-8 open/close evidence,
