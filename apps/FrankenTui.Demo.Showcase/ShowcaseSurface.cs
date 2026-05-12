@@ -2650,9 +2650,15 @@ internal static class ShowcaseSurface
         var variance = (alpha * beta) / (Math.Pow(alpha + beta, 2.0) * (alpha + beta + 1.0));
         var expectedAfter = variance * 0.72;
         var gain = Math.Max(0.0, variance - expectedAfter);
+        var focusIndex = Math.Clamp(state.VoiOverlayFocusIndex, 0, 6);
+        var ledgerIndex = Math.Clamp(state.VoiOverlayLedgerIndex, 0, 2);
+        var controlsScroll = Math.Clamp(state.VoiOverlayControlsScroll, 0, 8);
+        var detailExpanded = state.VoiOverlayDetailExpanded;
+        var visible = state.VoiOverlayVisible;
+        var resetCount = Math.Max(0, state.VoiOverlayResetCount);
 
         var decision = Panel(
-            "Decision",
+            focusIndex == 1 ? "Decision [focus]" : "Decision",
             $"event_idx: {tick}\n" +
             $"should_sample: {shouldSample.ToString().ToLowerInvariant()}\n" +
             $"reason: {(shouldSample ? "voi_gain_exceeds_cost" : "blocked_by_min_interval")}\n" +
@@ -2661,7 +2667,7 @@ internal static class ShowcaseSurface
             "e_value: 1.10 | e_threshold: 2.00 | boundary_score: 0.70");
 
         var posterior = Panel(
-            "Posterior",
+            focusIndex == 2 ? "Posterior [focus]" : "Posterior",
             $"alpha: {alpha:0.00} | beta: {beta:0.00}\n" +
             $"mean: {mean:0.000} | variance: {variance:0.000}\n" +
             $"expected_variance_after: {expectedAfter:0.000}\n" +
@@ -2669,7 +2675,7 @@ internal static class ShowcaseSurface
             "InlineAutoRemeasureConfig.voi enable_logging=true max_log_entries=96");
 
         var observation = Panel(
-            "Observation",
+            focusIndex == 3 ? "Observation [focus]" : "Observation",
             $"sample_idx: {Math.Max(0, tick / 2)}\n" +
             $"violated: {(tick % 17 < 3).ToString().ToLowerInvariant()}\n" +
             $"posterior_mean: {mean + 0.03:0.000}\n" +
@@ -2677,24 +2683,25 @@ internal static class ShowcaseSurface
             "source: runtime:inline-auto or demo:fallback");
 
         var ledger = Panel(
-            "VOI Ledger",
-            $"Decision  #{tick,3} sample={shouldSample.ToString().ToLowerInvariant()} voi_gain={gain:0.000} LBF=1.20\n" +
-            $"Observation #{Math.Max(0, tick / 2),3} violated={(tick % 17 < 3).ToString().ToLowerInvariant()} posterior_mean={mean + 0.03:0.000}\n" +
-            $"Decision  #{tick + 1,3} sample=true voi_gain={gain + 0.010:0.000} LBF=1.35\n" +
+            focusIndex == 4 ? $"VOI Ledger [selected {ledgerIndex}]" : "VOI Ledger",
+            $"{(ledgerIndex == 0 ? "> " : "  ")}Decision  #{tick,3} sample={shouldSample.ToString().ToLowerInvariant()} voi_gain={gain:0.000} LBF=1.20\n" +
+            $"{(ledgerIndex == 1 ? "> " : "  ")}Observation #{Math.Max(0, tick / 2),3} violated={(tick % 17 < 3).ToString().ToLowerInvariant()} posterior_mean={mean + 0.03:0.000}\n" +
+            $"{(ledgerIndex == 2 ? "> " : "  ")}Decision  #{tick + 1,3} sample=true voi_gain={gain + 0.010:0.000} LBF=1.35\n" +
             "Ledger entries map VoiLogEntry::Decision and VoiLogEntry::Observation");
 
         var controls = Panel(
-            "Overlay Controls",
+            controlsScroll > 0 ? $"Overlay Controls [scroll {controlsScroll}]" : focusIndex == 5 ? "Overlay Controls [focus]" : "Overlay Controls",
             "VOI Overlay | src: inline-auto|fallback | focus: Decision/Posterior/Observation/Ledger\n" +
+            $"State: visible={(visible ? "true" : "false")} detail={(detailExpanded ? "expanded" : "collapsed")} selected_ledger_idx={ledgerIndex} resets={resetCount}\n" +
             "Centered overlay area clamps to terminal size; style uses rounded border and deep background.\n" +
             "Tab cycle section | v toggle detail | n/p or Up/Down navigate ledger | r reset sampler | Esc clear focus\n" +
             "Mouse: click section to focus; wheel over ledger changes selected_ledger_idx; click outside clears focus\n" +
-            "Expanded hint: ledger[index] | click section to focus | Esc to clear");
+            $"Expanded hint: {(detailExpanded ? "ledger[index] detail open" : "ledger[index]")} | controls_scroll={controlsScroll} | Esc to clear");
 
         return new StackWidget(
             LayoutDirection.Vertical,
             [
-                (LayoutConstraint.Fixed(1), new ParagraphWidget("VOI Overlay | Galaxy-Brain sampler debug overlay | source: demo:fallback")),
+                (LayoutConstraint.Fixed(1), new ParagraphWidget($"VOI Overlay | Galaxy-Brain sampler debug overlay | source: demo:fallback | visible={(visible ? "true" : "false")} | focus={focusIndex}")),
                 (LayoutConstraint.Fill(), new StackWidget(
                     LayoutDirection.Horizontal,
                     [
@@ -2712,7 +2719,7 @@ internal static class ShowcaseSurface
                             ])),
                         (LayoutConstraint.Percentage(33), controls)
                     ])),
-                (LayoutConstraint.Fixed(1), new ParagraphWidget("r reset | v detail | n/p ledger | Tab section | mouse click/scroll hit regions | inline_auto_voi_snapshot fallback"))
+                (LayoutConstraint.Fixed(1), new ParagraphWidget($"r reset({resetCount}) | v detail({(detailExpanded ? "expanded" : "collapsed")}) | n/p ledger({ledgerIndex}) | Tab section | mouse click/scroll hit regions | inline_auto_voi_snapshot fallback"))
             ]);
     }
 

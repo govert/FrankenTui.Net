@@ -189,6 +189,12 @@ internal sealed record ShowcaseDemoState(
     int I18nStressSampleIndex = 0,
     bool I18nRtlEnabled = false,
     bool I18nExportArmed = false,
+    int VoiOverlayFocusIndex = 0,
+    int VoiOverlayLedgerIndex = 0,
+    int VoiOverlayControlsScroll = 0,
+    int VoiOverlayResetCount = 0,
+    bool VoiOverlayDetailExpanded = false,
+    bool VoiOverlayVisible = true,
     bool PaletteLabBenchEnabled = false,
     int PaletteLabBenchFrame = 0,
     int PaletteLabBenchProcessed = 0,
@@ -422,6 +428,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent i18nMouseEvent &&
             HandleI18nMouse(i18nMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent voiOverlayMouseEvent &&
+            HandleVoiOverlayMouse(voiOverlayMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -2600,6 +2612,95 @@ internal sealed record ShowcaseDemoState(
             _ => next
         };
         return hit.LocalHitId is "i18n:string_lookup" or "i18n:plural_rules" or "i18n:rtl_layout" or "i18n:stress_lab" or "i18n:footer";
+    }
+
+    private static bool HandleVoiOverlayMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 35 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content)
+        {
+            return false;
+        }
+
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = hit.LocalHitId switch
+            {
+                "voi_overlay:ledger" => next with
+                {
+                    VoiOverlayLedgerIndex = Math.Clamp(next.VoiOverlayLedgerIndex + delta, 0, 2),
+                    VoiOverlayFocusIndex = 4
+                },
+                "voi_overlay:controls" => next with
+                {
+                    VoiOverlayControlsScroll = Math.Clamp(next.VoiOverlayControlsScroll + delta, 0, 8),
+                    VoiOverlayFocusIndex = 5
+                },
+                _ => next
+            };
+            return hit.LocalHitId is "voi_overlay:ledger" or "voi_overlay:controls";
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        next = hit.LocalHitId switch
+        {
+            "voi_overlay:header" => next with
+            {
+                VoiOverlayVisible = !next.VoiOverlayVisible,
+                VoiOverlayFocusIndex = 0
+            },
+            "voi_overlay:decision" => next with
+            {
+                VoiOverlayFocusIndex = 1
+            },
+            "voi_overlay:posterior" => next with
+            {
+                VoiOverlayFocusIndex = 2
+            },
+            "voi_overlay:observation" => next with
+            {
+                VoiOverlayFocusIndex = 3
+            },
+            "voi_overlay:ledger" => next with
+            {
+                VoiOverlayLedgerIndex = (next.VoiOverlayLedgerIndex + 1) % 3,
+                VoiOverlayFocusIndex = 4
+            },
+            "voi_overlay:controls" => next with
+            {
+                VoiOverlayDetailExpanded = !next.VoiOverlayDetailExpanded,
+                VoiOverlayFocusIndex = 5
+            },
+            "voi_overlay:footer" => next with
+            {
+                VoiOverlayResetCount = next.VoiOverlayResetCount + 1,
+                VoiOverlayLedgerIndex = 0,
+                VoiOverlayFocusIndex = 6
+            },
+            _ => next
+        };
+        return hit.LocalHitId is
+            "voi_overlay:header" or
+            "voi_overlay:decision" or
+            "voi_overlay:posterior" or
+            "voi_overlay:observation" or
+            "voi_overlay:ledger" or
+            "voi_overlay:controls" or
+            "voi_overlay:footer";
     }
 
     private static bool HandleTerminalCapabilitiesMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)

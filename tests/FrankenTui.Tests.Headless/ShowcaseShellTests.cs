@@ -6686,6 +6686,81 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseVoiOverlayMouseMutatesFocusLedgerControlsAndReset()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 35,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(state, 3, 5, timestamp);
+        Assert.Equal(1, state.VoiOverlayFocusIndex);
+
+        state = ApplyMouse(
+            state,
+            45,
+            20,
+            timestamp + TimeSpan.FromMilliseconds(10),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(1, state.VoiOverlayLedgerIndex);
+        Assert.Equal(4, state.VoiOverlayFocusIndex);
+
+        state = ApplyMouse(state, 90, 5, timestamp + TimeSpan.FromMilliseconds(20));
+        Assert.True(state.VoiOverlayDetailExpanded);
+        Assert.Equal(5, state.VoiOverlayFocusIndex);
+
+        state = ApplyMouse(
+            state,
+            90,
+            5,
+            timestamp + TimeSpan.FromMilliseconds(30),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(1, state.VoiOverlayControlsScroll);
+        Assert.Equal(5, state.VoiOverlayFocusIndex);
+
+        state = ApplyMouse(state, 3, 29, timestamp + TimeSpan.FromMilliseconds(40));
+        Assert.Equal(1, state.VoiOverlayResetCount);
+        Assert.Equal(0, state.VoiOverlayLedgerIndex);
+        Assert.Equal(6, state.VoiOverlayFocusIndex);
+    }
+
+    [Fact]
+    public void ShowcaseVoiOverlayRendersMouseSelectedState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 35,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            VoiOverlayFocusIndex = 4,
+            VoiOverlayLedgerIndex = 2,
+            VoiOverlayControlsScroll = 3,
+            VoiOverlayResetCount = 2,
+            VoiOverlayDetailExpanded = true,
+            VoiOverlayVisible = false
+        };
+        var buffer = new RenderBuffer(120, 32);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 32), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("visible=false", screen);
+        Assert.Contains("VOI Ledger [selected 2]", screen);
+        Assert.Contains("> Decision", screen);
+        Assert.Contains("detail=expanded", screen);
+        Assert.Contains("selected_ledger_idx=2", screen);
+        Assert.Contains("r reset(2)", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryExposesInlineModeStoryPanels()
     {
         var state = ShowcaseDemoState.Create(
