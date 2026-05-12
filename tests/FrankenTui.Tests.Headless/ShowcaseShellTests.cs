@@ -6661,6 +6661,58 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseActionTimelineMouseMutatesFilterSelectionAndDetail()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 22,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(state, 3, 6, timestamp);
+        Assert.Equal(1, state.ActionTimelineFilterIndex);
+
+        state = ApplyMouse(
+            state,
+            3,
+            20,
+            timestamp + TimeSpan.FromMilliseconds(10),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(1, state.ActionTimelineSelectedIndex);
+
+        state = ApplyMouse(state, 80, 20, timestamp + TimeSpan.FromMilliseconds(20));
+        Assert.True(state.ActionTimelineDetailExpanded);
+    }
+
+    [Fact]
+    public void ShowcaseActionTimelineRendersMouseSelectedState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 22,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            ActionTimelineFilterIndex = 2,
+            ActionTimelineSelectedIndex = 3,
+            ActionTimelineDetailExpanded = true
+        };
+        var buffer = new RenderBuffer(120, 32);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 32), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("Active filter: component:runtime", screen);
+        Assert.Contains("Event Timeline [selected 3]", screen);
+        Assert.Contains("Event Detail [expanded]", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryExposesTerminalCapabilitiesPanels()
     {
         var state = ShowcaseDemoState.Create(

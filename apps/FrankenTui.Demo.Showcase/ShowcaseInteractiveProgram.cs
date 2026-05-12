@@ -123,6 +123,9 @@ internal sealed record ShowcaseDemoState(
     int NotificationsTriggerIndex = 0,
     int NotificationsToastIndex = 0,
     int NotificationsLifecycleScroll = 0,
+    int ActionTimelineFilterIndex = 0,
+    int ActionTimelineSelectedIndex = 0,
+    bool ActionTimelineDetailExpanded = false,
     bool PaletteLabBenchEnabled = false,
     int PaletteLabBenchFrame = 0,
     int PaletteLabBenchProcessed = 0,
@@ -278,6 +281,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent notificationsMouseEvent &&
             HandleNotificationsMouse(notificationsMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent actionTimelineMouseEvent &&
+            HandleActionTimelineMouse(actionTimelineMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -1342,6 +1351,56 @@ internal sealed record ShowcaseDemoState(
         }
 
         return false;
+    }
+
+    private static bool HandleActionTimelineMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 22 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content)
+        {
+            return false;
+        }
+
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = hit.LocalHitId switch
+            {
+                "action_timeline:timeline" => next with
+                {
+                    ActionTimelineSelectedIndex = Math.Clamp(next.ActionTimelineSelectedIndex + delta, 0, 7)
+                },
+                "action_timeline:filters" => next with
+                {
+                    ActionTimelineFilterIndex = Math.Clamp(next.ActionTimelineFilterIndex + delta, 0, 3)
+                },
+                _ => next
+            };
+            return hit.LocalHitId is "action_timeline:timeline" or "action_timeline:filters";
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        next = hit.LocalHitId switch
+        {
+            "action_timeline:filters" => next with { ActionTimelineFilterIndex = (next.ActionTimelineFilterIndex + 1) % 4 },
+            "action_timeline:timeline" => next with { ActionTimelineSelectedIndex = Math.Clamp(next.ActionTimelineSelectedIndex + 1, 0, 7) },
+            "action_timeline:detail" => next with { ActionTimelineDetailExpanded = !next.ActionTimelineDetailExpanded },
+            _ => next
+        };
+        return hit.LocalHitId is "action_timeline:filters" or "action_timeline:timeline" or "action_timeline:detail";
     }
 
     private static bool HandleTerminalCapabilitiesMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)

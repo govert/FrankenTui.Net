@@ -1489,7 +1489,15 @@ internal static class ShowcaseSurface
 
     private static IWidget BuildActionTimeline(ShowcaseDemoState state)
     {
-        var selected = state.ScriptFrame % 8;
+        var selected = Math.Clamp(state.ActionTimelineSelectedIndex, 0, 7);
+        var filter = Math.Clamp(state.ActionTimelineFilterIndex, 0, 3);
+        var filterLabel = filter switch
+        {
+            1 => "severity:warn+",
+            2 => "component:runtime",
+            3 => "type:budget",
+            _ => "all"
+        };
         var rows = Enumerable.Range(0, 8)
             .Select(index =>
             {
@@ -1529,9 +1537,12 @@ internal static class ShowcaseSurface
 
             Evidence:
               {(selectedRow[3] == "caps" ? "evidence: env + probe signal" : selectedRow[3] == "budget" ? "budget: frame_time > p95" : "decision: follow guard")}
+
+            Detail expanded: {(state.ActionTimelineDetailExpanded ? "yes" : "no")}
             """;
-        var controls = """
+        var controls = $"""
             Follow[F]: ON  Component[C]: all  Severity[S]: all  Type[T]: all  Clear[X]
+            Active filter: {filterLabel} | Selected event: {selected}
             Max events: 500 | Burst: every 2 ticks | Initial events: 12
             Enter toggles detail expansion | Up/Down or j/k navigate
             PgUp/PgDn page | Home/End jump | Click select | Scroll navigate
@@ -1540,10 +1551,9 @@ internal static class ShowcaseSurface
             action_timeline::new
             action_timeline::update
             action_timeline::tick
+            action_timeline::buffer_eviction
             action_timeline::filter_change
             action_timeline::follow_change
-            action_timeline::buffer_eviction
-            RUST_LOG=ftui_demo_showcase::screens::action_timeline=debug
             """;
 
         return new StackWidget(
@@ -1555,7 +1565,7 @@ internal static class ShowcaseSurface
                     [
                         (LayoutConstraint.Percentage(62), new PanelWidget
                         {
-                            Title = "Event Timeline",
+                            Title = $"Event Timeline [selected {selected}]",
                             Child = new TableWidget
                             {
                                 Headers = ["Tick", "Severity", "Component", "Type", "Summary"],
@@ -1563,7 +1573,7 @@ internal static class ShowcaseSurface
                                 SelectedRow = selected
                             }
                         }),
-                        (LayoutConstraint.Fill(), Panel("Event Detail", details))
+                        (LayoutConstraint.Fill(), Panel(state.ActionTimelineDetailExpanded ? "Event Detail [expanded]" : "Event Detail", details))
                     ]))
             ]);
     }
