@@ -8587,9 +8587,22 @@ public sealed class ShowcaseShellTests
             TerminalMouseButton.WheelDown,
             TerminalMouseKind.Scroll);
         Assert.Equal(1, state.PerformanceSelectedIndex);
+        Assert.Equal(0, state.PerformanceFocusIndex);
+        Assert.False(state.PerformanceContextArmed);
 
         state = ApplyMouse(state, 3, 15, timestamp + TimeSpan.FromMilliseconds(10));
         Assert.Equal(2, state.PerformanceSelectedIndex);
+        Assert.Equal(1, state.PerformanceFocusIndex);
+
+        state = ApplyMouse(
+            state,
+            100,
+            8,
+            timestamp + TimeSpan.FromMilliseconds(20),
+            TerminalMouseButton.Right,
+            TerminalMouseKind.Down);
+        Assert.Equal(2, state.PerformanceFocusIndex);
+        Assert.True(state.PerformanceContextArmed);
     }
 
     [Fact]
@@ -8602,7 +8615,9 @@ public sealed class ShowcaseShellTests
             language: "en",
             flowDirection: WidgetFlowDirection.LeftToRight) with
         {
-            PerformanceSelectedIndex = 42
+            PerformanceSelectedIndex = 42,
+            PerformanceFocusIndex = 2,
+            PerformanceContextArmed = true
         };
         var buffer = new RenderBuffer(120, 32);
 
@@ -8610,7 +8625,9 @@ public sealed class ShowcaseShellTests
             .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 32), Theme.DefaultTheme));
 
         var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("Performance Stats [context]", screen);
         Assert.Contains("Selected:     43 / 10000", screen);
+        Assert.Contains("Focus:        2 context", screen);
         Assert.Contains("Event #00042", screen);
     }
 

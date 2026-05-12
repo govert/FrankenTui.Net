@@ -1035,6 +1035,8 @@ internal static class ShowcaseSurface
         const int totalItems = 10_000;
         var viewportRows = Math.Max(8, Math.Min(18, state.Viewport.Height - 10));
         var selected = Math.Clamp(state.PerformanceSelectedIndex, 0, totalItems - 1);
+        var focus = Math.Clamp(state.PerformanceFocusIndex, 0, 3);
+        var focusLabel = state.PerformanceContextArmed ? "context" : "focus";
         var scrollOffset = Math.Max(0, selected - viewportRows / 2);
         var visibleEnd = Math.Min(totalItems, scrollOffset + viewportRows);
         var rows = Enumerable.Range(scrollOffset, visibleEnd - scrollOffset)
@@ -1074,6 +1076,7 @@ internal static class ShowcaseSurface
         var stats = $"""
             Total items:  {totalItems}
             Selected:     {selected + 1} / {totalItems}
+            Focus:        {focus} {focusLabel}
             Scroll:       {scrollOffset}
             Viewport:     {viewportRows} rows
             Visible:      {scrollOffset}..{visibleEnd}
@@ -1092,7 +1095,7 @@ internal static class ShowcaseSurface
                     [
                         (LayoutConstraint.Percentage(68), new PanelWidget
                         {
-                            Title = $"Virtualized List ({totalItems} items)",
+                            Title = focus is 0 or 1 ? $"Virtualized List ({totalItems} items) [{focusLabel}]" : $"Virtualized List ({totalItems} items)",
                             Child = new TableWidget
                             {
                                 Headers = ["", "Index", "Level", "Module", "Message"],
@@ -1100,9 +1103,9 @@ internal static class ShowcaseSurface
                                 SelectedRow = selected - scrollOffset
                             }
                         }),
-                        (LayoutConstraint.Fill(), Panel("Performance Stats", stats))
+                        (LayoutConstraint.Fill(), Panel(focus == 2 ? $"Performance Stats [{focusLabel}]" : "Performance Stats", stats))
                     ])),
-                (LayoutConstraint.Fixed(1), new ParagraphWidget($"Item {selected + 1}/{totalItems} | j/k: scroll | Ctrl+D/U: page | g/G: jump"))
+                (LayoutConstraint.Fixed(1), new ParagraphWidget($"Item {selected + 1}/{totalItems} | focus={focus} {focusLabel} | j/k: scroll | Ctrl+D/U: page | g/G: jump"))
             ]);
     }
 

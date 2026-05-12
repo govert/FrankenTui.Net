@@ -132,7 +132,9 @@ internal sealed record ShowcaseDemoState(
     int MacroRecorderTimelineIndex = 0,
     int MacroRecorderScenarioIndex = 0,
     bool MacroRecorderContextArmed = false,
+    int PerformanceFocusIndex = 0,
     int PerformanceSelectedIndex = 0,
+    bool PerformanceContextArmed = false,
     int MarkdownActivePaneIndex = 0,
     int MarkdownRendererScroll = 0,
     int MarkdownStreamScroll = 0,
@@ -4069,8 +4071,7 @@ internal sealed record ShowcaseDemoState(
         }
 
         var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
-        if (hit.Layer != ShowcaseHitLayer.Content ||
-            hit.LocalHitId is not ("performance:list" or "performance:list:selected"))
+        if (hit.Layer != ShowcaseHitLayer.Content)
         {
             return false;
         }
@@ -4078,7 +4079,38 @@ internal sealed record ShowcaseDemoState(
         if (gesture.Kind == TerminalMouseKind.Scroll)
         {
             var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
-            next = next with { PerformanceSelectedIndex = Math.Clamp(next.PerformanceSelectedIndex + delta, 0, 9_999) };
+            next = hit.LocalHitId switch
+            {
+                "performance:list" or "performance:list:selected" => next with
+                {
+                    PerformanceFocusIndex = hit.LocalHitId == "performance:list:selected" ? 1 : 0,
+                    PerformanceContextArmed = false,
+                    PerformanceSelectedIndex = Math.Clamp(next.PerformanceSelectedIndex + delta, 0, 9_999)
+                },
+                "performance:stats" => next with
+                {
+                    PerformanceFocusIndex = 2,
+                    PerformanceContextArmed = false
+                },
+                _ => next
+            };
+            return hit.LocalHitId is "performance:list" or "performance:list:selected" or "performance:stats";
+        }
+
+        if (gesture.Button == TerminalMouseButton.Right &&
+            hit.LocalHitId is "performance:list" or "performance:list:selected" or "performance:stats" or "performance:footer")
+        {
+            next = next with
+            {
+                PerformanceFocusIndex = hit.LocalHitId switch
+                {
+                    "performance:list:selected" => 1,
+                    "performance:stats" => 2,
+                    "performance:footer" => 3,
+                    _ => 0
+                },
+                PerformanceContextArmed = true
+            };
             return true;
         }
 
@@ -4087,8 +4119,27 @@ internal sealed record ShowcaseDemoState(
             return false;
         }
 
-        next = next with { PerformanceSelectedIndex = Math.Clamp(next.PerformanceSelectedIndex + 1, 0, 9_999) };
-        return true;
+        next = hit.LocalHitId switch
+        {
+            "performance:list" or "performance:list:selected" => next with
+            {
+                PerformanceFocusIndex = hit.LocalHitId == "performance:list:selected" ? 1 : 0,
+                PerformanceContextArmed = false,
+                PerformanceSelectedIndex = Math.Clamp(next.PerformanceSelectedIndex + 1, 0, 9_999)
+            },
+            "performance:stats" => next with
+            {
+                PerformanceFocusIndex = 2,
+                PerformanceContextArmed = false
+            },
+            "performance:footer" => next with
+            {
+                PerformanceFocusIndex = 3,
+                PerformanceContextArmed = false
+            },
+            _ => next
+        };
+        return hit.LocalHitId is "performance:list" or "performance:list:selected" or "performance:stats" or "performance:footer";
     }
 
     private static bool HandleMarkdownMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
