@@ -216,6 +216,15 @@ internal sealed record ShowcaseDemoState(
     bool WidgetBuilderBorderEnabled = true,
     bool WidgetBuilderPresetSaved = false,
     bool WidgetBuilderExportArmed = false,
+    int DeterminismFocusIndex = 0,
+    int DeterminismStrategyIndex = 1,
+    int DeterminismScenarioIndex = 0,
+    int DeterminismSeedOffset = 0,
+    int DeterminismReportScroll = 0,
+    int DeterminismChecksScroll = 0,
+    int DeterminismRunCount = 0,
+    bool DeterminismFaultEnabled = false,
+    bool DeterminismExportArmed = false,
     bool PaletteLabBenchEnabled = false,
     int PaletteLabBenchFrame = 0,
     int PaletteLabBenchProcessed = 0,
@@ -473,6 +482,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent widgetBuilderMouseEvent &&
             HandleWidgetBuilderMouse(widgetBuilderMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent determinismMouseEvent &&
+            HandleDeterminismMouse(determinismMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -3051,6 +3066,95 @@ internal sealed record ShowcaseDemoState(
 
     private static int ResolveWidgetBuilderValue(ShowcaseDemoState state) =>
         state.WidgetBuilderValue >= 0 ? state.WidgetBuilderValue : 40 + (Math.Abs(state.ScriptFrame) % 12) * 5;
+
+    private static bool HandleDeterminismMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 40 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content)
+        {
+            return false;
+        }
+
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = hit.LocalHitId switch
+            {
+                "determinism:equivalence" => next with
+                {
+                    DeterminismStrategyIndex = Math.Clamp(next.DeterminismStrategyIndex + delta, 0, 2),
+                    DeterminismFocusIndex = 1
+                },
+                "determinism:report" => next with
+                {
+                    DeterminismReportScroll = Math.Clamp(next.DeterminismReportScroll + delta, 0, 8),
+                    DeterminismFocusIndex = 2
+                },
+                "determinism:checks" => next with
+                {
+                    DeterminismChecksScroll = Math.Clamp(next.DeterminismChecksScroll + delta, 0, 8),
+                    DeterminismFocusIndex = 4
+                },
+                _ => next
+            };
+            return hit.LocalHitId is "determinism:equivalence" or "determinism:report" or "determinism:checks";
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        next = hit.LocalHitId switch
+        {
+            "determinism:header" => next with
+            {
+                DeterminismFaultEnabled = !next.DeterminismFaultEnabled,
+                DeterminismFocusIndex = 0
+            },
+            "determinism:equivalence" => next with
+            {
+                DeterminismStrategyIndex = (next.DeterminismStrategyIndex + 1) % 3,
+                DeterminismFocusIndex = 1
+            },
+            "determinism:report" => next with
+            {
+                DeterminismExportArmed = true,
+                DeterminismFocusIndex = 2
+            },
+            "determinism:preview" => next with
+            {
+                DeterminismSeedOffset = Math.Clamp(next.DeterminismSeedOffset + 1, 0, 10),
+                DeterminismFocusIndex = 3
+            },
+            "determinism:checks" => next with
+            {
+                DeterminismScenarioIndex = (next.DeterminismScenarioIndex + 1) % 3,
+                DeterminismRunCount = next.DeterminismRunCount + 1,
+                DeterminismFocusIndex = 4
+            },
+            "determinism:footer" => next with
+            {
+                DeterminismStrategyIndex = 1,
+                DeterminismScenarioIndex = 0,
+                DeterminismSeedOffset = 0,
+                DeterminismFaultEnabled = false,
+                DeterminismExportArmed = false,
+                DeterminismFocusIndex = 5
+            },
+            _ => next
+        };
+        return hit.LocalHitId is "determinism:header" or "determinism:equivalence" or "determinism:report" or "determinism:preview" or "determinism:checks" or "determinism:footer";
+    }
 
     private static bool HandleTerminalCapabilitiesMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
     {

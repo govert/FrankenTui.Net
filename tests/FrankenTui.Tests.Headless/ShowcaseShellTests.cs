@@ -7322,6 +7322,81 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseDeterminismLabMouseMutatesStrategyReportPreviewChecksAndReset()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 40,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(state, 3, 6, timestamp);
+        Assert.Equal(2, state.DeterminismStrategyIndex);
+        Assert.Equal(1, state.DeterminismFocusIndex);
+
+        state = ApplyMouse(
+            state,
+            3,
+            22,
+            timestamp + TimeSpan.FromMilliseconds(10),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(1, state.DeterminismReportScroll);
+        Assert.Equal(2, state.DeterminismFocusIndex);
+
+        state = ApplyMouse(state, 80, 6, timestamp + TimeSpan.FromMilliseconds(20));
+        Assert.Equal(1, state.DeterminismSeedOffset);
+        Assert.Equal(3, state.DeterminismFocusIndex);
+
+        state = ApplyMouse(state, 80, 22, timestamp + TimeSpan.FromMilliseconds(30));
+        Assert.Equal(1, state.DeterminismScenarioIndex);
+        Assert.Equal(1, state.DeterminismRunCount);
+        Assert.Equal(4, state.DeterminismFocusIndex);
+
+        state = ApplyMouse(state, 3, 29, timestamp + TimeSpan.FromMilliseconds(40));
+        Assert.Equal(1, state.DeterminismStrategyIndex);
+        Assert.Equal(0, state.DeterminismScenarioIndex);
+        Assert.Equal(0, state.DeterminismSeedOffset);
+        Assert.Equal(5, state.DeterminismFocusIndex);
+    }
+
+    [Fact]
+    public void ShowcaseDeterminismLabRendersMouseSelectedState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 40,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            DeterminismFocusIndex = 4,
+            DeterminismStrategyIndex = 2,
+            DeterminismScenarioIndex = 2,
+            DeterminismSeedOffset = 3,
+            DeterminismReportScroll = 2,
+            DeterminismChecksScroll = 4,
+            DeterminismRunCount = 5,
+            DeterminismFaultEnabled = true,
+            DeterminismExportArmed = true
+        };
+        var buffer = new RenderBuffer(120, 32);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 32), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("active=FullRedraw", screen);
+        Assert.Contains("fault=ON", screen);
+        Assert.Contains("> FullRedraw", screen);
+        Assert.Contains("Report scroll: 2 | export=ready", screen);
+        Assert.Contains("Checks [scroll 4]", screen);
+        Assert.Contains("run_count=5", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryExposesVisualEffectsPanels()
     {
         var state = ShowcaseDemoState.Create(

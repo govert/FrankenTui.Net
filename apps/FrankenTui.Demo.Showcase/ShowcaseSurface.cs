@@ -3142,23 +3142,32 @@ internal static class ShowcaseSurface
     private static IWidget BuildDeterminismLab(ShowcaseDemoState state)
     {
         var frame = state.RuntimeStats?.StepIndex ?? state.ScriptFrame;
-        var seed = 7 + Math.Abs(frame % 11);
-        var fault = frame % 5 == 0;
+        var strategyIndex = Math.Clamp(state.DeterminismStrategyIndex, 0, 2);
+        var scenarioIndex = Math.Clamp(state.DeterminismScenarioIndex, 0, 2);
+        var focusIndex = Math.Clamp(state.DeterminismFocusIndex, 0, 5);
+        var reportScroll = Math.Clamp(state.DeterminismReportScroll, 0, 8);
+        var checksScroll = Math.Clamp(state.DeterminismChecksScroll, 0, 8);
+        var seed = 7 + Math.Abs(frame % 11) + Math.Clamp(state.DeterminismSeedOffset, 0, 10);
+        var fault = state.DeterminismFaultEnabled || frame % 5 == 0;
+        string[] strategies = ["Full", "DirtyRows", "FullRedraw"];
+        string[] scenarios = ["Baseline (10f)", "Drift (30f)", "Fault Injection (1f)"];
+        var activeStrategy = strategies[strategyIndex];
+        var activeScenario = scenarios[scenarioIndex];
         var full = 0x8A2F3D9CUL + (ulong)Math.Abs(frame);
         var dirty = fault ? full ^ 0x0000_00FFUL : full;
         var redraw = full;
         var status = fault ? "MISMATCH" : "OK";
 
         var header = new ParagraphWidget(
-            $"Determinism Lab | seed={seed} | frame={frame} | active=DirtyRows | fault={(fault ? "ON" : "OFF")}\n" +
-            "Checksum equivalence across Full, DirtyRows, and FullRedraw diff strategies");
+            $"Determinism Lab | seed={seed} | frame={frame} | active={activeStrategy} | fault={(fault ? "ON" : "OFF")} | focus={focusIndex}\n" +
+            $"Checksum equivalence across Full, DirtyRows, and FullRedraw diff strategies | scenario={activeScenario}");
 
         var equivalence = Panel(
-            "Equivalence",
+            focusIndex == 1 ? $"Equivalence [focus {activeStrategy}]" : "Equivalence",
             "Strategy    Changes   Checksum             Status\n" +
-            $"Full           118   0x{full:x16}   OK\n" +
-            $"DirtyRows       42   0x{dirty:x16}   {status}\n" +
-            $"FullRedraw    1080   0x{redraw:x16}   OK\n\n" +
+            $"{(strategyIndex == 0 ? "> " : "  ")}Full           118   0x{full:x16}   OK\n" +
+            $"{(strategyIndex == 1 ? "> " : "  ")}DirtyRows       42   0x{dirty:x16}   {status}\n" +
+            $"{(strategyIndex == 2 ? "> " : "  ")}FullRedraw    1080   0x{redraw:x16}   OK\n\n" +
             (fault
                 ? "Mismatch: DirtyRows first at (0, 0) delta 1\n"
                 : "Mismatch: none\n") +
@@ -3166,7 +3175,7 @@ internal static class ShowcaseSurface
             "Controls: 1/2/3 strategy | [/] seed | Space pause | F fault | E export | Enter/R run | A all | C checksum | X reset");
 
         var preview = Panel(
-            "Scene Preview",
+            focusIndex == 3 ? $"Scene Preview [focus seed={seed}]" : "Scene Preview",
             "A..F....Q.....T..O....M....X....C....P....Z....\n" +
             "..B....L....R....D....H....N....V....E....K....\n" +
             "....O....cursor..Y....S....I....W....G....U....\n" +
@@ -3174,19 +3183,20 @@ internal static class ShowcaseSurface
             "LCG seed stream mutates rows and cells; dirty rows are diff-applied into a cloned buffer.");
 
         var checks = Panel(
-            "Checks",
+            checksScroll > 0 ? $"Checks [scroll {checksScroll}]" : focusIndex == 4 ? "Checks [focus]" : "Checks",
             "Scenarios (click/Enter):\n" +
-            "> Baseline (10f)\n" +
-            "  Drift (30f)\n" +
-            "  Fault Injection (1f)\n\n" +
+            $"{(scenarioIndex == 0 ? "> " : "  ")}Baseline (10f)\n" +
+            $"{(scenarioIndex == 1 ? "> " : "  ")}Drift (30f)\n" +
+            $"{(scenarioIndex == 2 ? "> " : "  ")}Fault Injection (1f)\n\n" +
             "Runs (click row to inspect):\n" +
-            $"  {status} Baseline (10f)\n" +
+            $"  {status} {activeScenario} run_count={state.DeterminismRunCount}\n" +
             "  OK Drift (30f)\n" +
             "  MISMATCH Fault Injection (1f)\n" +
             "Mouse: click scenario to run; click run row to inspect; wheel scrolls details");
 
         var report = Panel(
-            "Report + Determinism Env",
+            reportScroll > 0 ? $"Report + Determinism Env [scroll {reportScroll}]" : focusIndex == 2 ? "Report + Determinism Env [focus]" : "Report + Determinism Env",
+            $"Report scroll: {reportScroll} | export={(state.DeterminismExportArmed ? "ready" : "idle")}\n" +
             "JSONL export path: FTUI_DETERMINISM_LAB_REPORT or determinism_lab_report.jsonl\n" +
             "event=determinism_env timestamp run_id hash_key seed width height env\n" +
             "event=determinism_report scenario frame strategy checksum change_count status first_mismatch\n" +
@@ -3214,7 +3224,7 @@ internal static class ShowcaseSurface
                                 (LayoutConstraint.Percentage(48), checks)
                             ]))
                     ])),
-                (LayoutConstraint.Fixed(1), new ParagraphWidget("1/2/3 strategy | [/] seed | F fault | E export JSONL | A all scenarios | C log checksum | mouse hit regions"))
+                (LayoutConstraint.Fixed(1), new ParagraphWidget($"1/2/3 strategy({activeStrategy}) | [/] seed({seed}) | F fault({(fault ? "on" : "off")}) | E export({(state.DeterminismExportArmed ? "ready" : "idle")}) | A all scenarios | C log checksum | mouse hit regions"))
             ]);
     }
 
