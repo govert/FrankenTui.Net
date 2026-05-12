@@ -3574,10 +3574,22 @@ internal static class ShowcaseSurface
             lines.Add("│" + columns[0][row] + columns[1][row] + columns[2][row] + "│");
         }
 
-        lines.Add("│" + FitCell($" h/l: column | j/k: card | H/L: move | u/r: undo/redo | mouse: drag | moves: {moveCount}", 78) + "│");
+        var footer = board.IsDragging
+            ? $" drag card {board.Column(board.DragSourceCol)[board.DragSourceRow].Id} -> {KanbanColumnName(board.DragHoverCol)} | release to drop | moves: {moveCount}"
+            : $" h/l: column | j/k: card | H/L: move | u/r: undo/redo | mouse: drag | moves: {moveCount}";
+        lines.Add("│" + FitCell(footer, 78) + "│");
         lines.Add("╰" + new string('─', 78) + "╯");
         return lines;
     }
+
+    private static string KanbanColumnName(int col) =>
+        col switch
+        {
+            0 => "Todo",
+            1 => "In Progress",
+            2 => "Done",
+            _ => "none"
+        };
 
     private static string KanbanColumnTop(string title, bool focused) =>
         focused
@@ -3596,7 +3608,8 @@ internal static class ShowcaseSurface
         for (var index = 0; index < cards.Count && rows.Count < 18; index++)
         {
             var card = cards[index];
-            rows.Add(KanbanColumnLine(board, col, $"{(board.FocusCol == col && board.FocusRow == index ? "> " : "  ")}{card.Title}"));
+            var dragMark = board.IsDragging && board.DragSourceCol == col && board.DragSourceRow == index ? "~ " : string.Empty;
+            rows.Add(KanbanColumnLine(board, col, $"{(board.FocusCol == col && board.FocusRow == index ? "> " : "  ")}{dragMark}{card.Title}"));
             rows.Add(KanbanColumnLine(board, col, $"  [{card.Tag}]"));
             rows.Add(KanbanColumnLine(board, col, string.Empty));
         }

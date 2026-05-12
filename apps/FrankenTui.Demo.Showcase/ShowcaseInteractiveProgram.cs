@@ -1620,9 +1620,9 @@ internal sealed record ShowcaseDemoState(
         var board = next.KanbanBoard ?? ShowcaseKanbanState.CreateDefault();
         var updated = gesture.Kind switch
         {
-            TerminalMouseKind.Down when gesture.Button == TerminalMouseButton.Left => board.FocusAt(col, row),
-            TerminalMouseKind.Up when gesture.Button == TerminalMouseButton.Left => board.MoveFocusedToColumn(col),
-            TerminalMouseKind.Drag when gesture.Button == TerminalMouseButton.Left => board.FocusColumn(col),
+            TerminalMouseKind.Down when gesture.Button == TerminalMouseButton.Left => board.FocusAt(col, row).StartDrag(col, row),
+            TerminalMouseKind.Up when gesture.Button == TerminalMouseButton.Left => board.DropOnColumn(col),
+            TerminalMouseKind.Drag when gesture.Button == TerminalMouseButton.Left => board.DragOverColumn(col),
             _ => board
         };
 
@@ -5753,7 +5753,10 @@ internal sealed record ShowcaseKanbanState(
     int FocusCol,
     int FocusRow,
     IReadOnlyList<ShowcaseKanbanMove> History,
-    IReadOnlyList<ShowcaseKanbanMove> RedoStack)
+    IReadOnlyList<ShowcaseKanbanMove> RedoStack,
+    int DragSourceCol = -1,
+    int DragSourceRow = -1,
+    int DragHoverCol = -1)
 {
     public static ShowcaseKanbanState CreateDefault() =>
         new(
@@ -5784,6 +5787,8 @@ internal sealed record ShowcaseKanbanState(
     public bool CanUndo => History.Count > 0;
 
     public bool CanRedo => RedoStack.Count > 0;
+
+    public bool IsDragging => DragSourceCol >= 0 && DragSourceRow >= 0;
 
     public ShowcaseKanbanState FocusLeft() =>
         FocusCol == 0 ? this : WithFocus(FocusCol - 1, FocusRow);
@@ -5857,13 +5862,49 @@ internal sealed record ShowcaseKanbanState(
     }
 
     public ShowcaseKanbanState FocusAt(int col, int row) =>
-        col is < 0 or > 2 ? this : WithFocus(col, row);
+        col is < 0 or > 2 ? this : WithFocus(col, row).ClearDrag();
 
     public ShowcaseKanbanState FocusColumn(int col) =>
-        col is < 0 or > 2 ? this : WithFocus(col, FocusRow);
+        col is < 0 or > 2 ? this : WithFocus(col, FocusRow).ClearDrag();
 
     public ShowcaseKanbanState MoveFocusedToColumn(int toCol) =>
         toCol is < 0 or > 2 ? this : MoveCard(FocusCol, FocusRow, toCol);
+
+    public ShowcaseKanbanState StartDrag(int col, int row) =>
+        col is < 0 or > 2 || row < 0 || row >= Column(col).Count
+            ? ClearDrag()
+            : WithFocus(col, row) with
+            {
+                DragSourceCol = col,
+                DragSourceRow = row,
+                DragHoverCol = col
+            };
+
+    public ShowcaseKanbanState DragOverColumn(int col)
+    {
+        if (!IsDragging || col is < 0 or > 2)
+        {
+            return this;
+        }
+
+        return WithFocus(col, FocusRow) with { DragHoverCol = col };
+    }
+
+    public ShowcaseKanbanState DropOnColumn(int col)
+    {
+        if (!IsDragging)
+        {
+            return MoveFocusedToColumn(col).ClearDrag();
+        }
+
+        var moved = col is < 0 or > 2 ? this : MoveCard(DragSourceCol, DragSourceRow, col);
+        return moved.ClearDrag();
+    }
+
+    public ShowcaseKanbanState ClearDrag() =>
+        IsDragging || DragHoverCol >= 0
+            ? this with { DragSourceCol = -1, DragSourceRow = -1, DragHoverCol = -1 }
+            : this;
 
     private ShowcaseKanbanState MoveCard(int fromCol, int fromRow, int toCol)
     {

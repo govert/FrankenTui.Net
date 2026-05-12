@@ -591,9 +591,10 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   `app_kanbanboard_80x24.snap` with 24 equal rows, 0 differing rows, and a
   1.000 local/upstream nonblank-character ratio. Keyboard focus movement, card
   moves, undo, redo, history, redo stack, and rendered card positions still
-  mutate through a screen-local `ShowcaseKanbanState`; mouse drag/drop routing,
-  card dimming/drop preview styling, cached hit-region registration, and wider
-  viewport/interactive evidence remain tracked under `364-DEM`.
+  mutate through a screen-local `ShowcaseKanbanState`; mouse drag/drop routing
+  now tracks drag source/hover columns and renders transient drag preview state;
+  exact cached hit-region registration and wider viewport/interactive evidence
+  remain tracked under `364-DEM`.
   The Live Markdown Editor screen now follows the upstream search/editor/preview
   layout with upstream sample markdown, search query/match labels, focus modes,
   TextArea line-number/soft-wrap status, MarkdownRenderer preview,

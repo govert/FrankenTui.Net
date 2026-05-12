@@ -2154,12 +2154,46 @@ public sealed class ShowcaseShellTests
         var afterDown = state.ApplyInput(Envelope(down, timestamp), RuntimeFrameStats.Empty);
         Assert.Equal(0, afterDown.KanbanBoard!.FocusCol);
         Assert.Equal(0, afterDown.KanbanBoard!.FocusRow);
+        Assert.True(afterDown.KanbanBoard!.IsDragging);
+        Assert.Equal(0, afterDown.KanbanBoard!.DragSourceCol);
+        Assert.Equal(0, afterDown.KanbanBoard!.DragHoverCol);
+
+        var drag = TerminalEvent.Mouse(new MouseGesture(30, 4, TerminalMouseButton.Left, TerminalMouseKind.Drag), timestamp.AddMilliseconds(5));
+        var afterDrag = afterDown.ApplyInput(Envelope(drag, timestamp.AddMilliseconds(5)), RuntimeFrameStats.Empty);
+        Assert.True(afterDrag.KanbanBoard!.IsDragging);
+        Assert.Equal(1, afterDrag.KanbanBoard!.DragHoverCol);
 
         var up = TerminalEvent.Mouse(new MouseGesture(30, 4, TerminalMouseButton.Left, TerminalMouseKind.Up), timestamp.AddMilliseconds(10));
-        var afterUp = afterDown.ApplyInput(Envelope(up, timestamp.AddMilliseconds(10)), RuntimeFrameStats.Empty);
+        var afterUp = afterDrag.ApplyInput(Envelope(up, timestamp.AddMilliseconds(10)), RuntimeFrameStats.Empty);
         Assert.Equal(3, afterUp.KanbanBoard!.Todo.Count);
         Assert.Equal(3, afterUp.KanbanBoard!.InProgress.Count);
         Assert.Equal(1, afterUp.KanbanBoard!.InProgress[^1].Id);
+        Assert.False(afterUp.KanbanBoard!.IsDragging);
+    }
+
+    [Fact]
+    public void ShowcaseKanbanRendersDragPreviewState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new FrankenTui.Core.Size(82, 26),
+            screenNumber: 42,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            KanbanBoard = ShowcaseKanbanState.CreateDefault()
+                .StartDrag(0, 0)
+                .DragOverColumn(1)
+        };
+        var buffer = new RenderBuffer(82, 26);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, FrankenTui.Core.Rect.FromSize(82, 26), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("~ Design login page", screen);
+        Assert.Contains("drag card 1 -> In Progress", screen);
+        Assert.Contains("release to drop", screen);
     }
 
     [Fact]
