@@ -7255,7 +7255,7 @@ public sealed class ShowcaseShellTests
             3,
             6,
             timestamp + TimeSpan.FromMilliseconds(20),
-            TerminalMouseButton.WheelDown,
+            TerminalMouseButton.WheelUp,
             TerminalMouseKind.Scroll);
         Assert.Equal(1, state.InlineModeLogRateIndex);
         Assert.Equal(1, state.InlineModeFocusIndex);

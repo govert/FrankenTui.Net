@@ -3478,7 +3478,7 @@ internal sealed record ShowcaseDemoState(
             {
                 "inline_mode:inline_story" => next with
                 {
-                    InlineModeLogRateIndex = Math.Clamp(ResolveInlineModeLogRateIndex(next) + delta, 0, 3),
+                    InlineModeLogRateIndex = Math.Clamp(ResolveInlineModeLogRateIndex(next) - delta, 0, 3),
                     InlineModeFocusIndex = 1
                 },
                 "inline_mode:state_limits" => next with
