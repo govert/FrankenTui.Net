@@ -1767,6 +1767,17 @@ internal static class ShowcaseSurface
 
     private static IWidget BuildAdvancedTextEditor(ShowcaseDemoState state)
     {
+        var cursorLine = Math.Clamp(state.AdvancedTextEditorCursorLine, 0, 12);
+        var focusIndex = Math.Clamp(state.AdvancedTextEditorFocusIndex, 0, 3);
+        var historyIndex = Math.Clamp(state.AdvancedTextEditorHistoryIndex, 0, 5);
+        var diagnosticsIndex = Math.Clamp(state.AdvancedTextEditorDiagnosticsIndex, 0, 9);
+        var focusName = focusIndex switch
+        {
+            1 => "search",
+            2 => "history",
+            3 => "diagnostics",
+            _ => "editor"
+        };
         var sample = """
             Welcome to the Advanced Text Editor!
 
@@ -1782,19 +1793,20 @@ internal static class ShowcaseSurface
 
             Unicode support: emoji, CJK, accented text
             """;
-        var searchPanel = """
+        var searchPanel = $"""
             Search / Replace
             Search: editor
             Replace: buffer
-            2/5 | Enter: Next | Shift+Enter: Prev
+            2/5 | Focus: {focusName} | Cursor line: {cursorLine + 1}
             Ctrl+R: Replace | Ctrl+A: Replace all
 
             Focus: editor -> search -> replace
             Ctrl+Left/Right, Tab/Shift+Tab cycle focus
             Esc closes search or clears selection
             """;
-        var history = """
+        var history = $"""
             Undo History
+            Selected history row: {historyIndex}
             Undo (3)
               text_edited insert "buffer"
               replace_performed editor->buffer
@@ -1827,7 +1839,7 @@ internal static class ShowcaseSurface
                 {
                     Headers = ["Event", "Field", "Value"],
                     Rows = diagnosticsRows,
-                    SelectedRow = state.ScriptFrame % diagnosticsRows.Length
+                    SelectedRow = diagnosticsIndex
                 })
             ]);
 
@@ -1837,18 +1849,18 @@ internal static class ShowcaseSurface
                 (LayoutConstraint.Percentage(50), new TextAreaWidget
                 {
                     Document = TextDocument.FromString(sample),
-                    Cursor = new TextCursor(8, 25),
-                    HasFocus = true,
-                    StatusText = "Ln 9, Col 26 | Match 2/5 | Undo:3 Redo:1 | Ctrl+U: Show history"
+                    Cursor = new TextCursor(cursorLine, 25),
+                    HasFocus = focusIndex == 0,
+                    StatusText = $"Ln {cursorLine + 1}, Col 26 | Focus: {focusName} | Match 2/5 | Undo:3 Redo:1 | Ctrl+U: Show history"
                 }),
                 (LayoutConstraint.Fill(), new StackWidget(
                     LayoutDirection.Vertical,
                     [
-                        (LayoutConstraint.Fixed(10), Panel("Search / Replace", searchPanel)),
-                        (LayoutConstraint.Fixed(11), Panel("Undo History", history)),
+                        (LayoutConstraint.Fixed(10), Panel(focusIndex == 1 ? "Search / Replace [focus]" : "Search / Replace", searchPanel)),
+                        (LayoutConstraint.Fixed(11), Panel(focusIndex == 2 ? $"Undo History [row {historyIndex}]" : "Undo History", history)),
                         (LayoutConstraint.Fill(), new PanelWidget
                         {
-                            Title = "Diagnostics",
+                            Title = focusIndex == 3 ? $"Diagnostics [row {diagnosticsIndex}]" : "Diagnostics",
                             Child = diagnostics
                         })
                     ]))

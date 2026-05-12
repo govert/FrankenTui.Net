@@ -5370,6 +5370,66 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseAdvancedTextEditorMouseMutatesFocusCursorHistoryAndDiagnostics()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 25,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(state, 3, 6, timestamp);
+        Assert.Equal(4, state.AdvancedTextEditorCursorLine);
+        Assert.Equal(0, state.AdvancedTextEditorFocusIndex);
+
+        state = ApplyMouse(state, 70, 4, timestamp + TimeSpan.FromMilliseconds(10));
+        Assert.Equal(1, state.AdvancedTextEditorFocusIndex);
+
+        state = ApplyMouse(state, 70, 13, timestamp + TimeSpan.FromMilliseconds(20));
+        Assert.Equal(1, state.AdvancedTextEditorHistoryIndex);
+        Assert.Equal(2, state.AdvancedTextEditorFocusIndex);
+
+        state = ApplyMouse(
+            state,
+            70,
+            24,
+            timestamp + TimeSpan.FromMilliseconds(30),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(1, state.AdvancedTextEditorDiagnosticsIndex);
+        Assert.Equal(3, state.AdvancedTextEditorFocusIndex);
+    }
+
+    [Fact]
+    public void ShowcaseAdvancedTextEditorRendersMouseSelectedState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 25,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            AdvancedTextEditorCursorLine = 4,
+            AdvancedTextEditorFocusIndex = 3,
+            AdvancedTextEditorHistoryIndex = 2,
+            AdvancedTextEditorDiagnosticsIndex = 7
+        };
+        var buffer = new RenderBuffer(120, 32);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 32), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("Ln 5, Col 26 | Focus: diagnostics", screen);
+        Assert.Contains("Focus: diagnostics | Cursor line: 5", screen);
+        Assert.Contains("Selected history row: 2", screen);
+        Assert.Contains("Diagnostics [row 7]", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryExposesVirtualizedSearchPanels()
     {
         var state = ShowcaseDemoState.Create(

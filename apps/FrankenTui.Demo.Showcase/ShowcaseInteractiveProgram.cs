@@ -133,6 +133,10 @@ internal sealed record ShowcaseDemoState(
     int LayoutInspectorStepIndex = 0,
     bool LayoutInspectorOverlayVisible = true,
     bool LayoutInspectorTreeVisible = true,
+    int AdvancedTextEditorCursorLine = 8,
+    int AdvancedTextEditorFocusIndex = 0,
+    int AdvancedTextEditorHistoryIndex = 0,
+    int AdvancedTextEditorDiagnosticsIndex = 0,
     bool PaletteLabBenchEnabled = false,
     int PaletteLabBenchFrame = 0,
     int PaletteLabBenchProcessed = 0,
@@ -306,6 +310,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent layoutInspectorMouseEvent &&
             HandleLayoutInspectorMouse(layoutInspectorMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent advancedTextEditorMouseEvent &&
+            HandleAdvancedTextEditorMouse(advancedTextEditorMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -1544,6 +1554,117 @@ internal sealed record ShowcaseDemoState(
             _ => next
         };
         return hit.LocalHitId is "layout_inspector:info" or "layout_inspector:overlay" or "layout_inspector:tree" or "layout_inspector:pane_studio";
+    }
+
+    private static bool HandleAdvancedTextEditorMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 25 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content)
+        {
+            return false;
+        }
+
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = hit.LocalHitId switch
+            {
+                { } value when value.StartsWith("advanced_text_editor:line:", StringComparison.Ordinal) => next with
+                {
+                    AdvancedTextEditorCursorLine = Math.Clamp(next.AdvancedTextEditorCursorLine + delta, 0, 12),
+                    AdvancedTextEditorFocusIndex = 0
+                },
+                { } value when value.StartsWith("advanced_text_editor:history:", StringComparison.Ordinal) => next with
+                {
+                    AdvancedTextEditorHistoryIndex = Math.Clamp(next.AdvancedTextEditorHistoryIndex + delta, 0, 5),
+                    AdvancedTextEditorFocusIndex = 2
+                },
+                { } value when value.StartsWith("advanced_text_editor:diagnostic:", StringComparison.Ordinal) => next with
+                {
+                    AdvancedTextEditorDiagnosticsIndex = Math.Clamp(next.AdvancedTextEditorDiagnosticsIndex + delta, 0, 9),
+                    AdvancedTextEditorFocusIndex = 3
+                },
+                "advanced_text_editor:search" => next with
+                {
+                    AdvancedTextEditorFocusIndex = 1
+                },
+                _ => next
+            };
+            return hit.LocalHitId == "advanced_text_editor:search" ||
+                hit.LocalHitId.StartsWith("advanced_text_editor:line:", StringComparison.Ordinal) ||
+                hit.LocalHitId.StartsWith("advanced_text_editor:history:", StringComparison.Ordinal) ||
+                hit.LocalHitId.StartsWith("advanced_text_editor:diagnostic:", StringComparison.Ordinal);
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        if (hit.LocalHitId.StartsWith("advanced_text_editor:line:", StringComparison.Ordinal))
+        {
+            var rowText = hit.LocalHitId["advanced_text_editor:line:".Length..];
+            if (!int.TryParse(rowText, CultureInfo.InvariantCulture, out var row))
+            {
+                return false;
+            }
+
+            next = next with
+            {
+                AdvancedTextEditorCursorLine = Math.Clamp(row, 0, 12),
+                AdvancedTextEditorFocusIndex = 0
+            };
+            return true;
+        }
+
+        if (hit.LocalHitId.StartsWith("advanced_text_editor:history:", StringComparison.Ordinal))
+        {
+            var rowText = hit.LocalHitId["advanced_text_editor:history:".Length..];
+            if (!int.TryParse(rowText, CultureInfo.InvariantCulture, out var row))
+            {
+                return false;
+            }
+
+            next = next with
+            {
+                AdvancedTextEditorHistoryIndex = Math.Clamp(row, 0, 5),
+                AdvancedTextEditorFocusIndex = 2
+            };
+            return true;
+        }
+
+        if (hit.LocalHitId.StartsWith("advanced_text_editor:diagnostic:", StringComparison.Ordinal))
+        {
+            var rowText = hit.LocalHitId["advanced_text_editor:diagnostic:".Length..];
+            if (!int.TryParse(rowText, CultureInfo.InvariantCulture, out var row))
+            {
+                return false;
+            }
+
+            next = next with
+            {
+                AdvancedTextEditorDiagnosticsIndex = Math.Clamp(row, 0, 9),
+                AdvancedTextEditorFocusIndex = 3
+            };
+            return true;
+        }
+
+        if (hit.LocalHitId == "advanced_text_editor:search")
+        {
+            next = next with { AdvancedTextEditorFocusIndex = 1 };
+            return true;
+        }
+
+        return false;
     }
 
     private static bool HandleTerminalCapabilitiesMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
