@@ -5083,6 +5083,79 @@ public sealed class ShowcaseShellTests
         Assert.Equal(20_302, diagnosticRecord.RootElement.GetProperty("target_id").GetInt32());
     }
 
+    [Fact]
+    public void ShowcaseFrameHitRegistryExposesAdvancedTextEditorPanels()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 25,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+
+        var editorLine = ShowcaseFrameHitRegistry.HitTest(state, 3, 6);
+        var search = ShowcaseFrameHitRegistry.HitTest(state, 70, 4);
+        var history = ShowcaseFrameHitRegistry.HitTest(state, 70, 13);
+        var diagnostic = ShowcaseFrameHitRegistry.HitTest(state, 70, 24);
+
+        Assert.Equal("advanced_text_editor:line:4", editorLine.LocalHitId);
+        Assert.Equal((uint)25_004, editorLine.UpstreamHitId);
+        Assert.Equal("advanced_text_editor:search", search.LocalHitId);
+        Assert.Equal((uint)25_100, search.UpstreamHitId);
+        Assert.Equal("advanced_text_editor:history:1", history.LocalHitId);
+        Assert.Equal((uint)25_201, history.UpstreamHitId);
+        Assert.Equal("advanced_text_editor:diagnostic:1", diagnostic.LocalHitId);
+        Assert.Equal((uint)25_301, diagnostic.UpstreamHitId);
+    }
+
+    [Fact]
+    public void ShowcaseEvidenceJsonlWriterEmitsAdvancedTextEditorMouseActions()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"ftui-showcase-advanced-text-editor-mouse-{Guid.NewGuid():N}.jsonl");
+        var options = ShowcaseCliOptions.Parse(
+            ["--screen=25", "--evidence-jsonl", path],
+            _ => null);
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 25,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+        var editorEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 6, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp);
+        var searchEvent = TerminalEvent.Mouse(
+            new MouseGesture(70, 4, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp + TimeSpan.FromMilliseconds(10));
+        var diagnosticsEvent = TerminalEvent.Mouse(
+            new MouseGesture(70, 24, TerminalMouseButton.WheelDown, TerminalMouseKind.Scroll),
+            timestamp + TimeSpan.FromMilliseconds(20));
+
+        using (var writer = ShowcaseEvidenceJsonlWriter.Create(options.EvidenceJsonlPath))
+        {
+            Assert.NotNull(writer);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 1, frame: 1, editorEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 2, frame: 2, searchEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 3, frame: 3, diagnosticsEvent, state, state);
+        }
+
+        var lines = File.ReadAllLines(path);
+        Assert.Equal(3, lines.Length);
+        using var editorRecord = JsonDocument.Parse(lines[0]);
+        using var searchRecord = JsonDocument.Parse(lines[1]);
+        using var diagnosticsRecord = JsonDocument.Parse(lines[2]);
+        Assert.Equal("advanced_text_editor_line_select", editorRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("advanced_text_editor:line:4", editorRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(25_004, editorRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("advanced_text_editor_search_focus", searchRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("advanced_text_editor:search", searchRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(25_100, searchRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("advanced_text_editor_diagnostics_scroll_down", diagnosticsRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("advanced_text_editor:diagnostic:1", diagnosticsRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(25_301, diagnosticsRecord.RootElement.GetProperty("target_id").GetInt32());
+    }
+
     private static ShowcaseDemoState ApplyKey(ShowcaseDemoState state, KeyGesture gesture, DateTimeOffset timestamp)
     {
         var terminalEvent = TerminalEvent.Key(gesture, timestamp);

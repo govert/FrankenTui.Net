@@ -911,6 +911,63 @@ public sealed class ShowcaseEvidenceJsonlWriter : IDisposable
             return "log_search_hit_test";
         }
 
+        if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 25)
+        {
+            if (gesture.Kind == TerminalMouseKind.Scroll)
+            {
+                if (hit.LocalHitId.StartsWith("advanced_text_editor:line:", StringComparison.Ordinal))
+                {
+                    return gesture.Button == TerminalMouseButton.WheelUp
+                        ? "advanced_text_editor_scroll_up"
+                        : "advanced_text_editor_scroll_down";
+                }
+
+                if (hit.LocalHitId.StartsWith("advanced_text_editor:history:", StringComparison.Ordinal))
+                {
+                    return gesture.Button == TerminalMouseButton.WheelUp
+                        ? "advanced_text_editor_history_scroll_up"
+                        : "advanced_text_editor_history_scroll_down";
+                }
+
+                if (hit.LocalHitId.StartsWith("advanced_text_editor:diagnostic:", StringComparison.Ordinal))
+                {
+                    return gesture.Button == TerminalMouseButton.WheelUp
+                        ? "advanced_text_editor_diagnostics_scroll_up"
+                        : "advanced_text_editor_diagnostics_scroll_down";
+                }
+
+                return gesture.Button == TerminalMouseButton.WheelUp
+                    ? "advanced_text_editor_panel_scroll_up"
+                    : "advanced_text_editor_panel_scroll_down";
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Left)
+            {
+                if (hit.LocalHitId.StartsWith("advanced_text_editor:line:", StringComparison.Ordinal))
+                {
+                    return "advanced_text_editor_line_select";
+                }
+
+                if (hit.LocalHitId.StartsWith("advanced_text_editor:history:", StringComparison.Ordinal))
+                {
+                    return "advanced_text_editor_history_select";
+                }
+
+                if (hit.LocalHitId.StartsWith("advanced_text_editor:diagnostic:", StringComparison.Ordinal))
+                {
+                    return "advanced_text_editor_diagnostic_select";
+                }
+
+                return hit.LocalHitId switch
+                {
+                    "advanced_text_editor:search" => "advanced_text_editor_search_focus",
+                    _ => "advanced_text_editor_hit_test"
+                };
+            }
+
+            return "advanced_text_editor_hit_test";
+        }
+
         if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 7)
         {
             if (gesture.Kind == TerminalMouseKind.Scroll)

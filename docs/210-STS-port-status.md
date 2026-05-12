@@ -842,11 +842,13 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   matching mouse evidence, and the Macro Recorder increment adds controls,
   timeline, event-detail, and scenario-runner regions plus matching mouse
   evidence. The Log Search increment adds result-row, live-stream, controls,
-  and diagnostics regions plus matching mouse evidence, while still leaving
-  broader generalized screen hit routing open. Focused showcase-shell
-  verification is now `161` tests via
+  and diagnostics regions plus matching mouse evidence, and the Advanced Text
+  Editor increment adds editor-line, search/replace, undo-history, and
+  diagnostics regions plus matching mouse evidence, while still leaving broader
+  generalized screen hit routing open. Focused showcase-shell
+  verification is now `163` tests via
   `dotnet test tests/FrankenTui.Tests.Headless/FrankenTui.Tests.Headless.csproj --no-restore --filter FullyQualifiedName~ShowcaseShellTests`.
-  Current local verification is `415` headless tests, `9` web tests, and `7`
+  Current local verification is `417` headless tests, `9` web tests, and `7`
   PTY tests via `dotnet test FrankenTui.Net.sln --no-restore`.
   Previous focused registry/evidence verification covered `33`
   registry/evidence

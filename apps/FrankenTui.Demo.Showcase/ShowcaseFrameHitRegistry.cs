@@ -692,6 +692,49 @@ internal static class ShowcaseFrameHitRegistry
             }
         }
 
+        if (state.CurrentScreenNumber == 25 && TryResolveContentInnerArea(state.Viewport, out var editorInner) && editorInner.Width >= 40 && editorInner.Height >= 12)
+        {
+            var editorWidth = Math.Max(1, editorInner.Width / 2);
+            var sideX = editorInner.X + editorWidth;
+            var sideWidth = Math.Max(1, editorInner.Width - editorWidth);
+            var editorRows = Math.Max(1, Math.Min(14, (int)editorInner.Height));
+            for (var row = 0; row < editorRows; row++)
+            {
+                AddRegion(
+                    regions,
+                    editorInner.X,
+                    editorInner.Y + row,
+                    editorWidth,
+                    new($"advanced_text_editor:line:{row}", ShowcaseHitLayer.Content, (uint)(25_000 + row)));
+            }
+
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)sideX, editorInner.Y, (ushort)sideWidth, (ushort)Math.Min(10, (int)editorInner.Height)),
+                new("advanced_text_editor:search", ShowcaseHitLayer.Content, 25_100)));
+            var historyY = editorInner.Y + 10;
+            var historyHeight = Math.Max(1, Math.Min(11, editorInner.Height - 10));
+            for (var row = 0; row < historyHeight; row++)
+            {
+                AddRegion(
+                    regions,
+                    sideX,
+                    historyY + row,
+                    sideWidth,
+                    new($"advanced_text_editor:history:{row}", ShowcaseHitLayer.Content, (uint)(25_200 + row)));
+            }
+
+            var diagnosticsY = editorInner.Y + 21;
+            for (var row = 0; row < Math.Max(1, Math.Min(10, editorInner.Height - 21)); row++)
+            {
+                AddRegion(
+                    regions,
+                    sideX,
+                    diagnosticsY + row,
+                    sideWidth,
+                    new($"advanced_text_editor:diagnostic:{row}", ShowcaseHitLayer.Content, (uint)(25_300 + row)));
+            }
+        }
+
         if (state.CurrentScreenNumber == 7 && TryResolveContentInnerArea(state.Viewport, out var formsInner) && formsInner.Width >= 30 && formsInner.Height >= 8)
         {
             var formWidth = Math.Max(1, formsInner.Width / 2);
