@@ -584,6 +584,44 @@ internal static class ShowcaseFrameHitRegistry
                 new("file_browser:preview", ShowcaseHitLayer.Content, 9_100)));
         }
 
+        if (state.CurrentScreenNumber == 21 && TryResolveContentInnerArea(state.Viewport, out var notificationInner) && notificationInner.Width >= 30 && notificationInner.Height >= 8)
+        {
+            var triggerWidth = Math.Max(1, notificationInner.Width * 40 / 100);
+            var triggerRows = new[] { "success", "error", "warning", "info", "urgent", "dismiss_all" };
+            for (var index = 0; index < triggerRows.Length; index++)
+            {
+                AddRegion(
+                    regions,
+                    notificationInner.X,
+                    notificationInner.Y + 3 + index,
+                    triggerWidth,
+                    new(
+                        $"notifications:trigger:{triggerRows[index]}",
+                        ShowcaseHitLayer.Content,
+                        (uint)(21_000 + index)));
+            }
+
+            var stackX = notificationInner.X + triggerWidth;
+            var stackWidth = Math.Max(1, notificationInner.Width - triggerWidth);
+            for (var row = 0; row < 5; row++)
+            {
+                AddRegion(
+                    regions,
+                    stackX,
+                    notificationInner.Y + 2 + row,
+                    stackWidth,
+                    new($"notifications:toast:{row}", ShowcaseHitLayer.Content, (uint)(21_100 + row)));
+            }
+
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(
+                    (ushort)stackX,
+                    (ushort)(notificationInner.Y + 11),
+                    (ushort)stackWidth,
+                    (ushort)Math.Max(1, notificationInner.Height - 11)),
+                new("notifications:lifecycle", ShowcaseHitLayer.Content, 21_200)));
+        }
+
         if (state.CurrentScreenNumber == 26 && TryResolveContentInnerArea(state.Viewport, out var mouseInner) && mouseInner.Width >= 16 && mouseInner.Height >= 6)
         {
             var targetPanelWidth = Math.Max(4, mouseInner.Width * 42 / 100);

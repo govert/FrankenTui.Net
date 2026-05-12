@@ -796,6 +796,43 @@ public sealed class ShowcaseEvidenceJsonlWriter : IDisposable
             return "file_browser_hit_test";
         }
 
+        if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 21)
+        {
+            if (gesture.Kind == TerminalMouseKind.Scroll)
+            {
+                return hit.LocalHitId == "notifications:lifecycle"
+                    ? gesture.Button == TerminalMouseButton.WheelUp
+                        ? "notifications_lifecycle_scroll_up"
+                        : "notifications_lifecycle_scroll_down"
+                    : gesture.Button == TerminalMouseButton.WheelUp
+                        ? "notifications_push_success"
+                        : "notifications_push_info";
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Left)
+            {
+                if (hit.LocalHitId.StartsWith("notifications:trigger:", StringComparison.Ordinal))
+                {
+                    return hit.LocalHitId["notifications:trigger:".Length..] switch
+                    {
+                        "success" => "notifications_trigger_success",
+                        "error" => "notifications_trigger_error",
+                        "warning" => "notifications_trigger_warning",
+                        "info" => "notifications_trigger_info",
+                        "urgent" => "notifications_trigger_urgent",
+                        "dismiss_all" => "notifications_dismiss_all",
+                        _ => "notifications_trigger"
+                    };
+                }
+
+                return hit.LocalHitId.StartsWith("notifications:toast:", StringComparison.Ordinal)
+                    ? "notifications_toast_click"
+                    : "notifications_lifecycle_focus";
+            }
+
+            return "notifications_hit_test";
+        }
+
         if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 42)
         {
             return gesture.Kind switch

@@ -4724,6 +4724,76 @@ public sealed class ShowcaseShellTests
         Assert.Equal(9_100, previewRecord.RootElement.GetProperty("target_id").GetInt32());
     }
 
+    [Fact]
+    public void ShowcaseFrameHitRegistryExposesNotificationTriggerStackAndLifecycleRegions()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(80, 20),
+            screenNumber: 21,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+
+        var trigger = ShowcaseFrameHitRegistry.HitTest(state, 3, 5);
+        var toast = ShowcaseFrameHitRegistry.HitTest(state, 45, 5);
+        var lifecycle = ShowcaseFrameHitRegistry.HitTest(state, 45, 14);
+
+        Assert.Equal("notifications:trigger:success", trigger.LocalHitId);
+        Assert.Equal((uint)21_000, trigger.UpstreamHitId);
+        Assert.Equal("notifications:toast:1", toast.LocalHitId);
+        Assert.Equal((uint)21_101, toast.UpstreamHitId);
+        Assert.Equal("notifications:lifecycle", lifecycle.LocalHitId);
+        Assert.Equal((uint)21_200, lifecycle.UpstreamHitId);
+    }
+
+    [Fact]
+    public void ShowcaseEvidenceJsonlWriterEmitsNotificationMouseActions()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"ftui-showcase-notifications-mouse-{Guid.NewGuid():N}.jsonl");
+        var options = ShowcaseCliOptions.Parse(
+            ["--screen=21", "--evidence-jsonl", path],
+            _ => null);
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(80, 20),
+            screenNumber: 21,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+        var triggerEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 5, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp);
+        var toastEvent = TerminalEvent.Mouse(
+            new MouseGesture(45, 5, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp + TimeSpan.FromMilliseconds(10));
+        var lifecycleEvent = TerminalEvent.Mouse(
+            new MouseGesture(45, 14, TerminalMouseButton.WheelDown, TerminalMouseKind.Scroll),
+            timestamp + TimeSpan.FromMilliseconds(20));
+
+        using (var writer = ShowcaseEvidenceJsonlWriter.Create(options.EvidenceJsonlPath))
+        {
+            Assert.NotNull(writer);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 1, frame: 1, triggerEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 2, frame: 2, toastEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 3, frame: 3, lifecycleEvent, state, state);
+        }
+
+        var lines = File.ReadAllLines(path);
+        Assert.Equal(3, lines.Length);
+        using var triggerRecord = JsonDocument.Parse(lines[0]);
+        using var toastRecord = JsonDocument.Parse(lines[1]);
+        using var lifecycleRecord = JsonDocument.Parse(lines[2]);
+        Assert.Equal("notifications_trigger_success", triggerRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("notifications:trigger:success", triggerRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(21_000, triggerRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("notifications_toast_click", toastRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("notifications:toast:1", toastRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(21_101, toastRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("notifications_lifecycle_scroll_down", lifecycleRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("notifications:lifecycle", lifecycleRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(21_200, lifecycleRecord.RootElement.GetProperty("target_id").GetInt32());
+    }
+
     private static ShowcaseDemoState ApplyKey(ShowcaseDemoState state, KeyGesture gesture, DateTimeOffset timestamp)
     {
         var terminalEvent = TerminalEvent.Key(gesture, timestamp);
