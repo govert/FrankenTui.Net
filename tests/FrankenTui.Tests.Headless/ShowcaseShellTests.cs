@@ -7153,6 +7153,96 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseWidgetBuilderMouseMutatesPresetTreePreviewPropsAndExport()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 38,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(state, 3, 5, timestamp);
+        Assert.Equal(1, state.WidgetBuilderPresetIndex);
+        Assert.Equal(1, state.WidgetBuilderFocusIndex);
+
+        state = ApplyMouse(
+            state,
+            3,
+            6,
+            timestamp + TimeSpan.FromMilliseconds(10),
+            TerminalMouseButton.Right);
+        Assert.True(state.WidgetBuilderPresetSaved);
+        Assert.Equal(1, state.WidgetBuilderFocusIndex);
+
+        state = ApplyMouse(
+            state,
+            3,
+            20,
+            timestamp + TimeSpan.FromMilliseconds(20),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(1, state.WidgetBuilderSelectedIndex);
+        Assert.Equal(1, state.WidgetBuilderTreeScroll);
+        Assert.Equal(2, state.WidgetBuilderFocusIndex);
+
+        state = ApplyMouse(state, 45, 6, timestamp + TimeSpan.FromMilliseconds(30));
+        Assert.False(state.WidgetBuilderPreviewEnabled);
+        Assert.Equal(3, state.WidgetBuilderFocusIndex);
+
+        state = ApplyMouse(
+            state,
+            90,
+            6,
+            timestamp + TimeSpan.FromMilliseconds(40),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(1, state.WidgetBuilderPropsScroll);
+        Assert.True(state.WidgetBuilderValue >= 0);
+        Assert.Equal(4, state.WidgetBuilderFocusIndex);
+
+        state = ApplyMouse(state, 90, 20, timestamp + TimeSpan.FromMilliseconds(50));
+        Assert.True(state.WidgetBuilderExportArmed);
+        Assert.Equal(5, state.WidgetBuilderFocusIndex);
+    }
+
+    [Fact]
+    public void ShowcaseWidgetBuilderRendersMouseSelectedState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 38,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            WidgetBuilderPresetIndex = 1,
+            WidgetBuilderSelectedIndex = 4,
+            WidgetBuilderFocusIndex = 5,
+            WidgetBuilderTreeScroll = 2,
+            WidgetBuilderPropsScroll = 3,
+            WidgetBuilderValue = 85,
+            WidgetBuilderPreviewEnabled = false,
+            WidgetBuilderBorderEnabled = false,
+            WidgetBuilderPresetSaved = true,
+            WidgetBuilderExportArmed = true
+        };
+        var buffer = new RenderBuffer(120, 32);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 32), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("Preset: Status Wall", screen);
+        Assert.Contains("preview=off", screen);
+        Assert.Contains("> 05. Badge [off]", screen);
+        Assert.Contains("Border: off", screen);
+        Assert.Contains("status=ready", screen);
+        Assert.Contains("X export(ready)", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryExposesDeterminismLabPanels()
     {
         var state = ShowcaseDemoState.Create(

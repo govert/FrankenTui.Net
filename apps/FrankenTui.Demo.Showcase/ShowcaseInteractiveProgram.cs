@@ -206,6 +206,16 @@ internal sealed record ShowcaseDemoState(
     int AccessibilitySelectedToggleIndex = 0,
     int AccessibilityPreviewScroll = 0,
     int AccessibilityTelemetryScroll = 0,
+    int WidgetBuilderPresetIndex = -1,
+    int WidgetBuilderSelectedIndex = -1,
+    int WidgetBuilderFocusIndex = 0,
+    int WidgetBuilderTreeScroll = 0,
+    int WidgetBuilderPropsScroll = 0,
+    int WidgetBuilderValue = -1,
+    bool WidgetBuilderPreviewEnabled = true,
+    bool WidgetBuilderBorderEnabled = true,
+    bool WidgetBuilderPresetSaved = false,
+    bool WidgetBuilderExportArmed = false,
     bool PaletteLabBenchEnabled = false,
     int PaletteLabBenchFrame = 0,
     int PaletteLabBenchProcessed = 0,
@@ -457,6 +467,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent accessibilityMouseEvent &&
             HandleAccessibilityMouse(accessibilityMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent widgetBuilderMouseEvent &&
+            HandleWidgetBuilderMouse(widgetBuilderMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -2915,6 +2931,126 @@ internal sealed record ShowcaseDemoState(
         };
         return hit.LocalHitId is "accessibility:overview" or "accessibility:preview" or "accessibility:wcag" or "accessibility:telemetry" or "accessibility:footer";
     }
+
+    private static bool HandleWidgetBuilderMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 38 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content)
+        {
+            return false;
+        }
+
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = hit.LocalHitId switch
+            {
+                "widget_builder:presets" => next with
+                {
+                    WidgetBuilderPresetIndex = Math.Clamp(ResolveWidgetBuilderPresetIndex(next) + delta, 0, 2),
+                    WidgetBuilderFocusIndex = 1
+                },
+                "widget_builder:tree" => next with
+                {
+                    WidgetBuilderSelectedIndex = Math.Clamp(ResolveWidgetBuilderSelectedIndex(next) + delta, 0, 4),
+                    WidgetBuilderTreeScroll = Math.Clamp(next.WidgetBuilderTreeScroll + delta, 0, 8),
+                    WidgetBuilderFocusIndex = 2
+                },
+                "widget_builder:props" => next with
+                {
+                    WidgetBuilderPropsScroll = Math.Clamp(next.WidgetBuilderPropsScroll + delta, 0, 8),
+                    WidgetBuilderValue = Math.Clamp(ResolveWidgetBuilderValue(next) + delta * 5, 0, 100),
+                    WidgetBuilderFocusIndex = 4
+                },
+                _ => next
+            };
+            return hit.LocalHitId is "widget_builder:presets" or "widget_builder:tree" or "widget_builder:props";
+        }
+
+        if (hit.LocalHitId == "widget_builder:presets" && gesture.Button == TerminalMouseButton.Right)
+        {
+            next = next with
+            {
+                WidgetBuilderPresetSaved = true,
+                WidgetBuilderFocusIndex = 1
+            };
+            return true;
+        }
+
+        if (hit.LocalHitId == "widget_builder:tree" && gesture.Button == TerminalMouseButton.Right)
+        {
+            next = next with
+            {
+                WidgetBuilderBorderEnabled = !next.WidgetBuilderBorderEnabled,
+                WidgetBuilderFocusIndex = 2
+            };
+            return true;
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        next = hit.LocalHitId switch
+        {
+            "widget_builder:header" => next with
+            {
+                WidgetBuilderFocusIndex = 0
+            },
+            "widget_builder:presets" => next with
+            {
+                WidgetBuilderPresetIndex = Math.Clamp((gesture.Row - 4), 0, 2),
+                WidgetBuilderFocusIndex = 1
+            },
+            "widget_builder:tree" => next with
+            {
+                WidgetBuilderSelectedIndex = Math.Clamp((gesture.Row - 15), 0, 4),
+                WidgetBuilderFocusIndex = 2
+            },
+            "widget_builder:preview" => next with
+            {
+                WidgetBuilderPreviewEnabled = !next.WidgetBuilderPreviewEnabled,
+                WidgetBuilderFocusIndex = 3
+            },
+            "widget_builder:props" => next with
+            {
+                WidgetBuilderPropsScroll = Math.Clamp(next.WidgetBuilderPropsScroll + 1, 0, 8),
+                WidgetBuilderFocusIndex = 4
+            },
+            "widget_builder:export" => next with
+            {
+                WidgetBuilderExportArmed = true,
+                WidgetBuilderFocusIndex = 5
+            },
+            "widget_builder:footer" => next with
+            {
+                WidgetBuilderPresetSaved = false,
+                WidgetBuilderExportArmed = false,
+                WidgetBuilderFocusIndex = 6
+            },
+            _ => next
+        };
+        return hit.LocalHitId is "widget_builder:header" or "widget_builder:presets" or "widget_builder:tree" or "widget_builder:preview" or "widget_builder:props" or "widget_builder:export" or "widget_builder:footer";
+    }
+
+    private static int ResolveWidgetBuilderPresetIndex(ShowcaseDemoState state) =>
+        state.WidgetBuilderPresetIndex >= 0 ? state.WidgetBuilderPresetIndex : Math.Abs(state.ScriptFrame) % 3;
+
+    private static int ResolveWidgetBuilderSelectedIndex(ShowcaseDemoState state) =>
+        state.WidgetBuilderSelectedIndex >= 0 ? state.WidgetBuilderSelectedIndex : Math.Abs(state.ScriptFrame) % 4;
+
+    private static int ResolveWidgetBuilderValue(ShowcaseDemoState state) =>
+        state.WidgetBuilderValue >= 0 ? state.WidgetBuilderValue : 40 + (Math.Abs(state.ScriptFrame) % 12) * 5;
 
     private static bool HandleTerminalCapabilitiesMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
     {

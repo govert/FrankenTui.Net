@@ -2886,60 +2886,74 @@ internal static class ShowcaseSurface
     private static IWidget BuildWidgetBuilder(ShowcaseDemoState state)
     {
         var tick = state.RuntimeStats?.StepIndex ?? state.ScriptFrame;
-        var activePreset = Math.Abs(tick) % 3;
+        var activePreset = state.WidgetBuilderPresetIndex >= 0
+            ? Math.Clamp(state.WidgetBuilderPresetIndex, 0, 2)
+            : Math.Abs(tick) % 3;
         var presetName = activePreset switch
         {
             0 => "Starter Kit",
             1 => "Status Wall",
             _ => "Minimal"
         };
-        var selected = Math.Abs(tick) % 4;
-        var value = 40 + (Math.Abs(tick) % 12) * 5;
+        var selected = state.WidgetBuilderSelectedIndex >= 0
+            ? Math.Clamp(state.WidgetBuilderSelectedIndex, 0, 4)
+            : Math.Abs(tick) % 4;
+        var value = state.WidgetBuilderValue >= 0
+            ? Math.Clamp(state.WidgetBuilderValue, 0, 100)
+            : 40 + (Math.Abs(tick) % 12) * 5;
+        var focusIndex = Math.Clamp(state.WidgetBuilderFocusIndex, 0, 6);
+        var treeScroll = Math.Clamp(state.WidgetBuilderTreeScroll, 0, 8);
+        var propsScroll = Math.Clamp(state.WidgetBuilderPropsScroll, 0, 8);
+        var previewEnabled = state.WidgetBuilderPreviewEnabled;
+        var borderEnabled = state.WidgetBuilderBorderEnabled;
+        var presetSaved = state.WidgetBuilderPresetSaved;
+        var exportArmed = state.WidgetBuilderExportArmed;
 
         var header = new ParagraphWidget(
-            $"Preset: {presetName} | Widgets: 4 | [P] cycle [S] save [X] export\n" +
-            "Widget Builder Sandbox | deterministic presets, editable props, preview, and JSONL export");
+            $"Preset: {presetName} | Widgets: 4 | focus={focusIndex} | [P] cycle [S] save [X] export\n" +
+            $"Widget Builder Sandbox | deterministic presets, editable props, preview={(previewEnabled ? "on" : "off")}, and JSONL export={(exportArmed ? "ready" : "idle")}");
 
         var presets = Panel(
-            "Presets",
+            focusIndex == 1 ? $"Presets [focus {presetName}]" : "Presets",
             $"{(activePreset == 0 ? "> " : "  ")}Starter Kit\n" +
             $"{(activePreset == 1 ? "> " : "  ")}Status Wall\n" +
             $"{(activePreset == 2 ? "> " : "  ")}Minimal\n" +
-            "  Custom 1*\n\n" +
+            $"  Custom 1{(presetSaved ? "*" : "")}\n\n" +
             "Right-click presets saves current as Custom N\n" +
             "FTUI_WIDGET_BUILDER_EXPORT_PATH controls export destination");
 
         var tree = Panel(
-            "Widget Tree",
+            treeScroll > 0 ? $"Widget Tree [scroll {treeScroll}]" : focusIndex == 2 ? "Widget Tree [focus]" : "Widget Tree",
             $"{(selected == 0 ? "> " : "  ")}01. Paragraph [on]\n" +
             $"{(selected == 1 ? "> " : "  ")}02. List [on]\n" +
             $"{(selected == 2 ? "> " : "  ")}03. Progress [on]\n" +
             $"{(selected == 3 ? "> " : "  ")}04. Sparkline [on]\n" +
-            "05. Badge [off]\n\n" +
+            $"{(selected == 4 ? "> " : "  ")}05. Badge [{(previewEnabled ? "on" : "off")}]\n\n" +
             "WidgetKind ids: paragraph, list, progress, sparkline, badge");
 
         var preview = Panel(
-            "Live Preview",
+            focusIndex == 3 ? $"Live Preview [focus {(previewEnabled ? "enabled" : "disabled")}]" : "Live Preview",
             "Intro Paragraph: Compose widgets, tweak props, and observe layout changes.\n" +
             "Checklist: * Wireframe | Implement | Polish | Ship\n" +
             $"Build Progress: {Math.Min(100, value)}%\n" +
             "Throughput Sparkline: 3 5 2 6 7 4 8 6 5 7 3 6\n" +
-            "Status Badge: ACTIVE/STANDBY\n" +
+            $"Status Badge: {(previewEnabled ? "ACTIVE" : "STANDBY")}\n" +
             "Selected widget uses accent border and theme::panel_border_style");
 
         var props = Panel(
-            "Props",
-            $"Selected: {(selected == 0 ? "Paragraph" : selected == 1 ? "List" : selected == 2 ? "Progress" : "Sparkline")} (#{selected + 1})\n" +
-            "Enabled: on (E)\n" +
-            "Border: on (B)\n" +
+            propsScroll > 0 ? $"Props [scroll {propsScroll}]" : focusIndex == 4 ? "Props [focus]" : "Props",
+            $"Selected: {(selected == 0 ? "Paragraph" : selected == 1 ? "List" : selected == 2 ? "Progress" : selected == 3 ? "Sparkline" : "Badge")} (#{selected + 1})\n" +
+            $"Enabled: {(previewEnabled ? "on" : "off")} (E)\n" +
+            $"Border: {(borderEnabled ? "on" : "off")} (B)\n" +
             "Title: on (T)\n" +
             $"Accent: {(selected % 6) + 1} (C)\n" +
             $"Value: {Math.Min(100, value)} ([ / ])\n" +
             "J/K or Up/Down select widget | P/Shift+P cycle presets | R reset");
 
         var export = Panel(
-            "Export + Mouse",
+            focusIndex == 5 ? "Export + Mouse [focus]" : "Export + Mouse",
             "event=widget_builder_export\n" +
+            $"status={(exportArmed ? "ready" : "idle")} | saved={(presetSaved ? "true" : "false")} | props_scroll={propsScroll}\n" +
             "run_id=FTUI_WIDGET_BUILDER_RUN_ID | preset_id | preset_name | preset_index\n" +
             "widget_count | props_hash | preset.widgets[] | outcome=ok\n" +
             "WidgetSnapshot: kind,title,enabled,bordered,show_title,accent_idx,value\n" +
@@ -2967,7 +2981,7 @@ internal static class ShowcaseSurface
                                 (LayoutConstraint.Percentage(52), export)
                             ]))
                     ])),
-                (LayoutConstraint.Fixed(1), new ParagraphWidget("J/K select | P presets | S save | X export JSONL | E/B/T/C props | [/] value | Click/Scroll/Right-click mouse routing"))
+                (LayoutConstraint.Fixed(1), new ParagraphWidget($"J/K select({selected + 1}) | P presets({presetName}) | S save({(presetSaved ? "saved" : "idle")}) | X export({(exportArmed ? "ready" : "idle")}) | E/B/T/C props | [/] value({value}) | Click/Scroll/Right-click mouse routing"))
             ]);
     }
 
