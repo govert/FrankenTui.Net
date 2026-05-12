@@ -157,6 +157,11 @@ internal sealed record ShowcaseDemoState(
     int AsyncTasksHazardScroll = 0,
     int AsyncTasksPolicyIndex = 2,
     bool AsyncTasksAgingEnabled = true,
+    int ThemeStudioPresetIndex = 0,
+    int ThemeStudioTokenIndex = 0,
+    int ThemeStudioFocusIndex = 0,
+    int ThemeStudioDiagnosticsScroll = 0,
+    bool ThemeStudioExportArmed = false,
     bool PaletteLabBenchEnabled = false,
     int PaletteLabBenchFrame = 0,
     int PaletteLabBenchProcessed = 0,
@@ -360,6 +365,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent asyncTasksMouseEvent &&
             HandleAsyncTasksMouse(asyncTasksMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent themeStudioMouseEvent &&
+            HandleThemeStudioMouse(themeStudioMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -2051,6 +2062,110 @@ internal sealed record ShowcaseDemoState(
         };
         return hit.LocalHitId is "async_tasks:scheduler" or "async_tasks:details" or
             "async_tasks:activity" or "async_tasks:evidence" or "async_tasks:hazard" or "async_tasks:footer";
+    }
+
+    private static bool HandleThemeStudioMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 30 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content)
+        {
+            return false;
+        }
+
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = hit.LocalHitId switch
+            {
+                { } value when value.StartsWith("theme_studio:preset:", StringComparison.Ordinal) => next with
+                {
+                    ThemeStudioPresetIndex = Math.Clamp(next.ThemeStudioPresetIndex + delta, 0, 4),
+                    ThemeStudioFocusIndex = 0
+                },
+                { } value when value.StartsWith("theme_studio:token:", StringComparison.Ordinal) => next with
+                {
+                    ThemeStudioTokenIndex = Math.Clamp(next.ThemeStudioTokenIndex + delta, 0, 11),
+                    ThemeStudioFocusIndex = 1
+                },
+                "theme_studio:diagnostics" => next with
+                {
+                    ThemeStudioDiagnosticsScroll = Math.Clamp(next.ThemeStudioDiagnosticsScroll + delta, 0, 8),
+                    ThemeStudioFocusIndex = 3
+                },
+                _ => next
+            };
+            return hit.LocalHitId == "theme_studio:diagnostics" ||
+                hit.LocalHitId.StartsWith("theme_studio:preset:", StringComparison.Ordinal) ||
+                hit.LocalHitId.StartsWith("theme_studio:token:", StringComparison.Ordinal);
+        }
+
+        if (hit.LocalHitId.StartsWith("theme_studio:preset:", StringComparison.Ordinal))
+        {
+            var rowText = hit.LocalHitId["theme_studio:preset:".Length..];
+            if (!int.TryParse(rowText, CultureInfo.InvariantCulture, out var row))
+            {
+                return false;
+            }
+
+            next = next with
+            {
+                ThemeStudioPresetIndex = Math.Clamp(row, 0, 4),
+                ThemeStudioFocusIndex = 0,
+                ThemeStudioExportArmed = gesture.Button == TerminalMouseButton.Right
+            };
+            return gesture.Button is TerminalMouseButton.Left or TerminalMouseButton.Right;
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        if (hit.LocalHitId.StartsWith("theme_studio:token:", StringComparison.Ordinal))
+        {
+            var rowText = hit.LocalHitId["theme_studio:token:".Length..];
+            if (!int.TryParse(rowText, CultureInfo.InvariantCulture, out var row))
+            {
+                return false;
+            }
+
+            next = next with
+            {
+                ThemeStudioTokenIndex = Math.Clamp(row, 0, 11),
+                ThemeStudioFocusIndex = 1
+            };
+            return true;
+        }
+
+        next = hit.LocalHitId switch
+        {
+            "theme_studio:export" => next with
+            {
+                ThemeStudioExportArmed = true,
+                ThemeStudioFocusIndex = 2
+            },
+            "theme_studio:diagnostics" => next with
+            {
+                ThemeStudioFocusIndex = 3,
+                ThemeStudioDiagnosticsScroll = Math.Clamp(next.ThemeStudioDiagnosticsScroll + 1, 0, 8)
+            },
+            "theme_studio:footer" => next with
+            {
+                ThemeStudioFocusIndex = 4,
+                ThemeStudioExportArmed = !next.ThemeStudioExportArmed
+            },
+            _ => next
+        };
+        return hit.LocalHitId is "theme_studio:export" or "theme_studio:diagnostics" or "theme_studio:footer";
     }
 
     private static bool HandleTerminalCapabilitiesMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)

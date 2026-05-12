@@ -5917,6 +5917,68 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseThemeStudioMouseMutatesPresetTokenDiagnosticsAndExport()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 30,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(state, 3, 5, timestamp);
+        Assert.Equal(3, state.ThemeStudioPresetIndex);
+        Assert.Equal(0, state.ThemeStudioFocusIndex);
+
+        state = ApplyMouse(state, 40, 8, timestamp + TimeSpan.FromMilliseconds(10));
+        Assert.Equal(6, state.ThemeStudioTokenIndex);
+        Assert.Equal(1, state.ThemeStudioFocusIndex);
+
+        state = ApplyMouse(
+            state,
+            40,
+            24,
+            timestamp + TimeSpan.FromMilliseconds(20),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(1, state.ThemeStudioDiagnosticsScroll);
+        Assert.Equal(3, state.ThemeStudioFocusIndex);
+
+        state = ApplyMouse(state, 40, 17, timestamp + TimeSpan.FromMilliseconds(30));
+        Assert.True(state.ThemeStudioExportArmed);
+        Assert.Equal(2, state.ThemeStudioFocusIndex);
+    }
+
+    [Fact]
+    public void ShowcaseThemeStudioRendersMouseSelectedState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 30,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            ThemeStudioPresetIndex = 3,
+            ThemeStudioTokenIndex = 6,
+            ThemeStudioFocusIndex = 1,
+            ThemeStudioDiagnosticsScroll = 4,
+            ThemeStudioExportArmed = true
+        };
+        var buffer = new RenderBuffer(120, 32);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 32), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("Token Inspector [focus accent::SUCCESS]", screen);
+        Assert.Contains("Status: Export ready for Nord", screen);
+        Assert.Contains("Diagnostics scroll: 4", screen);
+        Assert.Contains("selected=Nord token=accent::SUCCESS export=ready", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryExposesSnapshotPlayerPanels()
     {
         var state = ShowcaseDemoState.Create(

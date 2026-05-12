@@ -2219,18 +2219,22 @@ internal static class ShowcaseSurface
 
     private static IWidget BuildThemeStudio(ShowcaseDemoState state)
     {
-        var presetIndex = state.ScriptFrame % 5;
+        var presetIndex = Math.Clamp(state.ThemeStudioPresetIndex, 0, 4);
+        var tokenIndex = Math.Clamp(state.ThemeStudioTokenIndex, 0, 11);
+        var focusIndex = Math.Clamp(state.ThemeStudioFocusIndex, 0, 4);
+        var diagnosticsScroll = Math.Clamp(state.ThemeStudioDiagnosticsScroll, 0, 8);
+        var exportArmed = state.ThemeStudioExportArmed;
         string[][] presets =
         [
-            [presetIndex == 0 ? ">" : "o", "Cyberpunk Aurora", "current"],
-            [presetIndex == 1 ? ">" : "", "Darcula", "preset"],
-            [presetIndex == 2 ? ">" : "", "Solar", "preset"],
-            [presetIndex == 3 ? ">" : "", "Nord", "preset"],
-            [presetIndex == 4 ? ">" : "", "High Contrast", "preset"]
+            [presetIndex == 0 ? ">" : "o", "Cyberpunk Aurora", presetIndex == 0 ? "current" : "preset"],
+            [presetIndex == 1 ? ">" : "", "Darcula", presetIndex == 1 ? "current" : "preset"],
+            [presetIndex == 2 ? ">" : "", "Solar", presetIndex == 2 ? "current" : "preset"],
+            [presetIndex == 3 ? ">" : "", "Nord", presetIndex == 3 ? "current" : "preset"],
+            [presetIndex == 4 ? ">" : "", "High Contrast", presetIndex == 4 ? "current" : "preset"]
         ];
-        string[][] tokens =
+        string[][] tokenRows =
         [
-            [">", "fg::PRIMARY", "Foreground", "#F8FAFC", "13.6:1", "AAA"],
+            ["", "fg::PRIMARY", "Foreground", "#F8FAFC", "13.6:1", "AAA"],
             ["", "fg::SECONDARY", "Foreground", "#CBD5E1", "9.7:1", "AAA"],
             ["", "fg::MUTED", "Foreground", "#94A3B8", "5.8:1", "AA"],
             ["", "bg::BASE", "Background", "#0F172A", "1.0:1", "Fail"],
@@ -2243,12 +2247,25 @@ internal static class ShowcaseSurface
             ["", "PriorityP0", "Priority", "#F43F5E", "4.5:1", "AA"],
             ["", "PriorityP4", "Priority", "#64748B", "3.9:1", "AA Large"]
         ];
+        var tokens = tokenRows
+            .Select((row, index) => new[]
+            {
+                index == tokenIndex ? ">" : row[0],
+                row[1],
+                row[2],
+                row[3],
+                row[4],
+                row[5]
+            })
+            .ToArray();
+        var selectedPreset = presets[presetIndex][1];
+        var selectedToken = tokens[tokenIndex][1];
         var inspector = new StackWidget(
             LayoutDirection.Vertical,
             [
                 (LayoutConstraint.Percentage(52), new PanelWidget
                 {
-                    Title = "Token Inspector",
+                    Title = focusIndex == 1 ? $"Token Inspector [focus {selectedToken}]" : "Token Inspector",
                     Child = new TableWidget
                     {
                         Headers = ["", "Token", "Category", "Hex", "Contrast", "WCAG"],
@@ -2257,11 +2274,11 @@ internal static class ShowcaseSurface
                     }
                 }),
                 (LayoutConstraint.Percentage(24), Panel(
-                    "Export",
-                    "Press E to export theme\nJSON keys: bg_base, bg_surface, fg_primary, fg_secondary, accent_primary, accent_secondary, accent_success, accent_warning, accent_error\nGhostty: background, foreground, selection-background, palette=0..7")),
+                    focusIndex == 2 ? "Export [focus]" : "Export",
+                    $"Press E to export theme\nStatus: {(exportArmed ? $"Export ready for {selectedPreset}" : "idle")}\nJSON keys: bg_base, bg_surface, fg_primary, fg_secondary, accent_primary, accent_secondary, accent_success, accent_warning, accent_error\nGhostty: background, foreground, selection-background, palette=0..7")),
                 (LayoutConstraint.Fill(), Panel(
-                    "Diagnostics + Telemetry",
-                    "FTUI_THEME_STUDIO_DIAGNOSTICS=true\nFTUI_THEME_STUDIO_DETERMINISTIC=true\nEvents: focus_changed, preset_changed, token_changed, theme_applied, theme_cycled, theme_exported, tick\nJSONL fields: seq, ts_us, kind, focus, preset, preset_index, token, token_index, export_bytes, checksum\nTelemetryHooks: on_focus_change, on_preset_change, on_token_change, on_theme_applied, on_theme_cycled, on_theme_exported, on_any"))
+                    diagnosticsScroll > 0 ? $"Diagnostics + Telemetry [scroll {diagnosticsScroll}]" : focusIndex == 3 ? "Diagnostics + Telemetry [focus]" : "Diagnostics + Telemetry",
+                    $"Diagnostics scroll: {diagnosticsScroll}\nFTUI_THEME_STUDIO_DIAGNOSTICS=true\nFTUI_THEME_STUDIO_DETERMINISTIC=true\nEvents: focus_changed, preset_changed, token_changed, theme_applied, theme_cycled, theme_exported, tick\nJSONL fields: seq, ts_us, kind, focus, preset, preset_index, token, token_index, export_bytes, checksum\nTelemetryHooks: on_focus_change, on_preset_change, on_token_change, on_theme_applied, on_theme_cycled, on_theme_exported, on_any"))
             ]);
 
         return new StackWidget(
@@ -2272,7 +2289,7 @@ internal static class ShowcaseSurface
                     [
                         (LayoutConstraint.Percentage(25), new PanelWidget
                         {
-                            Title = "Presets",
+                            Title = focusIndex == 0 ? $"Presets [focus {selectedPreset}]" : "Presets",
                             Child = new TableWidget
                             {
                                 Headers = ["", "Theme", "State"],
@@ -2282,7 +2299,7 @@ internal static class ShowcaseSurface
                         }),
                         (LayoutConstraint.Fill(), inspector)
                     ])),
-                (LayoutConstraint.Fixed(1), new ParagraphWidget("Presets: Cyberpunk Aurora, Darcula, Solar, Nord, High Contrast | Ctrl+T cycle | e JSON | E Ghostty"))
+                (LayoutConstraint.Fixed(1), new ParagraphWidget($"Presets: Cyberpunk Aurora, Darcula, Solar, Nord, High Contrast | selected={selectedPreset} token={selectedToken} export={(exportArmed ? "ready" : "idle")} | Ctrl+T cycle | e JSON | E Ghostty"))
             ]);
     }
 
