@@ -5257,7 +5257,7 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
-    public void ShowcaseFormsInputMouseMutatesSelectedField()
+    public void ShowcaseFormsInputMouseMutatesSelectedFieldAndTextArea()
     {
         var state = ShowcaseDemoState.Create(
             inlineMode: false,
@@ -5268,6 +5268,11 @@ public sealed class ShowcaseShellTests
         var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
 
         state = ApplyMouse(state, 3, 3, timestamp);
+        Assert.Equal(0, state.FormsInputFocusIndex);
+        Assert.Equal(0, state.FormsInputSelectedFieldIndex);
+
+        state = ApplyMouse(state, 45, 5, timestamp + TimeSpan.FromMilliseconds(5));
+        Assert.Equal(1, state.FormsInputFocusIndex);
         Assert.Equal(0, state.FormsInputSelectedFieldIndex);
 
         state = ApplyMouse(
@@ -5277,11 +5282,12 @@ public sealed class ShowcaseShellTests
             timestamp + TimeSpan.FromMilliseconds(10),
             TerminalMouseButton.WheelDown,
             TerminalMouseKind.Scroll);
-        Assert.Equal(1, state.FormsInputSelectedFieldIndex);
+        Assert.Equal(1, state.FormsInputFocusIndex);
+        Assert.Equal(1, state.FormsInputTextScroll);
     }
 
     [Fact]
-    public void ShowcaseFormsInputRendersMouseSelectedField()
+    public void ShowcaseFormsInputRendersMouseSelectedFieldAndTextArea()
     {
         var state = ShowcaseDemoState.Create(
             inlineMode: false,
@@ -5290,7 +5296,9 @@ public sealed class ShowcaseShellTests
             language: "en",
             flowDirection: WidgetFlowDirection.LeftToRight) with
         {
-            FormsInputSelectedFieldIndex = 2
+            FormsInputSelectedFieldIndex = 2,
+            FormsInputFocusIndex = 1,
+            FormsInputTextScroll = 4
         };
         var buffer = new RenderBuffer(80, 20);
 
@@ -5309,6 +5317,9 @@ public sealed class ShowcaseShellTests
         Assert.Equal(Theme.DefaultTheme.Selection.Foreground, seedCell.Value.Foreground);
         Assert.Equal(Theme.DefaultTheme.Selection.Background, seedCell.Value.Background);
         Assert.Equal(Theme.DefaultTheme.Selection.Flags, seedCell.Value.Attributes.Flags);
+        Assert.Contains(rows, row => row.Contains("forms mouse focus=1", StringComparison.Ordinal));
+        Assert.Contains(rows, row => row.Contains("ext_scroll=4", StringComparison.Ordinal));
+        Assert.Contains(rows, row => row.Contains("scroll=4", StringComparison.Ordinal));
     }
 
     [Fact]

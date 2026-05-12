@@ -680,19 +680,27 @@ internal static class ShowcaseSurface
     private static IWidget BuildFormsInput(ShowcaseDemoState state)
     {
         var validation = FormValidator.Validate(FormFields, FormValidators);
+        var selected = Math.Clamp(state.FormsInputSelectedFieldIndex, 0, FormFields.Count - 1);
+        var focus = Math.Clamp(state.FormsInputFocusIndex, 0, 1);
+        var scroll = Math.Clamp(state.FormsInputTextScroll, 0, 12);
         return TwoColumn(
             new FormWidget
             {
                 Fields = FormFields,
                 Validation = validation,
-                SelectedFieldIndex = Math.Clamp(state.FormsInputSelectedFieldIndex, 0, FormFields.Count - 1)
+                SelectedFieldIndex = selected
             },
             new TextAreaWidget
             {
-                Document = TextDocument.FromString("name = \"FrankenTui.Net\"\nscreen = 7\nseed = 42"),
-                Cursor = new TextCursor(1, 8),
-                HasFocus = true,
-                StatusText = "Text input and editing surface"
+                Document = TextDocument.FromString(
+                    $"forms mouse focus={focus} selected_field={selected} text_scroll={scroll}\n" +
+                    "name = \"FrankenTui.Net\"\n" +
+                    "screen = 7\n" +
+                    "seed = 42\n" +
+                    "validation = deterministic"),
+                Cursor = new TextCursor(Math.Min(1 + scroll % 3, 3), 8),
+                HasFocus = focus == 1,
+                StatusText = $"Text input and editing surface | scroll={scroll}"
             });
     }
 

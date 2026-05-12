@@ -121,6 +121,8 @@ internal sealed record ShowcaseDemoState(
     int WidgetGalleryTabIndex = 2,
     int WidgetGalleryTableRow = 1,
     int FormsInputSelectedFieldIndex = 1,
+    int FormsInputFocusIndex = 0,
+    int FormsInputTextScroll = 0,
     int TableThemePresetIndex = 0,
     int TerminalCapabilitiesSelectedRow = 1,
     int TerminalCapabilitiesProfileIndex = 0,
@@ -3809,13 +3811,27 @@ internal sealed record ShowcaseDemoState(
         if (gesture.Kind == TerminalMouseKind.Scroll && hit.LocalHitId == "forms_input:text_area")
         {
             var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
-            next = next with { FormsInputSelectedFieldIndex = Math.Clamp(next.FormsInputSelectedFieldIndex + delta, 0, 2) };
+            next = next with
+            {
+                FormsInputFocusIndex = 1,
+                FormsInputTextScroll = Math.Clamp(next.FormsInputTextScroll + delta, 0, 12)
+            };
             return true;
         }
 
         if (gesture.Kind != TerminalMouseKind.Down ||
-            gesture.Button != TerminalMouseButton.Left ||
-            !hit.LocalHitId.StartsWith("forms_input:field:", StringComparison.Ordinal))
+            gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        if (hit.LocalHitId == "forms_input:text_area")
+        {
+            next = next with { FormsInputFocusIndex = 1 };
+            return true;
+        }
+
+        if (!hit.LocalHitId.StartsWith("forms_input:field:", StringComparison.Ordinal))
         {
             return false;
         }
@@ -3826,7 +3842,11 @@ internal sealed record ShowcaseDemoState(
             return false;
         }
 
-        next = next with { FormsInputSelectedFieldIndex = Math.Clamp(fieldIndex, 0, 2) };
+        next = next with
+        {
+            FormsInputFocusIndex = 0,
+            FormsInputSelectedFieldIndex = Math.Clamp(fieldIndex, 0, 2)
+        };
         return true;
     }
 
