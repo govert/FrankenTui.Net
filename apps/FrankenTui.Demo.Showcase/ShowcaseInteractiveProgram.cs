@@ -109,6 +109,10 @@ internal sealed record ShowcaseDemoState(
     int MacroRecorderTimelineIndex = 0,
     int MacroRecorderScenarioIndex = 0,
     int PerformanceSelectedIndex = 0,
+    int MarkdownActivePaneIndex = 0,
+    int MarkdownRendererScroll = 0,
+    int MarkdownStreamScroll = 0,
+    int MarkdownWrapModeIndex = 0,
     bool PaletteLabBenchEnabled = false,
     int PaletteLabBenchFrame = 0,
     int PaletteLabBenchProcessed = 0,
@@ -270,6 +274,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent performanceMouseEvent &&
             HandlePerformanceMouse(performanceMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent markdownMouseEvent &&
+            HandleMarkdownMouse(markdownMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -1319,6 +1329,67 @@ internal sealed record ShowcaseDemoState(
         }
 
         next = next with { PerformanceSelectedIndex = Math.Clamp(next.PerformanceSelectedIndex + 1, 0, 9_999) };
+        return true;
+    }
+
+    private static bool HandleMarkdownMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 15 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content ||
+            !hit.LocalHitId.StartsWith("markdown:", StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = hit.LocalHitId switch
+            {
+                "markdown:renderer" => next with
+                {
+                    MarkdownActivePaneIndex = 0,
+                    MarkdownRendererScroll = Math.Clamp(next.MarkdownRendererScroll + delta, 0, 12)
+                },
+                "markdown:stream" => next with
+                {
+                    MarkdownActivePaneIndex = 1,
+                    MarkdownStreamScroll = Math.Clamp(next.MarkdownStreamScroll + delta, 0, 12)
+                },
+                "markdown:unicode" => next with { MarkdownActivePaneIndex = 4 },
+                _ => next
+            };
+            return hit.LocalHitId is "markdown:renderer" or "markdown:stream" or "markdown:unicode";
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        next = hit.LocalHitId switch
+        {
+            "markdown:renderer" => next with { MarkdownActivePaneIndex = 0 },
+            "markdown:stream" => next with { MarkdownActivePaneIndex = 1 },
+            "markdown:detection" => next with { MarkdownActivePaneIndex = 2 },
+            "markdown:style" => next with { MarkdownActivePaneIndex = 3 },
+            "markdown:unicode" => next with { MarkdownActivePaneIndex = 4 },
+            "markdown:wrap" => next with
+            {
+                MarkdownActivePaneIndex = 5,
+                MarkdownWrapModeIndex = (next.MarkdownWrapModeIndex + 1) % 3
+            },
+            _ => next
+        };
         return true;
     }
 

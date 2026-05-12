@@ -6885,6 +6885,57 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseMarkdownMouseMutatesPaneScrollAndWrapMode()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 15,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(
+            state,
+            3,
+            6,
+            timestamp,
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(0, state.MarkdownActivePaneIndex);
+        Assert.Equal(1, state.MarkdownRendererScroll);
+
+        state = ApplyMouse(state, 90, 24, timestamp + TimeSpan.FromMilliseconds(10));
+        Assert.Equal(5, state.MarkdownActivePaneIndex);
+        Assert.Equal(1, state.MarkdownWrapModeIndex);
+    }
+
+    [Fact]
+    public void ShowcaseMarkdownRendersMouseSelectedPaneState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 15,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            MarkdownActivePaneIndex = 1,
+            MarkdownRendererScroll = 2,
+            MarkdownStreamScroll = 3,
+            MarkdownWrapModeIndex = 1
+        };
+        var buffer = new RenderBuffer(120, 32);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 32), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("LLM Streaming Simulation [scroll 3]", screen);
+        Assert.Contains("Wrap: Character | Align: Left", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryExposesMermaidPanels()
     {
         var state = ShowcaseDemoState.Create(

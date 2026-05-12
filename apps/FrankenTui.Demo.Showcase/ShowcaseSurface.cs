@@ -1004,10 +1004,27 @@ internal static class ShowcaseSurface
         var streamFragment = streamingMarkdown[..streamChars];
         var complete = streamChars == streamingMarkdown.Length;
         var progress = streamChars * 100.0 / streamingMarkdown.Length;
+        var activePane = Math.Clamp(state.MarkdownActivePaneIndex, 0, 5) switch
+        {
+            0 => "Renderer",
+            1 => "Stream",
+            2 => "Detection",
+            3 => "Style",
+            4 => "Unicode",
+            _ => "Wrap"
+        };
+        var wrapMode = Math.Clamp(state.MarkdownWrapModeIndex, 0, 2) switch
+        {
+            1 => "Character",
+            2 => "None",
+            _ => "Word"
+        };
         var detection = $"""
             Detection: 7 indicators | {(complete ? "Confident" : "Likely")}
             Confidence: {(complete ? 100 : Math.Min(95, 35 + state.ScriptFrame * 8))}%
             Chars: {streamChars}/{streamingMarkdown.Length}
+            Active: {activePane}
+            Scrolls: renderer={state.MarkdownRendererScroll} stream={state.MarkdownStreamScroll}
             Space: play/pause | r: restart | f: turbo | Up/Down: scroll stream
             """;
 
@@ -1034,7 +1051,7 @@ internal static class ShowcaseSurface
             [
                 (LayoutConstraint.Percentage(35), new PanelWidget
                 {
-                    Title = "Markdown Renderer",
+                    Title = state.MarkdownActivePaneIndex == 0 ? $"Markdown Renderer [scroll {state.MarkdownRendererScroll}]" : "Markdown Renderer",
                     Child = new ParagraphWidget(string.Empty)
                     {
                         Document = MarkdownDocumentBuilder.ParseCached(sampleMarkdown),
@@ -1046,7 +1063,9 @@ internal static class ShowcaseSurface
                     [
                         (LayoutConstraint.Fill(), new PanelWidget
                         {
-                            Title = $"LLM Streaming Simulation | {(complete ? "Complete" : $"Streaming... {progress:0}%")}",
+                            Title = state.MarkdownActivePaneIndex == 1
+                                ? $"LLM Streaming Simulation [scroll {state.MarkdownStreamScroll}]"
+                                : $"LLM Streaming Simulation | {(complete ? "Complete" : $"Streaming... {progress:0}%")}",
                             Child = new ParagraphWidget(string.Empty)
                             {
                                 Document = MarkdownDocumentBuilder.ParseCached(streamFragment),
@@ -1069,7 +1088,7 @@ internal static class ShowcaseSurface
                             }
                         }),
                         (LayoutConstraint.Fill(), Panel(
-                            "Wrap: Word | Align: Left",
+                            $"Wrap: {wrapMode} | Align: Left",
                             "w: cycle wrap | a: cycle alignment\n\nThe quick brown fox jumps over the lazy dog. Supercalifragilisticexpialidocious tests character-level wrapping behavior."))
                     ]))
             ]);
