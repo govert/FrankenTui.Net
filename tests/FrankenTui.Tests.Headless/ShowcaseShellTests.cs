@@ -7680,6 +7680,66 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseVisualEffectsMouseMutatesEffectFocusAndHarnessScroll()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 18,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(
+            state,
+            3,
+            6,
+            timestamp,
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(0, state.VisualEffectsFocusIndex);
+        Assert.Equal(3, state.VisualEffectsEffectIndex);
+
+        state = ApplyMouse(state, 70, 6, timestamp + TimeSpan.FromMilliseconds(10));
+        Assert.Equal(1, state.VisualEffectsFocusIndex);
+
+        state = ApplyMouse(
+            state,
+            70,
+            6,
+            timestamp + TimeSpan.FromMilliseconds(20),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(1, state.VisualEffectsFocusIndex);
+        Assert.Equal(1, state.VisualEffectsHarnessScroll);
+    }
+
+    [Fact]
+    public void ShowcaseVisualEffectsRendersMouseSelectedState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 18,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            VisualEffectsFocusIndex = 1,
+            VisualEffectsEffectIndex = 4,
+            VisualEffectsHarnessScroll = 3
+        };
+        var buffer = new RenderBuffer(120, 32);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 32), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("vfx mouse focus=1 effect_idx=4 effect=matrix harness_scroll=3", screen);
+        Assert.Contains("Effect: matrix", screen);
+        Assert.Contains("harness_scroll=3", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryExposesResponsiveLayoutPanels()
     {
         var state = ShowcaseDemoState.Create(

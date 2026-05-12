@@ -1301,16 +1301,32 @@ internal static class ShowcaseSurface
 
     private static IWidget BuildVisualEffects(ShowcaseDemoState state)
     {
-        var effect = NormalizeVfxEffectLabel(state.VfxEffect);
-        return TwoColumn(
-            new PanelWidget
-            {
-                Title = ShowcaseVfxEffects.DisplayName(effect),
-                Child = new DeterministicVfxCanvasWidget(state.ScriptFrame, effect)
-            },
-            Panel(
-                "Harness",
-                $"Effect: {effect}\nLabel: {ShowcaseVfxEffects.DisplayName(effect)}\nRenderer: {ShowcaseVfxEffects.RendererName(effect)}\nMode: braille\n{ShowcaseVfxEffects.Description(effect)}"));
+        var effectIndex = ResolveVisualEffectsEffectIndex(state);
+        var effect = ShowcaseVfxEffects.AllCanonicalKeys[effectIndex];
+        var harnessText = $"""
+            Effect: {effect}
+            Label: {ShowcaseVfxEffects.DisplayName(effect)}
+            Renderer: {ShowcaseVfxEffects.RendererName(effect)}
+            Mode: braille
+            focus={Math.Clamp(state.VisualEffectsFocusIndex, 0, 1)}
+            harness_scroll={state.VisualEffectsHarnessScroll}
+
+            {ShowcaseVfxEffects.Description(effect)}
+            """;
+
+        return new StackWidget(
+            LayoutDirection.Vertical,
+            [
+                (LayoutConstraint.Fixed(1), new ParagraphWidget(
+                    $"vfx mouse focus={Math.Clamp(state.VisualEffectsFocusIndex, 0, 1)} effect_idx={effectIndex} effect={effect} harness_scroll={state.VisualEffectsHarnessScroll}")),
+                (LayoutConstraint.Fill(), TwoColumn(
+                    new PanelWidget
+                    {
+                        Title = ShowcaseVfxEffects.DisplayName(effect),
+                        Child = new DeterministicVfxCanvasWidget(state.ScriptFrame, effect)
+                    },
+                    Panel("Harness", harnessText)))
+            ]);
     }
 
     private static IWidget BuildResponsive(ShowcaseDemoState state)
@@ -3722,6 +3738,18 @@ internal static class ShowcaseSurface
 
     private static string NormalizeVfxEffectLabel(string? effect) =>
         ShowcaseVfxEffects.NormalizeOrDefault(effect);
+
+    private static int ResolveVisualEffectsEffectIndex(ShowcaseDemoState state)
+    {
+        if (state.VisualEffectsEffectIndex >= 0)
+        {
+            return Math.Clamp(state.VisualEffectsEffectIndex, 0, ShowcaseVfxEffects.AllCanonicalKeys.Length - 1);
+        }
+
+        var effect = NormalizeVfxEffectLabel(state.VfxEffect);
+        var index = Array.IndexOf(ShowcaseVfxEffects.AllCanonicalKeys, effect);
+        return index < 0 ? 0 : index;
+    }
 
     private static bool ShouldLightVfxPixel(
         string effect,

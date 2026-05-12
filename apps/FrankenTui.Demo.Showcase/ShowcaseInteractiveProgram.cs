@@ -134,6 +134,9 @@ internal sealed record ShowcaseDemoState(
     int MermaidMegaDetailScroll = 0,
     int MermaidMegaPanelScroll = 0,
     bool MermaidMegaContextArmed = false,
+    int VisualEffectsFocusIndex = 0,
+    int VisualEffectsEffectIndex = -1,
+    int VisualEffectsHarnessScroll = 0,
     int DataVizActivePanelIndex = 0,
     int DataVizMetricRowIndex = 0,
     int DataVizNarrativeDetailIndex = 0,
@@ -598,6 +601,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent mermaidMegaMouseEvent &&
             HandleMermaidMegaMouse(mermaidMegaMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent visualEffectsMouseEvent &&
+            HandleVisualEffectsMouse(visualEffectsMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -3993,6 +4002,69 @@ internal sealed record ShowcaseDemoState(
                 MermaidMegaContextArmed = false
             };
         return true;
+    }
+
+    private static bool HandleVisualEffectsMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 18 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content ||
+            !hit.LocalHitId.StartsWith("visual_effects:", StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        var focus = hit.LocalHitId == "visual_effects:canvas" ? 0 : 1;
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            if (hit.LocalHitId == "visual_effects:canvas")
+            {
+                var current = ResolveVisualEffectsEffectIndex(next);
+                var count = ShowcaseVfxEffects.AllCanonicalKeys.Length;
+                next = next with
+                {
+                    VisualEffectsFocusIndex = focus,
+                    VisualEffectsEffectIndex = (current + delta + count) % count
+                };
+                return true;
+            }
+
+            next = next with
+            {
+                VisualEffectsFocusIndex = focus,
+                VisualEffectsHarnessScroll = Math.Clamp(next.VisualEffectsHarnessScroll + delta, 0, 12)
+            };
+            return true;
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        next = next with { VisualEffectsFocusIndex = focus };
+        return true;
+    }
+
+    private static int ResolveVisualEffectsEffectIndex(ShowcaseDemoState state)
+    {
+        if (state.VisualEffectsEffectIndex >= 0)
+        {
+            return Math.Clamp(state.VisualEffectsEffectIndex, 0, ShowcaseVfxEffects.AllCanonicalKeys.Length - 1);
+        }
+
+        var effect = ShowcaseVfxEffects.NormalizeOrDefault(state.VfxEffect);
+        var index = Array.IndexOf(ShowcaseVfxEffects.AllCanonicalKeys, effect);
+        return index < 0 ? 0 : index;
     }
 
     private static bool HandleMarkdownLiveMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
