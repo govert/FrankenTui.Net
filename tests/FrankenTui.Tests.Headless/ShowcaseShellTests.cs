@@ -5551,6 +5551,85 @@ public sealed class ShowcaseShellTests
         Assert.Equal(32_300, budgetRecord.RootElement.GetProperty("target_id").GetInt32());
     }
 
+    [Fact]
+    public void ShowcaseFrameHitRegistryExposesExplainabilityPanels()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 33,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+
+        var header = ShowcaseFrameHitRegistry.HitTest(state, 3, 2);
+        var diff = ShowcaseFrameHitRegistry.HitTest(state, 3, 6);
+        var resize = ShowcaseFrameHitRegistry.HitTest(state, 45, 6);
+        var budget = ShowcaseFrameHitRegistry.HitTest(state, 90, 6);
+        var timeline = ShowcaseFrameHitRegistry.HitTest(state, 3, 18);
+        var source = ShowcaseFrameHitRegistry.HitTest(state, 3, 25);
+
+        Assert.Equal("explainability:header", header.LocalHitId);
+        Assert.Equal((uint)33_000, header.UpstreamHitId);
+        Assert.Equal("explainability:diff_strategy", diff.LocalHitId);
+        Assert.Equal((uint)33_100, diff.UpstreamHitId);
+        Assert.Equal("explainability:resize_regime", resize.LocalHitId);
+        Assert.Equal((uint)33_110, resize.UpstreamHitId);
+        Assert.Equal("explainability:budget_decisions", budget.LocalHitId);
+        Assert.Equal((uint)33_120, budget.UpstreamHitId);
+        Assert.Equal("explainability:timeline", timeline.LocalHitId);
+        Assert.Equal((uint)33_200, timeline.UpstreamHitId);
+        Assert.Equal("explainability:source_controls", source.LocalHitId);
+        Assert.Equal((uint)33_300, source.UpstreamHitId);
+    }
+
+    [Fact]
+    public void ShowcaseEvidenceJsonlWriterEmitsExplainabilityMouseActions()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"ftui-showcase-explainability-mouse-{Guid.NewGuid():N}.jsonl");
+        var options = ShowcaseCliOptions.Parse(
+            ["--screen=33", "--evidence-jsonl", path],
+            _ => null);
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 33,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+        var diffEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 6, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp);
+        var budgetEvent = TerminalEvent.Mouse(
+            new MouseGesture(90, 6, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp + TimeSpan.FromMilliseconds(10));
+        var timelineEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 18, TerminalMouseButton.WheelDown, TerminalMouseKind.Scroll),
+            timestamp + TimeSpan.FromMilliseconds(20));
+
+        using (var writer = ShowcaseEvidenceJsonlWriter.Create(options.EvidenceJsonlPath))
+        {
+            Assert.NotNull(writer);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 1, frame: 1, diffEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 2, frame: 2, budgetEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 3, frame: 3, timelineEvent, state, state);
+        }
+
+        var lines = File.ReadAllLines(path);
+        Assert.Equal(3, lines.Length);
+        using var diffRecord = JsonDocument.Parse(lines[0]);
+        using var budgetRecord = JsonDocument.Parse(lines[1]);
+        using var timelineRecord = JsonDocument.Parse(lines[2]);
+        Assert.Equal("explainability_diff_focus", diffRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("explainability:diff_strategy", diffRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(33_100, diffRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("explainability_budget_focus", budgetRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("explainability:budget_decisions", budgetRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(33_120, budgetRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("explainability_timeline_scroll_down", timelineRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("explainability:timeline", timelineRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(33_200, timelineRecord.RootElement.GetProperty("target_id").GetInt32());
+    }
+
     private static ShowcaseDemoState ApplyKey(ShowcaseDemoState state, KeyGesture gesture, DateTimeOffset timestamp)
     {
         var terminalEvent = TerminalEvent.Key(gesture, timestamp);

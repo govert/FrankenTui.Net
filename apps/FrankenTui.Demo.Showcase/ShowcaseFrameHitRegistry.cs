@@ -965,6 +965,41 @@ internal static class ShowcaseFrameHitRegistry
                 new("performance_challenge:footer", ShowcaseHitLayer.Content, 32_500));
         }
 
+        if (state.CurrentScreenNumber == 33 && TryResolveContentInnerArea(state.Viewport, out var explainInner) && explainInner.Width >= 45 && explainInner.Height >= 16)
+        {
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(explainInner.X, explainInner.Y, explainInner.Width, (ushort)Math.Min(2, (int)explainInner.Height)),
+                new("explainability:header", ShowcaseHitLayer.Content, 33_000)));
+
+            var bodyY = explainInner.Y + 2;
+            var bodyHeight = Math.Max(1, explainInner.Height - 16);
+            var diffWidth = Math.Max(1, explainInner.Width * 34 / 100);
+            var resizeWidth = Math.Max(1, explainInner.Width * 33 / 100);
+            var budgetWidth = Math.Max(1, explainInner.Width - diffWidth - resizeWidth);
+            var resizeX = explainInner.X + diffWidth;
+            var budgetX = resizeX + resizeWidth;
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(explainInner.X, (ushort)bodyY, (ushort)diffWidth, (ushort)bodyHeight),
+                new("explainability:diff_strategy", ShowcaseHitLayer.Content, 33_100)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)resizeX, (ushort)bodyY, (ushort)resizeWidth, (ushort)bodyHeight),
+                new("explainability:resize_regime", ShowcaseHitLayer.Content, 33_110)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)budgetX, (ushort)bodyY, (ushort)budgetWidth, (ushort)bodyHeight),
+                new("explainability:budget_decisions", ShowcaseHitLayer.Content, 33_120)));
+
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(explainInner.X, (ushort)(bodyY + bodyHeight), explainInner.Width, 7),
+                new("explainability:timeline", ShowcaseHitLayer.Content, 33_200)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(
+                    explainInner.X,
+                    (ushort)(bodyY + bodyHeight + 7),
+                    explainInner.Width,
+                    (ushort)Math.Max(1, explainInner.Height - bodyHeight - 9)),
+                new("explainability:source_controls", ShowcaseHitLayer.Content, 33_300)));
+        }
+
         if (state.CurrentScreenNumber == 7 && TryResolveContentInnerArea(state.Viewport, out var formsInner) && formsInner.Width >= 30 && formsInner.Height >= 8)
         {
             var formWidth = Math.Max(1, formsInner.Width / 2);

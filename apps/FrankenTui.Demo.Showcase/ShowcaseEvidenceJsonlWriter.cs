@@ -1191,6 +1191,41 @@ public sealed class ShowcaseEvidenceJsonlWriter : IDisposable
             return "performance_challenge_hit_test";
         }
 
+        if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 33)
+        {
+            if (gesture.Kind == TerminalMouseKind.Scroll)
+            {
+                return hit.LocalHitId switch
+                {
+                    "explainability:timeline" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "explainability_timeline_scroll_up"
+                        : "explainability_timeline_scroll_down",
+                    "explainability:source_controls" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "explainability_source_scroll_up"
+                        : "explainability_source_scroll_down",
+                    _ => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "explainability_panel_scroll_up"
+                        : "explainability_panel_scroll_down"
+                };
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Left)
+            {
+                return hit.LocalHitId switch
+                {
+                    "explainability:header" => "explainability_header_focus",
+                    "explainability:diff_strategy" => "explainability_diff_focus",
+                    "explainability:resize_regime" => "explainability_resize_focus",
+                    "explainability:budget_decisions" => "explainability_budget_focus",
+                    "explainability:timeline" => "explainability_timeline_focus",
+                    "explainability:source_controls" => "explainability_source_controls_focus",
+                    _ => "explainability_hit_test"
+                };
+            }
+
+            return "explainability_hit_test";
+        }
+
         if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 7)
         {
             if (gesture.Kind == TerminalMouseKind.Scroll)
