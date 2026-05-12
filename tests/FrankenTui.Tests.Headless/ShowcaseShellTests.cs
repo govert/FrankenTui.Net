@@ -6441,6 +6441,28 @@ public sealed class ShowcaseShellTests
         state = ApplyMouse(state, 60, 3, timestamp);
         Assert.Equal(42, state.SnapshotPlayerFrameIndex);
         Assert.Equal(0, state.SnapshotPlayerFocusIndex);
+        Assert.True(state.SnapshotPlayerTimelineScrubbing);
+
+        state = ApplyMouse(
+            state,
+            200,
+            3,
+            timestamp + TimeSpan.FromMilliseconds(5),
+            TerminalMouseButton.Left,
+            TerminalMouseKind.Drag);
+        Assert.Equal(49, state.SnapshotPlayerFrameIndex);
+        Assert.Equal(0, state.SnapshotPlayerFocusIndex);
+        Assert.True(state.SnapshotPlayerTimelineScrubbing);
+
+        state = ApplyMouse(
+            state,
+            1,
+            3,
+            timestamp + TimeSpan.FromMilliseconds(8),
+            TerminalMouseButton.Left,
+            TerminalMouseKind.Up);
+        Assert.Equal(0, state.SnapshotPlayerFrameIndex);
+        Assert.False(state.SnapshotPlayerTimelineScrubbing);
 
         state = ApplyMouse(
             state,

@@ -238,6 +238,7 @@ internal sealed record ShowcaseDemoState(
     bool SnapshotPlayerMarkerEnabled = false,
     bool SnapshotPlayerHeatmapEnabled = true,
     bool SnapshotPlayerPlaying = false,
+    bool SnapshotPlayerTimelineScrubbing = false,
     int PerformanceChallengeFocusIndex = 0,
     int PerformanceChallengeForcedTierIndex = -1,
     int PerformanceChallengeStressModeIndex = 1,
@@ -2969,9 +2970,30 @@ internal sealed record ShowcaseDemoState(
         if (next.CurrentScreenNumber != 31 ||
             next.Session.CommandPalette.IsOpen ||
             next.TourActive ||
-            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll or TerminalMouseKind.Drag))
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Up or TerminalMouseKind.Scroll or TerminalMouseKind.Drag))
         {
             return false;
+        }
+
+        static int FrameFromTimelineColumn(ShowcaseDemoState state, int column, int frameCount)
+        {
+            var innerWidth = Math.Max(1, state.Viewport.Width - 2);
+            var timelineWidth = Math.Max(1, innerWidth * 60 / 100);
+            var localColumn = Math.Clamp(column - 1, 0, timelineWidth - 1);
+            return Math.Clamp(localColumn * frameCount / timelineWidth, 0, frameCount - 1);
+        }
+
+        if (next.SnapshotPlayerTimelineScrubbing &&
+            gesture.Button == TerminalMouseButton.Left &&
+            gesture.Kind is TerminalMouseKind.Drag or TerminalMouseKind.Up)
+        {
+            next = next with
+            {
+                SnapshotPlayerFrameIndex = FrameFromTimelineColumn(next, gesture.Column, frameCount),
+                SnapshotPlayerFocusIndex = 0,
+                SnapshotPlayerTimelineScrubbing = gesture.Kind != TerminalMouseKind.Up
+            };
+            return true;
         }
 
         var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
@@ -3005,14 +3027,13 @@ internal sealed record ShowcaseDemoState(
 
         if (hit.LocalHitId == "snapshot_player:timeline")
         {
-            var innerWidth = Math.Max(1, next.Viewport.Width - 2);
-            var timelineWidth = Math.Max(1, innerWidth * 60 / 100);
-            var localColumn = Math.Clamp(gesture.Column - 1, 0, timelineWidth - 1);
-            var selectedFrame = Math.Clamp(localColumn * frameCount / timelineWidth, 0, frameCount - 1);
+            var selectedFrame = FrameFromTimelineColumn(next, gesture.Column, frameCount);
             next = next with
             {
                 SnapshotPlayerFrameIndex = selectedFrame,
                 SnapshotPlayerFocusIndex = 0,
+                SnapshotPlayerTimelineScrubbing = gesture.Button == TerminalMouseButton.Left &&
+                    gesture.Kind is TerminalMouseKind.Down or TerminalMouseKind.Drag,
                 SnapshotPlayerMarkerEnabled = gesture.Button == TerminalMouseButton.Right
                     ? !next.SnapshotPlayerMarkerEnabled
                     : next.SnapshotPlayerMarkerEnabled
