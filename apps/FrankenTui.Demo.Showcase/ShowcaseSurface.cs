@@ -667,11 +667,22 @@ internal static class ShowcaseSurface
                 """));
     }
 
-    private static IWidget BuildFileBrowser(ShowcaseDemoState state) =>
-        TwoColumn(
+    private static IWidget BuildFileBrowser(ShowcaseDemoState state)
+    {
+        var selectedRow = Math.Clamp(state.FileBrowserSelectedRowIndex, 0, 5);
+        var selectedPath = selectedRow switch
+        {
+            1 => ".external/frankentui",
+            2 => ".external/frankentui/README.md",
+            3 => ".external/frankentui/crates",
+            4 => "apps/FrankenTui.Demo.Showcase",
+            5 => "src/FrankenTui.Extras",
+            _ => ".external"
+        };
+        return TwoColumn(
             new PanelWidget
             {
-                Title = "Files",
+                Title = $"Files [row {selectedRow}]",
                 Child = new TreeWidget
                 {
                     Nodes =
@@ -683,7 +694,20 @@ internal static class ShowcaseSurface
                     ]
                 }
             },
-            Panel("Preview", "README.md\n\nFrankenTui.Net is a traceable, updateable .NET 10 port of FrankenTUI.\n\nUse --screen N to land directly on a showcase screen."));
+            Panel(
+                state.FileBrowserPreviewScroll > 0 ? $"Preview [scroll {state.FileBrowserPreviewScroll}]" : "Preview",
+                $"""
+                Selected row: {selectedRow}
+                Selected: {selectedPath}
+                Preview scroll: {state.FileBrowserPreviewScroll}
+
+                README.md
+
+                FrankenTui.Net is a traceable, updateable .NET 10 port of FrankenTUI.
+
+                Use --screen N to land directly on a showcase screen.
+                """));
+    }
 
     private static IWidget BuildAdvancedFeatures(ShowcaseDemoState state) =>
         TwoColumn(

@@ -4725,6 +4725,54 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseFileBrowserMouseMutatesSelectionAndPreviewScroll()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(80, 20),
+            screenNumber: 9,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(state, 3, 5, timestamp);
+        Assert.Equal(1, state.FileBrowserSelectedRowIndex);
+
+        state = ApplyMouse(
+            state,
+            45,
+            5,
+            timestamp + TimeSpan.FromMilliseconds(10),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(1, state.FileBrowserPreviewScroll);
+    }
+
+    [Fact]
+    public void ShowcaseFileBrowserRendersMouseSelectedState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(80, 20),
+            screenNumber: 9,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            FileBrowserSelectedRowIndex = 4,
+            FileBrowserPreviewScroll = 2
+        };
+        var buffer = new RenderBuffer(80, 20);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, Rect.FromSize(80, 20), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("Files [row 4]", screen);
+        Assert.Contains("Preview [scroll 2]", screen);
+        Assert.Contains("Selected row: 4", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryExposesNotificationTriggerStackAndLifecycleRegions()
     {
         var state = ShowcaseDemoState.Create(

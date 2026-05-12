@@ -116,6 +116,8 @@ internal sealed record ShowcaseDemoState(
     int DataVizActivePanelIndex = 0,
     int DataVizMetricRowIndex = 0,
     int DataVizNarrativeDetailIndex = 0,
+    int FileBrowserSelectedRowIndex = 0,
+    int FileBrowserPreviewScroll = 0,
     bool PaletteLabBenchEnabled = false,
     int PaletteLabBenchFrame = 0,
     int PaletteLabBenchProcessed = 0,
@@ -253,6 +255,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent dataVizMouseEvent &&
             HandleDataVizMouse(dataVizMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent fileBrowserMouseEvent &&
+            HandleFileBrowserMouse(fileBrowserMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -1144,6 +1152,58 @@ internal sealed record ShowcaseDemoState(
             _ => next
         };
         return hit.LocalHitId is "data_viz:progress" or "data_viz:metrics_table" or "data_viz:narrative";
+    }
+
+    private static bool HandleFileBrowserMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 9 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content)
+        {
+            return false;
+        }
+
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = hit.LocalHitId switch
+            {
+                { } value when value.StartsWith("file_browser:tree:", StringComparison.Ordinal) => next with
+                {
+                    FileBrowserSelectedRowIndex = Math.Clamp(next.FileBrowserSelectedRowIndex + delta, 0, 5)
+                },
+                "file_browser:preview" => next with
+                {
+                    FileBrowserPreviewScroll = Math.Clamp(next.FileBrowserPreviewScroll + delta, 0, 8)
+                },
+                _ => next
+            };
+            return hit.LocalHitId.StartsWith("file_browser:tree:", StringComparison.Ordinal) ||
+                hit.LocalHitId == "file_browser:preview";
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left ||
+            !hit.LocalHitId.StartsWith("file_browser:tree:", StringComparison.Ordinal))
+        {
+            return hit.LocalHitId == "file_browser:preview";
+        }
+
+        var rowText = hit.LocalHitId["file_browser:tree:".Length..];
+        if (!int.TryParse(rowText, CultureInfo.InvariantCulture, out var row))
+        {
+            return false;
+        }
+
+        next = next with { FileBrowserSelectedRowIndex = Math.Clamp(row, 0, 5) };
+        return true;
     }
 
     private static bool HandleTerminalCapabilitiesMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
