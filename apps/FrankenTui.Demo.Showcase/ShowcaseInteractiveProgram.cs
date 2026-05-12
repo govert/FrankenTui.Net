@@ -152,6 +152,11 @@ internal sealed record ShowcaseDemoState(
     int VirtualizedSearchDiagnosticsScroll = 0,
     bool VirtualizedSearchFocusSearch = false,
     bool VirtualizedSearchStatsFocused = false,
+    int AsyncTasksSelectedIndex = 0,
+    int AsyncTasksFocusedPanelIndex = 0,
+    int AsyncTasksHazardScroll = 0,
+    int AsyncTasksPolicyIndex = 2,
+    bool AsyncTasksAgingEnabled = true,
     bool PaletteLabBenchEnabled = false,
     int PaletteLabBenchFrame = 0,
     int PaletteLabBenchProcessed = 0,
@@ -349,6 +354,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent virtualizedSearchMouseEvent &&
             HandleVirtualizedSearchMouse(virtualizedSearchMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent asyncTasksMouseEvent &&
+            HandleAsyncTasksMouse(asyncTasksMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -1959,6 +1970,87 @@ internal sealed record ShowcaseDemoState(
         }
 
         return false;
+    }
+
+    private static bool HandleAsyncTasksMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 29 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content)
+        {
+            return false;
+        }
+
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = hit.LocalHitId switch
+            {
+                { } value when value.StartsWith("async_tasks:task:", StringComparison.Ordinal) => next with
+                {
+                    AsyncTasksSelectedIndex = Math.Clamp(next.AsyncTasksSelectedIndex + delta, 0, 7),
+                    AsyncTasksFocusedPanelIndex = 1
+                },
+                "async_tasks:hazard" => next with
+                {
+                    AsyncTasksHazardScroll = Math.Clamp(next.AsyncTasksHazardScroll + delta, 0, 6),
+                    AsyncTasksFocusedPanelIndex = 4
+                },
+                _ => next
+            };
+            return hit.LocalHitId == "async_tasks:hazard" ||
+                hit.LocalHitId.StartsWith("async_tasks:task:", StringComparison.Ordinal);
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        if (hit.LocalHitId.StartsWith("async_tasks:task:", StringComparison.Ordinal))
+        {
+            var rowText = hit.LocalHitId["async_tasks:task:".Length..];
+            if (!int.TryParse(rowText, CultureInfo.InvariantCulture, out var row))
+            {
+                return false;
+            }
+
+            next = next with
+            {
+                AsyncTasksSelectedIndex = Math.Clamp(row, 0, 7),
+                AsyncTasksFocusedPanelIndex = 1
+            };
+            return true;
+        }
+
+        next = hit.LocalHitId switch
+        {
+            "async_tasks:scheduler" => next with
+            {
+                AsyncTasksPolicyIndex = (next.AsyncTasksPolicyIndex + 1) % 6,
+                AsyncTasksFocusedPanelIndex = 0
+            },
+            "async_tasks:details" => next with { AsyncTasksFocusedPanelIndex = 2 },
+            "async_tasks:activity" => next with { AsyncTasksFocusedPanelIndex = 3 },
+            "async_tasks:evidence" => next with { AsyncTasksFocusedPanelIndex = 5 },
+            "async_tasks:hazard" => next with { AsyncTasksFocusedPanelIndex = 4 },
+            "async_tasks:footer" => next with
+            {
+                AsyncTasksAgingEnabled = !next.AsyncTasksAgingEnabled,
+                AsyncTasksFocusedPanelIndex = 6
+            },
+            _ => next
+        };
+        return hit.LocalHitId is "async_tasks:scheduler" or "async_tasks:details" or
+            "async_tasks:activity" or "async_tasks:evidence" or "async_tasks:hazard" or "async_tasks:footer";
     }
 
     private static bool HandleTerminalCapabilitiesMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)

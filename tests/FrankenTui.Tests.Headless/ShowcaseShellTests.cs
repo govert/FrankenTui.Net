@@ -5777,6 +5777,70 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseAsyncTasksMouseMutatesSelectionFocusPolicyAndHazard()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 29,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(state, 3, 9, timestamp);
+        Assert.Equal(3, state.AsyncTasksSelectedIndex);
+        Assert.Equal(1, state.AsyncTasksFocusedPanelIndex);
+
+        state = ApplyMouse(state, 3, 3, timestamp + TimeSpan.FromMilliseconds(10));
+        Assert.Equal(3, state.AsyncTasksPolicyIndex);
+        Assert.Equal(0, state.AsyncTasksFocusedPanelIndex);
+
+        state = ApplyMouse(
+            state,
+            90,
+            24,
+            timestamp + TimeSpan.FromMilliseconds(20),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(1, state.AsyncTasksHazardScroll);
+        Assert.Equal(4, state.AsyncTasksFocusedPanelIndex);
+
+        state = ApplyMouse(state, 3, 29, timestamp + TimeSpan.FromMilliseconds(30));
+        Assert.False(state.AsyncTasksAgingEnabled);
+        Assert.Equal(6, state.AsyncTasksFocusedPanelIndex);
+    }
+
+    [Fact]
+    public void ShowcaseAsyncTasksRendersMouseSelectedState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 29,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            AsyncTasksSelectedIndex = 3,
+            AsyncTasksFocusedPanelIndex = 5,
+            AsyncTasksHazardScroll = 2,
+            AsyncTasksPolicyIndex = 3,
+            AsyncTasksAgingEnabled = false
+        };
+        var buffer = new RenderBuffer(120, 32);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 32), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("Smith[Shortest Remaining Time]", screen);
+        Assert.Contains("Aging:off", screen);
+        Assert.Contains("ID: 4", screen);
+        Assert.Contains("Name: Async Build #1", screen);
+        Assert.Contains("Policy + Evidence [focus]", screen);
+        Assert.Contains("Hazard scroll: 2", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryExposesThemeStudioPanels()
     {
         var state = ShowcaseDemoState.Create(

@@ -2145,7 +2145,19 @@ internal static class ShowcaseSurface
 
     private static IWidget BuildAsyncTasks(ShowcaseDemoState state)
     {
-        var selected = state.ScriptFrame % 8;
+        var selected = Math.Clamp(state.AsyncTasksSelectedIndex, 0, 7);
+        var focusedPanel = Math.Clamp(state.AsyncTasksFocusedPanelIndex, 0, 6);
+        var hazardScroll = Math.Clamp(state.AsyncTasksHazardScroll, 0, 6);
+        var policy = Math.Clamp(state.AsyncTasksPolicyIndex, 0, 5) switch
+        {
+            0 => "FIFO",
+            1 => "SJF",
+            2 => "SRPT",
+            3 => "Smith",
+            4 => "Priority",
+            _ => "RoundRobin"
+        };
+        var aging = state.AsyncTasksAgingEnabled;
         string[][] tasks =
         [
             [selected == 0 ? ">" : "", "Running", "M", "Initial Setup", "64%", "30", "19"],
@@ -2158,11 +2170,11 @@ internal static class ShowcaseSurface
             [selected == 7 ? ">" : "", "Queued", "H", "Parallel Index #9", "0%", "23", "0"]
         ];
         var header = Panel(
-            "Scheduler",
-            "Q:3 R:2 D:1 F:1 | SRPT[Shortest Remaining Time] | Aging:on | max_concurrent=3\nInvariant: bounded_concurrency");
+            focusedPanel == 0 ? "Scheduler [focus]" : "Scheduler",
+            $"Q:3 R:2 D:1 F:1 | {policy}[Shortest Remaining Time] | Aging:{(aging ? "on" : "off")} | max_concurrent=3\nInvariant: bounded_concurrency");
         var queue = new PanelWidget
         {
-            Title = "Task Queue",
+            Title = focusedPanel == 1 ? "Task Queue [focus]" : "Task Queue",
             Child = new TableWidget
             {
                 Headers = ["", "State", "Pr", "Task", "Prog", "Est", "Elap"],
@@ -2172,17 +2184,17 @@ internal static class ShowcaseSurface
         };
         var selectedTask = tasks[selected];
         var details = Panel(
-            "Task Details",
-            $"ID: {selected + 1}\nName: {selectedTask[3]}\nState: {selectedTask[1]}\nPriority: {selectedTask[2]}\nProgress: {selectedTask[4]}\nElapsed: {selectedTask[6]} ticks\nEstimated: {selectedTask[5]} ticks\nError: Simulated failure");
+            focusedPanel == 2 ? "Task Details [focus]" : "Task Details",
+            $"ID: {selected + 1}\nName: {selectedTask[3]}\nState: {selectedTask[1]}\nPriority: {selectedTask[2]}\nProgress: {selectedTask[4]}\nElapsed: {selectedTask[6]} ticks\nEstimated: {selectedTask[5]} ticks\nPolicy: {policy}\nError: Simulated failure");
         var activity = Panel(
-            "Activity",
+            focusedPanel == 3 ? "Activity [focus]" : "Activity",
             "Spawned: Initial Setup\nStarted: Initial Setup\nStarted: Data Sync\nScheduler: SRPT\nAging: ON\nCanceled: Batch Backup #8\nRetrying: Full Deploy #7");
         var evidence = Panel(
-            "Policy + Evidence",
-            "Policies: FIFO, SJF, SRPT, Smith, Priority, RoundRobin\nSRPT theorem: minimizes E[T] (mean sojourn time)\nAging formula: effective_priority = priority + aging_factor * wait_time\nInvariants: bounded_concurrency, bounded_progress, terminal_stability, monotonic_ids, bounded_wait\nMetrics: tasks_scheduled, tasks_completed, mean_wait, mean_completion, max_wait, aging_boosts_applied");
+            focusedPanel == 5 ? "Policy + Evidence [focus]" : "Policy + Evidence",
+            $"Policies: FIFO, SJF, SRPT, Smith, Priority, RoundRobin\nActive policy: {policy}\nSRPT theorem: minimizes E[T] (mean sojourn time)\nAging formula: effective_priority = priority + aging_factor * wait_time\nInvariants: bounded_concurrency, bounded_progress, terminal_stability, monotonic_ids, bounded_wait\nMetrics: tasks_scheduled, tasks_completed, mean_wait, mean_completion, max_wait, aging_boosts_applied");
         var hazard = Panel(
-            "Hazard + Diagnostics",
-            "Hazard: base=0.001 factor=0.1 exponent=2.0 threshold=1.0\nExpected loss tuple: (E[Loss_continue], E[Loss_cancel], recommendation)\nDecision: loss_continue vs loss_cancel, bayes_factor, recommend_cancel\nJSONL: state_transition, scheduling_decision, policy_change, aging_toggle, invariant_check, starvation_warning, metrics_snapshot, cancellation_decision\nMouse: Click selects task row; Wheel scrolls task list");
+            hazardScroll > 0 ? $"Hazard + Diagnostics [scroll {hazardScroll}]" : focusedPanel == 4 ? "Hazard + Diagnostics [focus]" : "Hazard + Diagnostics",
+            $"Hazard scroll: {hazardScroll}\nHazard: base=0.001 factor=0.1 exponent=2.0 threshold=1.0\nExpected loss tuple: (E[Loss_continue], E[Loss_cancel], recommendation)\nDecision: loss_continue vs loss_cancel, bayes_factor, recommend_cancel\nJSONL: state_transition, scheduling_decision, policy_change, aging_toggle, invariant_check, starvation_warning, metrics_snapshot, cancellation_decision\nMouse: Click selects task row; Wheel scrolls task list");
 
         return new StackWidget(
             LayoutDirection.Vertical,
@@ -2201,7 +2213,7 @@ internal static class ShowcaseSurface
                                 (LayoutConstraint.Fill(), hazard)
                             ]))
                     ])),
-                (LayoutConstraint.Fixed(1), new ParagraphWidget("n:spawn c:cancel s:scheduler a:aging | bounded_concurrency scheduling_decision cancellation_decision"))
+                (LayoutConstraint.Fixed(1), new ParagraphWidget($"n:spawn c:cancel s:scheduler a:aging | focused={focusedPanel} aging={(aging ? "on" : "off")} | bounded_concurrency scheduling_decision cancellation_decision"))
             ]);
     }
 
