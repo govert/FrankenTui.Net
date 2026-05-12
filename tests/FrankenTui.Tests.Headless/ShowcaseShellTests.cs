@@ -6242,6 +6242,79 @@ public sealed class ShowcaseShellTests
         Assert.Equal(19_220, asideRecord.RootElement.GetProperty("target_id").GetInt32());
     }
 
+    [Fact]
+    public void ShowcaseFrameHitRegistryExposesIntrinsicSizingPanels()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 23,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+
+        var header = ShowcaseFrameHitRegistry.HitTest(state, 3, 2);
+        var scenarios = ShowcaseFrameHitRegistry.HitTest(state, 3, 8);
+        var detail = ShowcaseFrameHitRegistry.HitTest(state, 50, 8);
+        var controls = ShowcaseFrameHitRegistry.HitTest(state, 95, 8);
+
+        Assert.Equal("intrinsic_sizing:header", header.LocalHitId);
+        Assert.Equal((uint)23_000, header.UpstreamHitId);
+        Assert.Equal("intrinsic_sizing:scenarios", scenarios.LocalHitId);
+        Assert.Equal((uint)23_100, scenarios.UpstreamHitId);
+        Assert.Equal("intrinsic_sizing:detail", detail.LocalHitId);
+        Assert.Equal((uint)23_200, detail.UpstreamHitId);
+        Assert.Equal("intrinsic_sizing:controls", controls.LocalHitId);
+        Assert.Equal((uint)23_300, controls.UpstreamHitId);
+    }
+
+    [Fact]
+    public void ShowcaseEvidenceJsonlWriterEmitsIntrinsicSizingMouseActions()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"ftui-showcase-intrinsic-sizing-mouse-{Guid.NewGuid():N}.jsonl");
+        var options = ShowcaseCliOptions.Parse(
+            ["--screen=23", "--evidence-jsonl", path],
+            _ => null);
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 23,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+        var scenarioEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 8, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp);
+        var detailEvent = TerminalEvent.Mouse(
+            new MouseGesture(50, 8, TerminalMouseButton.WheelUp, TerminalMouseKind.Scroll),
+            timestamp + TimeSpan.FromMilliseconds(10));
+        var controlsEvent = TerminalEvent.Mouse(
+            new MouseGesture(95, 8, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp + TimeSpan.FromMilliseconds(20));
+
+        using (var writer = ShowcaseEvidenceJsonlWriter.Create(options.EvidenceJsonlPath))
+        {
+            Assert.NotNull(writer);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 1, frame: 1, scenarioEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 2, frame: 2, detailEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 3, frame: 3, controlsEvent, state, state);
+        }
+
+        var lines = File.ReadAllLines(path);
+        Assert.Equal(3, lines.Length);
+        using var scenarioRecord = JsonDocument.Parse(lines[0]);
+        using var detailRecord = JsonDocument.Parse(lines[1]);
+        using var controlsRecord = JsonDocument.Parse(lines[2]);
+        Assert.Equal("intrinsic_sizing_scenario_select", scenarioRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("intrinsic_sizing:scenarios", scenarioRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(23_100, scenarioRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("intrinsic_sizing_width_decrement", detailRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("intrinsic_sizing:detail", detailRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(23_200, detailRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("intrinsic_sizing_controls_focus", controlsRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("intrinsic_sizing:controls", controlsRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(23_300, controlsRecord.RootElement.GetProperty("target_id").GetInt32());
+    }
+
     private static ShowcaseDemoState ApplyKey(ShowcaseDemoState state, KeyGesture gesture, DateTimeOffset timestamp)
     {
         var terminalEvent = TerminalEvent.Key(gesture, timestamp);

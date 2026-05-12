@@ -418,9 +418,11 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   remain tracked under `364-DEM`. The Intrinsic Sizing screen now shows the four
   upstream scenarios, effective-width breakpoints, adaptive-sidebar/card/table/
   form rules, width override controls, mouse cycle affordances, and embedded
-  pane-studio notes; real content-aware measurement primitives, live scenario
-  switching, width override state, embedded pane workspace interaction, and
-  exact responsive rendering remain tracked under `364-DEM`. The Layout
+  pane-studio notes, with frame-registered header, scenario-table, detail, and
+  controls/pane-studio regions plus matching mouse evidence; real content-aware
+  measurement primitives, live scenario switching, width override state,
+  embedded pane workspace interaction, and exact responsive rendering remain
+  tracked under `364-DEM`. The Layout
   Inspector screen now shows upstream-shaped scenarios, solver steps,
   overlay/tree toggles, constraint-vs-rect records, overflow/underflow statuses,
   mouse/key affordances, and pane-studio notes; real `ConstraintOverlay` /
@@ -875,9 +877,9 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   and the Determinism Lab increment adds header, equivalence, report/env,
   scene-preview, checks, and footer regions plus matching mouse evidence, while
   still leaving broader generalized screen hit routing open.
-  Focused showcase-shell verification is now `191` tests via
+  Focused showcase-shell verification is now `193` tests via
   `dotnet test tests/FrankenTui.Tests.Headless/FrankenTui.Tests.Headless.csproj --no-restore --filter FullyQualifiedName~ShowcaseShellTests`.
-  Current local verification is `445` headless tests, `9` web tests, and `7`
+  Current local verification is `447` headless tests, `9` web tests, and `7`
   PTY tests via `dotnet test FrankenTui.Net.sln --no-restore`.
   Previous focused registry/evidence verification covered `33`
   registry/evidence

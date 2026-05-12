@@ -687,6 +687,30 @@ internal static class ShowcaseFrameHitRegistry
             }
         }
 
+        if (state.CurrentScreenNumber == 23 && TryResolveContentInnerArea(state.Viewport, out var intrinsicInner) && intrinsicInner.Width >= 45 && intrinsicInner.Height >= 10)
+        {
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(intrinsicInner.X, intrinsicInner.Y, intrinsicInner.Width, (ushort)Math.Min(4, (int)intrinsicInner.Height)),
+                new("intrinsic_sizing:header", ShowcaseHitLayer.Content, 23_000)));
+
+            var bodyY = intrinsicInner.Y + 4;
+            var bodyHeight = Math.Max(1, intrinsicInner.Height - 4);
+            var scenariosWidth = Math.Max(1, intrinsicInner.Width * 38 / 100);
+            var detailWidth = Math.Max(1, intrinsicInner.Width * 34 / 100);
+            var controlsWidth = Math.Max(1, intrinsicInner.Width - scenariosWidth - detailWidth);
+            var detailX = intrinsicInner.X + scenariosWidth;
+            var controlsX = detailX + detailWidth;
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(intrinsicInner.X, (ushort)bodyY, (ushort)scenariosWidth, (ushort)bodyHeight),
+                new("intrinsic_sizing:scenarios", ShowcaseHitLayer.Content, 23_100)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)detailX, (ushort)bodyY, (ushort)detailWidth, (ushort)bodyHeight),
+                new("intrinsic_sizing:detail", ShowcaseHitLayer.Content, 23_200)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)controlsX, (ushort)bodyY, (ushort)controlsWidth, (ushort)bodyHeight),
+                new("intrinsic_sizing:controls", ShowcaseHitLayer.Content, 23_300)));
+        }
+
         if (state.CurrentScreenNumber == 13 && TryResolveContentInnerArea(state.Viewport, out var macroInner) && macroInner.Width >= 40 && macroInner.Height >= 12)
         {
             regions.Add(new ShowcaseHitRegion(

@@ -887,6 +887,44 @@ public sealed class ShowcaseEvidenceJsonlWriter : IDisposable
             return "responsive_hit_test";
         }
 
+        if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 23)
+        {
+            if (gesture.Kind == TerminalMouseKind.Scroll)
+            {
+                return hit.LocalHitId switch
+                {
+                    "intrinsic_sizing:scenarios" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "intrinsic_sizing_scenario_prev"
+                        : "intrinsic_sizing_scenario_next",
+                    "intrinsic_sizing:detail" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "intrinsic_sizing_width_decrement"
+                        : "intrinsic_sizing_width_increment",
+                    _ => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "intrinsic_sizing_panel_scroll_up"
+                        : "intrinsic_sizing_panel_scroll_down"
+                };
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Right)
+            {
+                return "intrinsic_sizing_pane_mode";
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Left)
+            {
+                return hit.LocalHitId switch
+                {
+                    "intrinsic_sizing:header" => "intrinsic_sizing_header_focus",
+                    "intrinsic_sizing:scenarios" => "intrinsic_sizing_scenario_select",
+                    "intrinsic_sizing:detail" => "intrinsic_sizing_detail_focus",
+                    "intrinsic_sizing:controls" => "intrinsic_sizing_controls_focus",
+                    _ => "intrinsic_sizing_hit_test"
+                };
+            }
+
+            return "intrinsic_sizing_hit_test";
+        }
+
         if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 13)
         {
             if (gesture.Kind == TerminalMouseKind.Scroll)
