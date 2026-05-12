@@ -5791,6 +5791,85 @@ public sealed class ShowcaseShellTests
         Assert.Equal(35_200, controlsRecord.RootElement.GetProperty("target_id").GetInt32());
     }
 
+    [Fact]
+    public void ShowcaseFrameHitRegistryExposesInlineModeStoryPanels()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 36,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+
+        var header = ShowcaseFrameHitRegistry.HitTest(state, 3, 2);
+        var inlineStory = ShowcaseFrameHitRegistry.HitTest(state, 3, 6);
+        var altStory = ShowcaseFrameHitRegistry.HitTest(state, 45, 6);
+        var controls = ShowcaseFrameHitRegistry.HitTest(state, 90, 6);
+        var stateLimits = ShowcaseFrameHitRegistry.HitTest(state, 90, 20);
+        var footer = ShowcaseFrameHitRegistry.HitTest(state, 3, 29);
+
+        Assert.Equal("inline_mode:header", header.LocalHitId);
+        Assert.Equal((uint)36_000, header.UpstreamHitId);
+        Assert.Equal("inline_mode:inline_story", inlineStory.LocalHitId);
+        Assert.Equal((uint)36_100, inlineStory.UpstreamHitId);
+        Assert.Equal("inline_mode:alt_story", altStory.LocalHitId);
+        Assert.Equal((uint)36_110, altStory.UpstreamHitId);
+        Assert.Equal("inline_mode:controls", controls.LocalHitId);
+        Assert.Equal((uint)36_200, controls.UpstreamHitId);
+        Assert.Equal("inline_mode:state_limits", stateLimits.LocalHitId);
+        Assert.Equal((uint)36_210, stateLimits.UpstreamHitId);
+        Assert.Equal("inline_mode:footer", footer.LocalHitId);
+        Assert.Equal((uint)36_300, footer.UpstreamHitId);
+    }
+
+    [Fact]
+    public void ShowcaseEvidenceJsonlWriterEmitsInlineModeStoryMouseActions()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"ftui-showcase-inline-mode-mouse-{Guid.NewGuid():N}.jsonl");
+        var options = ShowcaseCliOptions.Parse(
+            ["--screen=36", "--evidence-jsonl", path],
+            _ => null);
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 36,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+        var headerEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 2, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp);
+        var inlineEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 6, TerminalMouseButton.WheelDown, TerminalMouseKind.Scroll),
+            timestamp + TimeSpan.FromMilliseconds(10));
+        var stateEvent = TerminalEvent.Mouse(
+            new MouseGesture(90, 20, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp + TimeSpan.FromMilliseconds(20));
+
+        using (var writer = ShowcaseEvidenceJsonlWriter.Create(options.EvidenceJsonlPath))
+        {
+            Assert.NotNull(writer);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 1, frame: 1, headerEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 2, frame: 2, inlineEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 3, frame: 3, stateEvent, state, state);
+        }
+
+        var lines = File.ReadAllLines(path);
+        Assert.Equal(3, lines.Length);
+        using var headerRecord = JsonDocument.Parse(lines[0]);
+        using var inlineRecord = JsonDocument.Parse(lines[1]);
+        using var stateRecord = JsonDocument.Parse(lines[2]);
+        Assert.Equal("inline_mode_compare_toggle", headerRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("inline_mode:header", headerRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(36_000, headerRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("inline_mode_log_rate_increment", inlineRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("inline_mode:inline_story", inlineRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(36_100, inlineRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("inline_mode_state_focus", stateRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("inline_mode:state_limits", stateRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(36_210, stateRecord.RootElement.GetProperty("target_id").GetInt32());
+    }
+
     private static ShowcaseDemoState ApplyKey(ShowcaseDemoState state, KeyGesture gesture, DateTimeOffset timestamp)
     {
         var terminalEvent = TerminalEvent.Key(gesture, timestamp);

@@ -1297,6 +1297,41 @@ public sealed class ShowcaseEvidenceJsonlWriter : IDisposable
             return "voi_overlay_hit_test";
         }
 
+        if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 36)
+        {
+            if (gesture.Kind == TerminalMouseKind.Scroll)
+            {
+                return hit.LocalHitId switch
+                {
+                    "inline_mode:inline_story" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "inline_mode_log_rate_decrement"
+                        : "inline_mode_log_rate_increment",
+                    "inline_mode:state_limits" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "inline_mode_state_scroll_up"
+                        : "inline_mode_state_scroll_down",
+                    _ => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "inline_mode_panel_scroll_up"
+                        : "inline_mode_panel_scroll_down"
+                };
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Left)
+            {
+                return hit.LocalHitId switch
+                {
+                    "inline_mode:header" => "inline_mode_compare_toggle",
+                    "inline_mode:inline_story" => "inline_mode_stream_pause_toggle",
+                    "inline_mode:alt_story" => "inline_mode_alt_focus",
+                    "inline_mode:controls" => "inline_mode_controls_focus",
+                    "inline_mode:state_limits" => "inline_mode_state_focus",
+                    "inline_mode:footer" => "inline_mode_footer_focus",
+                    _ => "inline_mode_hit_test"
+                };
+            }
+
+            return "inline_mode_hit_test";
+        }
+
         if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 7)
         {
             if (gesture.Kind == TerminalMouseKind.Scroll)
