@@ -6533,6 +6533,77 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseI18nMouseMutatesLocalePluralRtlStressAndExport()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 34,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(state, 90, 3, timestamp);
+        Assert.Equal(4, state.I18nLocaleIndex);
+        Assert.True(state.I18nRtlEnabled);
+        Assert.Equal(0, state.I18nFocusIndex);
+
+        state = ApplyMouse(
+            state,
+            3,
+            20,
+            timestamp + TimeSpan.FromMilliseconds(10),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(2, state.I18nPluralCount);
+        Assert.Equal(2, state.I18nFocusIndex);
+
+        state = ApplyMouse(state, 70, 8, timestamp + TimeSpan.FromMilliseconds(20));
+        Assert.False(state.I18nRtlEnabled);
+        Assert.Equal(3, state.I18nFocusIndex);
+
+        state = ApplyMouse(state, 70, 20, timestamp + TimeSpan.FromMilliseconds(30));
+        Assert.Equal(1, state.I18nStressSampleIndex);
+        Assert.Equal(4, state.I18nFocusIndex);
+
+        state = ApplyMouse(state, 3, 29, timestamp + TimeSpan.FromMilliseconds(40));
+        Assert.True(state.I18nExportArmed);
+        Assert.Equal(5, state.I18nFocusIndex);
+    }
+
+    [Fact]
+    public void ShowcaseI18nRendersMouseSelectedState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 34,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            I18nLocaleIndex = 4,
+            I18nFocusIndex = 4,
+            I18nPluralCount = 5,
+            I18nStressSampleIndex = 2,
+            I18nRtlEnabled = true,
+            I18nExportArmed = true
+        };
+        var buffer = new RenderBuffer(120, 32);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 32), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("locale=ar", screen);
+        Assert.Contains("[العربية]", screen);
+        Assert.Contains("Locale: ar (العربية)", screen);
+        Assert.Contains("count = 5", screen);
+        Assert.Contains("Flow: Rtl", screen);
+        Assert.Contains("Stress Lab [focus RTL Text]", screen);
+        Assert.Contains("export=ready", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryExposesVoiOverlayPanels()
     {
         var state = ShowcaseDemoState.Create(

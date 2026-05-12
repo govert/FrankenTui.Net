@@ -183,6 +183,12 @@ internal sealed record ShowcaseDemoState(
     bool ExplainabilityPaused = false,
     bool ExplainabilityOverlayMode = false,
     bool ExplainabilityAutoRefresh = true,
+    int I18nLocaleIndex = 0,
+    int I18nFocusIndex = 0,
+    int I18nPluralCount = 1,
+    int I18nStressSampleIndex = 0,
+    bool I18nRtlEnabled = false,
+    bool I18nExportArmed = false,
     bool PaletteLabBenchEnabled = false,
     int PaletteLabBenchFrame = 0,
     int PaletteLabBenchProcessed = 0,
@@ -410,6 +416,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent explainabilityMouseEvent &&
             HandleExplainabilityMouse(explainabilityMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent i18nMouseEvent &&
+            HandleI18nMouse(i18nMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -2502,6 +2514,92 @@ internal sealed record ShowcaseDemoState(
             "explainability:budget_decisions" or
             "explainability:timeline" or
             "explainability:source_controls";
+    }
+
+    private static bool HandleI18nMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 34 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content)
+        {
+            return false;
+        }
+
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = hit.LocalHitId switch
+            {
+                "i18n:plural_rules" => next with
+                {
+                    I18nPluralCount = Math.Clamp(next.I18nPluralCount + delta, 0, 21),
+                    I18nFocusIndex = 2
+                },
+                "i18n:stress_lab" => next with
+                {
+                    I18nStressSampleIndex = Math.Clamp(next.I18nStressSampleIndex + delta, 0, 3),
+                    I18nFocusIndex = 4
+                },
+                _ => next
+            };
+            return hit.LocalHitId is "i18n:plural_rules" or "i18n:stress_lab";
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        if (hit.LocalHitId == "i18n:locale_bar")
+        {
+            var innerWidth = Math.Max(1, next.Viewport.Width - 2);
+            var localeIndex = Math.Clamp((gesture.Column - 1) * 6 / innerWidth, 0, 5);
+            next = next with
+            {
+                I18nLocaleIndex = localeIndex,
+                I18nRtlEnabled = localeIndex == 4,
+                I18nFocusIndex = 0
+            };
+            return true;
+        }
+
+        next = hit.LocalHitId switch
+        {
+            "i18n:string_lookup" => next with
+            {
+                I18nFocusIndex = 1
+            },
+            "i18n:plural_rules" => next with
+            {
+                I18nPluralCount = Math.Clamp(next.I18nPluralCount + 1, 0, 21),
+                I18nFocusIndex = 2
+            },
+            "i18n:rtl_layout" => next with
+            {
+                I18nRtlEnabled = !next.I18nRtlEnabled,
+                I18nFocusIndex = 3
+            },
+            "i18n:stress_lab" => next with
+            {
+                I18nStressSampleIndex = (next.I18nStressSampleIndex + 1) % 4,
+                I18nFocusIndex = 4
+            },
+            "i18n:footer" => next with
+            {
+                I18nExportArmed = !next.I18nExportArmed,
+                I18nFocusIndex = 5
+            },
+            _ => next
+        };
+        return hit.LocalHitId is "i18n:string_lookup" or "i18n:plural_rules" or "i18n:rtl_layout" or "i18n:stress_lab" or "i18n:footer";
     }
 
     private static bool HandleTerminalCapabilitiesMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)

@@ -2560,41 +2560,53 @@ internal static class ShowcaseSurface
 
     private static IWidget BuildI18n(ShowcaseDemoState state)
     {
-        var locale = string.IsNullOrWhiteSpace(state.Language) ? "en" : state.Language;
-        var localeBar = "[English]  Espanol  Francais  Русский  العربية  日本語";
+        string[] localeCodes = ["en", "es", "fr", "ru", "ar", "ja"];
+        string[] localeNames = ["English", "Espanol", "Francais", "Русский", "العربية", "日本語"];
+        string[] sampleSets = ["Combining Marks", "CJK Width", "RTL Text", "Emoji & ZWJ"];
+        var localeIndex = Math.Clamp(state.I18nLocaleIndex, 0, localeCodes.Length - 1);
+        var focusIndex = Math.Clamp(state.I18nFocusIndex, 0, 5);
+        var pluralCount = Math.Clamp(state.I18nPluralCount, 0, 21);
+        var stressSampleIndex = Math.Clamp(state.I18nStressSampleIndex, 0, sampleSets.Length - 1);
+        var rtlEnabled = state.I18nRtlEnabled;
+        var exportArmed = state.I18nExportArmed;
+        var locale = localeCodes[localeIndex];
+        var localeName = localeNames[localeIndex];
+        var localeBar = string.Join("  ", localeNames.Select((name, index) => index == localeIndex ? $"[{name}]" : name));
+        var direction = rtlEnabled ? "Right-to-Left" : "Left-to-Right";
+        var flow = rtlEnabled ? "Rtl" : "Ltr";
         var overview = Panel(
-            "String Lookup",
+            focusIndex == 1 ? $"String Lookup [focus {locale}]" : "String Lookup",
             "--- Internationalization ---\n\n" +
             "Hello!  Welcome, Alice!\n" +
-            $"Locale: {locale} (English)\n" +
-            "Direction: Left-to-Right\n" +
-            "Flow: Ltr\n\n" +
+            $"Locale: {locale} ({localeName})\n" +
+            $"Direction: {direction}\n" +
+            $"Flow: {flow}\n\n" +
             "Coverage Report\n" +
             "Total keys: 6 | Locales: en es fr ru ar ja\n" +
             "Fallback chain: en");
 
         var plurals = Panel(
-            "Pluralization Rules",
-            "--- Pluralization Demo (count = 1) ---\n\n" +
-            "English (en): items: 1 item | files: 1 file\n" +
-            "Spanish (es): items: 1 elemento | files: 1 archivo\n" +
+            focusIndex == 2 ? $"Pluralization Rules [focus count={pluralCount}]" : "Pluralization Rules",
+            $"--- Pluralization Demo (count = {pluralCount}) ---\n\n" +
+            $"English (en): items: {pluralCount} {(pluralCount == 1 ? "item" : "items")} | files: {pluralCount} {(pluralCount == 1 ? "file" : "files")}\n" +
+            $"Spanish (es): items: {pluralCount} elemento{(pluralCount == 1 ? "" : "s")} | files: {pluralCount} archivo{(pluralCount == 1 ? "" : "s")}\n" +
             "Russian (ru): one/few/many forms for 1, 3, 5, 21\n" +
             "Arabic (ar): zero/one/two/few/many/other categories\n\n" +
             "Use Up/Down or mouse wheel to change count");
 
         var rtl = Panel(
-            "RTL Layout Mirroring",
+            focusIndex == 3 ? $"RTL Layout Mirroring [focus {flow}]" : "RTL Layout Mirroring",
             "Flex children reverse in RTL flow.\n\n" +
-            "LTR sample: [first] [second] [third]\n" +
-            "RTL sample: [third] [second] [first]\n\n" +
+            $"LTR sample: {(rtlEnabled ? "[third] [second] [first]" : "[first] [second] [third]")}\n" +
+            $"RTL sample: {(rtlEnabled ? "[third] [second] [first]" : "[first] [second] [third]")}\n\n" +
             "Arabic greeting: مرحبا بالعالم\n" +
             "Hebrew greeting: שלום עולם\n" +
             "Mixed: مرحبا world 123\n" +
             "D toggles RTL/LTR locale; click locale bar left/right half");
 
         var stress = Panel(
-            "Stress Lab",
-            "Sample sets: Combining Marks | CJK Width | RTL Text | Emoji & ZWJ\n" +
+            focusIndex == 4 ? $"Stress Lab [focus {sampleSets[stressSampleIndex]}]" : "Stress Lab",
+            $"Sample sets: {sampleSets[stressSampleIndex]} | Combining Marks | CJK Width | RTL Text | Emoji & ZWJ\n" +
             "combining_e_acute: école | display_width=5 | grapheme_count=5\n" +
             "cjk_hello: 你好世界 | display_width=8\n" +
             "zwj_astronaut: 👩‍🚀 🚀 | grapheme_width=2\n" +
@@ -2606,7 +2618,7 @@ internal static class ShowcaseSurface
             LayoutDirection.Vertical,
             [
                 (LayoutConstraint.Fixed(3), new ParagraphWidget(
-                    "i18n Stress Lab\n" +
+                    $"i18n Stress Lab | locale={locale} | focus={focusIndex} | export={(exportArmed ? "ready" : "idle")}\n" +
                     $"{localeBar}")),
                 (LayoutConstraint.Fill(), new StackWidget(
                     LayoutDirection.Horizontal,
@@ -2624,7 +2636,7 @@ internal static class ShowcaseSurface
                                 (LayoutConstraint.Percentage(50), stress)
                             ]))
                     ])),
-                (LayoutConstraint.Fixed(1), new ParagraphWidget("Left/Right locale | Shift+Left/Right grapheme cursor | [/] sample set | E export report | Tab/1-4 panel | R reset"))
+                (LayoutConstraint.Fixed(1), new ParagraphWidget($"Left/Right locale | Shift+Left/Right grapheme cursor | [/] sample set({sampleSets[stressSampleIndex]}) | E export report({(exportArmed ? "ready" : "idle")}) | Tab/1-4 panel | R reset"))
             ]);
     }
 
