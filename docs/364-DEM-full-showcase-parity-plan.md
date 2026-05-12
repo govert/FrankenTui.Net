@@ -124,7 +124,7 @@ state machines.
 | 4 | Code Explorer | `code_explorer` | `screens/code_explorer.rs` | Text | `ShowcaseSurface.BuildCodeExplorer` | partial: static code/pane approximation |
 | 5 | Widget Gallery | `widget_gallery` | `screens/widget_gallery.rs` | Core | `ShowcaseSurface.BuildWidgetGallery` | partial: local widget inventory gallery |
 | 6 | Layout Lab | `layout_lab` | `screens/layout_lab.rs`, `pane_interaction.rs` | Interaction | `ShowcaseSurface.BuildLayoutLab` | partial: local pane workspace, no full persistence/control parity |
-| 7 | Forms & Input | `forms_input` | `screens/forms_input.rs` | Interaction | `ShowcaseSurface.BuildFormsInput` | partial: local forms sample |
+| 7 | Forms & Input | `forms_input` | `screens/forms_input.rs` | Interaction | `ShowcaseSurface.BuildFormsInput` | partial: local forms sample with frame-hit regions for form field rows and the text-area pane plus field-focus/text-scroll mouse evidence; real input mutation, focus traversal, validation state updates, and exact upstream styling remain open |
 | 8 | Data Viz | `data_viz` | `screens/data_viz.rs` | Visuals | `ShowcaseSurface.BuildDataViz` | partial: local chart/composite sample |
 | 9 | File Browser | `file_browser` | `screens/file_browser.rs` | Interaction | `ShowcaseSurface.BuildFileBrowser` | partial: static tree/preview approximation with local frame-hit regions for tree rows and preview pane plus tree-select and preview/tree scroll evidence; real file-tree state mutation, preview selection, filesystem-backed loading, and exact upstream styling remain open |
 | 10 | Advanced | `advanced_features` | `screens/advanced_features.rs` | Core | `ShowcaseSurface.BuildAdvancedFeatures` | partial: local advanced-pattern panel |

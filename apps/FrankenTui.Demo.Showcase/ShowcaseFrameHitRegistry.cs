@@ -622,6 +622,28 @@ internal static class ShowcaseFrameHitRegistry
                 new("notifications:lifecycle", ShowcaseHitLayer.Content, 21_200)));
         }
 
+        if (state.CurrentScreenNumber == 7 && TryResolveContentInnerArea(state.Viewport, out var formsInner) && formsInner.Width >= 30 && formsInner.Height >= 8)
+        {
+            var formWidth = Math.Max(1, formsInner.Width / 2);
+            for (var row = 0; row < FormFieldCount; row++)
+            {
+                AddRegion(
+                    regions,
+                    formsInner.X,
+                    formsInner.Y + 1 + row,
+                    formWidth,
+                    new($"forms_input:field:{row}", ShowcaseHitLayer.Content, (uint)(7_000 + row)));
+            }
+
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(
+                    (ushort)(formsInner.X + formWidth),
+                    formsInner.Y,
+                    (ushort)Math.Max(1, formsInner.Width - formWidth),
+                    formsInner.Height),
+                new("forms_input:text_area", ShowcaseHitLayer.Content, 7_100)));
+        }
+
         if (state.CurrentScreenNumber == 26 && TryResolveContentInnerArea(state.Viewport, out var mouseInner) && mouseInner.Width >= 16 && mouseInner.Height >= 6)
         {
             var targetPanelWidth = Math.Max(4, mouseInner.Width * 42 / 100);
@@ -749,6 +771,8 @@ internal static class ShowcaseFrameHitRegistry
             new Rect((ushort)Math.Max(x, 0), (ushort)Math.Max(y, 0), (ushort)Math.Min(width, ushort.MaxValue), 1),
             result));
     }
+
+    private const int FormFieldCount = 3;
 
     private static int CategoryIndex(ShowcaseScreenCategory category)
     {

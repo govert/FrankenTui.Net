@@ -4794,6 +4794,67 @@ public sealed class ShowcaseShellTests
         Assert.Equal(21_200, lifecycleRecord.RootElement.GetProperty("target_id").GetInt32());
     }
 
+    [Fact]
+    public void ShowcaseFrameHitRegistryExposesFormsInputFieldAndTextAreaRegions()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(80, 20),
+            screenNumber: 7,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+
+        var field = ShowcaseFrameHitRegistry.HitTest(state, 3, 4);
+        var textArea = ShowcaseFrameHitRegistry.HitTest(state, 45, 5);
+
+        Assert.Equal(ShowcaseHitLayer.Content, field.Layer);
+        Assert.Equal("forms_input:field:1", field.LocalHitId);
+        Assert.Equal((uint)7_001, field.UpstreamHitId);
+        Assert.Equal(ShowcaseHitLayer.Content, textArea.Layer);
+        Assert.Equal("forms_input:text_area", textArea.LocalHitId);
+        Assert.Equal((uint)7_100, textArea.UpstreamHitId);
+    }
+
+    [Fact]
+    public void ShowcaseEvidenceJsonlWriterEmitsFormsInputMouseActions()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"ftui-showcase-forms-input-mouse-{Guid.NewGuid():N}.jsonl");
+        var options = ShowcaseCliOptions.Parse(
+            ["--screen=7", "--evidence-jsonl", path],
+            _ => null);
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(80, 20),
+            screenNumber: 7,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+        var fieldEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 4, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp);
+        var textEvent = TerminalEvent.Mouse(
+            new MouseGesture(45, 5, TerminalMouseButton.WheelDown, TerminalMouseKind.Scroll),
+            timestamp + TimeSpan.FromMilliseconds(10));
+
+        using (var writer = ShowcaseEvidenceJsonlWriter.Create(options.EvidenceJsonlPath))
+        {
+            Assert.NotNull(writer);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 1, frame: 1, fieldEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 2, frame: 2, textEvent, state, state);
+        }
+
+        var lines = File.ReadAllLines(path);
+        Assert.Equal(2, lines.Length);
+        using var fieldRecord = JsonDocument.Parse(lines[0]);
+        using var textRecord = JsonDocument.Parse(lines[1]);
+        Assert.Equal("forms_input_field_focus", fieldRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("forms_input:field:1", fieldRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(7_001, fieldRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("forms_input_text_scroll_down", textRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("forms_input:text_area", textRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(7_100, textRecord.RootElement.GetProperty("target_id").GetInt32());
+    }
+
     private static ShowcaseDemoState ApplyKey(ShowcaseDemoState state, KeyGesture gesture, DateTimeOffset timestamp)
     {
         var terminalEvent = TerminalEvent.Key(gesture, timestamp);
