@@ -1753,6 +1753,18 @@ internal static class ShowcaseFrameHitRegistry
             }
         }
 
+        if (state.CurrentScreenNumber == 4 && TryResolveContentInnerArea(state.Viewport, out var codeExplorerInner) && codeExplorerInner.Width >= 30 && codeExplorerInner.Height >= 8)
+        {
+            var treeWidth = Math.Max(1, codeExplorerInner.Width / 2);
+            var editorWidth = Math.Max(1, codeExplorerInner.Width - treeWidth);
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(codeExplorerInner.X, codeExplorerInner.Y, (ushort)treeWidth, codeExplorerInner.Height),
+                new("code_explorer:tree", ShowcaseHitLayer.Content, 4_000)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)(codeExplorerInner.X + treeWidth), codeExplorerInner.Y, (ushort)editorWidth, codeExplorerInner.Height),
+                new("code_explorer:editor", ShowcaseHitLayer.Content, 4_100)));
+        }
+
         if (state.CurrentScreenNumber == 2 && TryResolveContentInnerArea(state.Viewport, out var contentInner) && contentInner.Width >= 18 && contentInner.Height >= 6)
         {
             var rightColumnStart = contentInner.X + Math.Max(1, contentInner.Width * 52 / 100);

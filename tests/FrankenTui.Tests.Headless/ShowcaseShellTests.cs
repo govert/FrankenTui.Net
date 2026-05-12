@@ -2263,7 +2263,7 @@ public sealed class ShowcaseShellTests
         var state = ShowcaseDemoState.Create(
             inlineMode: false,
             viewport: new FrankenTui.Core.Size(72, 18),
-            screenNumber: 4,
+            screenNumber: 3,
             language: "en",
             flowDirection: WidgetFlowDirection.LeftToRight);
         var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
@@ -2271,9 +2271,9 @@ public sealed class ShowcaseShellTests
         var hit = ShowcaseFrameHitRegistry.HitTest(state, 20, 8);
 
         Assert.Equal(ShowcaseHitLayer.Pane, hit.Layer);
-        Assert.Equal("pane:4", hit.LocalHitId);
-        Assert.Equal(ShowcaseFrameHitRegistry.PaneRawId(4), hit.UpstreamHitId);
-        Assert.Equal(4, hit.TargetScreenNumber);
+        Assert.Equal("pane:3", hit.LocalHitId);
+        Assert.Equal(ShowcaseFrameHitRegistry.PaneRawId(3), hit.UpstreamHitId);
+        Assert.Equal(3, hit.TargetScreenNumber);
 
         var after = state.ApplyInput(
             Envelope(
@@ -2281,7 +2281,7 @@ public sealed class ShowcaseShellTests
                 timestamp),
             RuntimeFrameStats.Empty);
 
-        Assert.Equal(4, after.CurrentScreenNumber);
+        Assert.Equal(3, after.CurrentScreenNumber);
     }
 
     [Fact]
@@ -2591,12 +2591,12 @@ public sealed class ShowcaseShellTests
     {
         var path = Path.Combine(Path.GetTempPath(), $"ftui-showcase-current-pane-mouse-{Guid.NewGuid():N}.jsonl");
         var options = ShowcaseCliOptions.Parse(
-            ["--screen=4", "--evidence-jsonl", path],
+            ["--screen=3", "--evidence-jsonl", path],
             _ => null);
         var before = ShowcaseDemoState.Create(
             inlineMode: false,
             viewport: new FrankenTui.Core.Size(72, 18),
-            screenNumber: 4,
+            screenNumber: 3,
             language: "en",
             flowDirection: WidgetFlowDirection.LeftToRight);
         var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
@@ -2607,7 +2607,7 @@ public sealed class ShowcaseShellTests
             Envelope(terminalEvent, timestamp),
             RuntimeFrameStats.Empty);
 
-        Assert.Equal(4, after.CurrentScreenNumber);
+        Assert.Equal(3, after.CurrentScreenNumber);
         Assert.Equal(ShowcaseHitLayer.Unknown, ShowcaseFrameHitRegistry.HitTest(before, 0, 8).Layer);
         Assert.Equal(ShowcaseHitLayer.Unknown, ShowcaseFrameHitRegistry.HitTest(before, 20, 16).Layer);
         Assert.Equal(ShowcaseHitLayer.Pane, ShowcaseFrameHitRegistry.HitTest(before, 20, 8).Layer);
@@ -2621,10 +2621,10 @@ public sealed class ShowcaseShellTests
         var line = Assert.Single(File.ReadAllLines(path));
         using var mouseEvent = JsonDocument.Parse(line);
         Assert.Equal("down_forward", mouseEvent.RootElement.GetProperty("mouse_action").GetString());
-        Assert.Equal("pane:4", mouseEvent.RootElement.GetProperty("hit_id").GetString());
-        Assert.Equal(ShowcaseFrameHitRegistry.PaneRawId(4), mouseEvent.RootElement.GetProperty("hit_raw_id").GetUInt32());
+        Assert.Equal("pane:3", mouseEvent.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(ShowcaseFrameHitRegistry.PaneRawId(3), mouseEvent.RootElement.GetProperty("hit_raw_id").GetUInt32());
         Assert.Equal("pane", mouseEvent.RootElement.GetProperty("hit_layer").GetString());
-        Assert.Equal(4, mouseEvent.RootElement.GetProperty("hit_target_screen_number").GetInt32());
+        Assert.Equal(3, mouseEvent.RootElement.GetProperty("hit_target_screen_number").GetInt32());
     }
 
     [Fact]
@@ -7029,6 +7029,73 @@ public sealed class ShowcaseShellTests
         Assert.Equal("data_viz_narrative_context", narrativeRecord.RootElement.GetProperty("mouse_action").GetString());
         Assert.Equal("data_viz:narrative", narrativeRecord.RootElement.GetProperty("hit_id").GetString());
         Assert.Equal(8_200, narrativeRecord.RootElement.GetProperty("target_id").GetInt32());
+    }
+
+    [Fact]
+    public void ShowcaseFrameHitRegistryExposesCodeExplorerPanes()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 4,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+
+        var tree = ShowcaseFrameHitRegistry.HitTest(state, 3, 6);
+        var editor = ShowcaseFrameHitRegistry.HitTest(state, 90, 6);
+
+        Assert.Equal("code_explorer:tree", tree.LocalHitId);
+        Assert.Equal((uint)4_000, tree.UpstreamHitId);
+        Assert.Equal("code_explorer:editor", editor.LocalHitId);
+        Assert.Equal((uint)4_100, editor.UpstreamHitId);
+    }
+
+    [Fact]
+    public void ShowcaseEvidenceJsonlWriterEmitsCodeExplorerMouseActions()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"ftui-showcase-code-explorer-mouse-{Guid.NewGuid():N}.jsonl");
+        var options = ShowcaseCliOptions.Parse(
+            ["--screen=4", "--evidence-jsonl", path],
+            _ => null);
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 4,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+        var treeEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 6, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp);
+        var editorScrollEvent = TerminalEvent.Mouse(
+            new MouseGesture(90, 6, TerminalMouseButton.WheelDown, TerminalMouseKind.Scroll),
+            timestamp + TimeSpan.FromMilliseconds(10));
+        var editorContextEvent = TerminalEvent.Mouse(
+            new MouseGesture(90, 6, TerminalMouseButton.Right, TerminalMouseKind.Down),
+            timestamp + TimeSpan.FromMilliseconds(20));
+
+        using (var writer = ShowcaseEvidenceJsonlWriter.Create(options.EvidenceJsonlPath))
+        {
+            Assert.NotNull(writer);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 1, frame: 1, treeEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 2, frame: 2, editorScrollEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 3, frame: 3, editorContextEvent, state, state);
+        }
+
+        var lines = File.ReadAllLines(path);
+        Assert.Equal(3, lines.Length);
+        using var treeRecord = JsonDocument.Parse(lines[0]);
+        using var editorScrollRecord = JsonDocument.Parse(lines[1]);
+        using var editorContextRecord = JsonDocument.Parse(lines[2]);
+        Assert.Equal("code_explorer_tree_select", treeRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("code_explorer:tree", treeRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(4_000, treeRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("code_explorer_editor_scroll_down", editorScrollRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("code_explorer:editor", editorScrollRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(4_100, editorScrollRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("code_explorer_editor_context", editorContextRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("code_explorer:editor", editorContextRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(4_100, editorContextRecord.RootElement.GetProperty("target_id").GetInt32());
     }
 
     [Fact]
