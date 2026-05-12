@@ -656,6 +656,42 @@ internal static class ShowcaseFrameHitRegistry
                 new("macro_recorder:scenario_runner", ShowcaseHitLayer.Content, 13_300)));
         }
 
+        if (state.CurrentScreenNumber == 20 && TryResolveContentInnerArea(state.Viewport, out var logSearchInner) && logSearchInner.Width >= 40 && logSearchInner.Height >= 12)
+        {
+            var searchWidth = Math.Max(1, logSearchInner.Width * 55 / 100);
+            var sideX = logSearchInner.X + searchWidth;
+            var sideWidth = Math.Max(1, logSearchInner.Width - searchWidth);
+            for (var row = 0; row < Math.Min(10, (int)logSearchInner.Height); row++)
+            {
+                AddRegion(
+                    regions,
+                    logSearchInner.X,
+                    logSearchInner.Y + row,
+                    searchWidth,
+                    new($"log_search:result:{row}", ShowcaseHitLayer.Content, (uint)(20_000 + row)));
+            }
+
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)sideX, logSearchInner.Y, (ushort)sideWidth, (ushort)Math.Min(8, (int)logSearchInner.Height)),
+                new("log_search:live_stream", ShowcaseHitLayer.Content, 20_100)));
+            AddRegion(
+                regions,
+                sideX,
+                logSearchInner.Y + 8,
+                sideWidth,
+                new("log_search:controls", ShowcaseHitLayer.Content, 20_200));
+            var diagnosticsY = logSearchInner.Y + 16;
+            for (var row = 0; row < Math.Max(1, Math.Min(10, logSearchInner.Height - 16)); row++)
+            {
+                AddRegion(
+                    regions,
+                    sideX,
+                    diagnosticsY + row,
+                    sideWidth,
+                    new($"log_search:diagnostic:{row}", ShowcaseHitLayer.Content, (uint)(20_300 + row)));
+            }
+        }
+
         if (state.CurrentScreenNumber == 7 && TryResolveContentInnerArea(state.Viewport, out var formsInner) && formsInner.Width >= 30 && formsInner.Height >= 8)
         {
             var formWidth = Math.Max(1, formsInner.Width / 2);

@@ -865,6 +865,52 @@ public sealed class ShowcaseEvidenceJsonlWriter : IDisposable
             return "macro_hit_test";
         }
 
+        if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 20)
+        {
+            if (gesture.Kind == TerminalMouseKind.Scroll)
+            {
+                if (hit.LocalHitId.StartsWith("log_search:result:", StringComparison.Ordinal))
+                {
+                    return gesture.Button == TerminalMouseButton.WheelUp
+                        ? "log_search_results_scroll_up"
+                        : "log_search_results_scroll_down";
+                }
+
+                if (hit.LocalHitId.StartsWith("log_search:diagnostic:", StringComparison.Ordinal))
+                {
+                    return gesture.Button == TerminalMouseButton.WheelUp
+                        ? "log_search_diagnostics_scroll_up"
+                        : "log_search_diagnostics_scroll_down";
+                }
+
+                return gesture.Button == TerminalMouseButton.WheelUp
+                    ? "log_search_panel_scroll_up"
+                    : "log_search_panel_scroll_down";
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Left)
+            {
+                if (hit.LocalHitId.StartsWith("log_search:result:", StringComparison.Ordinal))
+                {
+                    return "log_search_result_select";
+                }
+
+                if (hit.LocalHitId.StartsWith("log_search:diagnostic:", StringComparison.Ordinal))
+                {
+                    return "log_search_diagnostic_select";
+                }
+
+                return hit.LocalHitId switch
+                {
+                    "log_search:live_stream" => "log_search_live_stream_focus",
+                    "log_search:controls" => "log_search_controls_focus",
+                    _ => "log_search_hit_test"
+                };
+            }
+
+            return "log_search_hit_test";
+        }
+
         if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 7)
         {
             if (gesture.Kind == TerminalMouseKind.Scroll)
