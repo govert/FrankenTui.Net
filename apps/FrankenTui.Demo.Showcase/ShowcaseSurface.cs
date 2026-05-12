@@ -949,6 +949,8 @@ internal static class ShowcaseSurface
         var selected = replay.Count == 0 ? 0 : Math.Clamp(state.MacroRecorderTimelineIndex, 0, replay.Count - 1);
         var selectedEvent = replay.Count == 0 ? null : replay[selected];
         var selectedScenario = Math.Clamp(state.MacroRecorderScenarioIndex, 0, 2);
+        var focus = Math.Clamp(state.MacroRecorderFocusIndex, 0, 3);
+        var focusLabel = state.MacroRecorderContextArmed ? "context" : "focus";
         var effectiveState = state.Session.Macro with { Macro = macro };
         var progress = macro.Events.Count == 0
             ? 0
@@ -957,7 +959,7 @@ internal static class ShowcaseSurface
         var controls = $"""
             State: {effectiveState.Mode.ToString().ToLowerInvariant()}   Events: {macro.Events.Count}   Duration: {macro.Events.LastOrDefault()?.ScheduledMs ?? 0}ms
             Speed: {effectiveState.Speed:0.00}x   Loop: {(effectiveState.Loop ? "On" : "Off")}   Progress: {progress,3}%   Filtered: 0
-            Focus: [Controls] [Timeline] [Scenarios]   Alt+Arrows: Controls/Timeline/Scenarios
+            Focus: {(focus == 0 ? "[Controls]" : "Controls")} {(focus == 1 ? "[Timeline]" : "Timeline")} {(focus == 2 ? "[Detail]" : "Detail")} {(focus == 3 ? "[Scenarios]" : "Scenarios")}   mouse={focusLabel}
             Quick Start: Enter load scenario | Space record | Up/Down scrub timeline
             Space/r record/stop | Enter/p play/pause | Esc stop | l loop | +/- speed
             Status: {effectiveState.Status}
@@ -1004,13 +1006,13 @@ internal static class ShowcaseSurface
         return new StackWidget(
             LayoutDirection.Vertical,
             [
-                (LayoutConstraint.Fixed(8), Panel("Macro Recorder", controls)),
+                (LayoutConstraint.Fixed(8), Panel(focus == 0 ? $"Macro Recorder [{focusLabel}]" : "Macro Recorder", controls)),
                 (LayoutConstraint.Fill(), new StackWidget(
                     LayoutDirection.Horizontal,
                     [
                         (LayoutConstraint.Percentage(60), new PanelWidget
                         {
-                            Title = "Timeline",
+                            Title = focus == 1 ? $"Timeline [{focusLabel} {selected}]" : $"Timeline [{selected}]",
                             Child = new TableWidget
                             {
                                 Headers = ["", "#", "Delay", "At", "Event"],
@@ -1021,8 +1023,8 @@ internal static class ShowcaseSurface
                         (LayoutConstraint.Fill(), new StackWidget(
                             LayoutDirection.Vertical,
                             [
-                                (LayoutConstraint.Percentage(65), Panel("Event Detail", eventDetail)),
-                                (LayoutConstraint.Fill(), Panel("Scenario Runner", scenarios))
+                                (LayoutConstraint.Percentage(65), Panel(focus == 2 ? $"Event Detail [{focusLabel}]" : "Event Detail", eventDetail)),
+                                (LayoutConstraint.Fill(), Panel(focus == 3 ? $"Scenario Runner [{focusLabel} {selectedScenario}]" : $"Scenario Runner [{selectedScenario}]", scenarios))
                             ]))
                     ]))
             ]);

@@ -936,7 +936,7 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   the Widget Gallery increment adds mouse-mutated
   list/tab/table/focus/context rendering, the Forms & Input increment adds mouse-mutated
   selected-field/text-area focus/scroll rendering, the Macro Recorder increment adds mouse-mutated
-  timeline/scenario selection rendering, the Performance increment adds
+  timeline/scenario/focus/context rendering, the Performance increment adds
   mouse-mutated virtual-list item rendering, the Markdown increment adds
   mouse-mutated pane/scroll/wrap rendering, the Data Viz increment adds
   mouse-mutated metric/narrative/context rendering, the File Browser

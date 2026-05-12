@@ -5565,6 +5565,8 @@ public sealed class ShowcaseShellTests
 
         state = ApplyMouse(state, 3, 12, timestamp);
         Assert.Equal(2, state.MacroRecorderTimelineIndex);
+        Assert.Equal(1, state.MacroRecorderFocusIndex);
+        Assert.False(state.MacroRecorderContextArmed);
 
         state = ApplyMouse(
             state,
@@ -5574,6 +5576,17 @@ public sealed class ShowcaseShellTests
             TerminalMouseButton.WheelDown,
             TerminalMouseKind.Scroll);
         Assert.Equal(1, state.MacroRecorderScenarioIndex);
+        Assert.Equal(3, state.MacroRecorderFocusIndex);
+
+        state = ApplyMouse(
+            state,
+            90,
+            16,
+            timestamp + TimeSpan.FromMilliseconds(20),
+            TerminalMouseButton.Right,
+            TerminalMouseKind.Down);
+        Assert.Equal(2, state.MacroRecorderFocusIndex);
+        Assert.True(state.MacroRecorderContextArmed);
     }
 
     [Fact]
@@ -5587,7 +5600,9 @@ public sealed class ShowcaseShellTests
             flowDirection: WidgetFlowDirection.LeftToRight) with
         {
             MacroRecorderTimelineIndex = 3,
-            MacroRecorderScenarioIndex = 2
+            MacroRecorderScenarioIndex = 2,
+            MacroRecorderFocusIndex = 3,
+            MacroRecorderContextArmed = true
         };
         var buffer = new RenderBuffer(120, 30);
 
@@ -5595,6 +5610,7 @@ public sealed class ShowcaseShellTests
             .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 30), Theme.DefaultTheme));
 
         var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("Scenario Runner [context 2]", screen);
         Assert.Contains("Selected: #003", screen);
         Assert.Contains("> Layout Lab - screens and n/p", screen);
     }

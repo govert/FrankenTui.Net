@@ -128,8 +128,10 @@ internal sealed record ShowcaseDemoState(
     int TableThemePresetIndex = 0,
     int TerminalCapabilitiesSelectedRow = 1,
     int TerminalCapabilitiesProfileIndex = 0,
+    int MacroRecorderFocusIndex = 0,
     int MacroRecorderTimelineIndex = 0,
     int MacroRecorderScenarioIndex = 0,
+    bool MacroRecorderContextArmed = false,
     int PerformanceSelectedIndex = 0,
     int MarkdownActivePaneIndex = 0,
     int MarkdownRendererScroll = 0,
@@ -3963,10 +3965,14 @@ internal sealed record ShowcaseDemoState(
             {
                 { } value when value.StartsWith("macro_recorder:timeline:", StringComparison.Ordinal) => next with
                 {
+                    MacroRecorderFocusIndex = 1,
+                    MacroRecorderContextArmed = false,
                     MacroRecorderTimelineIndex = Math.Clamp(next.MacroRecorderTimelineIndex + delta, 0, 4)
                 },
                 "macro_recorder:scenario_runner" => next with
                 {
+                    MacroRecorderFocusIndex = 3,
+                    MacroRecorderContextArmed = false,
                     MacroRecorderScenarioIndex = Math.Clamp(next.MacroRecorderScenarioIndex + delta, 0, 2)
                 },
                 _ => next
@@ -3975,9 +3981,39 @@ internal sealed record ShowcaseDemoState(
                 hit.LocalHitId == "macro_recorder:scenario_runner";
         }
 
+        if (gesture.Button == TerminalMouseButton.Right &&
+            (hit.LocalHitId == "macro_recorder:controls" ||
+                hit.LocalHitId == "macro_recorder:event_detail" ||
+                hit.LocalHitId == "macro_recorder:scenario_runner" ||
+                hit.LocalHitId.StartsWith("macro_recorder:timeline:", StringComparison.Ordinal)))
+        {
+            next = next with
+            {
+                MacroRecorderFocusIndex = hit.LocalHitId switch
+                {
+                    { } value when value.StartsWith("macro_recorder:timeline:", StringComparison.Ordinal) => 1,
+                    "macro_recorder:event_detail" => 2,
+                    "macro_recorder:scenario_runner" => 3,
+                    _ => 0
+                },
+                MacroRecorderContextArmed = true
+            };
+            return true;
+        }
+
         if (gesture.Button != TerminalMouseButton.Left)
         {
             return false;
+        }
+
+        if (hit.LocalHitId == "macro_recorder:controls")
+        {
+            next = next with
+            {
+                MacroRecorderFocusIndex = 0,
+                MacroRecorderContextArmed = false
+            };
+            return true;
         }
 
         if (hit.LocalHitId.StartsWith("macro_recorder:timeline:", StringComparison.Ordinal))
@@ -3988,13 +4024,33 @@ internal sealed record ShowcaseDemoState(
                 return false;
             }
 
-            next = next with { MacroRecorderTimelineIndex = Math.Clamp(row, 0, 4) };
+            next = next with
+            {
+                MacroRecorderFocusIndex = 1,
+                MacroRecorderContextArmed = false,
+                MacroRecorderTimelineIndex = Math.Clamp(row, 0, 4)
+            };
+            return true;
+        }
+
+        if (hit.LocalHitId == "macro_recorder:event_detail")
+        {
+            next = next with
+            {
+                MacroRecorderFocusIndex = 2,
+                MacroRecorderContextArmed = false
+            };
             return true;
         }
 
         if (hit.LocalHitId == "macro_recorder:scenario_runner")
         {
-            next = next with { MacroRecorderScenarioIndex = Math.Clamp(next.MacroRecorderScenarioIndex + 1, 0, 2) };
+            next = next with
+            {
+                MacroRecorderFocusIndex = 3,
+                MacroRecorderContextArmed = false,
+                MacroRecorderScenarioIndex = Math.Clamp(next.MacroRecorderScenarioIndex + 1, 0, 2)
+            };
             return true;
         }
 
