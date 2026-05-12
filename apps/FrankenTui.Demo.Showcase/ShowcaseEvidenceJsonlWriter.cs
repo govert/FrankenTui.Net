@@ -812,6 +812,46 @@ public sealed class ShowcaseEvidenceJsonlWriter : IDisposable
             return "terminal_capabilities_hit_test";
         }
 
+        if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 45)
+        {
+            if (gesture.Kind == TerminalMouseKind.Scroll)
+            {
+                return hit.LocalHitId switch
+                {
+                    "quake:canvas" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "quake_canvas_quality_prev"
+                        : "quake_canvas_quality_next",
+                    "quake:player" => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "quake_player_yaw_left"
+                        : "quake_player_yaw_right",
+                    _ => gesture.Button == TerminalMouseButton.WheelUp
+                        ? "quake_panel_scroll_up"
+                        : "quake_panel_scroll_down"
+                };
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Right)
+            {
+                return hit.LocalHitId == "quake:canvas"
+                    ? "quake_canvas_context"
+                    : "quake_panel_context";
+            }
+
+            if (gesture.Kind == TerminalMouseKind.Down && gesture.Button == TerminalMouseButton.Left)
+            {
+                return hit.LocalHitId switch
+                {
+                    "quake:canvas" => "quake_canvas_focus",
+                    "quake:player" => "quake_player_focus",
+                    "quake:renderer" => "quake_renderer_focus",
+                    "quake:controls" => "quake_controls_focus",
+                    _ => "quake_hit_test"
+                };
+            }
+
+            return "quake_hit_test";
+        }
+
         if (hit.Layer == ShowcaseHitLayer.Content && before.CurrentScreenNumber == 10)
         {
             if (gesture.Kind == TerminalMouseKind.Scroll)

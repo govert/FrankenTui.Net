@@ -7166,6 +7166,79 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseFrameHitRegistryExposesQuakePanels()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 45,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+
+        var canvas = ShowcaseFrameHitRegistry.HitTest(state, 3, 8);
+        var player = ShowcaseFrameHitRegistry.HitTest(state, 90, 8);
+        var renderer = ShowcaseFrameHitRegistry.HitTest(state, 90, 15);
+        var controls = ShowcaseFrameHitRegistry.HitTest(state, 90, 24);
+
+        Assert.Equal("quake:canvas", canvas.LocalHitId);
+        Assert.Equal((uint)45_000, canvas.UpstreamHitId);
+        Assert.Equal("quake:player", player.LocalHitId);
+        Assert.Equal((uint)45_100, player.UpstreamHitId);
+        Assert.Equal("quake:renderer", renderer.LocalHitId);
+        Assert.Equal((uint)45_200, renderer.UpstreamHitId);
+        Assert.Equal("quake:controls", controls.LocalHitId);
+        Assert.Equal((uint)45_300, controls.UpstreamHitId);
+    }
+
+    [Fact]
+    public void ShowcaseEvidenceJsonlWriterEmitsQuakeMouseActions()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"ftui-showcase-quake-mouse-{Guid.NewGuid():N}.jsonl");
+        var options = ShowcaseCliOptions.Parse(
+            ["--screen=45", "--evidence-jsonl", path],
+            _ => null);
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 45,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+        var canvasEvent = TerminalEvent.Mouse(
+            new MouseGesture(3, 8, TerminalMouseButton.Left, TerminalMouseKind.Down),
+            timestamp);
+        var playerScrollEvent = TerminalEvent.Mouse(
+            new MouseGesture(90, 8, TerminalMouseButton.WheelDown, TerminalMouseKind.Scroll),
+            timestamp + TimeSpan.FromMilliseconds(10));
+        var controlsContextEvent = TerminalEvent.Mouse(
+            new MouseGesture(90, 24, TerminalMouseButton.Right, TerminalMouseKind.Down),
+            timestamp + TimeSpan.FromMilliseconds(20));
+
+        using (var writer = ShowcaseEvidenceJsonlWriter.Create(options.EvidenceJsonlPath))
+        {
+            Assert.NotNull(writer);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 1, frame: 1, canvasEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 2, frame: 2, playerScrollEvent, state, state);
+            writer.WriteMouseEvent("input", options, RuntimeFrameStats.Empty, stepIndex: 3, frame: 3, controlsContextEvent, state, state);
+        }
+
+        var lines = File.ReadAllLines(path);
+        Assert.Equal(3, lines.Length);
+        using var canvasRecord = JsonDocument.Parse(lines[0]);
+        using var playerScrollRecord = JsonDocument.Parse(lines[1]);
+        using var controlsContextRecord = JsonDocument.Parse(lines[2]);
+        Assert.Equal("quake_canvas_focus", canvasRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("quake:canvas", canvasRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(45_000, canvasRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("quake_player_yaw_right", playerScrollRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("quake:player", playerScrollRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(45_100, playerScrollRecord.RootElement.GetProperty("target_id").GetInt32());
+        Assert.Equal("quake_panel_context", controlsContextRecord.RootElement.GetProperty("mouse_action").GetString());
+        Assert.Equal("quake:controls", controlsContextRecord.RootElement.GetProperty("hit_id").GetString());
+        Assert.Equal(45_300, controlsContextRecord.RootElement.GetProperty("target_id").GetInt32());
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryExposesWidgetGalleryPanels()
     {
         var state = ShowcaseDemoState.Create(

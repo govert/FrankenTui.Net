@@ -558,6 +558,30 @@ internal static class ShowcaseFrameHitRegistry
                 new("terminal_capabilities:simulation", ShowcaseHitLayer.Content, 12_200)));
         }
 
+        if (state.CurrentScreenNumber == 45 && TryResolveContentInnerArea(state.Viewport, out var quakeInner) && quakeInner.Width >= 80 && quakeInner.Height >= 12)
+        {
+            var bodyY = quakeInner.Y + 3;
+            var bodyHeight = Math.Max(1, quakeInner.Height - 3);
+            var canvasWidth = Math.Max(1, quakeInner.Width * 55 / 100);
+            var panelWidth = Math.Max(1, quakeInner.Width - canvasWidth);
+            var panelX = quakeInner.X + canvasWidth;
+            var playerHeight = Math.Max(1, bodyHeight * 34 / 100);
+            var rendererHeight = Math.Max(1, bodyHeight * 33 / 100);
+            var controlsHeight = Math.Max(1, bodyHeight - playerHeight - rendererHeight);
+            regions.Add(new ShowcaseHitRegion(
+                new Rect(quakeInner.X, (ushort)bodyY, (ushort)canvasWidth, (ushort)bodyHeight),
+                new("quake:canvas", ShowcaseHitLayer.Content, 45_000)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)panelX, (ushort)bodyY, (ushort)panelWidth, (ushort)playerHeight),
+                new("quake:player", ShowcaseHitLayer.Content, 45_100)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)panelX, (ushort)(bodyY + playerHeight), (ushort)panelWidth, (ushort)rendererHeight),
+                new("quake:renderer", ShowcaseHitLayer.Content, 45_200)));
+            regions.Add(new ShowcaseHitRegion(
+                new Rect((ushort)panelX, (ushort)(bodyY + playerHeight + rendererHeight), (ushort)panelWidth, (ushort)controlsHeight),
+                new("quake:controls", ShowcaseHitLayer.Content, 45_300)));
+        }
+
         if (state.CurrentScreenNumber == 10 && TryResolveContentInnerArea(state.Viewport, out var advancedInner) && advancedInner.Width >= 30 && advancedInner.Height >= 8)
         {
             var patternsWidth = Math.Max(1, advancedInner.Width / 2);
