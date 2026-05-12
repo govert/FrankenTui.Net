@@ -6058,6 +6058,80 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseSnapshotPlayerMouseMutatesTimelinePreviewControlsAndDiagnostics()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 31,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+
+        state = ApplyMouse(state, 60, 3, timestamp);
+        Assert.Equal(42, state.SnapshotPlayerFrameIndex);
+        Assert.Equal(0, state.SnapshotPlayerFocusIndex);
+
+        state = ApplyMouse(
+            state,
+            3,
+            8,
+            timestamp + TimeSpan.FromMilliseconds(10),
+            TerminalMouseButton.Right);
+        Assert.False(state.SnapshotPlayerHeatmapEnabled);
+        Assert.Equal(1, state.SnapshotPlayerFocusIndex);
+
+        state = ApplyMouse(state, 40, 8, timestamp + TimeSpan.FromMilliseconds(20));
+        Assert.Equal(1, state.SnapshotPlayerCompareIndex);
+        Assert.Equal(2, state.SnapshotPlayerFocusIndex);
+
+        state = ApplyMouse(state, 90, 16, timestamp + TimeSpan.FromMilliseconds(30));
+        Assert.True(state.SnapshotPlayerPlaying);
+        Assert.Equal(4, state.SnapshotPlayerFocusIndex);
+
+        state = ApplyMouse(
+            state,
+            90,
+            24,
+            timestamp + TimeSpan.FromMilliseconds(40),
+            TerminalMouseButton.WheelDown,
+            TerminalMouseKind.Scroll);
+        Assert.Equal(1, state.SnapshotPlayerDiagnosticsScroll);
+        Assert.Equal(5, state.SnapshotPlayerFocusIndex);
+    }
+
+    [Fact]
+    public void ShowcaseSnapshotPlayerRendersMouseSelectedState()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber: 31,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight) with
+        {
+            SnapshotPlayerFrameIndex = 12,
+            SnapshotPlayerFocusIndex = 2,
+            SnapshotPlayerDiagnosticsScroll = 4,
+            SnapshotPlayerCompareIndex = 1,
+            SnapshotPlayerMarkerEnabled = true,
+            SnapshotPlayerHeatmapEnabled = false,
+            SnapshotPlayerPlaying = true
+        };
+        var buffer = new RenderBuffer(120, 32);
+
+        ShowcaseSurface.Create(state)
+            .Render(new RuntimeRenderContext(buffer, Rect.FromSize(120, 32), Theme.DefaultTheme));
+
+        var screen = HeadlessBufferView.ScreenString(buffer);
+        Assert.Contains("Timeline (13/50)", screen);
+        Assert.Contains("Frame A/B Compare [focus slot B]", screen);
+        Assert.Contains("Status: Playing", screen);
+        Assert.Contains("Heatmap: Off", screen);
+        Assert.Contains("Diagnostics scroll: 4", screen);
+    }
+
+    [Fact]
     public void ShowcaseFrameHitRegistryExposesPerformanceChallengePanels()
     {
         var state = ShowcaseDemoState.Create(

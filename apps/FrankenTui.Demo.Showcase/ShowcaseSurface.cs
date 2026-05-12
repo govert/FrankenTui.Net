@@ -2306,34 +2306,42 @@ internal static class ShowcaseSurface
     private static IWidget BuildSnapshotPlayer(ShowcaseDemoState state)
     {
         const int frameCount = 50;
-        var current = state.ScriptFrame % frameCount;
+        var current = state.SnapshotPlayerFrameIndex >= 0
+            ? Math.Clamp(state.SnapshotPlayerFrameIndex, 0, frameCount - 1)
+            : state.ScriptFrame % frameCount;
+        var focusIndex = Math.Clamp(state.SnapshotPlayerFocusIndex, 0, 5);
+        var diagnosticsScroll = Math.Clamp(state.SnapshotPlayerDiagnosticsScroll, 0, 8);
+        var compareIndex = Math.Clamp(state.SnapshotPlayerCompareIndex, 0, 1);
+        var markerEnabled = state.SnapshotPlayerMarkerEnabled;
+        var heatmapMode = state.SnapshotPlayerHeatmapEnabled ? "Overlay" : "Off";
+        var playbackState = state.SnapshotPlayerPlaying ? "Playing" : "Paused";
         var timeline = new string('=', Math.Max(1, current / 2)).PadRight(25, '.');
         string[][] previewRows =
         [
             ["Frame", $"{current + 1}/{frameCount}", "Pattern", "Time Travel Mode"],
             ["Delta", "42 cells", "Render", $"{100 + current * 10}us"],
             ["Checksum", $"0x{0x8f34ab1200000000UL + (ulong)current:X16}", "Chain", "verified"],
-            ["Marker", current % 7 == 0 ? "yes" : "no", "State", "Paused"]
+            ["Marker", markerEnabled || current % 7 == 0 ? "yes" : "no", "State", playbackState]
         ];
         string[][] compareRows =
         [
-            ["A", "frame 1", "checksum", "0x8F34AB1200000000"],
-            ["B", "frame 2", "checksum", "0x8F34AB1200000001"],
+            [compareIndex == 0 ? "> A" : "A", $"frame {Math.Max(1, current)}", "checksum", $"0x{0x8F34AB1200000000UL + (ulong)Math.Max(0, current - 1):X16}"],
+            [compareIndex == 1 ? "> B" : "B", $"frame {current + 1}", "checksum", $"0x{0x8F34AB1200000000UL + (ulong)current:X16}"],
             ["Diff", "37 cells", "content", "24"],
-            ["Style", "13", "Heatmap", "Overlay"]
+            ["Style", "13", "Heatmap", heatmapMode]
         ];
         var left = new StackWidget(
             LayoutDirection.Vertical,
             [
                 (LayoutConstraint.Fixed(4), Panel(
-                    $"Timeline ({current + 1}/{frameCount})",
-                    $"{timeline}\nMarkers: frame 1, 8, 16 | Click timeline / Drag timeline scrubs frames")),
+                    focusIndex == 0 ? $"Timeline ({current + 1}/{frameCount}) [focus]" : $"Timeline ({current + 1}/{frameCount})",
+                    $"{timeline}\nMarkers: frame 1, 8, 16{(markerEnabled ? $", {current + 1}" : "")} | Click timeline / Drag timeline scrubs frames")),
                 (LayoutConstraint.Fill(), new StackWidget(
                     LayoutDirection.Horizontal,
                     [
                         (LayoutConstraint.Percentage(50), new PanelWidget
                         {
-                            Title = "Frame Preview",
+                            Title = focusIndex == 1 ? $"Frame Preview [focus heatmap={heatmapMode}]" : "Frame Preview",
                             Child = new TableWidget
                             {
                                 Headers = ["Metric", "Value", "Field", "Data"],
@@ -2342,7 +2350,7 @@ internal static class ShowcaseSurface
                         }),
                         (LayoutConstraint.Fill(), new PanelWidget
                         {
-                            Title = "Frame A/B Compare",
+                            Title = focusIndex == 2 ? $"Frame A/B Compare [focus slot {(compareIndex == 0 ? "A" : "B")}]" : "Frame A/B Compare",
                             Child = new TableWidget
                             {
                                 Headers = ["Slot", "Frame", "Field", "Value"],
@@ -2355,14 +2363,14 @@ internal static class ShowcaseSurface
             LayoutDirection.Vertical,
             [
                 (LayoutConstraint.Percentage(45), Panel(
-                    "Frame Info",
-                    $"Status: Paused\nFrame: {current + 1}/{frameCount}\nSize: 40x15\nChanges: 42 cells\nMemory: 28800 bytes\nChecksum: {0x8f34ab1200000000UL + (ulong)current:X16}\nChain hash: 0x0F0E0D0C0B0A0908\nMarkers: 3\nView: A/B Compare\nHeatmap: Overlay")),
+                    focusIndex == 3 ? "Frame Info [focus]" : "Frame Info",
+                    $"Status: {playbackState}\nFrame: {current + 1}/{frameCount}\nSize: 40x15\nChanges: 42 cells\nMemory: 28800 bytes\nChecksum: {0x8f34ab1200000000UL + (ulong)current:X16}\nChain hash: 0x0F0E0D0C0B0A0908\nMarkers: {(markerEnabled ? 4 : 3)}\nView: A/B Compare\nHeatmap: {heatmapMode}")),
                 (LayoutConstraint.Percentage(28), Panel(
-                    "Controls",
-                    "Space: Play/Pause\nLeft/Right or h/l: Step frame\nHome/End or g/G: First/Last\nM: Toggle marker\nR: Toggle record\nC: Clear\nD: Diagnostics\nV: Toggle compare view\nA/B: Pin compare A/B\nX: Swap A/B\nH: Heatmap overlay\nE: Export JSONL report")),
+                    focusIndex == 4 ? "Controls [focus]" : "Controls",
+                    $"State: {playbackState}\nSpace: Play/Pause\nLeft/Right or h/l: Step frame\nHome/End or g/G: First/Last\nM: Toggle marker\nR: Toggle record\nC: Clear\nD: Diagnostics\nV: Toggle compare view\nA/B: Pin compare A/B\nX: Swap A/B\nH: Heatmap overlay\nE: Export JSONL report")),
                 (LayoutConstraint.Fill(), Panel(
-                    "Diagnostics + Export",
-                    "Events: nav, playback, record, marker, clear\nJSONL report: time_travel_report\nFields: seq, action, from, to, frame, changes, checksum, chain, diff_cells, diff_pct, content_diff, style_diff\nInvariants: playback determinism, progress bounds, checksum integrity, memory budget\nMouse: Right-click timeline toggles marker; Right-click preview toggles heatmap"))
+                    diagnosticsScroll > 0 ? $"Diagnostics + Export [scroll {diagnosticsScroll}]" : focusIndex == 5 ? "Diagnostics + Export [focus]" : "Diagnostics + Export",
+                    $"Diagnostics scroll: {diagnosticsScroll}\nEvents: nav, playback, record, marker, clear\nJSONL report: time_travel_report\nFields: seq, action, from, to, frame, changes, checksum, chain, diff_cells, diff_pct, content_diff, style_diff\nInvariants: playback determinism, progress bounds, checksum integrity, memory budget\nMouse: Right-click timeline toggles marker; Right-click preview toggles heatmap"))
             ]);
 
         return new StackWidget(

@@ -162,6 +162,13 @@ internal sealed record ShowcaseDemoState(
     int ThemeStudioFocusIndex = 0,
     int ThemeStudioDiagnosticsScroll = 0,
     bool ThemeStudioExportArmed = false,
+    int SnapshotPlayerFrameIndex = -1,
+    int SnapshotPlayerFocusIndex = 0,
+    int SnapshotPlayerDiagnosticsScroll = 0,
+    int SnapshotPlayerCompareIndex = 0,
+    bool SnapshotPlayerMarkerEnabled = false,
+    bool SnapshotPlayerHeatmapEnabled = true,
+    bool SnapshotPlayerPlaying = false,
     bool PaletteLabBenchEnabled = false,
     int PaletteLabBenchFrame = 0,
     int PaletteLabBenchProcessed = 0,
@@ -371,6 +378,12 @@ internal sealed record ShowcaseDemoState(
 
         if (input.EffectiveEvent is MouseTerminalEvent themeStudioMouseEvent &&
             HandleThemeStudioMouse(themeStudioMouseEvent, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
+        if (input.EffectiveEvent is MouseTerminalEvent snapshotPlayerMouseEvent &&
+            HandleSnapshotPlayerMouse(snapshotPlayerMouseEvent, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
@@ -2166,6 +2179,107 @@ internal sealed record ShowcaseDemoState(
             _ => next
         };
         return hit.LocalHitId is "theme_studio:export" or "theme_studio:diagnostics" or "theme_studio:footer";
+    }
+
+    private static bool HandleSnapshotPlayerMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
+    {
+        const int frameCount = 50;
+        var gesture = mouseEvent.Gesture;
+        if (next.CurrentScreenNumber != 31 ||
+            next.Session.CommandPalette.IsOpen ||
+            next.TourActive ||
+            gesture.Kind is not (TerminalMouseKind.Down or TerminalMouseKind.Scroll or TerminalMouseKind.Drag))
+        {
+            return false;
+        }
+
+        var hit = ShowcaseFrameHitRegistry.HitTest(next, gesture.Column, gesture.Row);
+        if (hit.Layer != ShowcaseHitLayer.Content)
+        {
+            return false;
+        }
+
+        var currentFrame = next.SnapshotPlayerFrameIndex >= 0
+            ? next.SnapshotPlayerFrameIndex
+            : next.ScriptFrame % frameCount;
+        if (gesture.Kind == TerminalMouseKind.Scroll)
+        {
+            var delta = gesture.Button == TerminalMouseButton.WheelUp ? -1 : 1;
+            next = hit.LocalHitId switch
+            {
+                "snapshot_player:timeline" => next with
+                {
+                    SnapshotPlayerFrameIndex = Math.Clamp(currentFrame + delta, 0, frameCount - 1),
+                    SnapshotPlayerFocusIndex = 0
+                },
+                "snapshot_player:diagnostics" => next with
+                {
+                    SnapshotPlayerDiagnosticsScroll = Math.Clamp(next.SnapshotPlayerDiagnosticsScroll + delta, 0, 8),
+                    SnapshotPlayerFocusIndex = 5
+                },
+                _ => next
+            };
+            return hit.LocalHitId is "snapshot_player:timeline" or "snapshot_player:diagnostics";
+        }
+
+        if (hit.LocalHitId == "snapshot_player:timeline")
+        {
+            var innerWidth = Math.Max(1, next.Viewport.Width - 2);
+            var timelineWidth = Math.Max(1, innerWidth * 60 / 100);
+            var localColumn = Math.Clamp(gesture.Column - 1, 0, timelineWidth - 1);
+            var selectedFrame = Math.Clamp(localColumn * frameCount / timelineWidth, 0, frameCount - 1);
+            next = next with
+            {
+                SnapshotPlayerFrameIndex = selectedFrame,
+                SnapshotPlayerFocusIndex = 0,
+                SnapshotPlayerMarkerEnabled = gesture.Button == TerminalMouseButton.Right
+                    ? !next.SnapshotPlayerMarkerEnabled
+                    : next.SnapshotPlayerMarkerEnabled
+            };
+            return gesture.Button is TerminalMouseButton.Left or TerminalMouseButton.Right;
+        }
+
+        if (hit.LocalHitId == "snapshot_player:preview")
+        {
+            next = next with
+            {
+                SnapshotPlayerFocusIndex = 1,
+                SnapshotPlayerHeatmapEnabled = gesture.Button == TerminalMouseButton.Right
+                    ? !next.SnapshotPlayerHeatmapEnabled
+                    : next.SnapshotPlayerHeatmapEnabled
+            };
+            return gesture.Button is TerminalMouseButton.Left or TerminalMouseButton.Right;
+        }
+
+        if (gesture.Button != TerminalMouseButton.Left)
+        {
+            return false;
+        }
+
+        next = hit.LocalHitId switch
+        {
+            "snapshot_player:compare" => next with
+            {
+                SnapshotPlayerFocusIndex = 2,
+                SnapshotPlayerCompareIndex = (next.SnapshotPlayerCompareIndex + 1) % 2
+            },
+            "snapshot_player:frame_info" => next with
+            {
+                SnapshotPlayerFocusIndex = 3
+            },
+            "snapshot_player:controls" => next with
+            {
+                SnapshotPlayerFocusIndex = 4,
+                SnapshotPlayerPlaying = !next.SnapshotPlayerPlaying
+            },
+            "snapshot_player:diagnostics" => next with
+            {
+                SnapshotPlayerFocusIndex = 5,
+                SnapshotPlayerDiagnosticsScroll = Math.Clamp(next.SnapshotPlayerDiagnosticsScroll + 1, 0, 8)
+            },
+            _ => next
+        };
+        return hit.LocalHitId is "snapshot_player:compare" or "snapshot_player:frame_info" or "snapshot_player:controls" or "snapshot_player:diagnostics";
     }
 
     private static bool HandleTerminalCapabilitiesMouse(MouseTerminalEvent mouseEvent, ref ShowcaseDemoState next)
