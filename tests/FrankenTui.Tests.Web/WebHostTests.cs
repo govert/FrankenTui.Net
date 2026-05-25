@@ -279,4 +279,40 @@ public sealed class WebHostTests
         runner.Destroy();
         Assert.True(runner.IsRunning);
     }
+
+    [Fact]
+    public void ShowcaseRunnerCoreRoutesEncodedKeyToNumberedScreenState()
+    {
+        var runner = ShowcasePage.CreateRunner(screenNumber: 44, width: 80, height: 24);
+        Assert.True(runner.PushEncodedInput("""{"kind":"key","phase":"down","code":"KeyL","mods":1}"""));
+        Assert.Equal(44, runner.ScreenNumber);
+        var step = runner.Step();
+        Assert.Equal(1, step.EventsProcessed);
+        Assert.Equal(45, runner.ScreenNumber);
+        Assert.Contains("Quake", runner.RenderCurrent().Text);
+    }
+
+    [Fact]
+    public void ShowcaseRunnerCoreRoutesEncodedMouseToNumberedScreenState()
+    {
+        var runner = ShowcasePage.CreateRunner(screenNumber: 30, width: 120, height: 32);
+        Assert.True(runner.PushEncodedInput("""{"kind":"mouse","phase":"down","button":0,"x":3,"y":5,"mods":0}"""));
+        Assert.DoesNotContain("export=ready", runner.RenderCurrent().Text);
+        var step = runner.Step();
+        Assert.Equal(1, step.EventsProcessed);
+        Assert.Contains("selected=Nord", step.Frame.Text);
+    }
+
+    [Fact]
+    public void ShowcaseRunnerCoreEncodedHelpOverlayOpensAndClosesViaEsc()
+    {
+        var runner = ShowcasePage.CreateRunner(screenNumber: 30, width: 120, height: 32);
+        Assert.DoesNotContain("Keybindings", runner.RenderCurrent().Text);
+        Assert.True(runner.PushEncodedInput("""{"kind":"key","phase":"down","key":"?","code":"Slash","mods":0}"""));
+        var help = runner.Step();
+        Assert.Contains("Keybindings", help.Frame.Text);
+        Assert.True(runner.PushEncodedInput("""{"kind":"key","phase":"down","code":"Escape","mods":0}"""));
+        runner.Step();
+        Assert.DoesNotContain("Keybindings", runner.RenderCurrent().Text);
+    }
 }

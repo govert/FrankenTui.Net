@@ -259,6 +259,12 @@ public sealed class ShowcaseRunnerCore
                 return true;
             }
 
+            if (TryHandleScreenKeyInput(document.RootElement, kind) ||
+                TryHandleScreenMouseInput(document.RootElement, kind))
+            {
+                return true;
+            }
+
             return !string.IsNullOrWhiteSpace(kind);
         }
     }
@@ -599,5 +605,137 @@ public sealed class ShowcaseRunnerCore
             spans.Add(checked((uint)row.Length));
         }
         return (cells.ToArray(), spans.ToArray());
+    }
+
+    private bool TryHandleScreenKeyInput(JsonElement element, string kind)
+    {
+        if (_screenState is null || !string.Equals(kind, "key", StringComparison.OrdinalIgnoreCase))
+            return false;
+        if (TryGetStringProperty(element, "phase", out var phase) &&
+            string.Equals(phase, "up", StringComparison.OrdinalIgnoreCase))
+        {
+            return HasAnyProperty(element, "code", "key", "raw_key", "raw_code");
+        }
+        if (!TryParseKeyGesture(element, out var gesture))
+            return false;
+        QueueScreenTerminalEvent(TerminalEvent.Key(gesture));
+        return true;
+    }
+
+    private bool TryHandleScreenMouseInput(JsonElement element, string kind)
+    {
+        if (_screenState is null ||
+            (!string.Equals(kind, "mouse", StringComparison.OrdinalIgnoreCase) &&
+             !string.Equals(kind, "wheel", StringComparison.OrdinalIgnoreCase)))
+            return false;
+        if (!TryParseMouseGesture(element, kind, out var gesture))
+            return false;
+        QueueScreenTerminalEvent(TerminalEvent.Mouse(gesture));
+        return true;
+    }
+
+    private void QueueScreenTerminalEvent(TerminalEvent terminalEvent)
+    {
+        _pendingScreenEvents.Add(terminalEvent);
+        _pendingEventsProcessed++;
+    }
+
+    private static bool TryParseKeyGesture(JsonElement element, out KeyGesture gesture)
+    {
+        gesture = default;
+        if (!TryGetStringProperty(element, "key", out var key) &&
+            !TryGetStringProperty(element, "code", out key) &&
+            !TryGetStringProperty(element, "raw_key", out key) &&
+            !TryGetStringProperty(element, "raw_code", out key))
+            return false;
+        _ = TryGetIntProperty(element, "mods", out var modifiers);
+        var mods = (TerminalModifiers)(Math.Clamp(modifiers, 0, byte.MaxValue) & 0b111);
+        var normalized = key.Trim();
+        if (normalized.Length == 0) return false;
+        gesture = normalized switch
+        {
+            "Enter" or "NumpadEnter" => new KeyGesture(TerminalKey.Enter, mods),
+            "Escape" or "Esc" => new KeyGesture(TerminalKey.Escape, mods),
+            "Backspace" => new KeyGesture(TerminalKey.Backspace, mods),
+            "Tab" => new KeyGesture(TerminalKey.Tab, mods),
+            "BackTab" => new KeyGesture(TerminalKey.Tab, mods | TerminalModifiers.Shift),
+            "Delete" => new KeyGesture(TerminalKey.Delete, mods),
+            "Insert" => new KeyGesture(TerminalKey.Insert, mods),
+            "Home" => new KeyGesture(TerminalKey.Home, mods),
+            "End" => new KeyGesture(TerminalKey.End, mods),
+            "PageUp" => new KeyGesture(TerminalKey.PageUp, mods),
+            "PageDown" => new KeyGesture(TerminalKey.PageDown, mods),
+            "Up" or "ArrowUp" => new KeyGesture(TerminalKey.Up, mods),
+            "Down" or "ArrowDown" => new KeyGesture(TerminalKey.Down, mods),
+            "Left" or "ArrowLeft" => new KeyGesture(TerminalKey.Left, mods),
+            "Right" or "ArrowRight" => new KeyGesture(TerminalKey.Right, mods),
+            "Space" or "Spacebar" => new KeyGesture(TerminalKey.Character, mods, new Rune(' ')),
+            _ => CreateCharacterGesture(normalized, mods)
+        };
+        return true;
+    }
+
+    private static KeyGesture CreateCharacterGesture(string value, TerminalModifiers mods)
+    {
+        if (value.Length == 4 && value.StartsWith("Key", StringComparison.OrdinalIgnoreCase))
+        {
+            var ch = value[3];
+            ch = mods.HasFlag(TerminalModifiers.Shift) ? char.ToUpperInvariant(ch) : char.ToLowerInvariant(ch);
+            return new KeyGesture(TerminalKey.Character, mods, new Rune(ch));
+        }
+        if (value.Length == 6 && value.StartsWith("Digit", StringComparison.OrdinalIgnoreCase))
+            return new KeyGesture(TerminalKey.Character, mods, new Rune(value[5]));
+        var enumerator = value.EnumerateRunes();
+        if (enumerator.MoveNext())
+        {
+            var rune = enumerator.Current;
+            if (!enumerator.MoveNext())
+                return new KeyGesture(TerminalKey.Character, mods, rune);
+        }
+        return new KeyGesture(TerminalKey.Character, mods, new Rune('\0'));
+    }
+
+    private static bool TryParseMouseGesture(JsonElement element, string kind, out MouseGesture gesture)
+    {
+        gesture = default;
+        _ = TryGetIntProperty(element, "x", out var xValue);
+        _ = TryGetIntProperty(element, "y", out var yValue);
+        var column = (ushort)Math.Clamp(xValue, 0, ushort.MaxValue);
+        var row = (ushort)Math.Clamp(yValue, 0, ushort.MaxValue);
+        _ = TryGetIntProperty(element, "mods", out var modifierBits);
+        var mods = (TerminalModifiers)(Math.Clamp(modifierBits, 0, byte.MaxValue) & 0b111);
+        if (string.Equals(kind, "wheel", StringComparison.OrdinalIgnoreCase))
+        {
+            _ = TryGetIntProperty(element, "dy", out var dy);
+            _ = TryGetIntProperty(element, "dx", out var dx);
+            if (dy == 0) dy = dx;
+            if (dy == 0) return false;
+            var wheelButton = dy < 0 ? TerminalMouseButton.WheelUp : TerminalMouseButton.WheelDown;
+            gesture = new MouseGesture(column, row, wheelButton, TerminalMouseKind.Scroll, mods);
+            return true;
+        }
+        var phase = TryGetStringProperty(element, "phase", out var phaseValue) ? phaseValue : "down";
+        _ = TryGetIntProperty(element, "button", out var buttonValue);
+        var button = buttonValue switch { 1 => TerminalMouseButton.Middle, 2 => TerminalMouseButton.Right, _ => TerminalMouseButton.Left };
+        var mouseKind = phase.ToLowerInvariant() switch
+        {
+            "down" => TerminalMouseKind.Down,
+            "up" => TerminalMouseKind.Up,
+            "drag" => TerminalMouseKind.Drag,
+            "move" => TerminalMouseKind.Move,
+            _ => (TerminalMouseKind?)null
+        };
+        if (mouseKind is null) return false;
+        gesture = new MouseGesture(column, row, mouseKind == TerminalMouseKind.Move ? TerminalMouseButton.None : button, mouseKind.Value, mods);
+        return true;
+    }
+
+    private static bool HasAnyProperty(JsonElement element, params string[] names)
+    {
+        foreach (var property in element.EnumerateObject())
+            foreach (var name in names)
+                if (string.Equals(property.Name, name, StringComparison.OrdinalIgnoreCase))
+                    return true;
+        return false;
     }
 }
