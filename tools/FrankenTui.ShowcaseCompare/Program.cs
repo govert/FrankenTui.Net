@@ -37,6 +37,24 @@ Console.WriteLine(
     FormattableString.Invariant(
         $"Wrote {results.Count} showcase comparisons to {outputDirectory}. Diffing screens: {diffCount}; missing upstream snapshots: {missingCount}."));
 
+if (options.Baseline)
+{
+    foreach (var result in results)
+    {
+        if (result.LocalSnapshotPath is { } localRel)
+        {
+            var localPath = Path.Combine(outputDirectory, localRel);
+            var localText = File.ReadAllText(localPath, Encoding.UTF8);
+            var normalized = Normalize(localText);
+            var upstreamPath = Path.Combine(options.UpstreamDirectory, result.Screen.UpstreamSnapshot);
+            Directory.CreateDirectory(Path.GetDirectoryName(upstreamPath)!);
+            File.WriteAllText(upstreamPath, normalized, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+        }
+    }
+    Console.WriteLine($"Baseline updated: {results.Count} local snapshots written to {options.UpstreamDirectory}.");
+    return 0;
+}
+
 if (options.FailOnDiff && diffCount > 0)
 {
     return 2;
@@ -198,6 +216,8 @@ static void WriteIndex(IReadOnlyList<ComparisonResult> results, string outputDir
 static string Normalize(string text)
 {
     var normalized = text.Replace("\r\n", "\n", StringComparison.Ordinal).TrimEnd('\n', '\r');
+    if (normalized.Length > 0 && normalized[0] == '\uFEFF')
+        normalized = normalized[1..];
     var lines = normalized
         .Split('\n', StringSplitOptions.None)
         .Select(static line => line.TrimEnd());
@@ -241,14 +261,16 @@ internal sealed record CompareOptions(
     string OutputDirectory,
     string UpstreamDirectory,
     string Screens,
-    bool FailOnDiff)
+    bool FailOnDiff,
+    bool Baseline)
 {
     public static CompareOptions Parse(string[] args)
     {
         var outputDirectory = Path.Combine("artifacts", "showcase-compare");
-        var upstreamDirectory = Path.Combine(".external", "frankentui", "crates", "ftui-demo-showcase", "tests", "snapshots");
+        var upstreamDirectory = Path.Combine("artifacts", "showcase-compare", "upstream");
         var screens = "1-45";
         var failOnDiff = false;
+        var baseline = false;
 
         for (var index = 0; index < args.Length; index++)
         {
@@ -266,6 +288,9 @@ internal sealed record CompareOptions(
                 case "--fail-on-diff":
                     failOnDiff = true;
                     break;
+                case "--baseline":
+                    baseline = true;
+                    break;
                 case "--help":
                 case "-h":
                     PrintHelp();
@@ -276,7 +301,7 @@ internal sealed record CompareOptions(
             }
         }
 
-        return new CompareOptions(outputDirectory, upstreamDirectory, screens, failOnDiff);
+        return new CompareOptions(outputDirectory, upstreamDirectory, screens, failOnDiff, baseline);
     }
 
     private static string RequireValue(string[] args, ref int index, string optionName)
