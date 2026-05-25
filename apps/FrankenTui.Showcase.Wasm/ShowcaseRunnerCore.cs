@@ -265,7 +265,17 @@ public sealed class ShowcaseRunnerCore
                 return true;
             }
 
-            return !string.IsNullOrWhiteSpace(kind);
+            // Only accept recognized input kinds; reject unknown, accessibility, and malformed
+            return kind.ToLowerInvariant() switch
+            {
+                "key" => HasAnyProperty(document.RootElement, "code", "key", "raw_key", "raw_code"),
+                "mouse" => !TryGetStringProperty(document.RootElement, "phase", out var mp) || mp is "down" or "up" or "move" or "drag",
+                "wheel" => (TryGetIntProperty(document.RootElement, "dx", out var dx) && dx != 0) || (TryGetIntProperty(document.RootElement, "dy", out var dy) && dy != 0),
+                "paste" => TryGetStringProperty(document.RootElement, "data", out _),
+                "focus" => TryGetBoolProperty(document.RootElement, "focused", out _),
+                "composition" => TryGetStringProperty(document.RootElement, "phase", out var cp) && cp is "start" or "update" or "end" or "commit" or "cancel",
+                _ => false
+            };
         }
     }
 
@@ -738,6 +748,21 @@ public sealed class ShowcaseRunnerCore
             foreach (var name in names)
                 if (string.Equals(property.Name, name, StringComparison.OrdinalIgnoreCase))
                     return true;
+        return false;
+    }
+
+    private static bool TryGetBoolProperty(JsonElement element, string name, out bool value)
+    {
+        foreach (var property in element.EnumerateObject())
+        {
+            if (string.Equals(property.Name, name, StringComparison.OrdinalIgnoreCase) &&
+                property.Value.ValueKind is JsonValueKind.True or JsonValueKind.False)
+            {
+                value = property.Value.GetBoolean();
+                return true;
+            }
+        }
+        value = false;
         return false;
     }
 }

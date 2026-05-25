@@ -411,4 +411,50 @@ public sealed class WebHostTests
         Assert.False(afterStop.Running);
         Assert.False(afterStop.Rendered);
     }
+
+    [Fact]
+    public void ShowcaseRunnerCoreTinyGeometryScreenCycleWithResizeChurnIsStable()
+    {
+        var runner = ShowcasePage.CreateRunner(screenNumber: 1, width: 1, height: 1);
+        for (var i = 0; i < 180; i++)
+        {
+            if (i % 2 == 0)
+                runner.PushEncodedInput("""{"kind":"key","phase":"down","key":"L","code":"KeyL","mods":1}""");
+            runner.PushEncodedInput("{\"kind\":\"mouse\",\"phase\":\"move\",\"x\":" + (i % 3) + ",\"y\":" + (i % 2) + ",\"mods\":0}");
+            runner.Resize((ushort)(i % 5 == 0 ? 0 : (i % 3 + 1)), (ushort)(i % 2 + 1));
+            runner.AdvanceTime(16);
+            var result = runner.Step();
+            Assert.True(result.Running);
+            runner.PrepareFlatPatches();
+            Assert.StartsWith("fnv1a64:", runner.PatchHash(), StringComparison.Ordinal);
+            Assert.NotNull(runner.PatchStats());
+        }
+    }
+
+    [Fact]
+    public void ShowcaseRunnerCoreRejectsUnknownEncodedInputLikeUpstream()
+    {
+        var runner = ShowcasePage.CreateRunner();
+        Assert.True(runner.PushEncodedInput("""{"kind":"key","phase":"down","code":"Tab","mods":0}"""));
+        Assert.True(runner.PushEncodedInput("""{"kind":"mouse","phase":"move","x":11,"y":5,"mods":0}"""));
+        Assert.True(runner.PushEncodedInput("""{"kind":"mouse"}"""));
+        Assert.True(runner.PushEncodedInput("""{"kind":"paste","data":"hello"}"""));
+        Assert.True(runner.PushEncodedInput("""{"kind":"focus","focused":true}"""));
+        Assert.False(runner.PushEncodedInput("""{"kind":"mouse","phase":"hover","x":11,"y":5,"mods":0}"""));
+        Assert.False(runner.PushEncodedInput("""{"kind":"wheel","x":0,"y":0,"dx":0,"dy":0,"mods":0}"""));
+        Assert.False(runner.PushEncodedInput("""{"kind":"accessibility","screen_reader":true}"""));
+        Assert.False(runner.PushEncodedInput("""{"kind":"unknown_future_kind","data":"test"}"""));
+        Assert.False(runner.PushEncodedInput("not json"));
+    }
+
+    [Fact]
+    public void ShowcaseRunnerCoreUsesSharedShowcaseStateForMouseInput()
+    {
+        var runner = ShowcasePage.CreateRunner(screenNumber: 30, width: 120, height: 32);
+        Assert.True(runner.PushEncodedInput("""{"kind":"mouse","phase":"down","button":0,"x":3,"y":5,"mods":0}"""));
+        Assert.DoesNotContain("selected=Nord", runner.RenderCurrent().Text);
+        var presetStep = runner.Step();
+        Assert.Equal(1, presetStep.EventsProcessed);
+        Assert.Contains("selected=Nord", presetStep.Frame.Text);
+    }
 }
