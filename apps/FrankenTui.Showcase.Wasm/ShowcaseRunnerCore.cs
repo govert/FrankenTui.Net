@@ -1,5 +1,11 @@
+using System.Globalization;
+using System.Text;
 using System.Text.Json;
+using FrankenTui.Core;
+using FrankenTui.Demo.Showcase;
 using FrankenTui.Extras;
+using FrankenTui.Render;
+using FrankenTui.Runtime;
 using FrankenTui.Web;
 using FrankenTui.Widgets;
 
@@ -99,6 +105,12 @@ public sealed class ShowcaseRunnerCore
     private ushort _height;
     private string _language;
     private WidgetFlowDirection _flowDirection;
+    private int? _screenNumber;
+    private ShowcaseDemoState? _screenState;
+    private readonly List<TerminalEvent> _pendingScreenEvents = [];
+    private DateTimeOffset _clock = DateTimeOffset.UnixEpoch;
+    private bool _clockDirty;
+    private int _pendingEventsProcessed;
     private ulong _frameIndex;
     private ulong _paneSequence;
     private uint? _activePointerId;
@@ -111,47 +123,62 @@ public sealed class ShowcaseRunnerCore
         ushort height = 18,
         bool inlineMode = false,
         string language = "en-US",
-        WidgetFlowDirection flowDirection = WidgetFlowDirection.LeftToRight)
+        WidgetFlowDirection flowDirection = WidgetFlowDirection.LeftToRight,
+        int? screenNumber = null)
     {
         _scenarioId = scenarioId;
+        _screenNumber = screenNumber is { } screen ? ClampScreenNumber(screen) : null;
         _width = ClampDimension(width);
         _height = ClampDimension(height);
         _inlineMode = inlineMode;
         _language = string.IsNullOrWhiteSpace(language) ? "en-US" : language;
         _flowDirection = flowDirection;
+        _screenState = _screenNumber is { } initialScreen ? CreateScreenState(initialScreen) : null;
     }
 
     public ulong FrameIndex => _frameIndex;
 
     public uint? ActivePointerId => _activePointerId;
 
-    public bool IsRunning => _running;
+    public int? ScreenNumber => _screenState?.CurrentScreenNumber ?? _screenNumber;
 
     public WebFrame RenderCurrent() =>
-        ShowcasePage.RenderScenario(
-            _scenarioId,
-            checked((int)Math.Min(_frameIndex, int.MaxValue)),
-            _inlineMode,
-            _width,
-            _height,
-            _language,
-            _flowDirection);
+        _screenState is { } screenState
+            ? RenderScreenState(screenState)
+            : ShowcasePage.RenderScenario(
+                _scenarioId,
+                checked((int)Math.Min(_frameIndex, int.MaxValue)),
+                _inlineMode,
+                _width,
+                _height,
+                _language,
+                _flowDirection);
 
     public ShowcaseRunnerStepResult Step()
     {
+        var eventsProcessed = _pendingEventsProcessed;
+        ApplyPendingScreenEvents();
+        ApplyPendingClockTick();
+        _pendingEventsProcessed = 0;
         if (!_running)
         {
-            return new ShowcaseRunnerStepResult(false, false, 0, _frameIndex, RenderCurrent());
+            return new ShowcaseRunnerStepResult(false, false, eventsProcessed, _frameIndex, RenderCurrent());
         }
 
         _frameIndex++;
-        return new ShowcaseRunnerStepResult(true, true, 0, _frameIndex, RenderCurrent());
+        return new ShowcaseRunnerStepResult(true, true, eventsProcessed, _frameIndex, RenderCurrent());
     }
 
     public void Resize(ushort width, ushort height)
     {
         _width = ClampDimension(width);
         _height = ClampDimension(height);
+        _pendingEventsProcessed++;
+        if (_screenState is { } screenState)
+        {
+            _screenState = screenState with { Viewport = new Size(_width, _height) };
+            _screenNumber = _screenState.CurrentScreenNumber;
+        }
     }
 
     public bool PushEncodedInput(string json)
@@ -182,6 +209,25 @@ public sealed class ShowcaseRunnerCore
                 Enum.TryParse<HostedParityScenarioId>(scenarioName, ignoreCase: true, out var scenario))
             {
                 _scenarioId = scenario;
+                _screenNumber = null;
+                _screenState = null;
+                _pendingScreenEvents.Clear();
+                _pendingEventsProcessed++;
+                return true;
+            }
+
+            if (TryGetIntProperty(document.RootElement, "screen", out var screenNumber))
+            {
+                SelectScreen(screenNumber);
+                _pendingEventsProcessed++;
+                return true;
+            }
+
+            if (TryGetStringProperty(document.RootElement, "screen", out var screenText) &&
+                int.TryParse(screenText, NumberStyles.Integer, CultureInfo.InvariantCulture, out var parsedScreen))
+            {
+                SelectScreen(parsedScreen);
+                _pendingEventsProcessed++;
                 return true;
             }
 
@@ -189,6 +235,7 @@ public sealed class ShowcaseRunnerCore
                 string.Equals(kind, "quit", StringComparison.OrdinalIgnoreCase))
             {
                 _running = false;
+                _pendingEventsProcessed++;
                 return true;
             }
 
@@ -355,4 +402,74 @@ public sealed class ShowcaseRunnerCore
         value = string.Empty;
         return false;
     }
+
+    private WebFrame RenderScreenState(ShowcaseDemoState state)
+    {
+        var options = new WebRenderOptions(
+            "FrankenTui Showcase",
+            _language,
+            _flowDirection == WidgetFlowDirection.RightToLeft ? "rtl" : "ltr",
+            $"FrankenTui showcase screen {state.CurrentScreenNumber}",
+            Metadata: new Dictionary<string, string>(StringComparer.Ordinal)
+            {
+                ["showcase"] = "screen",
+                ["screen-number"] = state.CurrentScreenNumber.ToString(CultureInfo.InvariantCulture),
+                ["screen-mode"] = _inlineMode ? "inline" : "alt"
+            });
+        return WebHost.Render(ShowcaseSurface.Create(state), new Size(_width, _height), options: options);
+    }
+
+    private ShowcaseDemoState CreateScreenState(int screenNumber) =>
+        ShowcaseDemoState.Create(_inlineMode, new Size(_width, _height), ClampScreenNumber(screenNumber), _language, _flowDirection);
+
+    private void SelectScreen(int screenNumber)
+    {
+        _screenNumber = ClampScreenNumber(screenNumber);
+        _screenState = CreateScreenState(_screenNumber.Value);
+        _pendingScreenEvents.Clear();
+    }
+
+    private void ApplyPendingScreenEvents()
+    {
+        if (_screenState is null || _pendingScreenEvents.Count == 0)
+        {
+            _pendingScreenEvents.Clear();
+            return;
+        }
+        foreach (var terminalEvent in _pendingScreenEvents)
+            _screenState = _screenState.ApplyInput(Envelope(terminalEvent, terminalEvent.Timestamp), RuntimeFrameStats.Empty);
+        _screenNumber = _screenState.CurrentScreenNumber;
+        _pendingScreenEvents.Clear();
+    }
+
+    private void ApplyPendingClockTick()
+    {
+        if (!_clockDirty) return;
+        if (_screenState is { } state)
+        {
+            _screenState = state.ApplyTick(_clock, RuntimeFrameStats.Empty);
+            _screenNumber = _screenState.CurrentScreenNumber;
+        }
+        _clockDirty = false;
+    }
+
+    private static int ClampScreenNumber(int value) => Math.Clamp(value, 1, 45);
+
+    private static bool TryGetIntProperty(JsonElement element, string name, out int value)
+    {
+        foreach (var property in element.EnumerateObject())
+        {
+            if (string.Equals(property.Name, name, StringComparison.OrdinalIgnoreCase) &&
+                property.Value.ValueKind == JsonValueKind.Number &&
+                property.Value.TryGetInt32(out value))
+            {
+                return true;
+            }
+        }
+        value = 0;
+        return false;
+    }
+
+    private static RuntimeInputEnvelope Envelope(TerminalEvent terminalEvent, DateTimeOffset timestamp) =>
+        new(terminalEvent, terminalEvent, [], [], null, null, QuitRequested: false, HasWork: true, "web-runner", timestamp);
 }
