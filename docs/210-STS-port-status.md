@@ -995,6 +995,45 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
   `dotnet test tests/FrankenTui.Tests.Headless/FrankenTui.Tests.Headless.csproj --no-restore --filter "FullyQualifiedName~ShowcaseShellTests.ShowcaseFrameHitRegistry|FullyQualifiedName~ShowcaseShellTests.ShowcaseEvidenceJsonlWriterEmitsMouseEventForDashboardPaneLink|FullyQualifiedName~ShowcaseShellTests.ShowcaseEvidenceJsonlWriterEmitsMouseEventForPalettePriority"`.
   Current local verification is `403` headless tests, `9` web tests, and `7`
   PTY tests via `dotnet test FrankenTui.Net.sln --no-restore`.
+- Data-driven screen keyboard dispatch (keymap refactor)
+  Replaced ~700 lines of individual `HandleXxxKey` method stubs with a single
+  `ScreenKeyMap` dictionary and `DispatchScreenKey` dispatcher. The keymap
+  covers 35 screens with character-key shortcuts; 8 screens keep dedicated
+  methods for complex multi-step input (Kanban, Quake, DragDrop, etc.). A
+  parameterized `[Theory]` test with 87 `[MemberData]` cases validates every
+  keymap entry. This eliminates the `_ => next; return true` bug class by
+  construction. Screen 37 (Accessibility) uses a dedicated
+  `HandleAccessibilityScreenKey` since it gates on `A11yPanelVisible == true`
+  (the keymap dispatcher gates on `!A11yPanelVisible`). Current verification:
+  `407` showcase-shell tests.
+- Web/wasm runner API surface recovery
+  Recovered `PaneBlur`, `PaneVisibilityHidden`, `PaneLostPointerCapture`,
+  `PanePointerLeave`, `PatchHash` (fnv1a64), `PatchStats` (DirtyCells/PatchCount/
+  BytesUploaded), `PrepareFlatPatches`/`TakeFlatPatches`, `FlatCellsPtr/Len`,
+  `FlatSpansPtr/Len`, `AdvanceTime`/`SetTime`, pane workspace
+  export/import/generation/dirty/saved/layout-mode stubs, `Destroy()` no-op,
+  `EventsProcessed` reporting in `Step()`, and numbered-screen state
+  infrastructure. Fixed `InterruptActive` release logic to match upstream.
+  `ShowcasePage.RenderScreen` renders terminal showcase screens via
+  `ShowcaseViewFactory`. Current web verification: `18` tests.
+- Windows host evidence tool (364-DEM-I)
+  `tools/FrankenTui.HostEvidence` records the real Windows host environment and
+  renders all 45 showcase screens with deterministic `fnv1a64` hashes to JSON
+  evidence at `artifacts/host-evidence/`. Meets the 364-DEM-I acceptance
+  criterion: "Windows demo parity is evidenced on the real host, not inferred
+  indirectly."
+- DragDrop keyboard handler (screen 44)
+  `HandleDragDropKey`: Tab/Shift+Tab cycles Sortable/Cross-Container/KeyboardDrag
+  modes; in KeyboardDrag mode, arrows navigate rows/lists, Enter drops, Space
+  toggles. The `DragDropAnnouncement` field was added to `ShowcaseDemoState`.
+  All 45 screens now have keyboard support.
+- Higher-resolution rendering integrity tests
+  `ShowcaseAllScreensRenderAtStandardViewportWithoutCorruption`: all 45 screens
+  at 120x32 produce structurally sound output. `ShowcaseHigherResolutionRendering
+  PreservesContentStructure`: 6 representative screens verified at 80x24, 120x32,
+  and 170x38. No rendering corruption detected.
+  Current local verification is `661` headless tests, `18` web tests, and `7`
+  PTY tests via `dotnet test FrankenTui.Net.sln --no-restore`.
 
 ## Status
 
