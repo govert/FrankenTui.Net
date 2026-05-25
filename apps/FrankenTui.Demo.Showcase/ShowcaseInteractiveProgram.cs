@@ -742,6 +742,11 @@ internal sealed record ShowcaseDemoState(
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
 
+        if (HandleAccessibilityScreenKey(keyEvent.Gesture, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
         if (DispatchScreenKey(keyEvent.Gesture, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
@@ -889,7 +894,6 @@ internal sealed record ShowcaseDemoState(
         [34] = [ ( 'j', s => s with { I18nStressSampleIndex = (s.I18nStressSampleIndex + 1) % 4, I18nFocusIndex = 4 } ), ( 'k', s => s with { I18nStressSampleIndex = (s.I18nStressSampleIndex + 3) % 4, I18nFocusIndex = 4 } ), ( 'l', s => s with { I18nLocaleIndex = (s.I18nLocaleIndex + 1) % 5, I18nRtlEnabled = (s.I18nLocaleIndex + 1) % 5 == 4, I18nFocusIndex = 0 } ), ],
         [35] = [ ( 'j', s => s with { VoiOverlayLedgerIndex = (s.VoiOverlayLedgerIndex + 1) % 3, VoiOverlayFocusIndex = 4 } ), ( 'k', s => s with { VoiOverlayLedgerIndex = (s.VoiOverlayLedgerIndex + 2) % 3, VoiOverlayFocusIndex = 4 } ), ( 'r', s => s with { VoiOverlayResetCount = s.VoiOverlayResetCount + 1, VoiOverlayLedgerIndex = 0, VoiOverlayFocusIndex = 4 } ), ],
         [36] = [ ( 'j', s => s with { InlineModeLogRateIndex = Math.Clamp(ResolveInlineModeLogRateIndex(s) + 1, 0, 3), InlineModeFocusIndex = 3 } ), ( 'k', s => s with { InlineModeLogRateIndex = Math.Clamp(ResolveInlineModeLogRateIndex(s) - 1, 0, 3), InlineModeFocusIndex = 3 } ), ( 'p', s => s with { InlineModePaused = !s.InlineModePaused, InlineModeFocusIndex = 3 } ), ],
-        [37] = [ ( 'j', s => s with { AccessibilityPreviewScroll = Math.Clamp(s.AccessibilityPreviewScroll + 1, 0, 8), AccessibilityFocusIndex = 2 } ), ( 'k', s => s with { AccessibilityPreviewScroll = Math.Clamp(s.AccessibilityPreviewScroll - 1, 0, 8), AccessibilityFocusIndex = 2 } ), ],
     };
 
     private static bool DispatchScreenKey(KeyGesture gesture, ref ShowcaseDemoState next)
@@ -928,6 +932,31 @@ internal sealed record ShowcaseDemoState(
             }
         }
 
+        return false;
+    }
+
+    private static bool HandleAccessibilityScreenKey(KeyGesture gesture, ref ShowcaseDemoState next)
+    {
+        if (next.CurrentScreenNumber != 37 || !next.A11yPanelVisible || next.TourActive ||
+            next.Session.CommandPalette.IsOpen)
+        {
+            return false;
+        }
+
+        if (!gesture.IsCharacter || gesture.Character is not { } rune || gesture.Modifiers != TerminalModifiers.None)
+            return false;
+
+        var key = char.ToLowerInvariant((char)rune.Value);
+        if (key == 'j')
+        {
+            next = next with { AccessibilityPreviewScroll = Math.Clamp(next.AccessibilityPreviewScroll + 1, 0, 8), AccessibilityFocusIndex = 2 };
+            return true;
+        }
+        if (key == 'k')
+        {
+            next = next with { AccessibilityPreviewScroll = Math.Clamp(next.AccessibilityPreviewScroll - 1, 0, 8), AccessibilityFocusIndex = 2 };
+            return true;
+        }
         return false;
     }
 

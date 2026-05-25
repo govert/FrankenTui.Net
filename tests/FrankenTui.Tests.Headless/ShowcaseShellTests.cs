@@ -14,6 +14,157 @@ namespace FrankenTui.Tests.Headless;
 
 public sealed class ShowcaseShellTests
 {
+    [Theory]
+    [MemberData(nameof(ScreenKeyMapTestData))]
+    public void ScreenKeyMapEntryMutatesExpectedStateField(
+        int screenNumber, char key, string changedFieldName, object? expectedValue)
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(120, 32),
+            screenNumber,
+            "en",
+            WidgetFlowDirection.LeftToRight);
+
+        state = ApplyKey(state, new KeyGesture(TerminalKey.Character, TerminalModifiers.None, new Rune(key)),
+            DateTimeOffset.Parse("2026-06-01T00:00:00Z"));
+
+        var value = typeof(ShowcaseDemoState).GetProperty(changedFieldName)?.GetValue(state);
+        Assert.NotNull(value);
+        if (expectedValue is not null)
+            Assert.Equal(expectedValue, value);
+    }
+
+    public static TheoryData<int, char, string, object?> ScreenKeyMapTestData()
+    {
+        var data = new TheoryData<int, char, string, object>();
+        // Screen 1: Guided Tour
+        data.Add(1, 'j', nameof(ShowcaseDemoState.TourStartScreen), 3);
+        data.Add(1, 'k', nameof(ShowcaseDemoState.TourStartScreen), 2);
+        // Screen 2: Dashboard
+        data.Add(2, 'j', nameof(ShowcaseDemoState.DashboardHighlightIndex), 1);
+        data.Add(2, 'k', nameof(ShowcaseDemoState.DashboardHighlightIndex), 7);
+        // Screen 3: Shakespeare
+        data.Add(3, 'j', nameof(ShowcaseDemoState.ShakespeareQueryIndex), 1);
+        data.Add(3, 'k', nameof(ShowcaseDemoState.ShakespeareQueryIndex), 3);
+        // Screen 4: Code Explorer
+        data.Add(4, 'j', nameof(ShowcaseDemoState.CodeExplorerSelectedNodeIndex), 1);
+        data.Add(4, 'k', nameof(ShowcaseDemoState.CodeExplorerSelectedNodeIndex), 0);
+        // Screen 5: Widget Gallery (initial ListIndex=4)
+        data.Add(5, 'j', nameof(ShowcaseDemoState.WidgetGalleryListIndex), 5);
+        data.Add(5, 'k', nameof(ShowcaseDemoState.WidgetGalleryListIndex), 3);
+        // Screen 6: Layout Lab
+        data.Add(6, 'j', nameof(ShowcaseDemoState.LayoutLabSelectedPaneIndex), 1);
+        data.Add(6, 'k', nameof(ShowcaseDemoState.LayoutLabSelectedPaneIndex), 3);
+        data.Add(6, 'z', nameof(ShowcaseDemoState.LayoutLabWorkspaceZoom), 1);
+        // Screen 7: Forms Input (initial SelectedFieldIndex=1)
+        data.Add(7, 'j', nameof(ShowcaseDemoState.FormsInputSelectedFieldIndex), 2);
+        data.Add(7, 'k', nameof(ShowcaseDemoState.FormsInputSelectedFieldIndex), 0);
+        // Screen 8: Data Viz
+        data.Add(8, 'j', nameof(ShowcaseDemoState.DataVizMetricRowIndex), 1);
+        data.Add(8, 'k', nameof(ShowcaseDemoState.DataVizMetricRowIndex), 0);
+        // Screen 9: File Browser
+        data.Add(9, 'h', nameof(ShowcaseDemoState.FileBrowserFocusIndex), 0);
+        data.Add(9, 'l', nameof(ShowcaseDemoState.FileBrowserFocusIndex), 1);
+        data.Add(9, 'j', nameof(ShowcaseDemoState.FileBrowserSelectedRowIndex), 1);
+        data.Add(9, 'k', nameof(ShowcaseDemoState.FileBrowserSelectedRowIndex), 0);
+        data.Add(9, 'g', nameof(ShowcaseDemoState.FileBrowserSelectedRowIndex), 0);
+        // Screen 10: Advanced Features
+        data.Add(10, 'j', nameof(ShowcaseDemoState.AdvancedPatternIndex), 1);
+        data.Add(10, 'k', nameof(ShowcaseDemoState.AdvancedPatternIndex), 0);
+        // Screen 11: Table Theme Gallery
+        data.Add(11, 'j', nameof(ShowcaseDemoState.TableThemePresetIndex), 1);
+        data.Add(11, 'k', nameof(ShowcaseDemoState.TableThemePresetIndex), 2);
+        // Screen 13: Macro Recorder
+        data.Add(13, 'r', nameof(ShowcaseDemoState.MacroRecorderTimelineIndex), 0);
+        data.Add(13, ' ', nameof(ShowcaseDemoState.MacroRecorderScenarioIndex), 1);
+        data.Add(13, 'j', nameof(ShowcaseDemoState.MacroRecorderTimelineIndex), 1);
+        data.Add(13, 'k', nameof(ShowcaseDemoState.MacroRecorderTimelineIndex), 0);
+        // Screen 14: Performance
+        data.Add(14, 'j', nameof(ShowcaseDemoState.PerformanceSelectedIndex), 1);
+        data.Add(14, 'k', nameof(ShowcaseDemoState.PerformanceSelectedIndex), 0);
+        data.Add(14, 'g', nameof(ShowcaseDemoState.PerformanceSelectedIndex), 0);
+        // Screen 15: Markdown
+        data.Add(15, 'j', nameof(ShowcaseDemoState.MarkdownRendererScroll), 1);
+        data.Add(15, 'k', nameof(ShowcaseDemoState.MarkdownRendererScroll), 0);
+        data.Add(15, 'w', nameof(ShowcaseDemoState.MarkdownWrapModeIndex), 1);
+        // Screen 16: Mermaid
+        data.Add(16, 'j', nameof(ShowcaseDemoState.MermaidSampleIndex), 1);
+        data.Add(16, 'k', nameof(ShowcaseDemoState.MermaidSampleIndex), 0);
+        // Screen 17: Mermaid Mega
+        data.Add(17, 'j', nameof(ShowcaseDemoState.MermaidMegaSampleIndex), 1);
+        data.Add(17, 'k', nameof(ShowcaseDemoState.MermaidMegaSampleIndex), 0);
+        // Screen 18: Visual Effects (initial EffectIndex=-1, resolves to default via ResolveVisualEffectsEffectIndex)
+        data.Add(18, 'j', nameof(ShowcaseDemoState.VisualEffectsEffectIndex), null);
+        // Screen 19: Responsive
+        data.Add(19, 'b', nameof(ShowcaseDemoState.ResponsiveCustomBreakpoints), true);
+        data.Add(19, 'a', nameof(ShowcaseDemoState.ResponsiveAsideForcedVisible), true);
+        // Screen 20: Log Search
+        data.Add(20, 'j', nameof(ShowcaseDemoState.LogSearchSelectedResultIndex), 1);
+        data.Add(20, 'k', nameof(ShowcaseDemoState.LogSearchSelectedResultIndex), 0);
+        data.Add(20, 'p', nameof(ShowcaseDemoState.LogSearchPaused), true);
+        // Screen 21: Notifications
+        data.Add(21, 'j', nameof(ShowcaseDemoState.NotificationsTriggerIndex), 1);
+        data.Add(21, 'k', nameof(ShowcaseDemoState.NotificationsTriggerIndex), 0);
+        // Screen 22: Action Timeline
+        data.Add(22, 'j', nameof(ShowcaseDemoState.ActionTimelineSelectedIndex), 1);
+        data.Add(22, 'k', nameof(ShowcaseDemoState.ActionTimelineSelectedIndex), 0);
+        data.Add(22, 'f', nameof(ShowcaseDemoState.ActionTimelineFilterIndex), 1);
+        // Screen 23: Intrinsic Sizing
+        data.Add(23, 'j', nameof(ShowcaseDemoState.IntrinsicSizingScenarioIndex), 1);
+        data.Add(23, 'k', nameof(ShowcaseDemoState.IntrinsicSizingScenarioIndex), 3);
+        data.Add(23, 'w', nameof(ShowcaseDemoState.IntrinsicSizingWidthPresetIndex), 3);
+        // Screen 24: Layout Inspector
+        data.Add(24, 'j', nameof(ShowcaseDemoState.LayoutInspectorStepIndex), 1);
+        data.Add(24, 'k', nameof(ShowcaseDemoState.LayoutInspectorStepIndex), 2);
+        data.Add(24, 's', nameof(ShowcaseDemoState.LayoutInspectorScenarioIndex), 1);
+        // Screen 25: Advanced Text Editor
+        data.Add(25, 'j', nameof(ShowcaseDemoState.AdvancedTextEditorHistoryIndex), 1);
+        data.Add(25, 'k', nameof(ShowcaseDemoState.AdvancedTextEditorHistoryIndex), 0);
+        // Screen 26: Mouse Playground
+        data.Add(26, 'j', nameof(ShowcaseDemoState.MousePlaygroundSelectedTargetIndex), 1);
+        data.Add(26, 'k', nameof(ShowcaseDemoState.MousePlaygroundSelectedTargetIndex), 0);
+        data.Add(26, 'o', nameof(ShowcaseDemoState.MousePlaygroundOverlayVisible), true);
+        // Screen 27: Form Validation
+        data.Add(27, 'j', nameof(ShowcaseDemoState.FormValidationSelectedFieldIndex), 1);
+        data.Add(27, 'k', nameof(ShowcaseDemoState.FormValidationSelectedFieldIndex), 0);
+        data.Add(27, 'm', nameof(ShowcaseDemoState.FormValidationOnSubmitMode), true);
+        // Screen 29: Async Tasks
+        data.Add(29, 'n', nameof(ShowcaseDemoState.AsyncTasksPolicyIndex), 3);
+        data.Add(29, 's', nameof(ShowcaseDemoState.AsyncTasksPolicyIndex), 3);
+        data.Add(29, 'c', nameof(ShowcaseDemoState.AsyncTasksPolicyIndex), 1);
+        data.Add(29, 'a', nameof(ShowcaseDemoState.AsyncTasksAgingEnabled), false);
+        data.Add(29, 'r', nameof(ShowcaseDemoState.AsyncTasksSelectedIndex), 0);
+        data.Add(29, 'j', nameof(ShowcaseDemoState.AsyncTasksSelectedIndex), 1);
+        data.Add(29, 'k', nameof(ShowcaseDemoState.AsyncTasksSelectedIndex), 0);
+        // Screen 30: Theme Studio
+        data.Add(30, 'e', nameof(ShowcaseDemoState.ThemeStudioExportArmed), true);
+        // Screen 31: Snapshot Player
+        var snapState = ShowcaseDemoState.Create(false, new Size(120, 32), 31, "en", WidgetFlowDirection.LeftToRight).AdvanceScript(10);
+        snapState = ShowcaseDemoState.Create(false, new Size(120, 32), 31, "en", WidgetFlowDirection.LeftToRight).AdvanceScript(10);
+        var frameCount = Math.Max(snapState.ScriptFrame + 1, 1);
+        data.Add(31, 'j', nameof(ShowcaseDemoState.SnapshotPlayerFrameIndex), 0); // -1 -> 0 clamped
+        // Screen 32: Performance Challenge (initial ForcedTierIndex=-1)
+        data.Add(32, 'j', nameof(ShowcaseDemoState.PerformanceChallengeForcedTierIndex), 0);
+        data.Add(32, 's', nameof(ShowcaseDemoState.PerformanceChallengeStressModeIndex), 2);
+        // Screen 33: Explainability
+        data.Add(33, 'j', nameof(ShowcaseDemoState.ExplainabilityTimelineScroll), 1);
+        data.Add(33, 'k', nameof(ShowcaseDemoState.ExplainabilityTimelineScroll), 0);
+        data.Add(33, 'p', nameof(ShowcaseDemoState.ExplainabilityPaused), true);
+        // Screen 34: i18n
+        data.Add(34, 'j', nameof(ShowcaseDemoState.I18nStressSampleIndex), 1);
+        data.Add(34, 'k', nameof(ShowcaseDemoState.I18nStressSampleIndex), 3);
+        data.Add(34, 'l', nameof(ShowcaseDemoState.I18nLocaleIndex), 1);
+        // Screen 35: VOI Overlay
+        data.Add(35, 'j', nameof(ShowcaseDemoState.VoiOverlayLedgerIndex), 1);
+        data.Add(35, 'k', nameof(ShowcaseDemoState.VoiOverlayLedgerIndex), 2);
+        data.Add(35, 'r', nameof(ShowcaseDemoState.VoiOverlayResetCount), 1);
+        // Screen 36: Inline Mode (initial LogRateIndex=-1)
+        data.Add(36, 'j', nameof(ShowcaseDemoState.InlineModeLogRateIndex), 1);
+        data.Add(36, 'p', nameof(ShowcaseDemoState.InlineModePaused), true);
+        return data;
+    }
+
     [Fact]
     public void ShowcaseScreenKeyMapDispatchesToCorrectScreenMutation()
     {
