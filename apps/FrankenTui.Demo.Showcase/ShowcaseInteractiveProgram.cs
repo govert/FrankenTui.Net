@@ -742,6 +742,11 @@ internal sealed record ShowcaseDemoState(
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
 
+        if (DispatchScreenKey(keyEvent.Gesture, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
         if (HandleGlobalKey(keyEvent, input.Timestamp, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
@@ -846,6 +851,84 @@ internal sealed record ShowcaseDemoState(
 
         next = SyncSession(next, session);
         return true;
+    }
+
+    private static readonly Dictionary<int, (char Key, Func<ShowcaseDemoState, ShowcaseDemoState> Mutation)[]> ScreenKeyMap = new()
+    {
+        [1] = [ ( 'j', s => s with { TourStartScreen = Math.Clamp(s.TourStartScreen + 1, 2, 45) } ), ( 'k', s => s with { TourStartScreen = Math.Clamp(s.TourStartScreen - 1, 2, 45) } ), ],
+        [2] = [ ( 'j', s => s with { DashboardHighlightIndex = (s.DashboardHighlightIndex + 1) % 8, DashboardFocusIndex = 1 } ), ( 'k', s => s with { DashboardHighlightIndex = (s.DashboardHighlightIndex + 7) % 8, DashboardFocusIndex = 1 } ), ],
+        [3] = [ ( 'j', s => s with { ShakespeareQueryIndex = (s.ShakespeareQueryIndex + 1) % 4, ShakespeareFocusIndex = 0 } ), ( 'k', s => s with { ShakespeareQueryIndex = (s.ShakespeareQueryIndex + 3) % 4, ShakespeareFocusIndex = 0 } ), ],
+        [4] = [ ( 'j', s => s with { CodeExplorerSelectedNodeIndex = Math.Clamp(s.CodeExplorerSelectedNodeIndex + 1, 0, 6), CodeExplorerFocusIndex = 0 } ), ( 'k', s => s with { CodeExplorerSelectedNodeIndex = Math.Clamp(s.CodeExplorerSelectedNodeIndex - 1, 0, 6), CodeExplorerFocusIndex = 0 } ), ],
+        [5] = [ ( 'j', s => s with { WidgetGalleryListIndex = Math.Clamp(s.WidgetGalleryListIndex + 1, 0, 6), WidgetGalleryFocusIndex = 1 } ), ( 'k', s => s with { WidgetGalleryListIndex = Math.Clamp(s.WidgetGalleryListIndex - 1, 0, 6), WidgetGalleryFocusIndex = 1 } ), ],
+        [6] = [ ( 'j', s => s with { LayoutLabSelectedPaneIndex = (s.LayoutLabSelectedPaneIndex + 1) % 4, LayoutLabFocusIndex = 0 } ), ( 'k', s => s with { LayoutLabSelectedPaneIndex = (s.LayoutLabSelectedPaneIndex + 3) % 4, LayoutLabFocusIndex = 0 } ), ( 'z', s => s with { LayoutLabWorkspaceZoom = Math.Clamp(s.LayoutLabWorkspaceZoom + 1, -3, 3), LayoutLabFocusIndex = 0 } ), ],
+        [7] = [ ( 'j', s => s with { FormsInputSelectedFieldIndex = (s.FormsInputSelectedFieldIndex + 1) % 3, FormsInputFocusIndex = 0 } ), ( 'k', s => s with { FormsInputSelectedFieldIndex = (s.FormsInputSelectedFieldIndex + 2) % 3, FormsInputFocusIndex = 0 } ), ],
+        [8] = [ ( 'j', s => s with { DataVizMetricRowIndex = Math.Clamp(s.DataVizMetricRowIndex + 1, 0, 3), DataVizActivePanelIndex = 1 } ), ( 'k', s => s with { DataVizMetricRowIndex = Math.Clamp(s.DataVizMetricRowIndex - 1, 0, 3), DataVizActivePanelIndex = 1 } ), ],
+        [9] = [ ( 'h', s => s with { FileBrowserFocusIndex = 0 } ), ( 'l', s => s with { FileBrowserFocusIndex = 1 } ), ( 'j', s => s with { FileBrowserSelectedRowIndex = Math.Clamp(s.FileBrowserSelectedRowIndex + 1, 0, 5), FileBrowserFocusIndex = 0 } ), ( 'k', s => s with { FileBrowserSelectedRowIndex = Math.Clamp(s.FileBrowserSelectedRowIndex - 1, 0, 5), FileBrowserFocusIndex = 0 } ), ( 'g', s => s with { FileBrowserSelectedRowIndex = 0, FileBrowserFocusIndex = 0 } ), ],
+        [10] = [ ( 'j', s => s with { AdvancedPatternIndex = Math.Clamp(s.AdvancedPatternIndex + 1, 0, 4), AdvancedFocusIndex = 0 } ), ( 'k', s => s with { AdvancedPatternIndex = Math.Clamp(s.AdvancedPatternIndex - 1, 0, 4), AdvancedFocusIndex = 0 } ), ],
+        [11] = [ ( 'j', s => s with { TableThemePresetIndex = (s.TableThemePresetIndex + 1) % 3 } ), ( 'k', s => s with { TableThemePresetIndex = (s.TableThemePresetIndex + 2) % 3 } ), ],
+        [13] = [ ( 'r', s => s with { MacroRecorderFocusIndex = 1, MacroRecorderTimelineIndex = 0, MacroRecorderScenarioIndex = 0 } ), ( ' ', s => s with { MacroRecorderScenarioIndex = (s.MacroRecorderScenarioIndex + 1) % 3, MacroRecorderFocusIndex = 3 } ), ( 'j', s => s with { MacroRecorderTimelineIndex = Math.Clamp(s.MacroRecorderTimelineIndex + 1, 0, 4), MacroRecorderFocusIndex = 1 } ), ( 'k', s => s with { MacroRecorderTimelineIndex = Math.Clamp(s.MacroRecorderTimelineIndex - 1, 0, 4), MacroRecorderFocusIndex = 1 } ), ],
+        [14] = [ ( 'j', s => s with { PerformanceSelectedIndex = Math.Clamp(s.PerformanceSelectedIndex + 1, 0, 9999), PerformanceFocusIndex = 1 } ), ( 'k', s => s with { PerformanceSelectedIndex = Math.Clamp(s.PerformanceSelectedIndex - 1, 0, 9999), PerformanceFocusIndex = 1 } ), ( 'g', s => s with { PerformanceSelectedIndex = 0, PerformanceFocusIndex = 1 } ), ],
+        [15] = [ ( 'j', s => s with { MarkdownRendererScroll = Math.Clamp(s.MarkdownRendererScroll + 1, 0, 12), MarkdownActivePaneIndex = 0 } ), ( 'k', s => s with { MarkdownRendererScroll = Math.Clamp(s.MarkdownRendererScroll - 1, 0, 12), MarkdownActivePaneIndex = 0 } ), ( 'w', s => s with { MarkdownWrapModeIndex = (s.MarkdownWrapModeIndex + 1) % 3, MarkdownActivePaneIndex = 5 } ), ],
+        [16] = [ ( 'j', s => s with { MermaidSampleIndex = Math.Clamp(s.MermaidSampleIndex + 1, 0, MermaidShowcaseSurface.Catalog().Count - 1), MermaidFocusIndex = 0 } ), ( 'k', s => s with { MermaidSampleIndex = Math.Clamp(s.MermaidSampleIndex - 1, 0, MermaidShowcaseSurface.Catalog().Count - 1), MermaidFocusIndex = 0 } ), ],
+        [17] = [ ( 'j', s => s with { MermaidMegaSampleIndex = Math.Clamp(s.MermaidMegaSampleIndex + 1, 0, MermaidShowcaseSurface.Catalog().Count - 1), MermaidMegaFocusIndex = 0 } ), ( 'k', s => s with { MermaidMegaSampleIndex = Math.Clamp(s.MermaidMegaSampleIndex - 1, 0, MermaidShowcaseSurface.Catalog().Count - 1), MermaidMegaFocusIndex = 0 } ), ],
+        [18] = [ ( 'j', s => s with { VisualEffectsEffectIndex = (ResolveVisualEffectsEffectIndex(s) + 1) % ShowcaseVfxEffects.AllCanonicalKeys.Length, VisualEffectsFocusIndex = 0 } ), ( 'k', s => s with { VisualEffectsEffectIndex = (ResolveVisualEffectsEffectIndex(s) + ShowcaseVfxEffects.AllCanonicalKeys.Length - 1) % ShowcaseVfxEffects.AllCanonicalKeys.Length, VisualEffectsFocusIndex = 0 } ), ],
+        [19] = [ ( 'b', s => s with { ResponsiveCustomBreakpoints = !s.ResponsiveCustomBreakpoints, ResponsiveFocusIndex = 0 } ), ( 'a', s => s with { ResponsiveAsideForcedVisible = !s.ResponsiveAsideForcedVisible, ResponsiveFocusIndex = 0 } ), ],
+        [20] = [ ( 'j', s => s with { LogSearchSelectedResultIndex = Math.Clamp(s.LogSearchSelectedResultIndex + 1, 0, 99), LogSearchFocusIndex = 0 } ), ( 'k', s => s with { LogSearchSelectedResultIndex = Math.Clamp(s.LogSearchSelectedResultIndex - 1, 0, 99), LogSearchFocusIndex = 0 } ), ( 'p', s => s with { LogSearchPaused = !s.LogSearchPaused, LogSearchFocusIndex = 0 } ), ],
+        [21] = [ ( 'j', s => s with { NotificationsTriggerIndex = Math.Clamp(s.NotificationsTriggerIndex + 1, 0, 5), NotificationsFocusIndex = 0 } ), ( 'k', s => s with { NotificationsTriggerIndex = Math.Clamp(s.NotificationsTriggerIndex - 1, 0, 5), NotificationsFocusIndex = 0 } ), ],
+        [22] = [ ( 'j', s => s with { ActionTimelineSelectedIndex = Math.Clamp(s.ActionTimelineSelectedIndex + 1, 0, 7), ActionTimelineFocusIndex = 1 } ), ( 'k', s => s with { ActionTimelineSelectedIndex = Math.Clamp(s.ActionTimelineSelectedIndex - 1, 0, 7), ActionTimelineFocusIndex = 1 } ), ( 'f', s => s with { ActionTimelineFilterIndex = (s.ActionTimelineFilterIndex + 1) % 4, ActionTimelineFocusIndex = 0 } ), ],
+        [23] = [ ( 'j', s => s with { IntrinsicSizingScenarioIndex = (s.IntrinsicSizingScenarioIndex + 1) % 4, IntrinsicSizingFocusIndex = 1 } ), ( 'k', s => s with { IntrinsicSizingScenarioIndex = (s.IntrinsicSizingScenarioIndex + 3) % 4, IntrinsicSizingFocusIndex = 1 } ), ( 'w', s => s with { IntrinsicSizingWidthPresetIndex = (s.IntrinsicSizingWidthPresetIndex + 1) % 4, IntrinsicSizingFocusIndex = 3 } ), ],
+        [24] = [ ( 'j', s => s with { LayoutInspectorStepIndex = (s.LayoutInspectorStepIndex + 1) % 3, LayoutInspectorFocusIndex = 0 } ), ( 'k', s => s with { LayoutInspectorStepIndex = (s.LayoutInspectorStepIndex + 2) % 3, LayoutInspectorFocusIndex = 0 } ), ( 's', s => s with { LayoutInspectorScenarioIndex = (s.LayoutInspectorScenarioIndex + 1) % 4, LayoutInspectorFocusIndex = 0 } ), ],
+        [25] = [ ( 'j', s => s with { AdvancedTextEditorHistoryIndex = Math.Clamp(s.AdvancedTextEditorHistoryIndex + 1, 0, 5), AdvancedTextEditorFocusIndex = 2 } ), ( 'k', s => s with { AdvancedTextEditorHistoryIndex = Math.Clamp(s.AdvancedTextEditorHistoryIndex - 1, 0, 5), AdvancedTextEditorFocusIndex = 2 } ), ( 'u', s => s with { AdvancedTextEditorFocusIndex = s.AdvancedTextEditorFocusIndex == 2 ? 0 : 2 } ), ],
+        [26] = [ ( 'j', s => s with { MousePlaygroundSelectedTargetIndex = Math.Clamp(s.MousePlaygroundSelectedTargetIndex + 1, 0, 11), MousePlaygroundFocusIndex = 2 } ), ( 'k', s => s with { MousePlaygroundSelectedTargetIndex = Math.Clamp(s.MousePlaygroundSelectedTargetIndex - 1, 0, 11), MousePlaygroundFocusIndex = 2 } ), ( 'o', s => s with { MousePlaygroundOverlayVisible = !s.MousePlaygroundOverlayVisible, MousePlaygroundFocusIndex = 2 } ), ],
+        [27] = [ ( 'j', s => s with { FormValidationSelectedFieldIndex = Math.Clamp(s.FormValidationSelectedFieldIndex + 1, 0, 8), FormValidationFocusIndex = 1 } ), ( 'k', s => s with { FormValidationSelectedFieldIndex = Math.Clamp(s.FormValidationSelectedFieldIndex - 1, 0, 8), FormValidationFocusIndex = 1 } ), ( 'm', s => s with { FormValidationOnSubmitMode = !s.FormValidationOnSubmitMode, FormValidationFocusIndex = 0 } ), ],
+        [29] = [ ( 'n', s => s with { AsyncTasksPolicyIndex = (s.AsyncTasksPolicyIndex + 1) % 6, AsyncTasksFocusedPanelIndex = 0 } ), ( 'c', s => s with { AsyncTasksPolicyIndex = (s.AsyncTasksPolicyIndex + 5) % 6, AsyncTasksFocusedPanelIndex = 0 } ), ( 's', s => s with { AsyncTasksPolicyIndex = (s.AsyncTasksPolicyIndex + 1) % 6, AsyncTasksFocusedPanelIndex = 0 } ), ( 'a', s => s with { AsyncTasksAgingEnabled = !s.AsyncTasksAgingEnabled, AsyncTasksFocusedPanelIndex = 6 } ), ( 'r', s => s with { AsyncTasksPolicyIndex = 2, AsyncTasksAgingEnabled = true, AsyncTasksSelectedIndex = 0, AsyncTasksHazardScroll = 0, AsyncTasksFocusedPanelIndex = 1 } ), ( 'j', s => s with { AsyncTasksSelectedIndex = Math.Clamp(s.AsyncTasksSelectedIndex + 1, 0, 7), AsyncTasksFocusedPanelIndex = 1 } ), ( 'k', s => s with { AsyncTasksSelectedIndex = Math.Clamp(s.AsyncTasksSelectedIndex - 1, 0, 7), AsyncTasksFocusedPanelIndex = 1 } ), ],
+        [30] = [ ( 'e', s => s with { ThemeStudioExportArmed = !s.ThemeStudioExportArmed, ThemeStudioFocusIndex = 2 } ), ],
+        [31] = [ ( 'j', s => s with { SnapshotPlayerFrameIndex = Math.Clamp(s.SnapshotPlayerFrameIndex + 1, 0, Math.Max(s.ScriptFrame, 0)), SnapshotPlayerFocusIndex = 0 } ), ( 'k', s => s with { SnapshotPlayerFrameIndex = Math.Clamp(s.SnapshotPlayerFrameIndex - 1, 0, Math.Max(s.ScriptFrame, 0)), SnapshotPlayerFocusIndex = 0 } ), ( 'g', s => s with { SnapshotPlayerFrameIndex = 0, SnapshotPlayerFocusIndex = 0 } ), ],
+        [32] = [ ( 'j', s => s with { PerformanceChallengeForcedTierIndex = Math.Clamp(s.PerformanceChallengeForcedTierIndex + 1, -1, 3), PerformanceChallengeFocusIndex = 6 } ), ( 'k', s => s with { PerformanceChallengeForcedTierIndex = Math.Clamp(s.PerformanceChallengeForcedTierIndex - 1, -1, 3), PerformanceChallengeFocusIndex = 6 } ), ( 's', s => s with { PerformanceChallengeStressModeIndex = (s.PerformanceChallengeStressModeIndex + 1) % 4, PerformanceChallengeFocusIndex = 5 } ), ],
+        [33] = [ ( 'j', s => s with { ExplainabilityTimelineScroll = Math.Clamp(s.ExplainabilityTimelineScroll + 1, 0, 8), ExplainabilityFocusIndex = 4 } ), ( 'k', s => s with { ExplainabilityTimelineScroll = Math.Clamp(s.ExplainabilityTimelineScroll - 1, 0, 8), ExplainabilityFocusIndex = 4 } ), ( 'p', s => s with { ExplainabilityPaused = !s.ExplainabilityPaused, ExplainabilityAutoRefresh = s.ExplainabilityPaused, ExplainabilityFocusIndex = 0 } ), ],
+        [34] = [ ( 'j', s => s with { I18nStressSampleIndex = (s.I18nStressSampleIndex + 1) % 4, I18nFocusIndex = 4 } ), ( 'k', s => s with { I18nStressSampleIndex = (s.I18nStressSampleIndex + 3) % 4, I18nFocusIndex = 4 } ), ( 'l', s => s with { I18nLocaleIndex = (s.I18nLocaleIndex + 1) % 5, I18nRtlEnabled = (s.I18nLocaleIndex + 1) % 5 == 4, I18nFocusIndex = 0 } ), ],
+        [35] = [ ( 'j', s => s with { VoiOverlayLedgerIndex = (s.VoiOverlayLedgerIndex + 1) % 3, VoiOverlayFocusIndex = 4 } ), ( 'k', s => s with { VoiOverlayLedgerIndex = (s.VoiOverlayLedgerIndex + 2) % 3, VoiOverlayFocusIndex = 4 } ), ( 'r', s => s with { VoiOverlayResetCount = s.VoiOverlayResetCount + 1, VoiOverlayLedgerIndex = 0, VoiOverlayFocusIndex = 4 } ), ],
+        [36] = [ ( 'j', s => s with { InlineModeLogRateIndex = Math.Clamp(ResolveInlineModeLogRateIndex(s) + 1, 0, 3), InlineModeFocusIndex = 3 } ), ( 'k', s => s with { InlineModeLogRateIndex = Math.Clamp(ResolveInlineModeLogRateIndex(s) - 1, 0, 3), InlineModeFocusIndex = 3 } ), ( 'p', s => s with { InlineModePaused = !s.InlineModePaused, InlineModeFocusIndex = 3 } ), ],
+        [37] = [ ( 'j', s => s with { AccessibilityPreviewScroll = Math.Clamp(s.AccessibilityPreviewScroll + 1, 0, 8), AccessibilityFocusIndex = 2 } ), ( 'k', s => s with { AccessibilityPreviewScroll = Math.Clamp(s.AccessibilityPreviewScroll - 1, 0, 8), AccessibilityFocusIndex = 2 } ), ],
+    };
+
+    private static bool DispatchScreenKey(KeyGesture gesture, ref ShowcaseDemoState next)
+    {
+        if (next.Session.CommandPalette.IsOpen || next.EvidenceLedgerVisible ||
+            next.PerfHudVisible || next.DebugVisible || next.HelpVisible ||
+            next.A11yPanelVisible || next.TourActive)
+        {
+            return false;
+        }
+
+        if (!ScreenKeyMap.TryGetValue(next.CurrentScreenNumber, out var mappings))
+        {
+            return false;
+        }
+
+        if (!gesture.IsCharacter || gesture.Character is not { } rune)
+        {
+            return false;
+        }
+
+        // Try unmodified first, then Shift-modified for uppercase shortcuts like Shift+G/E
+        var mods = gesture.Modifiers;
+        if (mods != TerminalModifiers.None && mods != TerminalModifiers.Shift)
+        {
+            return false;
+        }
+
+        var key = char.ToLowerInvariant((char)rune.Value);
+        foreach (var (k, mutation) in mappings)
+        {
+            if (k == key)
+            {
+                next = mutation(next);
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private bool HandleGlobalKey(KeyTerminalEvent keyEvent, DateTimeOffset now, ref ShowcaseDemoState next)

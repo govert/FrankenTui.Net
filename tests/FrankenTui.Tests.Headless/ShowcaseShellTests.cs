@@ -15,6 +15,36 @@ namespace FrankenTui.Tests.Headless;
 public sealed class ShowcaseShellTests
 {
     [Fact]
+    public void ShowcaseScreenKeyMapDispatchesToCorrectScreenMutation()
+    {
+        var state = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(80, 24),
+            screenNumber: 2,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+        var timestamp = DateTimeOffset.Parse("2026-06-01T00:00:00Z");
+
+        state = ApplyKey(state, new KeyGesture(TerminalKey.Character, TerminalModifiers.None, new Rune('j')), timestamp);
+        Assert.Equal(1, state.DashboardHighlightIndex);
+        Assert.Equal(1, state.DashboardFocusIndex);
+
+        var fileState = ShowcaseDemoState.Create(
+            inlineMode: false,
+            viewport: new Size(80, 24),
+            screenNumber: 9,
+            language: "en",
+            flowDirection: WidgetFlowDirection.LeftToRight);
+
+        fileState = ApplyKey(fileState, new KeyGesture(TerminalKey.Character, TerminalModifiers.None, new Rune('h')), timestamp);
+        Assert.Equal(0, fileState.FileBrowserFocusIndex);
+        fileState = ApplyKey(fileState, new KeyGesture(TerminalKey.Character, TerminalModifiers.None, new Rune('l')), timestamp);
+        Assert.Equal(1, fileState.FileBrowserFocusIndex);
+        fileState = ApplyKey(fileState, new KeyGesture(TerminalKey.Character, TerminalModifiers.None, new Rune('j')), timestamp);
+        Assert.Equal(1, fileState.FileBrowserSelectedRowIndex);
+    }
+
+    [Fact]
     public void ShowcaseViewFactoryRendersUpstreamScreenCatalogSurface()
     {
         var buffer = new RenderBuffer(72, 18);
