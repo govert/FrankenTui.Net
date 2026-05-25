@@ -2311,6 +2311,26 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseDragDropKeyboardActivatesAndNavigatesModes()
+    {
+        var s = ShowcaseDemoState.Create(inlineMode: false, viewport: new Size(170, 38), screenNumber: 44, language: "en", flowDirection: WidgetFlowDirection.LeftToRight);
+        var ts = DateTimeOffset.Parse("2026-05-01T00:00:00Z");
+        s = ApplyKey(s, new KeyGesture(TerminalKey.Tab, TerminalModifiers.None), ts);
+        Assert.Equal(1, s.DragDropModeIndex);
+        Assert.False(s.DragDropKeyboardActive);
+        s = ApplyKey(s, new KeyGesture(TerminalKey.Tab, TerminalModifiers.None), ts);
+        Assert.Equal(2, s.DragDropModeIndex);
+        Assert.True(s.DragDropKeyboardActive);
+        s = ApplyKey(s, new KeyGesture(TerminalKey.Down, TerminalModifiers.None), ts);
+        Assert.Equal(1, s.DragDropSelectedIndex);
+        s = ApplyKey(s, new KeyGesture(TerminalKey.Right, TerminalModifiers.None), ts);
+        Assert.Equal(1, s.DragDropFocusedList);
+        s = ApplyKey(s, new KeyGesture(TerminalKey.Tab, TerminalModifiers.Shift), ts);
+        Assert.Equal(1, s.DragDropModeIndex);
+        Assert.False(s.DragDropKeyboardActive);
+    }
+
+    [Fact]
     public void ShowcaseDragDropRendersMouseSelectedState()
     {
         var state = ShowcaseDemoState.Create(

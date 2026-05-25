@@ -316,6 +316,7 @@ internal sealed record ShowcaseDemoState(
     int DragDropMoveCount = 0,
     bool DragDropKeyboardActive = false,
     bool DragDropContextAction = false,
+    string DragDropAnnouncement = "Selected row",
     int QuakeFocusIndex = 0,
     int QuakeQualityIndex = 0,
     int QuakeYawStep = 0,
@@ -747,6 +748,11 @@ internal sealed record ShowcaseDemoState(
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
         }
 
+        if (HandleDragDropKey(keyEvent.Gesture, ref next))
+        {
+            return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
+        }
+
         if (DispatchScreenKey(keyEvent.Gesture, ref next))
         {
             return SyncSession(next, next.Session.WithRuntimeStats(runtimeStats));
@@ -957,6 +963,48 @@ internal sealed record ShowcaseDemoState(
             next = next with { AccessibilityPreviewScroll = Math.Clamp(next.AccessibilityPreviewScroll - 1, 0, 8), AccessibilityFocusIndex = 2 };
             return true;
         }
+        return false;
+    }
+
+    private static bool HandleDragDropKey(KeyGesture gesture, ref ShowcaseDemoState next)
+    {
+        if (next.CurrentScreenNumber != 44 || next.Session.CommandPalette.IsOpen ||
+            next.EvidenceLedgerVisible || next.PerfHudVisible || next.DebugVisible ||
+            next.HelpVisible || next.A11yPanelVisible || next.TourActive)
+        {
+            return false;
+        }
+
+        // Tab/Shift+Tab cycles between Sortable/Cross-Container/Keyboard Drag modes
+        if (gesture.Key == TerminalKey.Tab && gesture.Modifiers is TerminalModifiers.None or TerminalModifiers.Shift)
+        {
+            var delta = gesture.Modifiers.HasFlag(TerminalModifiers.Shift) ? 2 : 1;
+            var newMode = (next.DragDropModeIndex + delta) % 3;
+            var keyboardActive = newMode == 2;
+            next = next with
+            {
+                DragDropModeIndex = newMode,
+                DragDropKeyboardActive = keyboardActive,
+                DragDropAnnouncement = keyboardActive ? "Keyboard drag active. Arrows: navigate, Enter: drop." : $"Mode selected: {newMode}"
+            };
+            return true;
+        }
+
+        // Keyboard Drag mode: arrows navigate, Enter drops, Space toggles
+        if (next.DragDropKeyboardActive && gesture.Modifiers == TerminalModifiers.None)
+        {
+            next = gesture.Key switch
+            {
+                TerminalKey.Up => next with { DragDropSelectedIndex = Math.Clamp(next.DragDropSelectedIndex - 1, 0, 7), DragDropAnnouncement = $"Row {Math.Clamp(next.DragDropSelectedIndex - 1, 0, 7)}" },
+                TerminalKey.Down => next with { DragDropSelectedIndex = Math.Clamp(next.DragDropSelectedIndex + 1, 0, 7), DragDropAnnouncement = $"Row {Math.Clamp(next.DragDropSelectedIndex + 1, 0, 7)}" },
+                TerminalKey.Left => next with { DragDropFocusedList = 0, DragDropAnnouncement = "Focused list 0" },
+                TerminalKey.Right => next with { DragDropFocusedList = 1, DragDropAnnouncement = "Focused list 1" },
+                TerminalKey.Enter => next with { DragDropMoveCount = next.DragDropMoveCount + 1, DragDropAnnouncement = $"Moved item {next.DragDropSelectedIndex}" },
+                _ => next
+            };
+            return true;
+        }
+
         return false;
     }
 
