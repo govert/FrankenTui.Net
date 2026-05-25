@@ -45,6 +45,48 @@ public sealed class ShowcaseShellTests
     }
 
     [Fact]
+    public void ShowcaseAllScreensRenderAtStandardViewportWithoutCorruption()
+    {
+        var size = new Size(120, 32);
+        for (var screenNumber = 1; screenNumber <= 45; screenNumber++)
+        {
+            var state = ShowcaseDemoState.Create(false, size, screenNumber, "en", WidgetFlowDirection.LeftToRight);
+            var buffer = new RenderBuffer(size.Width, size.Height);
+            ShowcaseSurface.Create(state).Render(
+                new RuntimeRenderContext(buffer, Rect.FromSize(size.Width, size.Height), Theme.DefaultTheme));
+            var lines = new List<string>(HeadlessBufferView.ScreenText(buffer));
+            var title = state.CurrentScreen.Title;
+            Assert.True(lines.Count == size.Height, $"{title}: expected {size.Height} lines, got {lines.Count}");
+            Assert.True(lines[^1].Length > 10, $"{title}: status row truncated");
+            var contentLines = lines.Where(l => l.Trim().Length > 2).Count();
+            Assert.True(contentLines > 3, $"{title}: only {contentLines} non-empty lines");
+            var tabRow = lines[0];
+            Assert.True(tabRow.Length > 5, $"{title}: tab row missing or empty");
+        }
+    }
+
+    [Fact]
+    public void ShowcaseHigherResolutionRenderingPreservesContentStructure()
+    {
+        var screens = new[] { 2, 5, 9, 15, 30, 42 };
+        var sizes = new[] { new Size(80, 24), new Size(120, 32), new Size(170, 38) };
+        foreach (var size in sizes)
+        foreach (var screenNumber in screens)
+        {
+            var state = ShowcaseDemoState.Create(false, size, screenNumber, "en", WidgetFlowDirection.LeftToRight);
+            var buffer = new RenderBuffer(size.Width, size.Height);
+            ShowcaseSurface.Create(state).Render(
+                new RuntimeRenderContext(buffer, Rect.FromSize(size.Width, size.Height), Theme.DefaultTheme));
+            var lines = new List<string>(HeadlessBufferView.ScreenText(buffer));
+            var title = state.CurrentScreen.Title;
+            Assert.True(lines.Count > 5, $"{title}@{size.Width}x{size.Height}: too few lines ({lines.Count})");
+            Assert.Contains(lines, l => l.Contains("\u2502")); // tab separators present
+            Assert.True(lines[^1].Length > 10, $"{title}@{size.Width}x{size.Height}: status row too short");
+            Assert.True(lines.Any(l => l.Trim().Length > 3), $"{title}@{size.Width}x{size.Height}: no content rows");
+        }
+    }
+
+    [Fact]
     public void ShowcaseViewFactoryRendersUpstreamScreenCatalogSurface()
     {
         var buffer = new RenderBuffer(72, 18);
