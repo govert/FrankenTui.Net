@@ -1,3 +1,4 @@
+using System.Globalization;
 using FrankenTui.Demo.Showcase;
 using FrankenTui.Extras;
 using FrankenTui.Render;
@@ -314,5 +315,100 @@ public sealed class WebHostTests
         Assert.True(runner.PushEncodedInput("""{"kind":"key","phase":"down","code":"Escape","mods":0}"""));
         runner.Step();
         Assert.DoesNotContain("Keybindings", runner.RenderCurrent().Text);
+    }
+
+    [Fact]
+    public void ShowcasePageAndRunnerRenderSharedShowcaseScreens()
+    {
+        var runner = ShowcasePage.CreateRunner(width: 80, height: 24);
+        var accepted = runner.PushEncodedInput("""{"screen":30}""");
+        var selected = runner.ScreenNumber;
+        var stepped = runner.Step();
+        Assert.True(accepted);
+        Assert.Equal(30, selected);
+        Assert.Equal(1, stepped.EventsProcessed);
+        Assert.Contains("Theme Studio", stepped.Frame.Text);
+        Assert.Equal("30", stepped.Frame.Metadata["screen-number"]);
+    }
+
+    [Fact]
+    public void ShowcaseRunnerCoreAppliesScreenNavigationKeysToNumberedScreens()
+    {
+        var runner = ShowcasePage.CreateRunner(screenNumber: 44, width: 80, height: 24);
+        runner.PushEncodedInput("""{"kind":"key","phase":"down","code":"KeyL","mods":1}""");
+        Assert.Equal(44, runner.ScreenNumber);
+        runner.Step();
+        Assert.Equal(45, runner.ScreenNumber);
+        runner.PushEncodedInput("""{"kind":"key","phase":"down","code":"Tab","mods":0}""");
+        runner.Step();
+        Assert.Equal(1, runner.ScreenNumber);
+        runner.PushEncodedInput("""{"kind":"key","phase":"down","code":"Digit0","mods":0}""");
+        runner.Step();
+        Assert.Equal(10, runner.ScreenNumber);
+        runner.PushEncodedInput("""{"kind":"key","phase":"up","code":"ArrowLeft","mods":0}""");
+        var keyUp = runner.Step();
+        Assert.Equal(1, keyUp.EventsProcessed);
+        Assert.Equal(10, runner.ScreenNumber);
+    }
+
+    [Fact]
+    public void ShowcaseRunnerCoreFilesScreenRenderLoopDoesNotPanic()
+    {
+        var runner = ShowcasePage.CreateRunner(width: 80, height: 24);
+        for (var screen = 1; screen <= 45; screen++)
+        {
+            runner.PushEncodedInput("{\"screen\":" + screen.ToString(CultureInfo.InvariantCulture) + "}");
+            var result = runner.Step();
+            Assert.True(result.Rendered);
+            Assert.NotEmpty(result.Frame.Text);
+        }
+    }
+
+    [Fact]
+    public void ShowcaseRunnerCoreStepNoEventsHasNonzeroFrameIndex()
+    {
+        var runner = ShowcasePage.CreateRunner(width: 80, height: 24);
+        var first = runner.Step();
+        Assert.True(first.Rendered);
+        Assert.Equal(0, first.EventsProcessed);
+        Assert.Equal((ulong)1, first.FrameIndex);
+    }
+
+    [Fact]
+    public void ShowcaseRunnerCoreResizeClampsZeroDimensionsAndRendersAfterStep()
+    {
+        var runner = ShowcasePage.CreateRunner(width: 80, height: 24);
+        runner.Resize(0, 0);
+        var result = runner.Step();
+        Assert.True(result.Rendered);
+        Assert.Equal(1, result.EventsProcessed);
+    }
+
+    [Fact]
+    public void ShowcaseRunnerCorePatchHashMatchesAfterPrepareFlatPatches()
+    {
+        var runner = ShowcasePage.CreateRunner(screenNumber: 30, width: 10, height: 4);
+        var liveHash = runner.PatchHash();
+        runner.PrepareFlatPatches();
+        var preparedHash = runner.PatchHash();
+        Assert.Equal(liveHash, preparedHash);
+        Assert.StartsWith("fnv1a64:", liveHash, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void ShowcaseRunnerCoreAssertStoppedStepPreservesQuitState()
+    {
+        var runner = ShowcasePage.CreateRunner(width: 80, height: 24);
+        runner.Step();
+        Assert.True(runner.IsRunning);
+        Assert.Equal((ulong)1, runner.FrameIndex);
+        runner.PushEncodedInput("""{"kind":"quit"}""");
+        var stopped = runner.Step();
+        Assert.False(stopped.Running);
+        Assert.False(runner.IsRunning);
+        Assert.Equal((ulong)1, runner.FrameIndex);
+        var afterStop = runner.Step();
+        Assert.False(afterStop.Running);
+        Assert.False(afterStop.Rendered);
     }
 }

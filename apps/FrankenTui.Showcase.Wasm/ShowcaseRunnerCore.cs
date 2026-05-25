@@ -614,7 +614,9 @@ public sealed class ShowcaseRunnerCore
         if (TryGetStringProperty(element, "phase", out var phase) &&
             string.Equals(phase, "up", StringComparison.OrdinalIgnoreCase))
         {
-            return HasAnyProperty(element, "code", "key", "raw_key", "raw_code");
+            var accepted = HasAnyProperty(element, "code", "key", "raw_key", "raw_code");
+            if (accepted) _pendingEventsProcessed++;
+            return accepted;
         }
         if (!TryParseKeyGesture(element, out var gesture))
             return false;
