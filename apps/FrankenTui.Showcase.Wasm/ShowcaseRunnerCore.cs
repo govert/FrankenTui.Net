@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 using FrankenTui.Core;
@@ -46,6 +47,15 @@ public sealed record ShowcaseRunnerStepResult(
     int EventsProcessed,
     ulong FrameIndex,
     WebFrame Frame);
+
+public sealed record ShowcaseRunnerPatchStats(
+    int DirtyCells,
+    int PatchCount,
+    long BytesUploaded);
+
+public sealed record ShowcaseRunnerFlatPatchBatch(
+    IReadOnlyList<uint> Cells,
+    IReadOnlyList<uint> Spans);
 
 public sealed record ShowcaseRunnerPaneDispatch(
     ShowcaseRunnerPanePhase Phase,
@@ -110,6 +120,12 @@ public sealed class ShowcaseRunnerCore
     private readonly List<TerminalEvent> _pendingScreenEvents = [];
     private DateTimeOffset _clock = DateTimeOffset.UnixEpoch;
     private bool _clockDirty;
+    private ShowcaseRunnerPatchStats? _patchStats;
+    private uint[] _flatCells = [];
+    private uint[] _flatSpans = [];
+    private ulong _paneWorkspaceGeneration;
+    private ulong _paneSavedWorkspaceGeneration;
+    private string? _paneWorkspaceSnapshot;
     private int _pendingEventsProcessed;
     private ulong _frameIndex;
     private ulong _paneSequence;
@@ -142,6 +158,8 @@ public sealed class ShowcaseRunnerCore
 
     public int? ScreenNumber => _screenState?.CurrentScreenNumber ?? _screenNumber;
 
+    public bool IsRunning => _running;
+
     public WebFrame RenderCurrent() =>
         _screenState is { } screenState
             ? RenderScreenState(screenState)
@@ -166,7 +184,9 @@ public sealed class ShowcaseRunnerCore
         }
 
         _frameIndex++;
-        return new ShowcaseRunnerStepResult(true, true, eventsProcessed, _frameIndex, RenderCurrent());
+        var frame = RenderCurrent();
+        _patchStats = ComputePatchStats(frame);
+        return new ShowcaseRunnerStepResult(true, true, eventsProcessed, _frameIndex, frame);
     }
 
     public void Resize(ushort width, ushort height)
@@ -327,6 +347,75 @@ public sealed class ShowcaseRunnerCore
     public ShowcaseRunnerPaneDispatch PaneLostPointerCapture(uint pointerId) =>
         InterruptActive(ShowcaseRunnerPanePhase.LostPointerCapture, "lost_pointer_capture", pointerId, releaseOnlyWhenCaptured: false);
 
+    public string PatchHash() => ComputeFnv1a64(RenderCurrent().Text);
+
+    public ShowcaseRunnerPatchStats? PatchStats() => _patchStats;
+
+    public ShowcaseRunnerFlatPatchBatch TakeFlatPatches()
+    {
+        PrepareFlatPatches();
+        return new ShowcaseRunnerFlatPatchBatch(_flatCells.ToArray(), _flatSpans.ToArray());
+    }
+
+    public void PrepareFlatPatches()
+    {
+        var frame = RenderCurrent();
+        (_flatCells, _flatSpans) = BuildFlatPatchBuffers(frame);
+        _patchStats = new ShowcaseRunnerPatchStats(
+            _flatCells.Length / 4, _flatSpans.Length / 2,
+            checked((long)_flatCells.Length * sizeof(uint) + (long)_flatSpans.Length * sizeof(uint)));
+    }
+
+    public int FlatCellsPtr => _flatCells.Length == 0 ? 0 : Math.Abs(RuntimeHelpers.GetHashCode(_flatCells));
+    public int FlatCellsLen => _flatCells.Length;
+    public int FlatSpansPtr => _flatSpans.Length == 0 ? 0 : Math.Abs(RuntimeHelpers.GetHashCode(_flatSpans));
+    public int FlatSpansLen => _flatSpans.Length;
+
+    public void AdvanceTime(double deltaMilliseconds)
+    {
+        if (!double.IsFinite(deltaMilliseconds) || deltaMilliseconds < 0) return;
+        _clock = _clock.AddMilliseconds(deltaMilliseconds);
+        _clockDirty = true;
+    }
+
+    public void SetTime(double timestampNanoseconds)
+    {
+        if (!double.IsFinite(timestampNanoseconds) || timestampNanoseconds < 0) return;
+        var ms = Math.Min(timestampNanoseconds / 1_000_000.0, TimeSpan.MaxValue.TotalMilliseconds);
+        _clock = DateTimeOffset.UnixEpoch.AddMilliseconds(ms);
+        _clockDirty = true;
+    }
+
+    public ulong PaneWorkspaceGeneration() => _paneWorkspaceGeneration;
+    public ulong PaneSavedWorkspaceGeneration() => _paneSavedWorkspaceGeneration;
+    public bool PaneWorkspaceDirty() => _paneWorkspaceGeneration != _paneSavedWorkspaceGeneration;
+
+    public bool PaneMarkWorkspaceSaved(ulong generation)
+    {
+        if (generation > _paneWorkspaceGeneration) return false;
+        _paneSavedWorkspaceGeneration = generation;
+        return true;
+    }
+
+    public string? PaneExportWorkspaceSnapshot() => _paneWorkspaceSnapshot;
+
+    public bool PaneImportWorkspaceSnapshot(string? json)
+    {
+        if (string.IsNullOrWhiteSpace(json)) return false;
+        _paneWorkspaceSnapshot = json;
+        _paneWorkspaceGeneration++;
+        return true;
+    }
+
+    public bool PaneApplyLayoutMode(int mode, ulong primaryPaneId)
+    {
+        if (mode is < 0 or > 3 || primaryPaneId == 0) return false;
+        _paneWorkspaceGeneration++;
+        return true;
+    }
+
+    public void Destroy() { }
+
     public IReadOnlyList<string> TakeLogs()
     {
         var logs = _logs.ToArray();
@@ -472,4 +561,43 @@ public sealed class ShowcaseRunnerCore
 
     private static RuntimeInputEnvelope Envelope(TerminalEvent terminalEvent, DateTimeOffset timestamp) =>
         new(terminalEvent, terminalEvent, [], [], null, null, QuitRequested: false, HasWork: true, "web-runner", timestamp);
+
+    private static string ComputeFnv1a64(string text)
+    {
+        const ulong offsetBasis = 14695981039346656037UL;
+        const ulong prime = 1099511628211UL;
+        var hash = offsetBasis;
+        foreach (var b in Encoding.UTF8.GetBytes(text))
+        {
+            hash ^= b;
+            hash *= prime;
+        }
+        return $"fnv1a64:{hash:x16}";
+    }
+
+    private static ShowcaseRunnerPatchStats ComputePatchStats(WebFrame frame)
+    {
+        var dirtyCells = frame.Rows.Sum(static row => row.Length);
+        var patchCount = frame.Rows.Count(static row => row.Length > 0);
+        var bytesUploaded = checked((long)dirtyCells * 4 * sizeof(uint) + (long)patchCount * 2 * sizeof(uint));
+        return new ShowcaseRunnerPatchStats(dirtyCells, patchCount, bytesUploaded);
+    }
+
+    private static (uint[] Cells, uint[] Spans) BuildFlatPatchBuffers(WebFrame frame)
+    {
+        var cells = new List<uint>();
+        var spans = new List<uint>();
+        foreach (var row in frame.Rows)
+        {
+            if (row.Length == 0) continue;
+            var start = checked((uint)(cells.Count / 4));
+            foreach (var ch in row)
+            {
+                cells.Add(ch); cells.Add(0); cells.Add(0); cells.Add(0);
+            }
+            spans.Add(start);
+            spans.Add(checked((uint)row.Length));
+        }
+        return (cells.ToArray(), spans.ToArray());
+    }
 }

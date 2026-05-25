@@ -217,4 +217,66 @@ public sealed class WebHostTests
         Assert.Contains(logs, line => line.Contains("phase=blur", StringComparison.Ordinal) && line.Contains("command=release", StringComparison.Ordinal));
         Assert.Empty(runner.TakeLogs());
     }
+
+    [Fact]
+    public void ShowcaseRunnerCoreExposesPatchHashAndTimeControls()
+    {
+        var runner = ShowcasePage.CreateRunner(screenNumber: 1, width: 80, height: 24);
+        var initialHash = runner.PatchHash();
+        runner.AdvanceTime(double.NaN);
+        runner.AdvanceTime(double.PositiveInfinity);
+        runner.AdvanceTime(-1);
+        Assert.Equal(initialHash, runner.PatchHash());
+        runner.AdvanceTime(16);
+        var advanced = runner.Step();
+        Assert.Equal(0, advanced.EventsProcessed);
+        Assert.StartsWith("fnv1a64:", runner.PatchHash(), StringComparison.Ordinal);
+        runner.SetTime(double.NaN);
+        runner.SetTime(double.NegativeInfinity);
+        runner.SetTime(-123);
+        runner.SetTime(16_000_000);
+        var setTime = runner.Step();
+        Assert.True(setTime.Rendered);
+        var stats = runner.PatchStats();
+        Assert.NotNull(stats);
+        Assert.True(stats.DirtyCells > 0);
+        Assert.True(stats.PatchCount > 0);
+        Assert.True(stats.BytesUploaded > stats.DirtyCells);
+    }
+
+    [Fact]
+    public void ShowcaseRunnerCorePreparesAndTakesFlatPatches()
+    {
+        var runner = ShowcasePage.CreateRunner(screenNumber: 30, width: 10, height: 4);
+        runner.PrepareFlatPatches();
+        Assert.True(runner.FlatCellsPtr > 0);
+        Assert.True(runner.FlatSpansPtr > 0);
+        Assert.True(runner.FlatCellsLen > 0);
+        Assert.True(runner.FlatSpansLen > 0);
+        var batch = runner.TakeFlatPatches();
+        Assert.Equal(runner.FlatCellsLen, batch.Cells.Count);
+        Assert.Equal(runner.FlatSpansLen, batch.Spans.Count);
+        Assert.Equal(0, batch.Cells.Count % 4);
+        Assert.Equal(0, batch.Spans.Count % 2);
+        Assert.Equal(batch.Cells.Count / 4, runner.PatchStats()!.DirtyCells);
+    }
+
+    [Fact]
+    public void ShowcaseRunnerCorePaneWorkspaceMethodsFollowUpstreamApiShape()
+    {
+        var runner = ShowcasePage.CreateRunner();
+        Assert.Equal((ulong)0, runner.PaneWorkspaceGeneration());
+        Assert.False(runner.PaneWorkspaceDirty());
+        Assert.True(runner.PaneImportWorkspaceSnapshot("{\"v\":1}"));
+        Assert.Equal((ulong)1, runner.PaneWorkspaceGeneration());
+        Assert.True(runner.PaneWorkspaceDirty());
+        Assert.True(runner.PaneMarkWorkspaceSaved(1));
+        Assert.False(runner.PaneWorkspaceDirty());
+        Assert.False(runner.PaneMarkWorkspaceSaved(999));
+        Assert.False(runner.PaneApplyLayoutMode(-1, 1));
+        Assert.False(runner.PaneApplyLayoutMode(0, 0));
+        Assert.True(runner.PaneApplyLayoutMode(1, 42));
+        runner.Destroy();
+        Assert.True(runner.IsRunning);
+    }
 }
