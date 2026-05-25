@@ -143,4 +143,78 @@ public sealed class WebHostTests
         Assert.Equal("e\u0301🧑🏽\u200D💻", frame.Rows[0]);
         Assert.DoesNotContain("\u25A1", frame.Html, StringComparison.Ordinal);
     }
+
+    [Fact]
+    public void ShowcaseRunnerCorePaneBlurReleasesActiveCapture()
+    {
+        var runner = ShowcasePage.CreateRunner(HostedParityScenarioId.Extras);
+        runner.PanePointerDownAt(61);
+        runner.PanePointerCaptureAcquired(61);
+        var blur = runner.PaneBlur();
+        Assert.Null(runner.ActivePointerId);
+        Assert.True(blur.Accepted);
+        Assert.Equal(ShowcaseRunnerPanePhase.Blur, blur.Phase);
+        Assert.Equal(ShowcaseRunnerPaneCommand.Release, blur.Command);
+    }
+
+    [Fact]
+    public void ShowcaseRunnerCorePaneVisibilityHiddenReleasesActiveCapture()
+    {
+        var runner = ShowcasePage.CreateRunner(HostedParityScenarioId.Extras);
+        runner.PanePointerDownAt(62);
+        runner.PanePointerCaptureAcquired(62);
+        var hidden = runner.PaneVisibilityHidden();
+        Assert.Null(runner.ActivePointerId);
+        Assert.True(hidden.Accepted);
+        Assert.Equal(ShowcaseRunnerPanePhase.VisibilityHidden, hidden.Phase);
+        Assert.Equal(ShowcaseRunnerPaneCommand.Release, hidden.Command);
+    }
+
+    [Fact]
+    public void ShowcaseRunnerCorePaneLostPointerCaptureCancelsWithoutReleaseCommand()
+    {
+        var runner = ShowcasePage.CreateRunner(HostedParityScenarioId.Extras);
+        runner.PanePointerDownAt(63);
+        var lost = runner.PaneLostPointerCapture(63);
+        Assert.Null(runner.ActivePointerId);
+        Assert.True(lost.Accepted);
+        Assert.Equal(ShowcaseRunnerPanePhase.LostPointerCapture, lost.Phase);
+        Assert.Equal(ShowcaseRunnerPaneCommand.None, lost.Command);
+    }
+
+    [Fact]
+    public void ShowcaseRunnerCorePaneLeaveBeforeCaptureAckCancelsActivePointer()
+    {
+        var runner = ShowcasePage.CreateRunner(HostedParityScenarioId.Extras);
+        runner.PanePointerDownAt(52);
+        var leave = runner.PanePointerLeave(52);
+        Assert.Null(runner.ActivePointerId);
+        Assert.Equal(ShowcaseRunnerPanePhase.PointerLeave, leave.Phase);
+        Assert.True(leave.Accepted);
+    }
+
+    [Fact]
+    public void ShowcaseRunnerCorePaneLeaveAfterCaptureAckIsIgnored()
+    {
+        var runner = ShowcasePage.CreateRunner(HostedParityScenarioId.Extras);
+        runner.PanePointerDownAt(53);
+        runner.PanePointerCaptureAcquired(53);
+        var leave = runner.PanePointerLeave(53);
+        Assert.True(leave.Accepted);
+        Assert.Equal(ShowcaseRunnerPaneCommand.None, leave.Command);
+        Assert.Equal("pointer_leave_after_capture", leave.Reason);
+    }
+
+    [Fact]
+    public void ShowcaseRunnerCorePaneLogsAreDrainedWithTakeLogs()
+    {
+        var runner = ShowcasePage.CreateRunner(HostedParityScenarioId.Extras);
+        runner.PanePointerDownAt(71);
+        runner.PanePointerCaptureAcquired(71);
+        runner.PaneBlur();
+        var logs = runner.TakeLogs();
+        Assert.Equal(3, logs.Count);
+        Assert.Contains(logs, line => line.Contains("phase=blur", StringComparison.Ordinal) && line.Contains("command=release", StringComparison.Ordinal));
+        Assert.Empty(runner.TakeLogs());
+    }
 }

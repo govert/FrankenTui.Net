@@ -260,6 +260,26 @@ public sealed class ShowcaseRunnerCore
     public ShowcaseRunnerPaneDispatch PaneRenderStalled() =>
         InterruptActive(ShowcaseRunnerPanePhase.RenderStalled, "render_stalled", null, releaseOnlyWhenCaptured: true);
 
+    public ShowcaseRunnerPaneDispatch PanePointerLeave(uint pointerId)
+    {
+        if (_activePointerId is null)
+            return Record(ShowcaseRunnerPanePhase.PointerLeave, pointerId, ShowcaseRunnerPaneCommand.None, ShowcaseRunnerPaneOutcome.Ignored, "no_active_pointer");
+        if (_captureAcquired)
+            return Record(ShowcaseRunnerPanePhase.PointerLeave, pointerId, ShowcaseRunnerPaneCommand.None, ShowcaseRunnerPaneOutcome.SemanticForwarded, "pointer_leave_after_capture");
+        _activePointerId = null;
+        _captureAcquired = false;
+        return Record(ShowcaseRunnerPanePhase.PointerLeave, pointerId, ShowcaseRunnerPaneCommand.None, ShowcaseRunnerPaneOutcome.SemanticForwarded, "pointer_left_before_capture");
+    }
+
+    public ShowcaseRunnerPaneDispatch PaneBlur() =>
+        InterruptActive(ShowcaseRunnerPanePhase.Blur, "blur", null, releaseOnlyWhenCaptured: true);
+
+    public ShowcaseRunnerPaneDispatch PaneVisibilityHidden() =>
+        InterruptActive(ShowcaseRunnerPanePhase.VisibilityHidden, "visibility_hidden", null, releaseOnlyWhenCaptured: true);
+
+    public ShowcaseRunnerPaneDispatch PaneLostPointerCapture(uint pointerId) =>
+        InterruptActive(ShowcaseRunnerPanePhase.LostPointerCapture, "lost_pointer_capture", pointerId, releaseOnlyWhenCaptured: false);
+
     public IReadOnlyList<string> TakeLogs()
     {
         var logs = _logs.ToArray();
@@ -284,7 +304,7 @@ public sealed class ShowcaseRunnerCore
         }
 
         var releasedPointer = _activePointerId;
-        var command = _captureAcquired || !releaseOnlyWhenCaptured
+        var command = releaseOnlyWhenCaptured && _captureAcquired
             ? ShowcaseRunnerPaneCommand.Release
             : ShowcaseRunnerPaneCommand.None;
         _activePointerId = null;
