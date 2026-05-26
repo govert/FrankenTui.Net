@@ -20,11 +20,11 @@ Widget infrastructure — completes the widget layer.
 
 | # | Module | Target File | Effort |
 |---|---|---|---|
-| B1 | `undo_support.rs` (820L) | `FrankenTui.Widgets/UndoSupport.cs` | 30 min |
-| B2 | `state.rs` + `stateful.rs` (1707L) | `FrankenTui.Widgets/WidgetState.cs` | 45 min |
-| B3 | `measurable.rs` + `measure_cache.rs` (1683L) | `FrankenTui.Widgets/MeasureSystem.cs` | 45 min |
-| B4 | `inspector.rs` (3280L) | `FrankenTui.Widgets/WidgetInspector.cs` | 60 min |
-| B5 | `drag.rs` (1549L) | `FrankenTui.Widgets/DragSupport.cs` | 45 min |
+| B1 | `undo_support.rs` (820L) | `FrankenTui.Widgets/WidgetInfrastructure.cs` | ✅ |
+| B2 | `state.rs` + `stateful.rs` (1707L) | `FrankenTui.Widgets/WidgetInfrastructure.cs` | ✅ |
+| B3 | `measurable.rs` + `measure_cache.rs` (1683L) | `FrankenTui.Widgets/WidgetInfrastructure.cs` | ✅ |
+| B4 | `inspector.rs` (3280L) | `FrankenTui.Widgets/InspectorAndDrag.cs` | ✅ |
+| B5 | `drag.rs` (1549L) | `FrankenTui.Widgets/InspectorAndDrag.cs` | ✅ |
 
 ## Phase C: System Utilities (1 session, ~6 items)
 
