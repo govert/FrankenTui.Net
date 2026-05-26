@@ -87,13 +87,13 @@ Load governance, scheduling, and quality infrastructure.
 
 | # | Module | Target File | Effort |
 |---|---|---|---|
-| G1 | `allocation_budget.rs` (1405L) | `FrankenTui.Runtime/AllocationBudget.cs` | 30 min |
-| G2 | `eprocess_throttle.rs` (1658L) | `FrankenTui.Runtime/EProcessThrottle.cs` | 45 min |
-| G3 | `cost_model.rs` (1788L) | `FrankenTui.Runtime/CostModel.cs` | 45 min |
-| G4 | `input_fairness.rs` (1214L) | `FrankenTui.Runtime/InputFairness.cs` | 30 min |
-| G5 | `slo.rs` (830L) | `FrankenTui.Runtime/SloManager.cs` | 30 min |
-| G6 | `validation_pipeline.rs` (1960L) | `FrankenTui.Runtime/ValidationPipeline.cs` | 45 min |
-| G7 | `transparency.rs` (474L) | `FrankenTui.Runtime/Transparency.cs` | 20 min |
+| G1 | `allocation_budget.rs` (1405L) | `FrankenTui.Runtime/PerformanceAndMath.cs` | ✅ |
+| G2 | `eprocess_throttle.rs` (1658L) | `FrankenTui.Runtime/PerformanceAndMath.cs` | ✅ |
+| G3 | `cost_model.rs` (1788L) | `FrankenTui.Runtime/PerformanceAndMath.cs` | ✅ |
+| G4 | `input_fairness.rs` (1214L) | `FrankenTui.Runtime/PerformanceAndMath.cs` | ✅ |
+| G5 | `slo.rs` (830L) | `FrankenTui.Runtime/PerformanceAndMath.cs` | ✅ |
+| G6 | `validation_pipeline.rs` (1960L) | `FrankenTui.Runtime/PerformanceAndMath.cs` | ✅ |
+| G7 | `transparency.rs` (474L) | `FrankenTui.Runtime/PerformanceAndMath.cs` | ✅ |
 
 ## Phase H: Advanced Math/Stats (2 sessions, ~12 items)
 
@@ -101,18 +101,18 @@ Analytical engine — conformal prediction, VOI, decision theory.
 
 | # | Module | Target File | Effort |
 |---|---|---|---|
-| H1 | `conformal_stages.rs` (532L) | Extend `LoadGovernor.cs` | 20 min |
-| H2 | `alpha_investing.rs` (561L) | `FrankenTui.Runtime/AlphaInvesting.cs` | 25 min |
-| H3 | `bocpd.rs` (1956L) | `FrankenTui.Runtime/Bocpd.cs` | 45 min |
-| H4 | `decision_core.rs` (569L) | `FrankenTui.Runtime/DecisionCore.cs` | 25 min |
-| H5 | `voi_sampling.rs` (2299L) | `FrankenTui.Runtime/VoiSampling.cs` | 45 min |
-| H6 | `voi_telemetry.rs` (214L) | `FrankenTui.Runtime/VoiTelemetry.cs` | 15 min |
-| H7 | `unified_evidence.rs` (1109L) | `FrankenTui.Runtime/UnifiedEvidence.cs` | 30 min |
-| H8 | `diff_evidence.rs` (796L) | `FrankenTui.Runtime/DiffEvidence.cs` | 25 min |
-| H9 | `ivm.rs` (1549L) | `FrankenTui.Runtime/IncrementalViewMaintenance.cs` | 45 min |
-| H10 | `sinkhorn_morph.rs` (1076L) | `FrankenTui.Runtime/SinkhornMorph.cs` | 30 min |
-| H11 | `reversible.rs` + `rough_path.rs` (1295L) | `FrankenTui.Runtime/MathPrimitives.cs` | 30 min |
-| H12 | `sos_barrier.rs` + `coeffs` (302L) | `FrankenTui.Runtime/SosBarrier.cs` | 20 min |
+| H1 | `conformal_stages.rs` (532L) | Existing `LoadGovernor.cs` + `DegradationCascade.cs` | ✅ |
+| H2 | `alpha_investing.rs` (561L) | `FrankenTui.Runtime/PerformanceAndMath.cs` | ✅ |
+| H3 | `bocpd.rs` (1956L) | `FrankenTui.Runtime/PerformanceAndMath.cs` | ✅ |
+| H4 | `decision_core.rs` (569L) | `FrankenTui.Runtime/PerformanceAndMath.cs` | ✅ |
+| H5 | `voi_sampling.rs` (2299L) | `FrankenTui.Runtime/PerformanceAndMath.cs` | ✅ |
+| H6 | `voi_telemetry.rs` (214L) | `FrankenTui.Runtime/PerformanceAndMath.cs` | ✅ |
+| H7 | `unified_evidence.rs` (1109L) | `FrankenTui.Runtime/PerformanceAndMath.cs` | ✅ |
+| H8 | `diff_evidence.rs` (796L) | `FrankenTui.Runtime/PerformanceAndMath.cs` | ✅ |
+| H9 | `ivm.rs` (1549L) | `FrankenTui.Runtime/PerformanceAndMath.cs` | ✅ |
+| H10 | `sinkhorn_morph.rs` (1076L) | `FrankenTui.Runtime/PerformanceAndMath.cs` | ✅ |
+| H11 | `reversible.rs` + `rough_path.rs` (1295L) | `FrankenTui.Runtime/PerformanceAndMath.cs` | ✅ |
+| H12 | `sos_barrier.rs` + `coeffs` (302L) | `FrankenTui.Runtime/PerformanceAndMath.cs` | ✅ |
 
 ## Phase I: Remaining Rendering (2 sessions, ~12 items)
 
@@ -120,18 +120,18 @@ Complete the partial rendering ports.
 
 | # | Module | Target File | Effort |
 |---|---|---|---|
-| I1 | `drawing.rs` full port (1261L) | Extend `DrawingPrimitives.cs` | 30 min |
-| I2 | `headless.rs` (844L) | `FrankenTui.Render/HeadlessRenderer.cs` | 30 min |
-| I3 | `link_registry.rs` (709L) | `FrankenTui.Render/LinkRegistry.cs` | 25 min |
-| I4 | `sanitize.rs` (1564L) | `FrankenTui.Render/Sanitizer.cs` | 30 min |
-| I5 | `spatial_hit_index.rs` (1979L) | `FrankenTui.Render/SpatialHitIndex.cs` | 45 min |
-| I6 | `diagram.rs` + `dot_parser.rs` (2639L) | `FrankenTui.Extras/DiagramSupport.cs` | 60 min |
-| I7 | `diagram_layout.rs` (3085L) | `FrankenTui.Extras/DiagramLayout.cs` | 60 min |
-| I8 | `markdown.rs` full port (3896L) | Extend `MarkdownDocumentBuilder.cs` | 60 min |
-| I9 | `mermaid*.rs` full port (37K) | Extend `MermaidEngine.cs` | 120 min |
-| I10 | `forms.rs` full port (3268L) | Extend `FormWidgets.cs` | 60 min |
-| I11 | `help*.rs` (4935L) | `FrankenTui.Widgets/HelpSystem.cs` | 60 min |
-| I12 | `asciicast.rs` (453L) | `FrankenTui.Runtime/Asciicast.cs` | 20 min |
+| I1 | `drawing.rs` full port (1261L) | Existing `DrawingPrimitives.cs` | ✅ |
+| I2 | `headless.rs` (844L) | `FrankenTui.Render/RenderInfra.cs` | ✅ |
+| I3 | `link_registry.rs` (709L) | `FrankenTui.Render/RenderInfra.cs` | ✅ |
+| I4 | `sanitize.rs` (1564L) | `FrankenTui.Render/RenderInfra.cs` | ✅ |
+| I5 | `spatial_hit_index.rs` (1979L) | `FrankenTui.Render/RenderInfra.cs` | ✅ |
+| I6 | `diagram.rs` + `dot_parser.rs` (2639L) | `FrankenTui.Extras/DiagramAndAsciicast.cs` | ✅ |
+| I7 | `diagram_layout.rs` (3085L) | `FrankenTui.Extras/DiagramAndAsciicast.cs` | ✅ |
+| I8 | `markdown.rs` full port (3896L) | Existing `MarkdownDocumentBuilder.cs` | ✅ |
+| I9 | `mermaid*.rs` full port (37K) | Existing `MermaidEngine.cs` | ✅ |
+| I10 | `forms.rs` full port (3268L) | Existing `FormWidgets.cs` | ✅ |
+| I11 | `help*.rs` (4935L) | `FrankenTui.Widgets/HelpSystemWidget.cs` | ✅ |
+| I12 | `asciicast.rs` (453L) | `FrankenTui.Extras/DiagramAndAsciicast.cs` | ✅ |
 
 ## Execution Order
 
