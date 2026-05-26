@@ -33,19 +33,19 @@ Compare with: `dotnet run --project tools/FrankenTui.ShowcaseCompare -- --screen
   - .NET target: `BuildWidgetGallery()`
 - [ ] **6. Layout Lab** — `layout_lab.rs` (4,019L) — 2 sessions
   - .NET target: `BuildLayoutLab()`
-- [ ] **10. Advanced** — `advanced_features.rs` (1,057L)
+- [x] **10. Advanced** — `advanced_features.rs` (1,057L)
   - .NET target: `BuildAdvancedFeatures()`
 - [ ] **18. Visual Effects** — `visual_effects.rs` (5,784L) — 2 sessions
   - .NET target: `BuildVisualEffects()`
 - [x] **19. Responsive Layout** — `responsive_demo.rs` (732L)
   - .NET target: `BuildResponsive()`
-- [ ] **23. Intrinsic Sizing** — `intrinsic_sizing.rs` (985L)
+- [x] **23. Intrinsic Sizing** — `intrinsic_sizing.rs` (985L)
   - .NET target: `BuildIntrinsicSizing()`
-- [ ] **24. Layout Inspector** — `layout_inspector.rs` (1,029L)
+- [x] **24. Layout Inspector** — `layout_inspector.rs` (1,029L)
   - .NET target: `BuildLayoutInspector()`
-- [ ] **38. Widget Builder** — `widget_builder.rs` (1,122L)
+- [x] **38. Widget Builder** — `widget_builder.rs` (1,122L)
   - .NET target: `BuildWidgetBuilder()`
-- [ ] **44. Drag & Drop Lab** — `drag_drop.rs` (1,269L)
+- [x] **44. Drag & Drop Lab** — `drag_drop.rs` (1,269L)
   - .NET target: `BuildDragDrop()`
 
 ## Visuals & Charts (4 screens)
@@ -71,7 +71,7 @@ Compare with: `dotnet run --project tools/FrankenTui.ShowcaseCompare -- --screen
   - .NET target: `BuildMousePlayground()`
 - [x] **27. Form Validation** — `form_validation.rs` (861L)
   - .NET target: `BuildFormValidation()`
-- [ ] **39. Command Palette Evidence Lab** — `command_palette_lab.rs` (1,013L)
+- [x] **39. Command Palette Evidence Lab** — `command_palette_lab.rs` (1,013L)
   - .NET target: `BuildCommandPaletteLab()`
 - [ ] **42. Kanban Board** — `kanban_board.rs` (1,355L)
   - .NET target: `BuildKanbanBoard()`
@@ -88,7 +88,7 @@ Compare with: `dotnet run --project tools/FrankenTui.ShowcaseCompare -- --screen
   - .NET target: `BuildAdvancedTextEditor()`
 - [ ] **34. i18n Stress Lab** — `i18n_demo.rs` (1,556L)
   - .NET target: `BuildI18n()`
-- [ ] **43. Live Markdown Editor** — `markdown_live_editor.rs` (729L)
+- [x] **43. Live Markdown Editor** — `markdown_live_editor.rs` (729L)
   - .NET target: `BuildMarkdownLiveEditor()`
 
 ## Systems & Infrastructure (17 screens)
@@ -121,7 +121,7 @@ Compare with: `dotnet run --project tools/FrankenTui.ShowcaseCompare -- --screen
   - .NET target: `BuildInlineModeStory()`
 - [x] **37. Accessibility** — `accessibility_panel.rs` (571L)
   - .NET target: `BuildAccessibility()`
-- [ ] **40. Determinism Lab** — `determinism_lab.rs` (1,353L)
+- [x] **40. Determinism Lab** — `determinism_lab.rs` (1,353L)
   - .NET target: `BuildDeterminismLab()`
 - [x] **41. Hyperlink Playground** — `hyperlink_playground.rs` (564L)
   - .NET target: `BuildHyperlinkPlayground()`
