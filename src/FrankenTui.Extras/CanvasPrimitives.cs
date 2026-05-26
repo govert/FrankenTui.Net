@@ -88,6 +88,51 @@ public sealed class CanvasPainter
         _pixels[y * Width + x] = true;
     }
 
+    public void Line(int x1, int y1, int x2, int y2)
+    {
+        var dx = Math.Abs(x2 - x1);
+        var dy = -Math.Abs(y2 - y1);
+        var sx = x1 < x2 ? 1 : -1;
+        var sy = y1 < y2 ? 1 : -1;
+        var err = dx + dy;
+        while (true)
+        {
+            Point(x1, y1);
+            if (x1 == x2 && y1 == y2) break;
+            var e2 = 2 * err;
+            if (e2 >= dy) { err += dy; x1 += sx; }
+            if (e2 <= dx) { err += dx; y1 += sy; }
+        }
+    }
+
+    public void Rect(int x, int y, int w, int h)
+    {
+        Line(x, y, x + w, y);
+        Line(x + w, y, x + w, y + h);
+        Line(x + w, y + h, x, y + h);
+        Line(x, y + h, x, y);
+    }
+
+    public void Circle(int cx, int cy, int radius)
+    {
+        var x = radius;
+        var y = 0;
+        var err = 0;
+        while (x >= y)
+        {
+            Point(cx + x, cy + y);
+            Point(cx + y, cy + x);
+            Point(cx - y, cy + x);
+            Point(cx - x, cy + y);
+            Point(cx - x, cy - y);
+            Point(cx - y, cy - x);
+            Point(cx + y, cy - x);
+            Point(cx + x, cy - y);
+            if (err <= 0) { y += 1; err += 2 * y + 1; }
+            if (err > 0) { x -= 1; err -= 2 * x + 1; }
+        }
+    }
+
     public void Render(Rect area, RenderBuffer buffer, Cell template) =>
         RenderCore(area, buffer, template, exclude: null);
 
