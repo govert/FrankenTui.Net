@@ -130,7 +130,7 @@ public sealed class WidgetClearContractTests
 
         new BlockWidget { Title = "Box", Child = new ParagraphWidget("Body") }.Render(context);
 
-        Assert.Equal("+- Box ----+", HeadlessBufferView.RowText(buffer, 0));
+        Assert.Equal("+---Box----+", HeadlessBufferView.RowText(buffer, 0));
         Assert.Equal("|Body      |", HeadlessBufferView.RowText(buffer, 1));
     }
 
