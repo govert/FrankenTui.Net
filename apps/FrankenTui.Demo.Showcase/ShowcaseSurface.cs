@@ -3082,13 +3082,13 @@ internal static class ShowcaseSurface
                 (LayoutConstraint.Fill(), new StackWidget(
                     LayoutDirection.Horizontal,
                     [
-                        (LayoutConstraint.Percentage(50), new StackWidget(
+                        (LayoutConstraint.Fixed(59), new StackWidget(
                             LayoutDirection.Vertical,
                             [
                                 (LayoutConstraint.Fixed(8), toggles),
                                 (LayoutConstraint.Fill(), preview)
                             ])),
-                        (LayoutConstraint.Percentage(50), new StackWidget(
+                        (LayoutConstraint.Fill(), new StackWidget(
                             LayoutDirection.Vertical,
                             [
                                 (LayoutConstraint.Fixed(10), wcag),

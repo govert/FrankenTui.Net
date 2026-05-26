@@ -1,0 +1,10 @@
+{
+  "default": {
+    "workspace_path": "C:\\Work\\FrankenTui.Net\\FrankenTui.Net.sln",
+    "workspace_handle": "ws_625dfe82704d437fb0f6711bfbeceaad",
+    "daemon_endpoint": "pipe:roslynskills-3b606e5cedfb60a7",
+    "daemon_pid": 41260,
+    "workspace_fingerprint": "c7863681112999e7be2d48d5431deabe5e837a35ae437b839dde82ab3db78b56",
+    "last_seen_utc": "2026-05-26T17:41:27.850772+00:00"
+  }
+}

@@ -1,24 +1,24 @@
-﻿ 1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
-┌─ Accessibility ──────────────────────────────────────────────────────────────┐
-│┌─ Accessibility Control Panel [focus] ──────────────────────────────────────┐│
-││Active Theme: current_theme                                                 ││
-││Base Theme: CyberpunkAurora                                                 ││
-││Mode: High Contrast                                                         ││
-││Motion: Reduced (0.0x)                                                      ││
-││Large Text: ON                                                              ││
-│└────────────────────────────────────────────────────────────────────────────┘│
-│┌─ Toggles ───────────────────────────┐┌─ WCAG Contrast ─────────────────────┐│
-││> [h] High Contrast: ON              ││Primary on Base     12.4:1 AAA       ││
-││  [m] Reduced Motion: ON             ││Secondary on Base    8.8:1 AAA       ││
-││  [l] Large Text: ON                 ││Accent Primary       5.7:1 AA        ││
-││Shift+A opens the compact overlay    ││Accent Warning       4.8:1 AA        ││
-││Click rows dispatch A11yToggleAction:││Accent Error         3.4:1 AA Large  ││
-││HighContrast, ReducedMotion,         ││                                     ││
-│└─────────────────────────────────────┘│Minimum ratio: 3.4:1 AA Large        ││
-│┌─ Live Preview ──────────────────────┐│AA >= 4.5, AAA >= 7.0, Large Text >= ││
-││Preview scroll: 0                    │└─────────────────────────────────────┘│
-││Preview text                         │┌─ A11y Telemetry ────────────────────┐│
-│└─────────────────────────────────────┘└─────────────────────────────────────┘│
-│h contrast | m motion | l large text | Shift+A overlay | Ctrl+T theme |       │
-└──────────────────────────────────────────────────────────────────────────────┘
+﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+╭────────────────────────────────Accessibility─────────────────────────────────╮
+│╭─────────────────────── Accessibility Control Panel ────────────────────────╮│
+││Active Theme: Cyberpunk Aurora                                              ││
+││Base Theme: Cyberpunk Aurora  Mode: Standard                                ││
+││Motion: Full (1.0x)  Large Text: OFF                                        ││
+││Shortcuts: h = contrast, m = motion, l = large text                         ││
+││                                                                            ││
+│╰────────────────────────────────────────────────────────────────────────────╯│
+│╭──────────────────────── Toggles ────────────────────────╮╭─ WCAG Contrast ─╮│
+││ [h] High Contrast: OFF                                  ││Primary on Base  ││
+││ [m] Reduced Motion: OFF                                 ││4.7:1 AA         ││
+││ [l] Large Text: OFF                                     ││Secondary on Base││
+││Shift+A opens the compact overlay                        ││8.8:1 AAA        ││
+││                                                         ││Accent Primary   ││
+││                                                         ││5.7:1 AA         ││
+│╰─────────────────────────────────────────────────────────╯│Accent Warning   ││
+│╭───────────────────── Live Preview ──────────────────────╮│4.8:1 AA         ││
+││Preview text                                             │╰─────────────────╯│
+││The quick brown fox jumps over the lazy dog.             │╭ A11y Telemetry ─╮│
+││Links look like this and code looks like fn main()       ││No a11y events   ││
+│╰─────────────────────────────────────────────────────────╯╰─────────────────╯│
+╰──────────────────────────────────────────────────────────────────────────────╯
 Accessibility [37/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

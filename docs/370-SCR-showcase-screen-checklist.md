@@ -119,7 +119,7 @@ Compare with: `dotnet run --project tools/FrankenTui.ShowcaseCompare -- --screen
   - .NET target: `BuildVoiOverlay()`
 - [ ] **36. Inline Mode** — `inline_mode_story.rs` (723L)
   - .NET target: `BuildInlineModeStory()`
-- [ ] **37. Accessibility** — `accessibility_panel.rs` (571L)
+- [x] **37. Accessibility** — `accessibility_panel.rs` (571L)
   - .NET target: `BuildAccessibility()`
 - [ ] **40. Determinism Lab** — `determinism_lab.rs` (1,353L)
   - .NET target: `BuildDeterminismLab()`
