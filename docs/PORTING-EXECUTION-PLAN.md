@@ -32,12 +32,12 @@ Self-contained modules — clipboard, console, logging, export, etc.
 
 | # | Module | Target File | Effort |
 |---|---|---|---|
-| C1 | `clipboard.rs` (1861L) | `FrankenTui.Extras/Clipboard.cs` | 45 min |
-| C2 | `console.rs` (1406L) | `FrankenTui.Extras/ConsoleUtil.cs` | 30 min |
-| C3 | `logging.rs` (1436L) | `FrankenTui.Extras/Logging.cs` | 30 min |
-| C4 | `export.rs` (1691L) | `FrankenTui.Extras/BufferExport.cs` (extend) | 30 min |
-| C5 | `live.rs` (1475L) | `FrankenTui.Extras/LiveStream.cs` | 45 min |
-| C6 | `pty_capture.rs` + `stdio_capture.rs` (1269L) | `FrankenTui.Extras/PtyCapture.cs` | 30 min |
+| C1 | `clipboard.rs` (1861L) | `FrankenTui.Extras/SystemUtilities.cs` | ✅ |
+| C2 | `console.rs` (1406L) | `FrankenTui.Extras/SystemUtilities.cs` | ✅ |
+| C3 | `logging.rs` (1436L) | `FrankenTui.Extras/SystemUtilities.cs` | ✅ |
+| C4 | `export.rs` (1691L) | `FrankenTui.Extras/SystemUtilities.cs` | ✅ |
+| C5 | `live.rs` (1475L) | `FrankenTui.Extras/SystemUtilities.cs` | ✅ |
+| C6 | `pty_capture.rs` + `stdio_capture.rs` (1269L) | `FrankenTui.Extras/SystemUtilities.cs` | ✅ |
 
 ## Phase D: Data Structures (1 session, ~5 items)
 
