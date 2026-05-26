@@ -1,0 +1,24 @@
+﻿ 1: Tour  [2: Dash]  3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+┌─ Dashboard ──────────────────────────────────────────────────────────────────┐
+│┌─ Overview [focus] ───────────────────┐┌─ Highlights ───────────────────────┐│
+││Mode: Autorun | scroll=0 |            ││  Visual Effects canvas             ││
+││context=idle                          ││  Data Viz charts                   ││
+││> 45-screen showcase catalog          ││  Code Explorer panes               ││
+││  upstream-shaped numbering and titles││  Performance metrics               ││
+││  runtime-backed interactive loop     ││  Layout Lab workspace              ││
+││  Windows Terminal viewport support   ││  Drag & Drop lab                   ││
+││Port baseline: 60%                    ││  Action Timeline                   ││
+││## Dashboard                          ││  Markdown rich text                ││
+││- cached markdown summary             ││selected=0 focus=0 mouse            ││
+││- width-stable render path            ││panel=dashboard:highlights          ││
+││                                      ││                                    ││
+││                                      ││                                    ││
+││                                      ││                                    ││
+││                                      ││                                    ││
+││                                      ││                                    ││
+││                                      ││                                    ││
+││                                      ││                                    ││
+││                                      ││                                    ││
+│└──────────────────────────────────────┘└────────────────────────────────────┘│
+└──────────────────────────────────────────────────────────────────────────────┘
+Dashboard [2/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

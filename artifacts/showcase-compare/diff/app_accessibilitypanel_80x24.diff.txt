@@ -1,0 +1,80 @@
+﻿Screen 37: Accessibility Panel
+Upstream snapshot: app_accessibilitypanel_80x24.snap
+Viewport: 80x24
+Upstream nonblank chars: 1066
+Local nonblank chars: 1288
+Local/upstream char ratio: 1.208
+Equal rows: 0; differing rows: 24
+
+@@ row 01
+upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
+local   :  1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+@@ row 02
+upstream: ╭────────────────────────────────────────────────────Accessibility──────────────
+local   : ┌─ Accessibility ──────────────────────────────────────────────────────────────┐
+@@ row 03
+upstream: │╭─────────────────────────────────────────── Accessibility Control Panel ──────
+local   : │┌─ Accessibility Control Panel [focus] ──────────────────────────────────────┐│
+@@ row 04
+upstream: ││Active Theme: Cyberpunk Aurora
+local   : ││Active Theme: current_theme                                                 ││
+@@ row 05
+upstream: ││Base Theme: Cyberpunk Aurora  Mode: Standard
+local   : ││Base Theme: CyberpunkAurora                                                 ││
+@@ row 06
+upstream: ││Motion: Full (1.0x)  Large Text: OFF
+local   : ││Mode: High Contrast                                                         ││
+@@ row 07
+upstream: ││Shortcuts: h = contrast, m = motion, l = large text
+local   : ││Motion: Reduced (0.0x)                                                      ││
+@@ row 08
+upstream: ││
+local   : ││Large Text: ON                                                              ││
+@@ row 09
+upstream: │╰──────────────────────────────────────────────────────────────────────────────
+local   : │└────────────────────────────────────────────────────────────────────────────┘│
+@@ row 10
+upstream: │╭──────────────────────── Toggles ────────────────────────╮╭───────────────────
+local   : │┌─ Toggles ───────────────────────────┐┌─ WCAG Contrast ─────────────────────┐│
+@@ row 11
+upstream: ││ [h] High Contrast: OFF                                  ││Primary on Base
+local   : ││> [h] High Contrast: ON              ││Primary on Base     12.4:1 AAA       ││
+@@ row 12
+upstream: ││ [m] Reduced Motion: OFF                                 ││Secondary on Base
+local   : ││  [m] Reduced Motion: ON             ││Secondary on Base    8.8:1 AAA       ││
+@@ row 13
+upstream: ││ [l] Large Text: OFF                                     ││Accent Primary
+local   : ││  [l] Large Text: ON                 ││Accent Primary       5.7:1 AA        ││
+@@ row 14
+upstream: ││Shift+A opens the compact overlay                        ││Accent Warning
+local   : ││Shift+A opens the compact overlay    ││Accent Warning       4.8:1 AA        ││
+@@ row 15
+upstream: ││                                                         ││Accent Error
+local   : ││Click rows dispatch A11yToggleAction:││Accent Error         3.4:1 AA Large  ││
+@@ row 16
+upstream: ││                                                         ││
+local   : ││HighContrast, ReducedMotion,         ││                                     ││
+@@ row 17
+upstream: │╰─────────────────────────────────────────────────────────╯│Minimum ratio: 4.7:
+local   : │└─────────────────────────────────────┘│Minimum ratio: 3.4:1 AA Large        ││
+@@ row 18
+upstream: │╭───────────────────── Live Preview ──────────────────────╮│AA >= 4.5, AAA >= 7
+local   : │┌─ Live Preview ──────────────────────┐│AA >= 4.5, AAA >= 7.0, Large Text >= ││
+@@ row 19
+upstream: ││Preview text                                             │╰───────────────────
+local   : ││Preview scroll: 0                    │└─────────────────────────────────────┘│
+@@ row 20
+upstream: ││The quick brown fox jumps over the lazy dog.             │╭───────────────────
+local   : ││Preview text                         │┌─ A11y Telemetry ────────────────────┐│
+@@ row 21
+upstream: ││Links look like this and code looks like fn main()       ││No a11y events yet.
+local   : │└─────────────────────────────────────┘└─────────────────────────────────────┘│
+@@ row 22
+upstream: ││Status: OK  Error                                        ││
+local   : │h contrast | m motion | l large text | Shift+A overlay | Ctrl+T theme |       │
+@@ row 23
+upstream: ││Animations active                                        ││
+local   : └──────────────────────────────────────────────────────────────────────────────┘
+@@ row 24
+upstream:   Tab/Shift+Tab: next/prev    0x0 00:00                    ││
+local   : Accessibility [37/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

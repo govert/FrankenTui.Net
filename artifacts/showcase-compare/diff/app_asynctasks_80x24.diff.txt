@@ -1,0 +1,80 @@
+﻿Screen 29: Async Tasks
+Upstream snapshot: app_asynctasks_80x24.snap
+Viewport: 80x24
+Upstream nonblank chars: 583
+Local nonblank chars: 1263
+Local/upstream char ratio: 2.166
+Equal rows: 0; differing rows: 24
+
+@@ row 01
+upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
+local   :  1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+@@ row 02
+upstream: ╭─────────────────────────────────────────────────────Async Tasks───────────────
+local   : ┌─ Async Tasks ────────────────────────────────────────────────────────────────┐
+@@ row 03
+upstream: │Q:0 R:2 D:1 F:0 | FIFO[First-In-First-Out] | Aging:✓
+local   : │┌─ Scheduler [focus] ────────────────────────────────────────────────────────┐│
+@@ row 04
+upstream: │╭─────────────────────────────Task Queue──────────────────────────────╮╭───────
+local   : ││Q:3 R:2 D:1 F:1 | SRPT[Shortest Remaining Time] | Aging:on |                ││
+@@ row 05
+upstream: ││▶ Running  [M] Initial Setup                             ██████░  90%││ID: 1
+local   : ││max_concurrent=3                                                            ││
+@@ row 06
+upstream: ││  Running  [L] Data Sync                                 ████░░░  54%││Name: I
+local   : │└────────────────────────────────────────────────────────────────────────────┘│
+@@ row 07
+upstream: ││  Done     [H] Cache Warm                                            ││State:R
+local   : │┌─ Task Queue ───────────────────────────────┐┌─ Task Details ───────────────┐│
+@@ row 08
+upstream: unning                                                                 ││Priorit
+local   : ││      State Pr    Task  Prog  Est   Elap    ││ID: 1                         ││
+@@ row 09
+upstream: ││                                                                     ││Progres
+local   : ││>     RunninM     Initia64%etu30    19      ││Name: Initial Setup           ││
+@@ row 10
+upstream: 0%                                                                     ││Elapsed
+local   : ││      RunninL     Data S38%   50    19      ││State: Running                ││
+@@ row 11
+upstream: 0 ticks                                                                ││Estimat
+local   : ││      QueuedH     Cache 0%rm  20    0       │└──────────────────────────────┘│
+@@ row 12
+upstream: ││                                                                     ││
+local   : ││      QueuedH     Async 0%ild 27    0       │┌─ Activity ───────────────────┐│
+@@ row 13
+upstream: ││                                                                     ││
+local   : ││      Done  M     Quick 100% #34    34      ││Spawned: Initial Setup        ││
+@@ row 14
+upstream: ││                                                                     ││
+local   : ││      FailedL     Full D100%y 69    69      │└──────────────────────────────┘│
+@@ row 15
+upstream: ││                                                                     │╰───────
+local   : ││      CancelMd    Batch 42%kup768   32      │┌─ Policy + Evidence ──────────┐│
+@@ row 16
+upstream: ││                                                                     │╭───────
+local   : ││      QueuedH     Parall0% Ind23 #9 0       │└──────────────────────────────┘│
+@@ row 17
+upstream: ││                                                                     ││Spawned
+local   : ││                                            │┌─ Hazard + Diagnostics ───────┐│
+@@ row 18
+upstream: ││                                                                     ││Spawned
+local   : ││                                            ││Hazard scroll: 0              ││
+@@ row 19
+upstream: ││                                                                     ││Spawned
+local   : ││                                            ││Hazard: base=0.001 factor=0.1 ││
+@@ row 20
+upstream: ││                                                                     ││Started
+local   : ││                                            ││exponent=2.0 threshold=1.0    ││
+@@ row 21
+upstream: : Initial Setup                                                        ││Started
+local   : │└────────────────────────────────────────────┘└──────────────────────────────┘│
+@@ row 22
+upstream: : Data Sync                                                            ││Started
+local   : │n:spawn c:cancel s:scheduler a:aging | focused=0 aging=on |                   │
+@@ row 23
+upstream: : Cache Warm                                                           ││
+local   : └──────────────────────────────────────────────────────────────────────────────┘
+@@ row 24
+upstream:  Tab/Shift+Tab: next/prev     0x0 00:00                                ││
+local   : Async Tasks [29/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

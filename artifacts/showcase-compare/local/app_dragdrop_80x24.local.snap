@@ -1,0 +1,24 @@
+﻿ 1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+┌─ Drag & Drop Lab ────────────────────────────────────────────────────────────┐
+│Drag & Drop Lab | Sortable List | Cross-Container | Keyboard Drag             │
+│LIST_SIZE=8 deterministic Item/File payloads | cached layout rects feed hit   │
+│testing                                                                       │
+│[Sortable List]  [cross-container]  [keyboard drag]                           │
+│Tab / Shift+Tab cycles DemoMode; mouse down on layout_tabs selects mode       │
+│                                                                              │
+│┌─ List A [focus] ────────────────────┐┌─ List B ────────────────────────────┐│
+││> Item 1 id=0 color=primary          ││  File 1 id=8 color=primary          ││
+││  Item 2 id=1 color=secondary        ││  File 2 id=9 color=secondary        ││
+││  Item 3 id=2 color=success          ││  File 3 id=10 color=success         ││
+││  Item 4 id=3 color=warning          ││  File 4 id=11 color=warning         ││
+│└─────────────────────────────────────┘└─────────────────────────────────────┘│
+│┌─ Keyboard Drag + Announcements ─────┐┌─ Modes + Mouse Evidence ────────────┐│
+││KeyboardDragManager active=False     ││mode=Sortable List selected_index=0  ││
+││mode=Inactive                        ││focused_list=0 context=False         ││
+││Space/Enter: start or drop | arrows  ││tick_count=0                         ││
+││navigate DropTargetInfo | Esc cancels││Sortable: j/k navigate, u/d or       ││
+││Drop targets: WidgetId, target name, ││Shift+K/J reorder items within list  ││
+││Rect from rendered list rows         ││Cross-container: h/l switches list,  ││
+│└─────────────────────────────────────┘└─────────────────────────────────────┘│
+└──────────────────────────────────────────────────────────────────────────────┘
+Drag & Drop Lab [44/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

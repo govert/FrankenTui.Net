@@ -1,0 +1,24 @@
+﻿ 1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout  [7: Forms]  8
+┌─ Forms & Input ──────────────────────────────────────────────────────────────┐
+│Repository: FrankenTui.Net              forms mouse focus=0 selected_field=1 t│
+│  Port target                           ext_scroll=0                          │
+│Start Screen: 5                         name = "FrankenTui.Net"               │
+│  Widget gallery                        screen = 7                            │
+│Seed: 42                                seed = 42                             │
+│  Deterministic demo seed               validation = deterministic            │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│Validation: clean                       Text input and editing surface | scroll
+└──────────────────────────────────────────────────────────────────────────────┘
+Forms & Input [7/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

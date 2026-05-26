@@ -1,0 +1,24 @@
+﻿ 1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+┌─ Virtualized Search ─────────────────────────────────────────────────────────┐
+│┌─ Search (/ to focus, Esc to clear) ────────────────────────────────────────┐│
+││Type to search...  query="cfg"  focus=List                                  ││
+│└────────────────────────────────────────────────────────────────────────────┘│
+│┌─ Results (1250 of 10000 match) ────────────────────┐┌─ Stats ──────────────┐│
+││             Item         Score        MatchPos     ││Total:    10000 items ││
+││>            [00000] Confi61ration :: C0,7,13vice ini│Matches:  1250        ││
+││             [00048] Confi58ration :: A0,7,13way vali│Selected: 1           ││
+││             [00096] Confi55ration :: W0,7,13ool cach│Query:    "cfg"       ││
+││             [00144] Confi52ration :: C0,7,13nager co│Focus:    List        ││
+││             [00192] Confi49ration :: E0,7,13s initia│Top score: 61         ││
+││             [00240] Confi46ration :: C0,7,13vice val│                      ││
+││             [00288] Confi43ration :: A0,7,13way cach│Keybindings:          ││
+││             [00336] Confi40ration :: W0,7,13ool comp│/        Focus search ││
+││             [00384] Confi37ration :: C0,7,13nager in│Esc      Clear search ││
+││             [00432] Confi34ration :: E0,7,13s valida└──────────────────────┘│
+││             [00480] Confi31ration :: C0,7,13vice cac┌─ Diagnostics ────────┐│
+││             [00528] Confi28ration :: A0,7,13way comp│Selected diagnostic: 0││
+││                                                    ││Diagnostics scroll: 0 ││
+││                                                    ││FTUI_VSEARCH_DIAGNOSTI││
+│└────────────────────────────────────────────────────┘└──────────────────────┘│
+└──────────────────────────────────────────────────────────────────────────────┘
+Virtualized Search [28/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

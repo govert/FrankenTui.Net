@@ -1,0 +1,24 @@
+﻿ 1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+┌─ Performance Challenge ──────────────────────────────────────────────────────┐
+│PERFORMANCE CHALLENGE MODE - DEGRADATION TIERS                                │
+│┌─ Real-Time Metrics ────────────┐┌┐┌─ Render Budget ────────────────────────┐│
+││Metric  Value   Metric  Value   ││││Budget: 17.00ms (60fps target)          ││
+││avg     12.80ms p50     14.20ms ││││Observed: 12.80ms avg                   ││
+││p95     18.70ms p99     31.40ms ││││Simulated: 12.80ms (+0.0ms)             ││
+││min     8.10ms  max     42.80ms ││││Usage: 75%                              ││
+││views   0       samples 120     ││││Tier: Full Fidelity                     ││
+││V/Tick  1.30    Tick Rat60.0 tps│││└────────────────────────────────────────┘│
+││                                │││┌─ Stress Harness ───────────────────────┐│
+││                                │└┘│Mode: Ramp | Load 0% | +0.0ms           ││
+││                                │┌┐│Decision: hold                          ││
+││                                ││││States: Off, Ramp, Peak, Cool           ││
+││                                │││└────────────────────────────────────────┘│
+││                                │││┌─ Degradation Tiers ────────────────────┐│
+││                                ││││          Tier      Threshold Response  ││
+││                                ││││>         Full      >=50fps   full fidelit
+││                                ││││          Reduced   20-49fps  no FX     ││
+││                                ││││          Minimal   5-19fps   minimal rend
+│└────────────────────────────────┘└┘└────────────────────────────────────────┘│
+│s:stress(Ramp) | c:cool | r:reset | p:pause | m:mode(intervals) |             │
+└──────────────────────────────────────────────────────────────────────────────┘
+Performance Challenge [32/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

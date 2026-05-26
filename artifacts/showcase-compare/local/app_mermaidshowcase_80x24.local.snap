@@ -1,0 +1,24 @@
+﻿ 1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+┌─ Mermaid Showcase ───────────────────────────────────────────────────────────┐
+│mouse focus=0 sample_idx=0 zoom_step=0 panel_scroll=0 status_scroll=0         │
+│Mermaid Showcase  Sample: Flow-01  Layout: Auto  Tier: Rich  Status: OK       │
+│┌─ Library ──────┐┌─ Viewport ──────────────────────┐┌─ Controls ────────────┐│
+││› Flow-01 [Flow]││Plan ──▶ Audit                   ││Sample: Flow-01        ││
+││• Sequence-01 [Se│Audit ──▶ Port                   ││Glyph: unicode         ││
+││• State-01 [State│Port ──▶ Test                    ││Render: adaptive       ││
+││                ││Test ──▶ Ship                    ││Palette: default       ││
+││                ││                                 ││Guard: default         ││
+││                ││                                 ││Zoom: 100%  Pan: 0,0   ││
+││                ││                                 ││Viewport override: off ││
+││                ││                                 ││Layout: auto           ││
+││                ││                                 ││Tier: rich             ││
+││                ││                                 ││Wrap: wordchar         ││
+││                ││                                 │└───────────────────────┘│
+││                ││                                 │┌─ Metrics ─────────────┐│
+││                ││                                 ││Parse: 2.96 ms         ││
+││                ││                                 ││Layout: 1.11 ms        ││
+││                ││                                 ││Render: 2.25 ms        ││
+││                ││                                 ││Iter: 20               ││
+│└────────────────┘└─────────────────────────────────┘│Score: 3.10            ││
+└─────────────────────────────────────────────────────│Violations: 0          │┘
+Mermaid Showcase [16/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

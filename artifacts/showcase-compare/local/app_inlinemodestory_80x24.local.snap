@@ -1,0 +1,24 @@
+﻿ 1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+┌─ Inline Mode ────────────────────────────────────────────────────────────────┐
+│Mode: Inline | Compare: OFF | Anchor: Bottom | UI height: 1 | Rate: 1/tick |  │
+│focus=0                                                                       │
+│┌─ Inline Mode Story ──────┐┌─ Alt-screen Story ───┐┌─ Controls + Mouse ───┐  │
+││000060 [INFO ] core       ││ALT-SCREEN MODE -     ││Space pause/resume    │  │
+││scrollback ok             ││SCROLLBACK HIDDEN     ││stream                │  │
+││000061 [WARN ] render     ││Full-screen takeover  ││A toggle chrome anchor│  │
+││inline anchor             ││(logs do not persist) ││(top/bottom)          │  │
+││000062 [ERROR] runtime    ││                      ││C toggle inline vs alt│  │
+││budget check              ││Compare mode: disabled││comparison            │  │
+││000063 [DEBUG] widgets    ││renders Inline        │└──────────────────────┘  │
+││diff pass                 ││(scrollback preserved)│┌─ State + Limits ─────┐  │
+││                          ││beside Alt-screen     ││State scroll: 0       │  │
+││INLINE MODE - SCROLLBACK  ││(scrollback hidden).  ││MAX_LOG_LINES=2000 |  │  │
+││PRESERVED                 ││Clicking the alt      ││INITIAL_LOG_LINES=60  │  │
+││Anchor: BOTTOM | UI       ││header drills into    ││LOG_RATE_OPTIONS=[1,2,│  │
+││height: 1 | Log rate:     ││alt-screen mode when  ││5,10]                 │  │
+││1/tick                    ││comparing.            ││UI_HEIGHT_OPTIONS=[1,2│  │
+││Logs stream underneath    ││                      │└──────────────────────┘  │
+│└──────────────────────────┘└──────────────────────┘                          │
+│Space pause(live) | A anchor(Bottom) | C compare(off) | D defaults | H        │
+└──────────────────────────────────────────────────────────────────────────────┘
+Inline Mode [36/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

@@ -1,0 +1,80 @@
+﻿Screen 15: Markdown Rich Text
+Upstream snapshot: app_markdownrichtext_80x24.snap
+Viewport: 80x24
+Upstream nonblank chars: 856
+Local nonblank chars: 1136
+Local/upstream char ratio: 1.327
+Equal rows: 0; differing rows: 24
+
+@@ row 01
+upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
+local   :  1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+@@ row 02
+upstream: ╭───────────────────────────────────────────────────────Markdown────────────────
+local   : ┌─ Markdown ───────────────────────────────────────────────────────────────────┐
+@@ row 03
+upstream: │╭───────────Markdown Renderer───────────╮ ╭──LLM Streaming Simulation | Complet
+local   : │┌─ Markdown Renderer [scrol┌─ LLM Streaming Simulation┌─ Style Sampler ──────┐│
+@@ row 04
+upstream: e─GitHub-Flavored Markdown (Rich Demo)   │ │FrankenTUI Streaming Report — "Galax
+local   : ││▌ GitHub-Flavored        ││▌ FrankenTUI Streaming   ││Bold  Dim  Italic     ││
+@@ row 05
+upstream: y│                                       │ │Brain" Edition
+local   : ││Markdown (Rich Demo)     ││Report                   ││Underline             ││
+@@ row 06
+upstream: ││LaTeX + Symbols                        │ │
+local   : ││                         ││                         ││Strikethrough  Reverse││
+@@ row 07
+upstream: ││                                       │ │ℹ  NOTE
+local   : ││▌▌ LaTeX + Symbols       │││ [!NOTE]                ││Blink                 ││
+@@ row 08
+upstream: ││Inline math: E = mc², α + β = γ, Δ x ≈ │ │┃ This stream simulates an LLM respo
+local   : ││                         │││ This stream simulates  ││Dbl-Underline         ││
+@@ row 09
+upstream: n│0.001.                                 │ │┃ rendered incrementally with full G
+local   : ││Inline math: E = mc^2, α ││an L                     ││Curly-Underline       ││
+@@ row 10
+upstream: F│                                       │ │┃ support.
+local   : ││+ β = γ.                 ││                         │└──────────────────────┘│
+@@ row 11
+upstream: ││Block math:                            │ │
+local   : ││                         ││                         │┌─ Unicode Showcase ───┐│
+@@ row 12
+upstream: ││                                       │ │💡 TIP
+local   : ││▌▌ Admonitions           ││                         ││Text   Type   Cells   ││
+@@ row 13
+upstream: ││  ∑ᵢ₌₁ⁿ xᵢ = n(n+1)/2                  │ │┃ Inline-first output keeps logs
+local   : ││                         ││                         ││Hello  ASCII  5       ││
+@@ row 14
+upstream: ││                                       │ │┃ scrolling while the UI stays stabH
+local   : │││ [!NOTE]                ││                         ││ni hao CJK    8       ││
+@@ row 15
+upstream: ello      ^{∞} eI       │5     }         │ │
+local   : │││ Information note with  ││                         ││konnichHiragan10      ││
+@@ row 16
+upstream: ││                                       │ │⚠  WARNING
+local   : ││rich emphasis.           ││                         ││alpha bGreek  10      ││
+@@ row 17
+upstream: ││Admonitions                            │ │┃ Rendering is deterministic. If you
+local   : ││                         │└─────────────────────────┘│arrows Symbols7       ││
+@@ row 18
+upstream: ││                                       │ │┃ see flicker, it is a bug.
+local   : │││ [!TIP]                 │┌─ Markdown Detection ────┐│blocks Block e4.      ││
+@@ row 19
+upstream: ││ℹ  NOTE                                │ │
+local   : │││ Use <kbd>Tab</kbd> and ││Detection: 7 indicators |││                      ││
+@@ row 20
+upstream: ││┃ Information note with rich emphasis. │ │TL;DR
+local   : ││<kbd>Shift+Tab</kbd> to  ││Likely                   │└──────────────────────┘│
+@@ row 21
+upstream: ││                                       │ │• ✅ Zero-flicker rendering via Buffe
+local   : ││navigate.                ││Confidence: 35%          │┌─ Wrap: Word | Align: Le
+@@ row 22
+upstream: r│💡 TIPP                                 ││→ Diff → Presenter
+local   : │└─────────────────────────┘└─────────────────────────┘└──────────────────────┘│
+@@ row 23
+upstream: ││┃ Use Tab and Shift+Tab to navigate.   │ │• ✅ Eviden▌ce-ledger decisions (Baye
+local   : └──────────────────────────────────────────────────────────────────────────────┘
+@@ row 24
+upstream: █│                                       │ │  [█████████████████████████████████
+local   : Markdown [15/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

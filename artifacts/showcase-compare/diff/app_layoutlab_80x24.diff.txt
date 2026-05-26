@@ -1,0 +1,80 @@
+﻿Screen 6: Layout Lab
+Upstream snapshot: app_layoutlab_80x24.snap
+Viewport: 80x24
+Upstream nonblank chars: 1352
+Local nonblank chars: 1019
+Local/upstream char ratio: 0.754
+Equal rows: 0; differing rows: 24
+
+@@ row 01
+upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
+local   :  1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets  [6: Layout]  7: Forms   8
+@@ row 02
+upstream: ╭──────────────────────────────────────────────────────Layout Lab───────────────
+local   : ┌─ Layout Lab ─────────────────────────────────────────────────────────────────┐
+@@ row 03
+upstream: │╭─────────────────────────────────────────────── Layout + Pane Studio ─────────
+local   : │┌─ Pane Workspace [focus zoom=0] ──────┐┌─ Workspace Metrics [scroll=0] ─────┐│
+@@ row 04
+upstream: ││┌───────────────── Preset 1: Flex Vertical ──────────────────┐ ┌──────────────
+local   : ││selected_pane_index=0 context=idle    ││Selected: editor local_index=0      ││
+@@ row 05
+upstream: │││┌─────────────────────────Fixed(5)─────────────────────────┐│ │mode:Focus sel
+local   : ││mouse=layout_lab:workspace            ││Mode: Compare focus=0 zoom=0        ││
+@@ row 06
+upstream: ││││60x5 @(3,4)                                               ││ │┃
+local   : ││┌─ Files ─────────┐┌─ Logs ──────────┐││Hash: D5B520171B43                  ││
+@@ row 07
+upstream: ││││                                                          ││ │┃ 25x5  @66,4
+local   : │││                 ││                 │││Timeline: 0 actions scroll=0        ││
+@@ row 08
+upstream: ││││                                                          ││ │┃
+local   : │││ files           ││ logs            │││Load: default workspace             ││
+@@ row 09
+upstream: │││└──────────────────────────────────────────────────────────┘│ │──────────■■■■
+local   : │││                 ││                 │││Context: idle                       ││
+@@ row 10
+upstream: │││┌─────────────────────────Pct(30%)─────────────────────────┐│ │╭───────5 pane
+local   : │││                 ││                 │││Mouse: workspace click cycles pane, ││
+@@ row 11
+upstream: ││││60x3 @(3,9)                                               ││ ││
+local   : │││                 ││                 │││wheel zooms; metrics wheel scrolls  ││
+@@ row 12
+upstream: │││└──────────────────────────────────────────────────────────┘│ ││ 25x6  @66,9
+local   : │││                 ││                 │││                                    ││
+@@ row 13
+upstream: │││┌──────────────────────────Min(3)──────────────────────────┐│ ││
+local   : ││└─────────────────┘└─────────────────┘││                                    ││
+@@ row 14
+upstream: ││││60x3 @(3,12)                                              ││ ││
+local   : ││┌─ Editor * ──────┐┌─ HUD ───────────┐││                                    ││
+@@ row 15
+upstream: │││└──────────────────────────────────────────────────────────┘│ │╰─────────────
+local   : │││                 ││                 │││                                    ││
+@@ row 16
+upstream: ││└────────────────────────────────────────────────────────────┘ └──────────────
+local   : │││ selected=editor ││ hud             │││                                    ││
+@@ row 17
+upstream: │╰──────────────────────────────────────────────────────────────────────────────
+local   : │││ mode=Compare    ││                 │││                                    ││
+@@ row 18
+upstream: │───────────────────────────────────────────────────────────────────────────────
+local   : │││ hash=D5B520171B ││                 │││                                    ││
+@@ row 19
+upstream: │╭───────────────── Controls ──────────────────╮╭─────────────────────────── Wid
+local   : │││ 43              ││                 │││                                    ││
+@@ row 20
+upstream: ││Preset: [1] Flex Vertical                    ││┌Padding───────────────────────
+local   : │││                 ││                 │││                                    ││
+@@ row 21
+upstream: ││Direction: Vertical (d)                      │││
+local   : ││└─────────────────┘└─────────────────┘││                                    ││
+@@ row 22
+upstream: ││Alignment: Start (a)                         │││
+local   : │└──────────────────────────────────────┘└────────────────────────────────────┘│
+@@ row 23
+upstream: ││Gap: 0 (+/-)                                 ││└──────────────────────────────
+local   : └──────────────────────────────────────────────────────────────────────────────┘
+@@ row 24
+upstream: Tab/Shift+Tab: next/prev      0x0 00:00        ││┌Columns───────────────────────
+local   : Layout Lab [6/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

@@ -1,0 +1,24 @@
+﻿ 1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+┌─ Mermaid Mega Showcase ──────────────────────────────────────────────────────┐
+│mega mouse focus=0 sample_idx=0 zoom_step=0 detail_scroll=0 panel_scroll=0    │
+│Mermaid Showcase  Sample: Flow-01  Layout:   ┌─ Mega Sample Library ─────────┐│
+│┌─ Library┌─ Viewport ───────┐┌─ Controls ──┐│      SampleFamilyTier  N/E    ││
+││› Flow-01│Plan ──▶ Audit    ││Sample:      ││>     Flow-0Flow  M     5/4    ││
+││• Sequenc│Audit ──▶ Port    ││Flow-01      ││      SequenSequenSe    3/3    ││
+││• State-0│Port ──▶ Test     ││Glyph:       ││      State-State L     7/8    ││
+││        ││Test ──▶ Ship     ││unicode      ││                               ││
+││        ││                  ││Render:      ││                               ││
+││        ││                  ││adaptive     ││                               ││
+││        ││                  ││Palette:     ││                               ││
+││        ││                  ││default      │└───────────────────────────────┘│
+││        ││                  ││Guard:       │┌─ Mega Controls ───────────────┐│
+││        ││                  ││default      ││Mode: normal | Render: adaptive││
+││        ││                  │└─────────────┘│| Palette: default             ││
+││        ││                  │┌─ Metrics ───┐│Sample filter: all (3 samples) ││
+││        ││                  ││Parse: 2.96  ││Categories: Flow:1, Sequence:1,││
+││        ││                  ││ms           ││State:1                        ││
+││        ││                  ││Layout: 1.11 ││Selected: Flow-01              ││
+││        ││                  ││ms           ││Node navigation: h/j/k/l or    ││
+│└────────┘└──────────────────┘│Render: 2.25 ││arrows                         ││
+└──────────────────────────────│ms           ││Inspect/search: / query | n/N  │┘
+Mermaid Mega Showcase [17/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

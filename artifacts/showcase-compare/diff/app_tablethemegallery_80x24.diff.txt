@@ -1,0 +1,80 @@
+﻿Screen 11: Table Theme Gallery
+Upstream snapshot: app_tablethemegallery_80x24.snap
+Viewport: 80x24
+Upstream nonblank chars: 341
+Local nonblank chars: 841
+Local/upstream char ratio: 2.466
+Equal rows: 0; differing rows: 24
+
+@@ row 01
+upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
+local   :  1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+@@ row 02
+upstream: ╭─────────────────────────────────────────────────Table Theme Gallery───────────
+local   : ┌─ Table Theme Gallery ────────────────────────────────────────────────────────┐
+@@ row 03
+upstream: │
+local   : │┌─ Preset A [active] ────┐┌─ Preset B ────────────┐┌─ Preset C ──────────────┐│
+@@ row 04
+upstream: │
+local   : ││Theme   Tone    Use     ││Theme  Tone   Use      ││Theme   Tone    Use      ││
+@@ row 05
+upstream: │
+local   : ││Default stable  terminal-│Defaultstable terminal-s│Default stable  terminal-sa
+@@ row 06
+upstream: │
+local   : ││Contrastwarn    high-visi│Contraswarn   high-visib│Contrastwarn    high-visibi
+@@ row 07
+upstream: │
+local   : ││Muted   info    documenta│Muted  info   documentat│Muted   info    documentati
+@@ row 08
+upstream: │
+local   : ││Alert   criticalops surfa│Alert  criticaops surfac│Alert   criticalops surface
+@@ row 09
+upstream: │
+local   : ││                        ││                       ││                         ││
+@@ row 10
+upstream: │
+local   : ││                        ││                       ││                         ││
+@@ row 11
+upstream: │
+local   : ││                        ││                       ││                         ││
+@@ row 12
+upstream: │
+local   : ││                        ││                       ││                         ││
+@@ row 13
+upstream: │
+local   : ││                        ││                       ││                         ││
+@@ row 14
+upstream: │
+local   : ││                        ││                       ││                         ││
+@@ row 15
+upstream: │
+local   : ││                        ││                       ││                         ││
+@@ row 16
+upstream: │
+local   : ││                        ││                       ││                         ││
+@@ row 17
+upstream: │
+local   : ││                        ││                       ││                         ││
+@@ row 18
+upstream: │
+local   : ││                        ││                       ││                         ││
+@@ row 19
+upstream: │
+local   : ││                        ││                       ││                         ││
+@@ row 20
+upstream: │
+local   : ││                        ││                       ││                         ││
+@@ row 21
+upstream: │
+local   : ││                        ││                       ││                         ││
+@@ row 22
+upstream: │╭────────────────────────────────────────────Preview · Aurora · Markdown───────
+local   : │└────────────────────────┘└───────────────────────┘└─────────────────────────┘│
+@@ row 23
+upstream: ││View(V): Markdown | Header(H): Off | Zebra(Z): Subtle
+local   : └──────────────────────────────────────────────────────────────────────────────┘
+@@ row 24
+upstream: rced)Tab/Shift+Tab: next/prev 0x0 00:00 | Arrows/Tab: Select | R: Reset
+local   : Table Theme Gallery [11/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

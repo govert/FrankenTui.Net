@@ -1,0 +1,24 @@
+﻿ 1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+┌─ Layout Inspector ───────────────────────────────────────────────────────────┐
+│┌─ Layout Inspector [focus┌─ Constraint Overlay ────────┐┌─ Pane Studio ─────┐│
+││Scenario: Flex Trio     ││Constraint Overlay           ││Embedded workspace ││
+││Details: Vertical flex: ││visible | Step Constraints   ││visible at wide    ││
+││Fixed + Min + Max       ││style:                       ││sizes.             ││
+││Step: Constraints       ││  show_borders=false         ││                   ││
+││Overlay: on   Tree: on  ││  show_size_diff=true        ││FlexRoot / GridRoot││
+││Focus: 0 focus          ││  show_labels=true           ││/ FitRoot records  ││
+││                        ││                             ││are compared       ││
+││Keys: n/p scenario  [/] ││Scenario blocks:             ││against requested  ││
+││step  o overlay  t tree │└─────────────────────────────┘│and received rects.││
+││r reset                 │┌─ Layout Tree ───────────────┐│                   ││
+││Mouse: click info cycles││Widget RequestReceiveStatus  ││Drag panes | Right ││
+││scenario | click viz    ││FlexRoo0x0    80x21  OK      ││click mode | Wheel ││
+││steps | right click     ││  Fixed0x3    40x3   OK      ││magnetism          ││
+││toggles overlay         ││  Min  0x4    40x8   OK      ││                   ││
+││Pane rail: Drag panes | ││  Max  0x6    40x6   OK      ││ConstraintOverlay  ││
+││Right click mode | Wheel││                             ││and LayoutDebugger ││
+││magnetism               ││                             ││parity hooks remain││
+││                        ││                             ││tracked under      ││
+│└────────────────────────┘└─────────────────────────────┘└───────────────────┘│
+└──────────────────────────────────────────────────────────────────────────────┘
+Layout Inspector [24/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

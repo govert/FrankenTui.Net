@@ -1,0 +1,80 @@
+﻿Screen 7: Forms & Input
+Upstream snapshot: app_formsinput_80x24.snap
+Viewport: 80x24
+Upstream nonblank chars: 602
+Local nonblank chars: 549
+Local/upstream char ratio: 0.912
+Equal rows: 0; differing rows: 24
+
+@@ row 01
+upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
+local   :  1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout  [7: Forms]  8
+@@ row 02
+upstream: ╭────────────────────────────────────────────────────Forms & Input──────────────
+local   : ┌─ Forms & Input ──────────────────────────────────────────────────────────────┐
+@@ row 03
+upstream: │╭────────────────────Registration Form────────────────────╮╭───────────────────
+local   : │Repository: FrankenTui.Net              forms mouse focus=0 selected_field=1 t│
+@@ row 04
+upstream: ││ DRAFT   REQ 0/3   ERR 0   FIELDS 3/6                    ││ Search   Search...
+local   : │  Port target                           ext_scroll=0                          │
+@@ row 05
+upstream: ││Name *:         Enter your name...                       ││ Password Password
+local   : │Start Screen: 5                         name = "FrankenTui.Net"               │
+@@ row 06
+upstream: ││Email *:        user@example.com                         ││
+local   : │  Widget gallery                        screen = 7                            │
+@@ row 07
+upstream: ││Role:             Developer                              │╰───────────────────
+local   : │Seed: 42                                seed = 42                             │
+@@ row 08
+upstream: ││Theme:          (1) Light                                │╭───────────────────
+local   : │  Deterministic demo seed               validation = deterministic            │
+@@ row 09
+upstream: ││Age:              25                                     ││1  Hello, world!
+local   : │                                                                              │
+@@ row 10
+upstream: ││Accept Terms *: [ ]                                      ││2
+local   : │                                                                              │
+@@ row 11
+upstream: ││                                                         ││3  This is a multi-
+local   : │                                                                              │
+@@ row 12
+upstream: ││                                                         ││4  You can type, se
+local   : │                                                                              │
+@@ row 13
+upstream: ││                                                         ││5
+local   : │                                                                              │
+@@ row 14
+upstream: ││                                                         ││6  Try Shift+Arrow
+local   : │                                                                              │
+@@ row 15
+upstream: ││                                                         ││7  Ctrl+A selects a
+local   : │                                                                              │
+@@ row 16
+upstream: ││                                                         ││8  Ctrl+Z to undo,
+local   : │                                                                              │
+@@ row 17
+upstream: ││                                                         ││
+local   : │                                                                              │
+@@ row 18
+upstream: ││                                                         ││
+local   : │                                                                              │
+@@ row 19
+upstream: ││                                                         ││
+local   : │                                                                              │
+@@ row 20
+upstream: ││                                                         ││
+local   : │                                                                              │
+@@ row 21
+upstream: ││                                                         ││
+local   : │                                                                              │
+@@ row 22
+upstream: ││                                                         ││
+local   : │Validation: clean                       Text input and editing surface | scroll
+@@ row 23
+upstream: ││                                                         ││
+local   : └──────────────────────────────────────────────────────────────────────────────┘
+@@ row 24
+upstream:   Tab/Shift+Tab: next/prev    0x0 00:00                    ││
+local   : Forms & Input [7/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

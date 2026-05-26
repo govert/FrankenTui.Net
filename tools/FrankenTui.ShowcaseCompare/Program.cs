@@ -25,7 +25,8 @@ var results = new List<ComparisonResult>(cases.Length);
 
 foreach (var screen in cases)
 {
-    var result = Compare(screen, upstreamDirectory, outputDirectory);
+    var resolved = screen with { Width = (ushort)options.Width, Height = (ushort)options.Height };
+    var result = Compare(resolved, upstreamDirectory, outputDirectory);
     results.Add(result);
 }
 
@@ -46,7 +47,8 @@ if (options.Baseline)
             var localPath = Path.Combine(outputDirectory, localRel);
             var localText = File.ReadAllText(localPath, Encoding.UTF8);
             var normalized = Normalize(localText);
-            var upstreamPath = Path.Combine(options.UpstreamDirectory, result.Screen.UpstreamSnapshot);
+            var upstreamSnapshotName = $"app_{Slug(result.Screen)}_{result.Screen.Width}x{result.Screen.Height}";
+            var upstreamPath = Path.Combine(options.UpstreamDirectory, $"{upstreamSnapshotName}.snap");
             Directory.CreateDirectory(Path.GetDirectoryName(upstreamPath)!);
             File.WriteAllText(upstreamPath, normalized, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
         }
@@ -69,8 +71,9 @@ return 0;
 
 static ComparisonResult Compare(ScreenCase screen, string upstreamDirectory, string outputDirectory)
 {
+    var baseName = $"app_{Slug(screen)}_{screen.Width}x{screen.Height}";
     var localText = RenderLocal(screen);
-    var upstreamPath = Path.Combine(upstreamDirectory, screen.UpstreamSnapshot);
+    var upstreamPath = Path.Combine(upstreamDirectory, $"{baseName}.snap");
     var upstreamMissing = !File.Exists(upstreamPath);
     var upstreamText = upstreamMissing ? string.Empty : File.ReadAllText(upstreamPath, Encoding.UTF8);
 
@@ -79,7 +82,6 @@ static ComparisonResult Compare(ScreenCase screen, string upstreamDirectory, str
 
     var metrics = CompareText(upstreamText, localText);
     var exactMatch = !upstreamMissing && string.Equals(upstreamText, localText, StringComparison.Ordinal);
-    var baseName = Path.GetFileNameWithoutExtension(screen.UpstreamSnapshot);
     var localSnapshotPath = Path.Combine(outputDirectory, "local", $"{baseName}.local.snap");
     var upstreamSnapshotPath = Path.Combine(outputDirectory, "upstream", $"{baseName}.upstream.snap");
     var diffPath = Path.Combine(outputDirectory, "diff", $"{baseName}.diff.txt");
@@ -152,7 +154,7 @@ static string BuildDiff(ScreenCase screen, bool upstreamMissing, string upstream
 {
     var builder = new StringBuilder();
     builder.AppendLine(FormattableString.Invariant($"Screen {screen.Number}: {screen.Title}"));
-    builder.AppendLine(FormattableString.Invariant($"Upstream snapshot: {screen.UpstreamSnapshot}"));
+    builder.AppendLine(FormattableString.Invariant($"Upstream snapshot: app_{Slug(screen)}_{screen.Width}x{screen.Height}.snap"));
     builder.AppendLine(FormattableString.Invariant($"Viewport: {screen.Width}x{screen.Height}"));
     builder.AppendLine(FormattableString.Invariant($"Upstream nonblank chars: {metrics.UpstreamNonBlankChars}"));
     builder.AppendLine(FormattableString.Invariant($"Local nonblank chars: {metrics.LocalNonBlankChars}"));
@@ -207,7 +209,7 @@ static void WriteIndex(IReadOnlyList<ComparisonResult> results, string outputDir
 
         builder.AppendLine(
             FormattableString.Invariant(
-                $"| {result.Screen.Number} {EscapeMarkdown(result.Screen.Title)} | `{result.Screen.UpstreamSnapshot}` | {exact} | {result.Metrics.EqualRows} | {result.Metrics.DifferingRows} | {result.Metrics.UpstreamNonBlankChars} | {result.Metrics.LocalNonBlankChars} | {result.Metrics.LocalToUpstreamCharRatio:0.000} | [{Path.GetFileName(result.DiffPath)}]({ToMarkdownPath(result.DiffPath)}) |"));
+                $"| {result.Screen.Number} {EscapeMarkdown(result.Screen.Title)} | `app_{Slug(result.Screen)}_{result.Screen.Width}x{result.Screen.Height}.snap` | {exact} | {result.Metrics.EqualRows} | {result.Metrics.DifferingRows} | {result.Metrics.UpstreamNonBlankChars} | {result.Metrics.LocalNonBlankChars} | {result.Metrics.LocalToUpstreamCharRatio:0.000} | [{Path.GetFileName(result.DiffPath)}]({ToMarkdownPath(result.DiffPath)}) |"));
     }
 
     File.WriteAllText(Path.Combine(outputDirectory, "index.md"), builder.ToString(), Encoding.UTF8);
@@ -257,12 +259,34 @@ static string ToMarkdownPath(string path) => Uri.EscapeDataString(path).Replace(
 
 static string EscapeMarkdown(string text) => text.Replace("|", "\\|", StringComparison.Ordinal);
 
+static string Slug(ScreenCase screen) => screen.Number switch
+{
+    1=>"guidedtour",2=>"dashboard",3=>"shakespeare",4=>"codeexplorer",
+    5=>"widgetgallery",6=>"layoutlab",7=>"formsinput",8=>"dataviz",
+    9=>"filebrowser",10=>"advancedfeatures",11=>"tablethemegallery",
+    12=>"terminalcapabilities",13=>"macrorecorder",14=>"performance",
+    15=>"markdownrichtext",16=>"mermaidshowcase",17=>"mermaidmegashowcase",
+    18=>"visualeffects",19=>"responsivedemo",20=>"logsearch",
+    21=>"notifications",22=>"actiontimeline",23=>"intrinsicsizing",
+    24=>"layoutinspector",25=>"advancedtexteditor",26=>"mouseplayground",
+    27=>"formvalidation",28=>"virtualizedsearch",29=>"asynctasks",
+    30=>"themestudio",31=>"snapshotplayer",32=>"performancehud",
+    33=>"explainabilitycockpit",34=>"i18ndemo",35=>"voioverlay",
+    36=>"inlinemodestory",37=>"accessibilitypanel",38=>"widgetbuilder",
+    39=>"commandpalettelab",40=>"determinismlab",41=>"hyperlinkplayground",
+    42=>"kanbanboard",43=>"markdownliveeditor",44=>"dragdrop",
+    45=>"quakeeasteregg",
+    _ => screen.Title.ToLowerInvariant().Replace(" ", "")
+};
+
 internal sealed record CompareOptions(
     string OutputDirectory,
     string UpstreamDirectory,
     string Screens,
     bool FailOnDiff,
-    bool Baseline)
+    bool Baseline,
+    ushort Width,
+    ushort Height)
 {
     public static CompareOptions Parse(string[] args)
     {
@@ -271,6 +295,8 @@ internal sealed record CompareOptions(
         var screens = "1-45";
         var failOnDiff = false;
         var baseline = false;
+        ushort width = 80;
+        ushort height = 24;
 
         for (var index = 0; index < args.Length; index++)
         {
@@ -291,6 +317,12 @@ internal sealed record CompareOptions(
                 case "--baseline":
                     baseline = true;
                     break;
+                case "--width":
+                    width = ushort.Parse(RequireValue(args, ref index, "--width"), CultureInfo.InvariantCulture);
+                    break;
+                case "--height":
+                    height = ushort.Parse(RequireValue(args, ref index, "--height"), CultureInfo.InvariantCulture);
+                    break;
                 case "--help":
                 case "-h":
                     PrintHelp();
@@ -301,7 +333,7 @@ internal sealed record CompareOptions(
             }
         }
 
-        return new CompareOptions(outputDirectory, upstreamDirectory, screens, failOnDiff, baseline);
+        return new CompareOptions(outputDirectory, upstreamDirectory, screens, failOnDiff, baseline, width, height);
     }
 
     private static string RequireValue(string[] args, ref int index, string optionName)
@@ -322,6 +354,8 @@ internal sealed record CompareOptions(
         Console.WriteLine("  --out <path>       Output directory. Default: artifacts/showcase-compare");
         Console.WriteLine("  --upstream <path>  Upstream snapshot directory.");
         Console.WriteLine("  --screens <list>   Screen list/ranges, for example 1-45 or 42,43,44.");
+        Console.WriteLine("  --width <cols>     Viewport width (default: 80)");
+        Console.WriteLine("  --height <rows>    Viewport height (default: 24)");
         Console.WriteLine("  --fail-on-diff     Return exit code 2 when any compared screen differs.");
     }
 }
@@ -371,55 +405,55 @@ internal static class ScreenCases
 {
     public static readonly IReadOnlyList<ScreenCase> All =
     [
-        new(1, "Guided Tour", "app_guidedtour_80x24.snap"),
-        new(2, "Dashboard", "app_dashboard_80x24.snap"),
-        new(3, "Shakespeare", "app_shakespeare_80x24.snap"),
-        new(4, "Code Explorer", "app_codeexplorer_80x24.snap"),
-        new(5, "Widget Gallery", "app_widgetgallery_80x24.snap"),
-        new(6, "Layout Lab", "app_layoutlab_80x24.snap"),
-        new(7, "Forms & Input", "app_formsinput_80x24.snap"),
-        new(8, "Data Viz", "app_dataviz_80x24.snap"),
-        new(9, "File Browser", "app_filebrowser_80x24.snap"),
-        new(10, "Advanced Features", "app_advancedfeatures_80x24.snap"),
-        new(11, "Table Theme Gallery", "app_tablethemegallery_80x24.snap"),
-        new(12, "Terminal Capabilities", "app_terminalcapabilities_80x24.snap"),
-        new(13, "Macro Recorder", "app_macrorecorder_80x24.snap"),
-        new(14, "Performance", "app_performance_80x24.snap"),
-        new(15, "Markdown Rich Text", "app_markdownrichtext_80x24.snap"),
-        new(16, "Mermaid Showcase", "app_mermaidshowcase_80x24.snap"),
-        new(17, "Mermaid Mega Showcase", "app_mermaidmegashowcase_80x24.snap"),
-        new(18, "Visual Effects", "app_visualeffects_80x24.snap"),
-        new(19, "Responsive Layout", "app_responsivedemo_80x24.snap"),
-        new(20, "Log Search", "app_logsearch_80x24.snap"),
-        new(21, "Notifications", "app_notifications_80x24.snap"),
-        new(22, "Action Timeline", "app_actiontimeline_80x24.snap"),
-        new(23, "Intrinsic Sizing", "app_intrinsicsizing_80x24.snap"),
-        new(24, "Layout Inspector", "app_layoutinspector_80x24.snap"),
-        new(25, "Advanced Text Editor", "app_advancedtexteditor_80x24.snap"),
-        new(26, "Mouse Playground", "app_mouseplayground_80x24.snap"),
-        new(27, "Form Validation", "app_formvalidation_80x24.snap"),
-        new(28, "Virtualized Search", "app_virtualizedsearch_80x24.snap"),
-        new(29, "Async Tasks", "app_asynctasks_80x24.snap"),
-        new(30, "Theme Studio", "app_themestudio_80x24.snap"),
-        new(31, "Time-Travel Studio", "app_snapshotplayer_80x24.snap"),
-        new(32, "Performance Challenge", "app_performancehud_80x24.snap"),
-        new(33, "Explainability Cockpit", "app_explainabilitycockpit_80x24.snap"),
-        new(34, "i18n Stress Lab", "app_i18ndemo_80x24.snap"),
-        new(35, "VOI Overlay", "app_voioverlay_80x24.snap"),
-        new(36, "Inline Mode Story", "app_inlinemodestory_80x24.snap"),
-        new(37, "Accessibility Panel", "app_accessibilitypanel_80x24.snap"),
-        new(38, "Widget Builder", "app_widgetbuilder_80x24.snap"),
-        new(39, "Command Palette Lab", "app_commandpalettelab_80x24.snap"),
-        new(40, "Determinism Lab", "app_determinismlab_80x24.snap"),
-        new(41, "Hyperlink Playground", "app_hyperlinkplayground_80x24.snap"),
-        new(42, "Kanban Board", "app_kanbanboard_80x24.snap"),
-        new(43, "Live Markdown Editor", "app_markdownliveeditor_80x24.snap"),
-        new(44, "Drag & Drop Lab", "app_dragdrop_80x24.snap"),
-        new(45, "Quake E1M1", "app_quakeeasteregg_80x24.snap")
+        new(1, "Guided Tour"),
+        new(2, "Dashboard"),
+        new(3, "Shakespeare"),
+        new(4, "Code Explorer"),
+        new(5, "Widget Gallery"),
+        new(6, "Layout Lab"),
+        new(7, "Forms & Input"),
+        new(8, "Data Viz"),
+        new(9, "File Browser"),
+        new(10, "Advanced Features"),
+        new(11, "Table Theme Gallery"),
+        new(12, "Terminal Capabilities"),
+        new(13, "Macro Recorder"),
+        new(14, "Performance"),
+        new(15, "Markdown Rich Text"),
+        new(16, "Mermaid Showcase"),
+        new(17, "Mermaid Mega Showcase"),
+        new(18, "Visual Effects"),
+        new(19, "Responsive Layout"),
+        new(20, "Log Search"),
+        new(21, "Notifications"),
+        new(22, "Action Timeline"),
+        new(23, "Intrinsic Sizing"),
+        new(24, "Layout Inspector"),
+        new(25, "Advanced Text Editor"),
+        new(26, "Mouse Playground"),
+        new(27, "Form Validation"),
+        new(28, "Virtualized Search"),
+        new(29, "Async Tasks"),
+        new(30, "Theme Studio"),
+        new(31, "Time-Travel Studio"),
+        new(32, "Performance Challenge"),
+        new(33, "Explainability Cockpit"),
+        new(34, "i18n Stress Lab"),
+        new(35, "VOI Overlay"),
+        new(36, "Inline Mode Story"),
+        new(37, "Accessibility Panel"),
+        new(38, "Widget Builder"),
+        new(39, "Command Palette Lab"),
+        new(40, "Determinism Lab"),
+        new(41, "Hyperlink Playground"),
+        new(42, "Kanban Board"),
+        new(43, "Live Markdown Editor"),
+        new(44, "Drag & Drop Lab"),
+        new(45, "Quake E1M1")
     ];
 }
 
-internal sealed record ScreenCase(int Number, string Title, string UpstreamSnapshot, int Width = 80, int Height = 24);
+internal sealed record ScreenCase(int Number, string Title, ushort Width = 80, ushort Height = 24);
 
 internal sealed record ComparisonResult(
     ScreenCase Screen,

@@ -1,0 +1,24 @@
+﻿ 1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+┌─ Form Validation ────────────────────────────────────────────────────────────┐
+│┌─ Mode [focus] ───────────────┐┌─ Error Summary ────────┐┌─ Controls ───────┐│
+││Mode: Real-time [M to toggle] ││Field       Message     ││Tab/S-Tab:        ││
+│└──────────────────────────────┘│Username    Username must│navigate fields   │c
+│┌─ Registration Form [Username] │Password    Password must│Up/Down: change   │c
+││       Field  Value  State    ││Bio         Bio must be 1│value / navigate  │s
+││>      Usernamab     error    ││                        ││Space: toggle     ││
+││       Email  not-an-okail    ││                        ││checkbox          ││
+││       Passworshort  error    ││                        ││Enter: submit form││
+││       Confirmdiffereok       ││                        │└──────────────────┘│
+││       Age    25     ok       ││                        │┌─ Notifications ──┐│
+││       Bio    xxxxxxxerrorxxxxx└────────────────────────┘│QueueConfig:      ││
+││       Websitenot-a-uok       │┌─ Validation Rules ─────┐│max_visible=3     ││
+││       Role   (Selectok role) ││Selected error: 0       ││max_queued=10     ││
+││       Accept false  ok       ││Username: required, min ││Position: TopRight││
+││                              ││3                       ││Latest toast:     ││
+│└──────────────────────────────┘│Email: required,        │└──────────────────┘│
+│┌─ Touched / Dirty ────────────┐│contains @ and .        │┌─ Mouse + Diagnostic
+││Touched: 1/9 | Dirty: 8/9     ││Password: required, min ││Diagnostics       ││
+││Submitted: false | Focused:   ││8                       ││scroll: 0         ││
+│└──────────────────────────────┘└────────────────────────┘└──────────────────┘│
+└──────────────────────────────────────────────────────────────────────────────┘
+Form Validation [27/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

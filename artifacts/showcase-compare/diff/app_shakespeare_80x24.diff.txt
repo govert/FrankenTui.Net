@@ -1,0 +1,80 @@
+﻿Screen 3: Shakespeare
+Upstream snapshot: app_shakespeare_80x24.snap
+Viewport: 80x24
+Upstream nonblank chars: 946
+Local nonblank chars: 819
+Local/upstream char ratio: 0.866
+Equal rows: 0; differing rows: 24
+
+@@ row 01
+upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
+local   :  1: Tour   2: Dash  [3: Shakes]  4: Code   5: Widgets   6: Layout   7: Forms   8
+@@ row 02
+upstream: ╭─────────────────────────────────────────────────────Shakespeare───────────────
+local   : ┌─ Shakespeare ────────────────────────────────────────────────────────────────┐
+@@ row 03
+upstream: │┏━━━━━━━━━━━━━━━━━━━Complete Works of William Shakespeare━━━━━━━━━━━━━━━━━━━━┓╭
+local   : │shakespeare mouse focus=0 query_idx=0 search_scroll=0 notes_scroll=0          │
+@@ row 04
+upstream: │┃      1 The Project Gutenberg eBook of The Complete Works of William Shakes█┃│
+local   : │┌─ Log Search ─────────────────────────┐┌─ Notes ────────────────────────────┐│
+@@ row 05
+upstream: o matches yet                                                                │┃│
+local   : ││                                      ││A text-heavy screen driven through  ││
+@@ row 06
+upstream: │┃      3 This ebook is for the use of anyone anywhere in the United States a│┃│
+local   : ││ / be                                 ││the same search primitives used     ││
+@@ row 07
+upstream: │┃      4 most other parts of the world at no cost and with almost no restric│┃│
+local   : ││ mode=literal case=insensitive        ││elsewhere in the demo.              ││
+@@ row 08
+upstream: │┃      5 whatsoever. You may copy it, give it away or re-use it under the te│┃│
+local   : ││ context=0 matches=1                  ││                                    ││
+@@ row 09
+upstream: │┃      6 of the Project Gutenberg License included with this ebook or online│┃│
+local   : ││ To «be», or not to «be», that is the ││focus=0 query_idx=0 query=be        ││
+@@ row 10
+upstream: │┃      7 at www.gutenberg.org. If you are not located in the United States, │┃│
+local   : ││ question:                            ││search_scroll=0                     ││
+@@ row 11
+upstream: │┃      8 you will have to check the laws of the country where you are locate│┃│
+local   : ││                                      ││notes_scroll=0                      ││
+@@ row 12
+upstream: │┃      9 before using this eBook.                                           │┃╰
+local   : ││                                      ││context=idle                        ││
+@@ row 13
+upstream: │┃     10                                                                    │┃╭
+local   : ││                                      ││                                    ││
+@@ row 14
+upstream: │┃     11 Title: The Complete Works of William Shakespeare                   │┃│
+local   : ││                                      ││                                    ││
+@@ row 15
+upstream: │┃     12                                                                    │┃│
+local   : ││                                      ││                                    ││
+@@ row 16
+upstream: │┃     13 Author: William Shakespeare                                        │┃│
+local   : ││                                      ││                                    ││
+@@ row 17
+upstream: │┃     14                                                                    │┃│
+local   : ││                                      ││                                    ││
+@@ row 18
+upstream: │┃     15 Release date: January 1, 1994 [eBook #100]                         │┃│
+local   : ││                                      ││                                    ││
+@@ row 19
+upstream: │┃     16                 Most recently updated: August 24, 2025             │┃│
+local   : ││                                      ││                                    ││
+@@ row 20
+upstream: │┃     17                                                                    │┃│
+local   : ││                                      ││                                    ││
+@@ row 21
+upstream: │┃     18 Language: English                                                  │┃╰
+local   : ││                                      ││                                    ││
+@@ row 22
+upstream: │┃     19                                                                    │┃╭
+local   : │└──────────────────────────────────────┘└────────────────────────────────────┘│
+@@ row 23
+upstream: │┃     20                                                                    │┃│
+local   : └──────────────────────────────────────────────────────────────────────────────┘
+@@ row 24
+upstream:  Tab/Shift+Tab: next/prev     0x0 00:00                                      │┃│
+local   : Shakespeare [3/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

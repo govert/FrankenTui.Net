@@ -1,0 +1,80 @@
+﻿Screen 1: Guided Tour
+Upstream snapshot: app_guidedtour_80x24.snap
+Viewport: 80x24
+Upstream nonblank chars: 1330
+Local nonblank chars: 870
+Local/upstream char ratio: 0.654
+Equal rows: 0; differing rows: 24
+
+@@ row 01
+upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
+local   : [1: Tour]  2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+@@ row 02
+upstream: ╭──────────────────────────────────────────────────────Dashboard────────────────
+local   : ┌─ Guided Tour ────────────────────────────────────────────────────────────────┐
+@@ row 03
+upstream: │FRANKENTUI DASHBOARD                                          ╭────────────────
+local   : │┌─ Guided Tour ──────────────────────────────────────────────────────────────┐│
+@@ row 04
+upstream: │╭──────Plasma───────╮╭─────────Charts · Pulse─────────╮╭────Co│1/16 · Tour · LI
+local   : ││FrankenTui.Net now launches an upstream-shaped terminal showcase.           ││
+@@ row 05
+upstream: ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││g:cycle · sparklines + mini bars││// run│Speed 1.00x · N6
+local   : ││                                                                            ││
+@@ row 06
+upstream: .9⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││CPU ▃ ▃▃▂▂▁▁▄▃▄▂▅▅▅▆▂▄▅▃▆▅▄▄ 38%││use st│Dashboard
+local   : ││Start a guided tour through the screen catalog with Enter or Space.         ││
+@@ row 07
+upstream: ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││MEM ▅▂ ▃▁▄▄▂▂▇▅▃▅▂▃▄▆▄▇█▂▆▅▄ 41%││      │This is the home
+local   : ││Start screen: 2 | Speed: 1x                                                 ││
+@@ row 08
+upstream: ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││NET ▁▁▁▁▁  ▁   ▇▁▁    ▁ █▁▁▁▁125││use ft│clicked.
+local   : ││Use Up/Down or j/k to choose a start screen, +/- to tune speed, r to reset. ││
+@@ row 09
+upstream: ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││OUT ▁▁▁▃▁█  ▁▁ ▁  ▁▁▇    ▁   134││use ft│Click a tile (or
+local   : ││Use --tour to launch directly into autoplay, or --screen N to start on a    ││
+@@ row 10
+upstream: ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││EPS █  74% DSK █  66% IO  ░  11%││Click │Controls: Space
+local   : ││specific screen.                                                            ││
+@@ row 11
+upstream: ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                │╰──────│Steps:
+local   : ││                                                                            ││
+@@ row 12
+upstream: ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                │╭──────│▶ Tour · Dashboa
+local   : ││Featured stops:                                                             ││
+@@ row 13
+upstream: ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                ││Status│• Tour · Dashboa
+local   : ││2 Dashboard                                                                 ││
+@@ row 14
+upstream: ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                ││EPS:11│• Visuals · Merm
+local   : ││5 Widget Gallery                                                            ││
+@@ row 15
+upstream: ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                ││Cyberp│• Tour · Inline
+local   : ││6 Layout Lab                                                                ││
+@@ row 16
+upstream: ││Click → Visual Effe││Click → Data Viz                ││Click ╰────────────────
+local   : ││15 Markdown                                                                 ││
+@@ row 17
+upstream: │╰───────────────────╯╰────────────────────────────────╯╰───────────────────────
+local   : ││16 Mermaid Showcase                                                         ││
+@@ row 18
+upstream: │╭Text FX · 3-Up (1/2│╭───────────Activity────────────│╭────Markdown · Complete─
+local   : ││30 Theme Studio                                                             ││
+@@ row 19
+upstream: ─│Sample 1 of 3 · 3-U││SEV TIME  COMP  MESSAGE        ││FrankenTUI Field Notes
+local   : ││40 Determinism Lab                                                          ││
+@@ row 20
+upstream: ││1 · None · S1      ││ INFO  00:02   CPU spike detect││
+local   : ││                                                                            ││
+@@ row 21
+upstream: ││# FX Lab · Determin││ INFO  00:02   CPU spike detect│││ Goal: deterministic ou
+local   : ││                                                                            ││
+@@ row 22
+upstream: tpu · FadeIn · S2    ││                               ││
+local   : │└────────────────────────────────────────────────────────────────────────────┘│
+@@ row 23
+upstream: ││## GFM Stress · Led⋮│                               ⋮│Highlights
+local   : └──────────────────────────────────────────────────────────────────────────────┘
+@@ row 24
+upstream: Tab/Shift+Tab: next/prev      0x0 00:00               ││✓ Inline mode with
+local   : Guided Tour [1/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

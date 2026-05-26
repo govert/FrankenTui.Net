@@ -1,0 +1,80 @@
+﻿Screen 45: Quake E1M1
+Upstream snapshot: app_quakeeasteregg_80x24.snap
+Viewport: 80x24
+Upstream nonblank chars: 1110
+Local nonblank chars: 1226
+Local/upstream char ratio: 1.105
+Equal rows: 0; differing rows: 24
+
+@@ row 01
+upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
+local   :  1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+@@ row 02
+upstream: ╭───────────────────────────────────────────────Quake E1M1 (Easter Egg)─────────
+local   : ┌─ Quake E1M1 (Easter Egg) ────────────────────────────────────────────────────┐
+@@ row 03
+upstream: │WASD move · Arrows look · Space jump · F fire · V quality [Reduced] · R reset
+local   : │Quake E1M1 (Easter Egg) | WASD move | Arrows look | Space jump | F fire | V   │
+@@ row 04
+upstream: │
+local   : │quality [Full] | R reset                                                      │
+@@ row 05
+upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠛  ⢀⣠⣴⣾⣿⣿⣿⣿⣿⣿
+local   : │Real upstream screen renders QUAKE_E1M1 mesh with physics, collision, depth,  │
+@@ row 06
+upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠛⠁⢀⣠⣴⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+local   : │┌─ Quake E1M1 [focus flash=0] ───────────┐┌─ Player + Physics ──────────────┐ │
+@@ row 07
+upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠛⢁⣠⣴⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿                                       ⢀⢤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤
+local   : ││ ⠻⢿⣿⣿⣿⣿⡿⠃          ⠘⠿⣿⣿⣿⣿⣿⠟           ⠻⢿││pos=(0.54,0.51,0.18) yaw=0.00    │ │
+@@ row 08
+upstream: ⣿⣿⣿⣿⣿⡿⢛⣡⣴⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿                                       ⢀⣮⣿⡿⠿⠿⠿⠿⠛⠛⠛⠛⠉
+local   : ││   ⠈⠉⠉     ⢀⣀⣠⣤⣀⡀     ⠉⠉⠁     ⣀⣀⣤⣄⣀     ││pitch=0.00 quality=Full flash=0  │ │
+@@ row 09
+upstream: │      ⢿⣿⣿⣻⣵⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿                                 ⣷⣄         ⣿
+local   : ││          ⢴⣿⣿⣿⣿⣿⣿⣷          ⠠⣾⣿⣿⣿⣿⣿⣿⡆   ││reset=0 scroll=0                 │ │
+@@ row 10
+upstream: ⣿⣿⡿⠟⢂⡏⠉⠙⠛⠻⠿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿                                    ⣿⣿⣷⣄       ⣿
+local   : ││          ⠈⠙⠻⠿⠿⠟⠛⠁           ⠉⠛⠿⠿⠿⠛⠉    │└─────────────────────────────────┘ │
+@@ row 11
+upstream: ⣿⣿⠁⣠⣿⡇       ⠈⠉⠉⠛⠛⠿⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿                                    ⣿⣿⣿⣿⣿⣦⡀    ⣿
+local   : ││ ⣠⣴⣶⣶⣶⣶⣤⡀          ⢀⣤⣶⣶⣶⣶⣦⣄           ⣠⣴│┌─ Mesh Raster Evidence [scroll 0]  │
+@@ row 12
+upstream: ⣿⡟⡰⣿⣿⡇                ⠉⠉⠛⠛⠻⠿⢿⣿⣿⣿                                    ⣿⣿⣿⣿⣿⣿⣿⣦⡀  ⣿
+local   : ││ ⠻⣿⣿⣿⣿⣿⡿⠇          ⠘⢿⣿⣿⣿⣿⣿⠿           ⠻⣿││Renderer:                        │ │
+@@ row 13
+upstream: ⣿⢃⡇⠈⠻⡇                        ⠈⠉                                    ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⣄⣿
+local   : ││   ⠉⠉⠉⠁     ⣀⣀⣀⣀     ⠈⠉⠉⠉     ⢀⣀⣀⣀⡀     ││local-fps-braille-canvas         │ │
+@@ row 14
+upstream: ⡿⣸⡇                                                                 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷
+local   : ││          ⢰⣿⣿⣿⣿⣿⣿⣦          ⠠⣾⣿⣿⣿⣿⣿⣷⡄   ││Mode: braille | Frame: 0 |       │ │
+@@ row 15
+upstream: ⣄     ⣿⣇⣿⡇  ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿                        ⠇       ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+local   : ││          ⠈⠛⠻⠿⠿⠿⠛⠁           ⠙⠻⠿⠿⠿⠟⠋    │└─────────────────────────────────┘ │
+@@ row 16
+upstream: ⣿⣷⣄⡀  ⣿⣼⣿⡇  ⣿⣿⣿⡿⠛⠻⠿⣿⣿⣿                                    ⠉⠁⡅⠉⠁   ⠤⣤⣿⣿⡿⠿⠿⠿⠿⠿⠿⠿⠿⠿
+local   : ││ ⢀⣤⣶⣶⣶⣶⣤⡀           ⣠⣴⣶⣶⣶⣦⣄           ⢀⣤│┌─ Harness + Divergence ──────────┐ │
+@@ row 17
+upstream: ⠿⠿⠿⠿⠦⣿⣯⣿⣿⡇⣜⣿⣿⣿⠏     ⣿    ⣿    ⣟⣿⣿⣿⢿⣿⣿⣿⣿                     ⠁        ⠉⠉⠛⠒⠶⠶⣖⣲⡶⠶⣶
+local   : ││ ⠻⣿⣿⣿⣿⣿⣿⠇          ⠘⢿⣿⣿⣿⣿⣿⡿           ⠻⣿││FPS-style Quake slipgate raster  │ │
+@@ row 18
+upstream: ⣶⣶⣶⣶⣶  ⣿⣿⣷⣿⣿⠟⠁⣠⣴⡇   ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿    ⣿    ⡀  ⢀    ⡀         ⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀    ⠈⠉⠙⠒
+local   : ││   ⠉⠉⠉⠉     ⢀⣀⣀⣀     ⠈⠉⠉⠉⠁     ⣀⣀⣀⡀     ││approximation.                   │ │
+@@ row 19
+upstream: ⣉⡁⣿⣿⣿⣿⣿⠟⣡⣴⣿⣿⣿⡇   ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿  ⢀⣠⣴⡤⠾⣻⣿⣿⣿⠶⠒⢒⣾⡷⠶⠶⠶⠶⠶⠖⢒⣲⣶⣿⣿⣿⣿⣿⣿⣿⣿⠿⠯⠭⠭⣭⡭⣉⠉⠉⠉⡉
+local   : ││          ⣰⣾⣿⣿⣿⣿⣿⣦          ⢀⣶⣿⣿⣿⣿⣿⣷⡄   ││Canvas.ensure_for_area(mode=Brail│ │
+@@ row 20
+upstream: ⢹⣿⣿⣿⣿⣿⣿⣿⣿⡇   ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢀⣀⣴⣶⣶⣾⣿⣿⣿⣾⣿⣾⣿⣷⣿⡂⣰⣽⣿⣇⣀⣀⣀⣀⣤⣶⣿⣿⣿⣿⣿⣿⣿⡿⣿⣭⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+local   : ││          ⠈⠛⠿⠿⠿⠿⠟⠁           ⠙⠻⠿⠿⠿⠿⠋    │└─────────────────────────────────┘ │
+@@ row 21
+upstream: ⣿⣿⣿⣿⣿   ⣿⣿⠟⠛⠛⠛  ⠁   ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡂⠉⠉⠁⣿⣿⣿⣿⣿⣿⣿⣯⣟⣿⣟⣹⣽⣾⣿⣿⣿⣧⣤⣼⣾⣿⣿⣿⣿⣿⣿⣿⣟⣋⣁⣀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⣻⣿⡟
+local   : ││ ⢀⣤⣴⣶⣶⣦⣄⡀           ⣠⣤⣶⣶⣶⣤⣀           ⢀⣤│                                    │
+@@ row 22
+upstream: │ ⣿          ⣿⣿⣿⣿⣿⣿⣿⣿⣀⠠ ⣶⣶⠶⠶⣿⣿⣿⣿⣦⣄⣸⣷⣮⣿⣿⣿⣻⣿⣿⣿⣿⣿⣥⣤⣤⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⣿⣿⣶⣦⣿⣭⣭⣵⣶⣶⣿⣿⣿⣗⣽⣿⣧⣿
+local   : │└────────────────────────────────────────┘                                    │
+@@ row 23
+upstream: ⣿⡿⠿⠛⠛⠛⠋⣿⣿⡿⠿⠛⣿⣿⣿⣀⣠⣤⠶⠚⠉⣿⣿⣿⣿⣿⣦⣤⣿⣿⣿⣿⡿⠟⣿⣿⣿⣿⣿⣿⣀⣼⣿⣿⣾⣧⣾⣿⣿⣿⣿⣿⡿⢻⠛⠛⠟⠛⣻⠛⠛⣿⠻⢿⣿⣿⣿⣿⣿⣿⣿⣶⣽⣿⣿⣶⣿⣿⣿⢈
+local   : └──────────────────────────────────────────────────────────────────────────────┘
+@@ row 24
+upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⠐⠿⠈⠛⢿⣷⣄⠈⠉⣿⣿⣿⣿⣿⣿⠉⠛⠻⠿⣿⠈⠙⠛⠿⢿⣿⠉⠛⠻⠿⣿⣿⣿⣿⣯⣟⡽⣹⢟⣭⡿⣻⣾⣿⡇⣼    ⢺ ⣀⣿  ⠈⠙⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+local   : Quake E1M1 (Easter Egg) [45/45]  default [h] [cmd] [p] [d]  Mouse: AUTO

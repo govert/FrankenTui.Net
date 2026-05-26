@@ -1,0 +1,80 @@
+﻿Screen 42: Kanban Board
+Upstream snapshot: app_kanbanboard_80x24.snap
+Viewport: 80x24
+Upstream nonblank chars: 498
+Local nonblank chars: 659
+Local/upstream char ratio: 1.323
+Equal rows: 0; differing rows: 24
+
+@@ row 01
+upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
+local   :  1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+@@ row 02
+upstream: ╭─────────────────────────────────────────────────────Kanban Board──────────────
+local   : ┌─ Kanban Board ───────────────────────────────────────────────────────────────┐
+@@ row 03
+upstream: │┏━━━━━━━━━━━━━━━━Todo━━━━━━━━━━━━━━━━━┓╭─────────────In Progress─────────────╮╭
+local   : │╭─────────────────────────────────Kanban                                      │
+@@ row 04
+upstream: │┃> Design login page                  ┃│  Build nav component                ││
+local   : │Board─────────────────────────────────╮                                       │
+@@ row 05
+upstream: │┃  [UI]                               ┃│  [UI]                               ││
+local   : ││┏━━━━━━━━━━Todo━━━━━━━━━━┓╭──────In                                          │
+@@ row 06
+upstream: │┃                                     ┃│                                     ││
+local   : │Progress───────╮╭──────────Done──────────╮│                                   │
+@@ row 07
+upstream: │┃  Add input validation               ┃│  Implement auth flow                ││
+local   : ││┃> Design login page     ┃│  Build nav component   ││  Project scaffolding   │
+@@ row 08
+upstream: │┃  [Logic]                            ┃│  [Logic]                            ││
+local   : │││                                                                            │
+@@ row 09
+upstream: │┃                                     ┃│                                     ││
+local   : ││┃  [UI]                  ┃│  [UI]                  ││  [Ops]                 │
+@@ row 10
+upstream: │┃  Write unit tests                   ┃│                                     ││
+local   : │││                                                                            │
+@@ row 11
+upstream: │┃  [QA]                               ┃│                                     ││
+local   : ││┃                        ┃│                        ││                        │
+@@ row 12
+upstream: │┃                                     ┃│                                     ││
+local   : │││                                                                            │
+@@ row 13
+upstream: │┃  Set up CI pipeline                 ┃│                                     ││
+local   : ││┃  Add input validation  ┃│  Implement auth flow   ││                        │
+@@ row 14
+upstream: │┃  [Ops]                              ┃│                                     ││
+local   : │││                                                                            │
+@@ row 15
+upstream: │┃                                     ┃│                                     ││
+local   : ││┃  [Logic]               ┃│  [Logic]               ││                        │
+@@ row 16
+upstream: │┃                                     ┃│                                     ││
+local   : │││                                                                            │
+@@ row 17
+upstream: │┃                                     ┃│                                     ││
+local   : ││┃                        ┃│                        ││                        │
+@@ row 18
+upstream: │┃                                     ┃│                                     ││
+local   : │││                                                                            │
+@@ row 19
+upstream: │┃                                     ┃│                                     ││
+local   : ││┃  Write unit tests      ┃│                        ││                        │
+@@ row 20
+upstream: │┃                                     ┃│                                     ││
+local   : │││                                                                            │
+@@ row 21
+upstream: │┃                                     ┃│                                     ││
+local   : ││┃  [QA]                  ┃│                        ││                        │
+@@ row 22
+upstream: │┃                                     ┃│                                     ││
+local   : │││                                                                            │
+@@ row 23
+upstream: │┃                                     ┃│                                     ││
+local   : └──────────────────────────────────────────────────────────────────────────────┘
+@@ row 24
+upstream:   Tab/Shift+Tab: next/prev    0x0 00:00 │                                     ││
+local   : Kanban Board [42/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

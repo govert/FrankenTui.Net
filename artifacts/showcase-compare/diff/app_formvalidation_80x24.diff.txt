@@ -1,0 +1,80 @@
+﻿Screen 27: Form Validation
+Upstream snapshot: app_formvalidation_80x24.snap
+Viewport: 80x24
+Upstream nonblank chars: 553
+Local nonblank chars: 1335
+Local/upstream char ratio: 2.414
+Equal rows: 0; differing rows: 24
+
+@@ row 01
+upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
+local   :  1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+@@ row 02
+upstream: ╭───────────────────────────────────────────────────Form Validation─────────────
+local   : ┌─ Form Validation ────────────────────────────────────────────────────────────┐
+@@ row 03
+upstream: │Mode: Real-time [M to toggle]                                          ╭───────
+local   : │┌─ Mode [focus] ───────────────┐┌─ Error Summary ────────┐┌─ Controls ───────┐│
+@@ row 04
+upstream: │╭──────────────────────────Registration Form──────────────────────────╮│No vali
+local   : ││Mode: Real-time [M to toggle] ││Field       Message     ││Tab/S-Tab:        ││
+@@ row 05
+upstream: ││Username:         Enter username (required)                          ││
+local   : │└──────────────────────────────┘│Username    Username must│navigate fields   │c
+@@ row 06
+upstream: ││Email:            user@example.com                                   ││
+local   : │┌─ Registration Form [Username] │Password    Password must│Up/Down: change   │c
+@@ row 07
+upstream: ││Password:         Min 8 characters                                   ││
+local   : ││       Field  Value  State    ││Bio         Bio must be 1│value / navigate  │s
+@@ row 08
+upstream: ││Confirm Password: Re-enter password                                  ││
+local   : ││>      Usernamab     error    ││                        ││Space: toggle     ││
+@@ row 09
+upstream: ││Age:                25                                               ││
+local   : ││       Email  not-an-okail    ││                        ││checkbox          ││
+@@ row 10
+upstream: ││Bio:              Max 100 characters                                 ││
+local   : ││       Passworshort  error    ││                        ││Enter: submit form││
+@@ row 11
+upstream: ││Website:          https://example.com                                ││
+local   : ││       Confirmdiffereok       ││                        │└──────────────────┘│
+@@ row 12
+upstream: ││Role:               (Select a role)                                  ││
+local   : ││       Age    25     ok       ││                        │┌─ Notifications ──┐│
+@@ row 13
+upstream: ││Accept Terms:     [ ]                                                ││
+local   : ││       Bio    xxxxxxxerrorxxxxx└────────────────────────┘│QueueConfig:      ││
+@@ row 14
+upstream: ││                                                                     ││
+local   : ││       Websitenot-a-uok       │┌─ Validation Rules ─────┐│max_visible=3     ││
+@@ row 15
+upstream: ││                                                                     ││
+local   : ││       Role   (Selectok role) ││Selected error: 0       ││max_queued=10     ││
+@@ row 16
+upstream: ││                                                                     ││
+local   : ││       Accept false  ok       ││Username: required, min ││Position: TopRight││
+@@ row 17
+upstream: ││                                                                     ││
+local   : ││                              ││3                       ││Latest toast:     ││
+@@ row 18
+upstream: ││                                                                     ││
+local   : │└──────────────────────────────┘│Email: required,        │└──────────────────┘│
+@@ row 19
+upstream: ││                                                                     ││
+local   : │┌─ Touched / Dirty ────────────┐│contains @ and .        │┌─ Mouse + Diagnostic
+@@ row 20
+upstream: ││                                                                     ││
+local   : ││Touched: 1/9 | Dirty: 8/9     ││Password: required, min ││Diagnostics       ││
+@@ row 21
+upstream: ││                                                                     ││
+local   : ││Submitted: false | Focused:   ││8                       ││scroll: 0         ││
+@@ row 22
+upstream: ││                                                                     ││
+local   : │└──────────────────────────────┘└────────────────────────┘└──────────────────┘│
+@@ row 23
+upstream: ││                                                                     ││
+local   : └──────────────────────────────────────────────────────────────────────────────┘
+@@ row 24
+upstream: )  Tab/Shift+Tab: next/prev   0x0 00:00                                ││
+local   : Form Validation [27/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

@@ -1,0 +1,24 @@
+﻿ 1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+┌─ File Browser ───────────────────────────────────────────────────────────────┐
+│┌─ Files [row 0 scroll 0] ─────────────┐┌─ Preview ──────────────────────────┐│
+││└ .external                           ││file mouse focus=0 tree_scroll=0    ││
+││  └ frankentui                        ││preview_scroll=0                    ││
+││    └ README.md                       ││Selected row: 0                     ││
+││    └ crates                          ││Selected: .external                 ││
+││      └ ftui-demo-showcase            ││Tree scroll: 0                      ││
+││└ apps                                ││Preview scroll: 0                   ││
+││  └ FrankenTui.Demo.Showcase          ││                                    ││
+││└ src                                 ││README.md                           ││
+││  └ FrankenTui.Extras                 ││                                    ││
+││  └ FrankenTui.Tty                    ││FrankenTui.Net is a traceable,      ││
+││└ tests                               ││updateable .NET 10 port of          ││
+││  └ FrankenTui.Tests.Headless         ││FrankenTUI.                         ││
+││                                      ││                                    ││
+││                                      ││Use --screen N to land directly on a││
+││                                      ││showcase screen.                    ││
+││                                      ││                                    ││
+││                                      ││                                    ││
+││                                      ││                                    ││
+│└──────────────────────────────────────┘└────────────────────────────────────┘│
+└──────────────────────────────────────────────────────────────────────────────┘
+File Browser [9/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

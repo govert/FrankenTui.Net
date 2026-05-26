@@ -1,0 +1,80 @@
+﻿Screen 9: File Browser
+Upstream snapshot: app_filebrowser_80x24.snap
+Viewport: 80x24
+Upstream nonblank chars: 1116
+Local nonblank chars: 897
+Local/upstream char ratio: 0.804
+Equal rows: 0; differing rows: 24
+
+@@ row 01
+upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
+local   :  1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+@@ row 02
+upstream: ╭─────────────────────────────────────────────────────File Browser──────────────
+local   : ┌─ File Browser ───────────────────────────────────────────────────────────────┐
+@@ row 03
+upstream: │╭─────Project Tree──────╮ ╭──────────────Files (23 items)──────────────╮ ╭─────
+local   : │┌─ Files [row 0 scroll 0] ─────────────┐┌─ Preview ──────────────────────────┐│
+@@ row 04
+upstream: ││📁 my-app              │ │🏠 / 📁 home → 📁 user → 📁 projects → 📁 my│ │Directory
+local   : ││└ .external                           ││file mouse focus=0 tree_scroll=0    ││
+@@ row 05
+upstream: ││├── 📁 src             │ │   Name              Perms             Size │ │Path:
+local   : ││  └ frankentui                        ││preview_scroll=0                    ││
+@@ row 06
+upstream: │││   ├── 🦀 main.rs     │ │📁 .git              drwxr-xr-x          -- │ │Preview
+local   : ││    └ README.md                       ││Selected row: 0                     ││
+@@ row 07
+upstream: │││   ├── 🦀 lib.rs      │ │📁 assets            drwxr-xr-x          -- │ │Directo
+local   : ││    └ crates                          ││Selected: .external                 ││
+@@ row 08
+upstream: │││   └── 📁 models      │ │📁 docs              drwxr-xr-x          -- │ │  📁 .gi
+local   : ││      └ ftui-demo-showcase            ││Tree scroll: 0                      ││
+@@ row 09
+upstream: │││       ├── 🦀 user.rs │ │📁 src               drwxr-xr-x          -- │ │  📁 ass
+local   : ││└ apps                                ││Preview scroll: 0                   ││
+@@ row 10
+upstream: │││       └── 🦀 post.rs │ │📁 target            drwxr-xr-x          -- │ │  📁 doc
+local   : ││  └ FrankenTui.Demo.Showcase          ││                                    ││
+@@ row 11
+upstream: ││├── 📁 tests           │ │📁 tests             drwxr-xr-x          -- │ │  📁 src
+local   : ││└ src                                 ││README.md                           ││
+@@ row 12
+upstream: │││   ├── 🐍 test_app.py │ │🔗 build.sh          lrwxr-xr-x        48 B │ │  📁 tar
+local   : ││  └ FrankenTui.Extras                 ││                                    ││
+@@ row 13
+upstream: │││   └── 🦀 integration.│ │🐍 app.py            -rwxr-xr-x      1.5 KB │ │  📁 tes
+local   : ││  └ FrankenTui.Tty                    ││FrankenTui.Net is a traceable,      ││
+@@ row 14
+upstream: ││├── 📁 docs            │ │🔧 Cargo.toml        -rw-r--r--       512 B │ │  🔗 bui
+local   : ││└ tests                               ││updateable .NET 10 port of          ││
+@@ row 15
+upstream: │││   ├── 📖 README.md   │ │🔧 config.toml       -rw-r--r--       256 B │ │  🐍 app
+local   : ││  └ FrankenTui.Tests.Headless         ││FrankenTUI.                         ││
+@@ row 16
+upstream: │││   └── 📖 API.md      │ │📷 cover.jpg         -rw-r--r--    512.0 KB │ │
+local   : ││                                      ││                                    ││
+@@ row 17
+upstream: ││├── 🔧 Cargo.toml      │ │🔧 data.json         -rw-r--r--     10.2 KB │ │
+local   : ││                                      ││Use --screen N to land directly on a││
+@@ row 18
+upstream: ││├── 🔧 package.json    │ │🎬 demo.mp4          -rw-r--r--     12.6 MB │ │
+local   : ││                                      ││showcase screen.                    ││
+@@ row 19
+upstream: ││└── 🔧 .gitignore      │ │🦀 lib.rs            -rw-r--r--      4.1 KB │ │
+local   : ││                                      ││                                    ││
+@@ row 20
+upstream: ││                       │ │📷 logo.png          -rw-r--r--    424.1 KB │ │
+local   : ││                                      ││                                    ││
+@@ row 21
+upstream: ││                       │ │🦀 main.rs           -rw-r--r--      2.0 KB │ │
+local   : ││                                      ││                                    ││
+@@ row 22
+upstream: ││                       │ │🦀 mod.rs            -rw-r--r--       512 B │ │
+local   : │└──────────────────────────────────────┘└────────────────────────────────────┘│
+@@ row 23
+upstream: ││                       │ │🔧 package.json      -rw-r--r--       384 B │ │
+local   : └──────────────────────────────────────────────────────────────────────────────┘
+@@ row 24
+upstream:  Tab/Shift+Tab: next/prev     0x0 00:00         -rw-r--r--      3.1 KB │ │
+local   : File Browser [9/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

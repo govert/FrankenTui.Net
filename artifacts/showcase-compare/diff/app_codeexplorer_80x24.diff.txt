@@ -1,0 +1,80 @@
+﻿Screen 4: Code Explorer
+Upstream snapshot: app_codeexplorer_80x24.snap
+Viewport: 80x24
+Upstream nonblank chars: 1346
+Local nonblank chars: 665
+Local/upstream char ratio: 0.494
+Equal rows: 0; differing rows: 24
+
+@@ row 01
+upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
+local   :  1: Tour   2: Dash   3: Shakes  [4: Code]  5: Widgets   6: Layout   7: Forms   8
+@@ row 02
+upstream: ╭────────────────────────────────────────────────────Code Explorer──────────────
+local   : ┌─ Code Explorer ──────────────────────────────────────────────────────────────┐
+@@ row 03
+upstream: │╔═════════════════════════════════════sqlite3.c════════════════════════════════
+local   : │code mouse focus=0 selected_node=0 editor_scroll=0 context=idle path=src      │
+@@ row 04
+upstream: │║      1 /*********************************************************************
+local   : │┌─ Tree [selected 0] ──────────────────┐mod app;                              │
+@@ row 05
+upstream: │║      2 ** This file is an amalgamation of many separate C source files from S
+local   : ││└ src                                 │mod chrome;                           │
+@@ row 06
+upstream: │║      3 ** version 3.48.0.  By combining all the individual C code files into
+local   : ││  └ app.rs                            │mod screens;                          │
+@@ row 07
+upstream: │║      4 ** single large file, the entire code can be compiled as a single tran
+local   : ││  └ chrome.rs                         │                                      │
+@@ row 08
+upstream: │║      5 ** unit.  This allows many compilers to do optimizations that would no
+local   : ││  └ screens                           │// path: src                          │
+@@ row 09
+upstream: │║      6 ** possible if the files were compiled separately.  Performance improv
+local   : ││    └ widget_gallery.rs               │// scroll: 0                          │
+@@ row 10
+upstream: │║      7 ** of 5% or more are commonly seen when SQLite is compiled as a single
+local   : ││    └ theme_studio.rs                 │                                      │
+@@ row 11
+upstream: │║      8 ** translation unit.
+local   : ││└ docs                                │                                      │
+@@ row 12
+upstream: │║      9 **
+local   : ││  └ spec                              │                                      │
+@@ row 13
+upstream: │║     10 ** This file is all you need to compile SQLite.  To use SQLite in othe
+local   : ││  └ adr                               │                                      │
+@@ row 14
+upstream: │║     11 ** programs, you need this file and the "sqlite3.h" header file that d
+local   : ││└ tests                               │                                      │
+@@ row 15
+upstream: │║     12 ** the programming interface to the SQLite library.  (If you do not ha
+local   : ││  └ showcase_smoke.rs                 │                                      │
+@@ row 16
+upstream: │║     13 ** the "sqlite3.h" header file at hand, you will find a copy embedded
+local   : ││                                      │                                      │
+@@ row 17
+upstream: │║     14 ** the text of this file.  Search for "Begin file sqlite3.h" to find t
+local   : ││                                      │                                      │
+@@ row 18
+upstream: │║     15 ** of the embedded sqlite3.h header file.) Additional code files may b
+local   : ││                                      │                                      │
+@@ row 19
+upstream: │║     16 ** if you want a wrapper to interface SQLite with your choice of progr
+local   : ││                                      │                                      │
+@@ row 20
+upstream: │╚══════════════════════════════════════════════════════════════════════════════
+local   : ││                                      │                                      │
+@@ row 21
+upstream: │╭──────────────────────────────────Telemetry Deck──────────────────────────────
+local   : ││                                      │                                      │
+@@ row 22
+upstream: ││IO Lane                      Cache Hit                   Lock + TX
+local   : │└──────────────────────────────────────┘Rust syntax preview | scroll=0 | contex
+@@ row 23
+upstream: ││                                                         LCK██████░░░░░░░░░░░░
+local   : └──────────────────────────────────────────────────────────────────────────────┘
+@@ row 24
+upstream: ne-writer rule · deterministic0x0 00:00
+local   : Code Explorer [4/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

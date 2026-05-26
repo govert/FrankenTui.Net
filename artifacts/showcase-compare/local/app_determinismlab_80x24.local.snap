@@ -1,0 +1,24 @@
+﻿ 1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+┌─ Determinism Lab ────────────────────────────────────────────────────────────┐
+│Determinism Lab | seed=7 | frame=0 | active=DirtyRows | fault=ON | paused=no |│
+│focus=0                                                                       │
+│┌─ Equivalence ─────────────────────────────┐┌─ Scene Preview ──────────────┐ │
+││Strategy    Changes   Checksum             ││A..F....Q.....T..O....M....X..│ │
+││Status                                     ││..C....P....Z....             │ │
+││Full           118   0x000000008a2f3d9c    ││..B....L....R....D....H....N..│ │
+││OK                                         ││..V....E....K....             │ │
+││> DirtyRows       42   0x000000008a2f3d63  ││....O....cursor..Y....S....I..│ │
+││MISMATCH                                   ││..W....G....U....             │ │
+││FullRedraw    1080   0x000000008a2f3d9c    │└──────────────────────────────┘ │
+│└───────────────────────────────────────────┘┌─ Checks ─────────────────────┐ │
+│┌─ Report + Determinism Env ────────────────┐│Scenarios (click/Enter):      │ │
+││Report scroll: 0 | export=idle             ││> Baseline (10f)              │ │
+││JSONL export path:                         ││  Drift (30f)                 │ │
+││FTUI_DETERMINISM_LAB_REPORT or             ││  Fault Injection (1f)        │ │
+││determinism_lab_report.jsonl               ││                              │ │
+││Manual checksum log: idle                  ││Runs (click row to inspect):  │ │
+│└───────────────────────────────────────────┘└──────────────────────────────┘ │
+│                                                                              │
+│1/2/3 strategy(DirtyRows) | [/] seed(7) | Space pause(live) | F fault(on) | E │
+└──────────────────────────────────────────────────────────────────────────────┘
+Determinism Lab [40/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

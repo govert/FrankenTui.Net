@@ -1,0 +1,24 @@
+﻿ 1: Tour   2: Dash   3: Shakes  [4: Code]  5: Widgets   6: Layout   7: Forms   8
+┌─ Code Explorer ──────────────────────────────────────────────────────────────┐
+│code mouse focus=0 selected_node=0 editor_scroll=0 context=idle path=src      │
+│┌─ Tree [selected 0] ──────────────────┐mod app;                              │
+││└ src                                 │mod chrome;                           │
+││  └ app.rs                            │mod screens;                          │
+││  └ chrome.rs                         │                                      │
+││  └ screens                           │// path: src                          │
+││    └ widget_gallery.rs               │// scroll: 0                          │
+││    └ theme_studio.rs                 │                                      │
+││└ docs                                │                                      │
+││  └ spec                              │                                      │
+││  └ adr                               │                                      │
+││└ tests                               │                                      │
+││  └ showcase_smoke.rs                 │                                      │
+││                                      │                                      │
+││                                      │                                      │
+││                                      │                                      │
+││                                      │                                      │
+││                                      │                                      │
+││                                      │                                      │
+│└──────────────────────────────────────┘Rust syntax preview | scroll=0 | contex
+└──────────────────────────────────────────────────────────────────────────────┘
+Code Explorer [4/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)
