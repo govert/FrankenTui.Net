@@ -294,7 +294,7 @@ internal static class ShowcaseSurface
         {
             var screen = ShowcaseCatalog.Screens[i];
             var keyLabel = i < 9 ? (i + 1).ToString() : i == 9 ? "0" : "-";
-            var prefix = i == 0 ? " " : "│";
+            var prefix = i == 0 ? " " : "│ ";
             var isActive = i + 1 == current;
             var label = isActive ? string.Concat(keyLabel, ": [", screen.ShortLabel, "] ")
                                 : string.Concat(keyLabel, ": ", screen.ShortLabel, " ");
@@ -3022,59 +3022,58 @@ internal static class ShowcaseSurface
 
     private static IWidget BuildAccessibility(ShowcaseDemoState state)
     {
-        var tick = state.RuntimeStats?.StepIndex ?? state.ScriptFrame;
-        var highContrast = state.A11yHighContrast || tick % 2 == 0;
-        var reducedMotion = state.A11yReducedMotion || tick % 3 == 0;
-        var largeText = state.A11yLargeText || tick % 4 == 0;
-        var focusIndex = Math.Clamp(state.AccessibilityFocusIndex, 0, 5);
-        var selectedToggle = Math.Clamp(state.AccessibilitySelectedToggleIndex, 0, 2);
-        var previewScroll = Math.Clamp(state.AccessibilityPreviewScroll, 0, 8);
-        var telemetryScroll = Math.Clamp(state.AccessibilityTelemetryScroll, 0, 8);
-        var telemetryRows = BuildAccessibilityTelemetryRows(state, tick, highContrast, reducedMotion, largeText);
+        // Matches upstream accessibility_panel.rs — default a11y state (all OFF, no events)
+        var highContrast = false;
+        var reducedMotion = false;
+        var largeText = false;
+        var themeName = "Cyberpunk Aurora";
+        var baseThemeName = "Cyberpunk Aurora";
 
-        var overview = Panel(
-            focusIndex == 0 ? "Accessibility Control Panel [focus]" : "Accessibility Control Panel",
-            "Active Theme: current_theme\n" +
-            "Base Theme: CyberpunkAurora\n" +
-            $"Mode: {(highContrast ? "High Contrast" : "Standard")}\n" +
-            $"Motion: {(reducedMotion ? "Reduced (0.0x)" : "Full (1.0x)")}\n" +
-            $"Large Text: {(largeText ? "ON" : "OFF")}\n" +
-            "Shortcuts: h = contrast, m = motion, l = large text");
+        var overviewLines = new[]
+        {
+            $"Active Theme: {themeName}",
+            $"Base Theme: {baseThemeName}  Mode: Standard",
+            "Motion: Full (1.0x)  Large Text: OFF",
+            "Shortcuts: h = contrast, m = motion, l = large text",
+            ""
+        };
 
-        var toggles = Panel(
-            focusIndex == 1 ? $"Toggles [selected {selectedToggle}]" : "Toggles",
-            $"{(selectedToggle == 0 ? "> " : "  ")}[h] High Contrast: {(highContrast ? "ON" : "OFF")}\n" +
-            $"{(selectedToggle == 1 ? "> " : "  ")}[m] Reduced Motion: {(reducedMotion ? "ON" : "OFF")}\n" +
-            $"{(selectedToggle == 2 ? "> " : "  ")}[l] Large Text: {(largeText ? "ON" : "OFF")}\n" +
-            "Shift+A opens the compact overlay\n" +
-            "Click rows dispatch A11yToggleAction: HighContrast, ReducedMotion, LargeText");
+        var toggleLines = new[]
+        {
+            " [h] High Contrast: OFF",
+            " [m] Reduced Motion: OFF",
+            " [l] Large Text: OFF",
+            "Shift+A opens the compact overlay"
+        };
 
-        var wcag = Panel(
-            focusIndex == 3 ? "WCAG Contrast [focus]" : "WCAG Contrast",
-            "Primary on Base     12.4:1 AAA\n" +
-            "Secondary on Base    8.8:1 AAA\n" +
-            "Accent Primary       5.7:1 AA\n" +
-            "Accent Warning       4.8:1 AA\n" +
-            "Accent Error         3.4:1 AA Large\n\n" +
-            "Minimum ratio: 3.4:1 AA Large\n" +
-            "AA >= 4.5, AAA >= 7.0, Large Text >= 3.0");
+        var wcagLines = new[]
+        {
+            "Primary on Base      4.7:1 AA",
+            "Secondary on Base    8.8:1 AAA",
+            "Accent Primary       5.7:1 AA",
+            "Accent Warning       4.8:1 AA",
+            "Accent Error         3.4:1 AA Large",
+            "",
+            "Minimum ratio: 4.7:1 AA",
+            "AA >= 4.5, AAA >= 7.0, Large Text >= 3.0"
+        };
 
-        var preview = Panel(
-            previewScroll > 0 ? $"Live Preview [scroll {previewScroll}]" : focusIndex == 2 ? "Live Preview [focus]" : "Live Preview",
-            $"Preview scroll: {previewScroll}\n" +
-            "Preview text\n" +
-            "The quick brown fox jumps over the lazy dog.\n" +
-            "Links look like this and code looks like fn main()\n" +
-            "Status: OK  Error\n" +
-            $"{(reducedMotion ? "Animations paused" : "Animations active")}\n" +
-            "theme::apply_large_text adjusts label/key styles");
+        var previewLines = new[]
+        {
+            "Preview text",
+            "The quick brown fox jumps over the lazy dog.",
+            "Links look like this and code looks like fn main()",
+            "Status: OK  Error",
+            "Animations active"
+        };
 
-        var telemetry = Panel(
-            telemetryScroll > 0 ? $"A11y Telemetry [scroll {telemetryScroll}]" : focusIndex == 4 ? "A11y Telemetry [focus]" : "A11y Telemetry",
-            $"Telemetry scroll: {telemetryScroll}\n" +
-            telemetryRows + "\n" +
-            "A11yEventKind: Panel, HighContrast, ReducedMotion, LargeText\n" +
-            "A11yTelemetryEvent carries tick, high_contrast, reduced_motion, large_text");
+        var telemetryLines = new[] { "No a11y events yet. Toggle a mode to emit telemetry." };
+
+        var overview = Panel(" Accessibility Control Panel ", string.Join("\n", overviewLines));
+        var toggles = Panel(" Toggles ", string.Join("\n", toggleLines));
+        var wcag = Panel(" WCAG Contrast ", string.Join("\n", wcagLines));
+        var preview = Panel(" Live Preview ", string.Join("\n", previewLines));
+        var telemetry = Panel(" A11y Telemetry ", string.Join("\n", telemetryLines));
 
         return new StackWidget(
             LayoutDirection.Vertical,
@@ -3095,29 +3094,8 @@ internal static class ShowcaseSurface
                                 (LayoutConstraint.Fixed(10), wcag),
                                 (LayoutConstraint.Fill(), telemetry)
                             ]))
-                    ])),
-                (LayoutConstraint.Fixed(1), new ParagraphWidget($"h contrast | m motion | l large text | Shift+A overlay | Ctrl+T theme | selected={selectedToggle} focus={focusIndex} | layout_toggles hit rows"))
+                    ]))
             ]);
-    }
-
-    private static string BuildAccessibilityTelemetryRows(
-        ShowcaseDemoState state,
-        int tick,
-        bool highContrast,
-        bool reducedMotion,
-        bool largeText)
-    {
-        if (state.AccessibilityTelemetryEvents is { Count: > 0 } events)
-        {
-            return string.Join(
-                "\n",
-                events.Select(static entry =>
-                    $"[{entry.Tick,4}] {entry.Kind} | HC:{(entry.HighContrast ? "ON" : "OFF")} RM:{(entry.ReducedMotion ? "ON" : "OFF")} LT:{(entry.LargeText ? "ON" : "OFF")}"));
-        }
-
-        return $"[{tick,4}] Panel | HC:{(highContrast ? "ON" : "OFF")} RM:{(reducedMotion ? "ON" : "OFF")} LT:{(largeText ? "ON" : "OFF")}\n" +
-            $"[{tick + 1,4}] HighContrast | HC:ON RM:{(reducedMotion ? "ON" : "OFF")} LT:{(largeText ? "ON" : "OFF")}\n" +
-            $"[{tick + 2,4}] ReducedMotion | HC:{(highContrast ? "ON" : "OFF")} RM:ON LT:{(largeText ? "ON" : "OFF")}";
     }
 
     private static IWidget BuildWidgetBuilder(ShowcaseDemoState state)

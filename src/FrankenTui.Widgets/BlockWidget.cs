@@ -13,6 +13,10 @@ public sealed class BlockWidget : IWidget
 
     public IWidget? Child { get; init; }
 
+    public TitleAlignment TitleAlign { get; init; } = TitleAlignment.Center;
+
+    public enum TitleAlignment { Left, Center }
+
     public void Render(RuntimeRenderContext context)
     {
         if (!WidgetRenderHelpers.RenderContent(context))
@@ -42,7 +46,12 @@ public sealed class BlockWidget : IWidget
         if (!string.IsNullOrWhiteSpace(Title) && context.Bounds.Width > 4)
         {
             var titleStyle = WidgetRenderHelpers.ApplyStyling(context) ? context.Theme.Title : context.Theme.Default;
-            BufferPainter.WriteText(context.Buffer, (ushort)(context.Bounds.X + 2), context.Bounds.Y, $" {Title} ", titleStyle.ToCell());
+            var titleText = Title;
+            var titleWidth = (ushort)Math.Min(titleText.Length, context.Bounds.Width - 2);
+            var x = TitleAlign == TitleAlignment.Center
+                ? (ushort)(context.Bounds.X + 1 + (context.Bounds.Width - 2 - titleWidth) / 2)
+                : (ushort)(context.Bounds.X + 1);
+            BufferPainter.WriteText(context.Buffer, x, context.Bounds.Y, titleText, titleStyle.ToCell());
         }
 
         if (Child is not null)
