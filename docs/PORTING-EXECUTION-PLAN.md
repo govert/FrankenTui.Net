@@ -8,11 +8,11 @@ Quick wins — self-contained, no dependencies, each < 1000 lines.
 
 | # | Module | Target File | Effort |
 |---|---|---|---|
-| A1 | `filesize.rs` (635L) | `FrankenTui.Extras/FileSize.cs` | 15 min |
-| A2 | `borders.rs` (414L) | Extend `DrawingPrimitives.cs` | 15 min |
-| A3 | `mouse.rs` (16L) | `FrankenTui.Widgets/MouseSupport.cs` | 5 min |
-| A4 | `list_helper.rs` (2L) | Merge into `ListWidget.cs` | 5 min |
-| A5 | `diagnostics.rs` (495L) | `FrankenTui.Widgets/Diagnostics.cs` | 20 min |
+| A1 | `filesize.rs` (635L) | `FrankenTui.Extras/FileSize.cs` | ✅ |
+| A2 | `borders.rs` (414L) | `FrankenTui.Widgets/BorderPresets.cs` | ✅ |
+| A3 | `mouse.rs` (16L) | `FrankenTui.Widgets/MouseSupport.cs` | ✅ |
+| A4 | `list_helper.rs` (2L) | Merged into `ListWidget.cs` | ✅ |
+| A5 | `diagnostics.rs` (495L) | `FrankenTui.Widgets/Diagnostics.cs` | ✅ |
 
 ## Phase B: Widget Utilities (1-2 sessions, ~8 items)
 
