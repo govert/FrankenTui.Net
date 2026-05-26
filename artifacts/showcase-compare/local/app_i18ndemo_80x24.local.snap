@@ -1,24 +1,24 @@
-﻿ 1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
-┌─ i18n Stress Lab ────────────────────────────────────────────────────────────┐
-│i18n Stress Lab | locale=en | focus=0 | export=idle                           │
-│[English]  Espanol  Francais  Русский  العربية  日本語                        │
-│                                                                              │
-│┌─ String Lookup ─────────────────────┐┌─ RTL Layout Mirroring ──────────────┐│
-││--- Internationalization ---         ││Flex children reverse in RTL flow.   ││
-││                                     ││                                     ││
-││Hello!  Welcome, Alice!              ││LTR sample: [first] [second] [third] ││
-││Locale: en (English)                 ││RTL sample: [first] [second] [third] ││
-││Direction: Left-to-Right             ││                                     ││
-││Flow: Ltr                            ││Arabic greeting: مرحبا بالعالم       ││
-│└─────────────────────────────────────┘└─────────────────────────────────────┘│
-│┌─ Pluralization Rules ───────────────┐┌─ Stress Lab ────────────────────────┐│
-││--- Pluralization Demo (count = 1)   ││Sample sets: Combining Marks |       ││
-││---                                  ││Combining Marks | CJK Width | RTL    ││
-││                                     ││Text | Emoji & ZWJ                   ││
-││English (en): items: 1 item | files: ││combining_e_acute: école |           ││
-││1 file                               ││display_width=5 | grapheme_count=5   ││
-││Spanish (es): items: 1 elemento |    ││cjk_hello: 你好世界 | display_width=8││
-│└─────────────────────────────────────┘└─────────────────────────────────────┘│
-│Left/Right locale | Shift+Left/Right grapheme cursor | [/] sample             │
-└──────────────────────────────────────────────────────────────────────────────┘
+﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+╭───────────────────────────────i18n Stress Lab────────────────────────────────╮
+│╭──────────────────────────────i18n Stress Lab───────────────────────────────╮│
+││Language: en-US                                                             ││
+││                                                                            ││
+││Greetings:                                                                  ││
+││  English:    Hello, World!                                                 ││
+││  Spanish:    ¡Hola, Mundo!                                                 ││
+││  French:     Bonjour le monde!                                             ││
+││  German:     Hallo, Welt!                                                  ││
+││  Japanese:   こんにちは世界                                                ││
+││  Korean:     안녕하세요 세계                                               ││
+││  Arabic:     مرحبا بالعالم                                                 ││
+││  Hebrew:     שלום עולם                                                     ││
+││  Russian:    Привет, мир!                                                  ││
+││  Chinese:    你好，世界                                                    ││
+││                                                                            ││
+││RTL Test:                                                                   ││
+││  مرحبا بالعالم — هذا نص تجريبي                                             ││
+││                                                                            ││
+││Width Test:                                                                 ││
+│╰────────────────────────────────────────────────────────────────────────────╯│
+╰──────────────────────────────────────────────────────────────────────────────╯
 i18n Stress Lab [34/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

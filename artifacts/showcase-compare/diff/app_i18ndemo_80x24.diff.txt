@@ -2,79 +2,79 @@
 Upstream snapshot: app_i18ndemo_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 653
-Local nonblank chars: 1259
-Local/upstream char ratio: 1.928
+Local nonblank chars: 746
+Local/upstream char ratio: 1.142
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
 @@ row 02
 upstream: ╭───────────────────────────────────────────────────i18n Stress Lab─────────────
-local   : ┌─ i18n Stress Lab ────────────────────────────────────────────────────────────┐
+local   : ╭───────────────────────────────i18n Stress Lab────────────────────────────────╮
 @@ row 03
 upstream: │                                [English]  Español  Français  Русский  العربية
-local   : │i18n Stress Lab | locale=en | focus=0 | export=idle                           │
+local   : │╭──────────────────────────────i18n Stress Lab───────────────────────────────╮│
 @@ row 04
 upstream: │
-local   : │[English]  Espanol  Francais  Русский  العربية  日本語                        │
+local   : ││Language: en-US                                                             ││
 @@ row 05
 upstream: │───────────────────────────────────────────────────────────────────────────────
-local   : │                                                                              │
+local   : ││                                                                            ││
 @@ row 06
 upstream: │╭String Lookup────────────────────────────────────────────╮ ╭Coverage Report───
-local   : │┌─ String Lookup ─────────────────────┐┌─ RTL Layout Mirroring ──────────────┐│
+local   : ││Greetings:                                                                  ││
 @@ row 07
 upstream: ││--- Internationalization ---                             │ │--- Coverage Repor
-local   : ││--- Internationalization ---         ││Flex children reverse in RTL flow.   ││
+local   : ││  English:    Hello, World!                                                 ││
 @@ row 08
 upstream: ││                                                         │ │
-local   : ││                                     ││                                     ││
+local   : ││  Spanish:    ¡Hola, Mundo!                                                 ││
 @@ row 09
 upstream: ││  Hello!                                                 │ │  Total keys: 6
-local   : ││Hello!  Welcome, Alice!              ││LTR sample: [first] [second] [third] ││
+local   : ││  French:     Bonjour le monde!                                             ││
 @@ row 10
 upstream: ││  Welcome, Alice!                                        │ │  Locales: 6
-local   : ││Locale: en (English)                 ││RTL sample: [first] [second] [third] ││
+local   : ││  German:     Hallo, Welt!                                                  ││
 @@ row 11
 upstream: ││                                                         │ │
-local   : ││Direction: Left-to-Right             ││                                     ││
+local   : ││  Japanese:   こんにちは世界                                                ││
 @@ row 12
 upstream: ││  Locale: English (English)                              │ │  ar 100% (6/6)
-local   : ││Flow: Ltr                            ││Arabic greeting: مرحبا بالعالم       ││
+local   : ││  Korean:     안녕하세요 세계                                               ││
 @@ row 13
 upstream: ││  Direction: Left-to-Right                               │ │  en 100% (6/6) <-
-local   : │└─────────────────────────────────────┘└─────────────────────────────────────┘│
+local   : ││  Arabic:     مرحبا بالعالم                                                 ││
 @@ row 14
 upstream: ││  Flow: Ltr                                              │ │  es 100% (6/6)
-local   : │┌─ Pluralization Rules ───────────────┐┌─ Stress Lab ────────────────────────┐│
+local   : ││  Hebrew:     שלום עולם                                                     ││
 @@ row 15
 upstream: ││                                                         │ │  fr 100% (6/6)
-local   : ││--- Pluralization Demo (count = 1)   ││Sample sets: Combining Marks |       ││
+local   : ││  Russian:    Привет, мир!                                                  ││
 @@ row 16
 upstream: ││                                                         │ │  ja 100% (6/6)
-local   : ││---                                  ││Combining Marks | CJK Width | RTL    ││
+local   : ││  Chinese:    你好，世界                                                    ││
 @@ row 17
 upstream: ││                                                         │ │  ru 100% (6/6)
-local   : ││                                     ││Text | Emoji & ZWJ                   ││
+local   : ││                                                                            ││
 @@ row 18
 upstream: ││                                                         │ │
-local   : ││English (en): items: 1 item | files: ││combining_e_acute: école |           ││
+local   : ││RTL Test:                                                                   ││
 @@ row 19
 upstream: ││                                                         │ │  Fallback chain:
-local   : ││1 file                               ││display_width=5 | grapheme_count=5   ││
+local   : ││  مرحبا بالعالم — هذا نص تجريبي                                             ││
 @@ row 20
 upstream: ││                                                         │ │
-local   : ││Spanish (es): items: 1 elemento |    ││cjk_hello: 你好世界 | display_width=8││
+local   : ││                                                                            ││
 @@ row 21
 upstream: ││                                                         │ │
-local   : │└─────────────────────────────────────┘└─────────────────────────────────────┘│
+local   : ││Width Test:                                                                 ││
 @@ row 22
 upstream: ││                                                         │ │
-local   : │Left/Right locale | Shift+Left/Right grapheme cursor | [/] sample             │
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 23
 upstream: ││                                                         │ │
-local   : └──────────────────────────────────────────────────────────────────────────────┘
+local   : ╰──────────────────────────────────────────────────────────────────────────────╯
 @@ row 24
 upstream: )  Tab/Shift+Tab: next/prev   0x0 00:00                    │ │
 local   : i18n Stress Lab [34/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

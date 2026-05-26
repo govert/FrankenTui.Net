@@ -2,79 +2,79 @@
 Upstream snapshot: app_dashboard_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 1303
-Local nonblank chars: 927
-Local/upstream char ratio: 0.711
+Local nonblank chars: 1020
+Local/upstream char ratio: 0.783
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour  [2: Dash]  3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+local   :  1: Tour │ 2: [Dash] │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
 @@ row 02
 upstream: ╭──────────────────────────────────────────────────────Dashboard────────────────
-local   : ┌─ Dashboard ──────────────────────────────────────────────────────────────────┐
+local   : ╭──────────────────────────────────Dashboard───────────────────────────────────╮
 @@ row 03
 upstream: │FRANKENTUI DASHBOARD
-local   : │┌─ Overview [focus] ───────────────────┐┌─ Highlights ───────────────────────┐│
+local   : │╭─────────────────────────────────Dashboard──────────────────────────────────╮│
 @@ row 04
 upstream: │╭──────Plasma───────╮╭─────────Charts · Pulse─────────╮╭────Code · Rust (1/28)─
-local   : ││Mode: Autorun | scroll=0 |            ││  Visual Effects canvas             ││
+local   : ││╭─ System Health ─────╮  ╭─ Recent Logs ───────────────────╮                ││
 @@ row 05
 upstream: ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││g:cycle · sparklines + mini bars││// runtime.rs
-local   : ││context=idle                          ││  Data Viz charts                   ││
+local   : │││ CPU:   42%  ████░░ │  │ 08:00 INFO  Showcase booted      │                ││
 @@ row 06
 upstream: ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││CPU ▃ ▃▃▂▂▁▁▄▃▄▂▅▅▅▆▂▄▅▃▆▅▄▄ 41%││use std::{collections::
-local   : ││> 45-screen showcase catalog          ││  Code Explorer panes               ││
+local   : │││ MEM:   68%  ██████░│  │ 08:01 DEBUG Diff decision FULL    │               ││
 @@ row 07
 upstream: ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││MEM ▅▂ ▃▁▄▄▂▂▇▅▃▅▂▃▄▆▄▇█▂▆▅▄ 42%││
-local   : ││  upstream-shaped numbering and titles││  Performance metrics               ││
+local   : │││ DISK:  23%  ██░░░░ │  │ 08:02 WARN  Replay ledger missing │               ││
 @@ row 08
 upstream: ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││NET ▁▁▁▁▁  ▁   ▇▁▁    ▁ █▁▁▁▁ 25││use ftui_core::event::E
-local   : ││  runtime-backed interactive loop     ││  Layout Lab workspace              ││
+local   : │││ NET:   12%  █░░░░░ │  │ 08:03 INFO  Command palette ranked│               ││
 @@ row 09
 upstream: ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││OUT ▁▁▁▃▁█  ▁▁ ▁  ▁▁▇    ▁    73││use ftui_render::cell::
-local   : ││  Windows Terminal viewport support   ││  Drag & Drop lab                   ││
+local   : ││╰─────────────────────╯  ╰────────────────────────────────╯                 ││
 @@ row 10
 upstream: ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││EPS █  76% DSK █  67% IO  ░   4%││Click → Code Explorer
-local   : ││Port baseline: 60%                    ││  Action Timeline                   ││
+local   : ││                                                                            ││
 @@ row 11
 upstream: ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                │╰───────────────────────
-local   : ││## Dashboard                          ││  Markdown rich text                ││
+local   : ││╭─ Quick Stats ───────╮  ╭─ Active Tasks ────────────────╮                  ││
 @@ row 12
 upstream: ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                │╭───────────Info────────
-local   : ││- cached markdown summary             ││selected=0 focus=0 mouse            ││
+local   : │││ FPS:      60.0      │  │ ● Port widgets       [████░░] │                  ││
 @@ row 13
 upstream: ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                ││Status:NOMINAL FPS:9
-local   : ││- width-stable render path            ││panel=dashboard:highlights          ││
+local   : │││ Frame:    0ms       │  │ ● Add tests          [██░░░░] │                  ││
 @@ row 14
 upstream: ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                ││EPS:1145  118x26
-local   : ││                                      ││                                    ││
+local   : │││ Uptime:   2m 34s    │  │ ● Fix layout         [██████] │                  ││
 @@ row 15
 upstream: ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                ││Cyberpunk Aurora
-local   : ││                                      ││                                    ││
+local   : │││ Screens:  45        │  │ ○ Deploy              [░░░░░░] │                 ││
 @@ row 16
 upstream: ││Click → Visual Effe││Click → Data Viz                ││Click → Performance
-local   : ││                                      ││                                    ││
+local   : ││╰─────────────────────╯  ╰──────────────────────────────╯                   ││
 @@ row 17
 upstream: │╰───────────────────╯╰────────────────────────────────╯╰───────────────────────
-local   : ││                                      ││                                    ││
+local   : ││                                                                            ││
 @@ row 18
 upstream: │╭Text FX · 3-Up (1/2│╭───────────Activity────────────│╭────Markdown · Complete─
-local   : ││                                      ││                                    ││
+local   : ││                                                                            ││
 @@ row 19
 upstream: ─│Sample 1 of 3 · 3-U││SEV TIME  COMP  MESSAGE        ││FrankenTUI Field Notes
-local   : ││                                      ││                                    ││
+local   : ││                                                                            ││
 @@ row 20
 upstream: ││1 · None · S1      ││ INFO  00:02   CPU spike detect││
-local   : ││                                      ││                                    ││
+local   : ││                                                                            ││
 @@ row 21
 upstream: ││# FX Lab · Determin││ INFO  00:02   CPU spike detect│││ Goal: deterministic ou
-local   : ││                                      ││                                    ││
+local   : ││                                                                            ││
 @@ row 22
 upstream: tpu · FadeIn · S2    ││                               ││
-local   : │└──────────────────────────────────────┘└────────────────────────────────────┘│
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 23
 upstream: ││## GFM Stress · Led⋮│                               ⋮│Highlights
-local   : └──────────────────────────────────────────────────────────────────────────────┘
+local   : ╰──────────────────────────────────────────────────────────────────────────────╯
 @@ row 24
 upstream: Tab/Shift+Tab: next/prev      0x0 00:00               ││✓ Inline mode with
 local   : Dashboard [2/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

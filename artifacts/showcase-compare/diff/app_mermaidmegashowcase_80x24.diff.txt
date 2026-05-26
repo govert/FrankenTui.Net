@@ -2,79 +2,79 @@
 Upstream snapshot: app_mermaidmegashowcase_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 833
-Local nonblank chars: 1106
-Local/upstream char ratio: 1.328
+Local nonblank chars: 735
+Local/upstream char ratio: 0.882
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
 @@ row 02
 upstream: ╭────────────────────────────────────────────────Mermaid Mega Showcase──────────
-local   : ┌─ Mermaid Mega Showcase ──────────────────────────────────────────────────────┐
+local   : ╭────────────────────────────Mermaid Mega Showcase─────────────────────────────╮
 @@ row 03
 upstream: │┌──────────────────────────────────────────────────────────────────────────────
-local   : │mega mouse focus=0 sample_idx=0 zoom_step=0 detail_scroll=0 panel_scroll=0    │
+local   : │╭───────────────────────────Mermaid Mega Showcase────────────────────────────╮│
 @@ row 04
 upstream: ││ Tier:auto Glyph:unicode Render:braille Wrap:wordchar Layout:auto Dir:auto Pal
-local   : │Mermaid Showcase  Sample: Flow-01  Layout:   ┌─ Mega Sample Library ─────────┐│
+local   : ││Diagram Types:                                                              ││
 @@ row 05
 upstream: ││
-local   : │┌─ Library┌─ Viewport ───────┐┌─ Controls ──┐│      SampleFamilyTier  N/E    ││
+local   : ││  flowchart  • sequence  • class                                            ││
 @@ row 06
 upstream: ││
-local   : ││› Flow-01│Plan ──▶ Audit    ││Sample:      ││>     Flow-0Flow  M     5/4    ││
+local   : ││  state      • er        • gantt                                            ││
 @@ row 07
 upstream: ││
-local   : ││• Sequenc│Audit ──▶ Port    ││Flow-01      ││      SequenSequenSe    3/3    ││
+local   : ││  pie        • git       • mindmap                                          ││
 @@ row 08
 upstream: │└──────────────────────────────────────────────────────────────────────────────
-local   : ││• State-0│Port ──▶ Test     ││Glyph:       ││      State-State L     7/8    ││
+local   : ││  timeline   • sankey    • block                                            ││
 @@ row 09
 upstream: │┌ Flow Basic [default] ────────────────────────────────────────────────────────
-local   : ││        ││Test ──▶ Ship     ││unicode      ││                               ││
+local   : ││                                                                            ││
 @@ row 10
 upstream: ││
-local   : ││        ││                  ││Render:      ││                               ││
+local   : ││Controls:                                                                   ││
 @@ row 11
 upstream: ││                                   ⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇
-local   : ││        ││                  ││adaptive     ││                               ││
+local   : ││  ↑/↓ select type                                                           ││
 @@ row 12
 upstream: ││                                   ⢸⣿⣿⣿⣿⣿Start ⣿⣿⣿⣿⣿⡇
-local   : ││        ││                  ││Palette:     ││                               ││
+local   : ││  ←/→ adjust zoom                                                           ││
 @@ row 13
 upstream: ││                                   ⠘⠛⠛⠛⠛⠛⠛⠛⣛⣟⡛⠛⠛⠛⠛⠛⠛⠃
-local   : ││        ││                  ││default      │└───────────────────────────────┘│
+local   : ││  r reset view                                                              ││
 @@ row 14
 upstream: ││                                           ⢘⣟
-local   : ││        ││                  ││Guard:       │┌─ Mega Controls ───────────────┐│
+local   : ││  e export SVG                                                              ││
 @@ row 15
 upstream: ││                                    ⢀⣀⣠⣤⣶⣾⣿⣿⣿⣿⣷⣶⣤⣤⣀⡀
-local   : ││        ││                  ││default      ││Mode: normal | Render: adaptive││
+local   : ││  d toggle debug                                                            ││
 @@ row 16
 upstream: ││                                   ⠈⠉⠛⠛⠿⠿⣿⣿⣿⣿⣿⣿⡿⠿⠟⠛⠋⠁
-local   : ││        ││                  │└─────────────┘│| Palette: default             ││
+local   : ││                                                                            ││
 @@ row 17
 upstream: ││                                        ⣀⣀⠤⠝⠛⠥⢄⣀⡀
-local   : ││        ││                  │┌─ Metrics ───┐│Sample filter: all (3 samples) ││
+local   : ││Current: flowchart                                                          ││
 @@ row 18
 upstream: ││                          ⣀⣀⣀⣀⣀⣀⣀⣀⣠⣾⣤⣒⣊⣉⣀⣀⡀  ⢀⣀⣀⣈⣉⣒⣢⣼⣦⣀⣀⣀⣀⣀⣀⣀⣀
-local   : ││        ││                  ││Parse: 2.96  ││Categories: Flow:1, Sequence:1,││
+local   : ││Nodes: 12  Edges: 15                                                        ││
 @@ row 19
 upstream: arse: 0.0ms                 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇  ⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-local   : ││        ││                  ││ms           ││State:1                        ││
+local   : ││Render time: 2.3ms                                                          ││
 @@ row 20
 upstream: ayout: 0.1ms                ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇  ⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-local   : ││        ││                  ││Layout: 1.11 ││Selected: Flow-01              ││
+local   : ││Cache: warm (12 diagrams)                                                   ││
 @@ row 21
 upstream: ender: 0.1ms                ⠉⠉⠉⠉⠉⠉⠉⠉⠛⠭⠭⣉⣉⠉⠉⠉⢁  ⢈⠉⠉⠉⢉⣉⡩⠭⠝⠋⠉⠉⠉⠉⠉⠉⠉
-local   : ││        ││                  ││ms           ││Node navigation: h/j/k/l or    ││
+local   : ││                                                                            ││
 @@ row 22
 upstream: otal: 0.2ms                          ⢠⣤⣤⣤⣭⣭⣶⣾⣷⣴⣿⣶⣮⣭⣥⣤⣤⡄
-local   : │└────────┘└──────────────────┘│Render: 2.25 ││arrows                         ││
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 23
 upstream: odes: 5 Edges: 5                     ⢸⣿⣿⣿⣿⣿ End  ⣿⣿⣿⣿⣿⡇
-local   : └──────────────────────────────│ms           ││Inspect/search: / query | n/N  │┘
+local   : ╰──────────────────────────────────────────────────────────────────────────────╯
 @@ row 24
 upstream: utoFit: tight (25%)ev         0x0 00:00 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇
 local   : Mermaid Mega Showcase [17/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

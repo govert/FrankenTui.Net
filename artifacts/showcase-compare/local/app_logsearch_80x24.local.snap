@@ -1,24 +1,24 @@
-﻿ 1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
-┌─ Log Search ─────────────────────────────────────────────────────────────────┐
-│log focus=0 result=0 diag=0 rscroll=0     ┌─ Live Stream ────────────────────┐│
-│┌─ Log Search ───────────────────────────┐│Focus: 0 | selected_result=0 |    ││
-││                                        ││selected_diagnostic=0             ││
-││ / info                                 ││Max lines: 5000                   ││
-││ mode=literal case=insensitive          ││Burst: every 3 ticks / 2 lines    ││
-││ context=0 matches=4                    ││Follow mode: on                   ││
-││ 08:00 «info»  showcase booted          ││Paused: false result_scroll=0     ││
-││ 08:03 «info»  command palette ranked   │└──────────────────────────────────┘│
-││ 11 results                             │┌─ Search Controls f0 r0 d0 ───────┐│
-││ 08:04 «info»  macro replay loop        ││focus=0 selected_result=0         ││
-││ stabilized                             ││selected_diagnostic=0             ││
-││ 08:06 «info»  windows terminal         ││/ open search | Enter submit | Esc││
-││ viewport detected                      ││close                             ││
-││                                        ││n/N next/prev match | f filter    ││
-││                                        ││Ctrl+C case sensitivity           ││
-││                                        │└──────────────────────────────────┘│
-││                                        │┌─ Diagnostics ────────────────────┐│
-││                                        ││FTUI_LOGSEARCH_DIAGNOSTICS=true   ││
-││                                        ││JSONL fields: seq timestamp_us    ││
-│└────────────────────────────────────────┘└──────────────────────────────────┘│
-└──────────────────────────────────────────────────────────────────────────────┘
+﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+╭──────────────────────────────────Log Search──────────────────────────────────╮
+│╭─────────────────────────────────Log Search─────────────────────────────────╮│
+││Search: [type to filter]                                                    ││
+││                                                                            ││
+││[0001] INFO  server::http     Request received GET /api/v1/status           ││
+││[0002] DEBUG db::pool         Connection acquired (pool: 8/10)              ││
+││[0003] INFO  auth::jwt        Token validated for user 'admin'              ││
+││[0004] WARN  cache::redis     Cache miss for key 'dashboard:v2'             ││
+││[0005] ERROR queue::worker    Failed to process job #42: timeout            ││
+││[0006] INFO  api::handler     Response sent 200 OK (12ms)                   ││
+││[0007] DEBUG core::runtime    Frame budget: 2.1ms/16.7ms (12.6%)            ││
+││[0008] TRACE render::diff     Dirty rows: 3, strategy: partial              ││
+││[0009] INFO  widgets::table   Table rendered: 5x3, 15 cells                 ││
+││[0010] WARN  layout::flex     Constraint overflow: min > available          ││
+││[0011] INFO  server::http     Request received POST /api/v1/data            ││
+││[0012] ERROR db::pool         Connection pool exhausted (10/10)             ││
+││[0013] INFO  runtime::program  Tick #130 completed                          ││
+││                                                                            ││
+││                                                                            ││
+││                                                                            ││
+│╰────────────────────────────────────────────────────────────────────────────╯│
+╰──────────────────────────────────────────────────────────────────────────────╯
 Log Search [20/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

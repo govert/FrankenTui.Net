@@ -27,7 +27,7 @@ Compare with: `dotnet run --project tools/FrankenTui.ShowcaseCompare -- --screen
 
 ## Core Widgets & Layout (10 screens)
 
-- [ ] **2. Dashboard** — `dashboard.rs` (7,057L) — 2 sessions
+- [x] **2. Dashboard** — `dashboard.rs` (7,057L) — 2 sessions
   - .NET target: `BuildDashboard()`
 - [x] **5. Widget Gallery** — `widget_gallery.rs` (2,348L) — 1 session
   - .NET target: `BuildWidgetGallery()`
@@ -35,7 +35,7 @@ Compare with: `dotnet run --project tools/FrankenTui.ShowcaseCompare -- --screen
   - .NET target: `BuildLayoutLab()`
 - [x] **10. Advanced** — `advanced_features.rs` (1,057L)
   - .NET target: `BuildAdvancedFeatures()`
-- [ ] **18. Visual Effects** — `visual_effects.rs` (5,784L) — 2 sessions
+- [x] **18. Visual Effects** — `visual_effects.rs` (5,784L) — 2 sessions
   - .NET target: `BuildVisualEffects()`
 - [x] **19. Responsive Layout** — `responsive_demo.rs` (732L)
   - .NET target: `BuildResponsive()`
@@ -54,9 +54,9 @@ Compare with: `dotnet run --project tools/FrankenTui.ShowcaseCompare -- --screen
   - .NET target: `BuildDataViz()`
 - [x] **11. Table Theme Gallery** — `table_theme_gallery.rs` (1,260L)
   - .NET target: `BuildTableThemeGallery()`
-- [ ] **16. Mermaid Showcase** — `mermaid_showcase.rs` (6,494L) — 2 sessions
+- [x] **16. Mermaid Showcase** — `mermaid_showcase.rs` (6,494L) — 2 sessions
   - .NET target: `BuildMermaid()`
-- [ ] **17. Mermaid Mega Showcase** — `mermaid_mega_showcase.rs` (7,934L) — 3 sessions
+- [x] **17. Mermaid Mega Showcase** — `mermaid_mega_showcase.rs` (7,934L) — 3 sessions
   - .NET target: `BuildMermaidMega()`
 
 ## Interaction & Forms (7 screens)
@@ -67,7 +67,7 @@ Compare with: `dotnet run --project tools/FrankenTui.ShowcaseCompare -- --screen
   - .NET target: `BuildFileBrowser()`
 - [x] **13. Macro Recorder** — `macro_recorder.rs` (1,629L)
   - .NET target: `BuildMacroRecorder()`
-- [ ] **26. Mouse Playground** — `mouse_playground.rs` (2,631L) — 1 session
+- [x] **26. Mouse Playground** — `mouse_playground.rs` (2,631L) — 1 session
   - .NET target: `BuildMousePlayground()`
 - [x] **27. Form Validation** — `form_validation.rs` (861L)
   - .NET target: `BuildFormValidation()`
@@ -84,9 +84,9 @@ Compare with: `dotnet run --project tools/FrankenTui.ShowcaseCompare -- --screen
   - .NET target: `BuildCodeExplorer()`
 - [x] **15. Markdown** — `markdown_rich_text.rs` (1,578L)
   - .NET target: `BuildMarkdown()`
-- [ ] **25. Advanced Text Editor** — `advanced_text_editor.rs` (2,133L) — 1 session
+- [x] **25. Advanced Text Editor** — `advanced_text_editor.rs` (2,133L) — 1 session
   - .NET target: `BuildAdvancedTextEditor()`
-- [ ] **34. i18n Stress Lab** — `i18n_demo.rs` (1,556L)
+- [x] **34. i18n Stress Lab** — `i18n_demo.rs` (1,556L)
   - .NET target: `BuildI18n()`
 - [x] **43. Live Markdown Editor** — `markdown_live_editor.rs` (729L)
   - .NET target: `BuildMarkdownLiveEditor()`
@@ -97,23 +97,23 @@ Compare with: `dotnet run --project tools/FrankenTui.ShowcaseCompare -- --screen
   - .NET target: `BuildTerminalCapabilities()`
 - [x] **14. Performance** — `performance.rs` (591L)
   - .NET target: `BuildPerformance()`
-- [ ] **20. Log Search** — `log_search.rs` (2,531L) — 1 session
+- [x] **20. Log Search** — `log_search.rs` (2,531L) — 1 session
   - .NET target: `BuildLogSearch()`
 - [x] **21. Notifications** — `notifications.rs` (636L)
   - .NET target: `BuildNotifications()`
 - [x] **22. Action Timeline** — `action_timeline.rs` (1,707L)
   - .NET target: `BuildActionTimeline()`
-- [ ] **28. Virtualized Search** — `virtualized_search.rs` (2,192L) — 1 session
+- [x] **28. Virtualized Search** — `virtualized_search.rs` (2,192L) — 1 session
   - .NET target: `BuildVirtualizedSearch()`
-- [ ] **29. Async Tasks** — `async_tasks.rs` (4,597L) — 2 sessions
+- [x] **29. Async Tasks** — `async_tasks.rs` (4,597L) — 2 sessions
   - .NET target: `BuildAsyncTasks()`
-- [ ] **30. Theme Studio** — `theme_studio.rs` (2,028L) — 1 session
+- [x] **30. Theme Studio** — `theme_studio.rs` (2,028L) — 1 session
   - .NET target: `BuildThemeStudio()`
-- [ ] **31. Time-Travel Studio** — `snapshot_player.rs` (2,586L) — 1 session
+- [x] **31. Time-Travel Studio** — `snapshot_player.rs` (2,586L) — 1 session
   - .NET target: `BuildSnapshotPlayer()`
 - [x] **32. Performance Challenge** — `performance_hud.rs` (1,604L)
   - .NET target: `BuildPerformanceChallenge()`
-- [ ] **33. Explainability Cockpit** — `explainability_cockpit.rs` (1,400L)
+- [x] **33. Explainability Cockpit** — `explainability_cockpit.rs` (1,400L)
   - .NET target: `BuildExplainability()`
 - [x] **35. VOI Overlay** — `voi_overlay.rs` (785L)
   - .NET target: `BuildVoiOverlay()`
@@ -125,7 +125,7 @@ Compare with: `dotnet run --project tools/FrankenTui.ShowcaseCompare -- --screen
   - .NET target: `BuildDeterminismLab()`
 - [x] **41. Hyperlink Playground** — `hyperlink_playground.rs` (564L)
   - .NET target: `BuildHyperlinkPlayground()`
-- [ ] **45. Quake E1M1 (Easter Egg)** — `quake.rs` (1,548L)
+- [x] **45. Quake E1M1 (Easter Egg)** — `quake.rs` (1,548L)
   - .NET target: `BuildQuake()`
 
 ---

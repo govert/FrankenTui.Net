@@ -2,79 +2,79 @@
 Upstream snapshot: app_logsearch_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 1278
-Local nonblank chars: 1184
-Local/upstream char ratio: 0.926
+Local nonblank chars: 1175
+Local/upstream char ratio: 0.919
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
 @@ row 02
 upstream: ╭──────────────────────────────────────────────────────Log Search───────────────
-local   : ┌─ Log Search ─────────────────────────────────────────────────────────────────┐
+local   : ╭──────────────────────────────────Log Search──────────────────────────────────╮
 @@ row 03
 upstream: │╭ Log Viewer ──────────────────────────────────────────────────────────────────
-local   : │log focus=0 result=0 diag=0 rscroll=0     ┌─ Live Stream ────────────────────┐│
+local   : │╭─────────────────────────────────Log Search─────────────────────────────────╮│
 @@ row 04
 upstream: ││[    45] DEBUG server::http       Connection pool health check passed
-local   : │┌─ Log Search ───────────────────────────┐│Focus: 0 | selected_result=0 |    ││
+local   : ││Search: [type to filter]                                                    ││
 @@ row 05
 upstream: ││[    46] DEBUG db::pool           Token refresh completed for session
-local   : ││                                        ││selected_diagnostic=0             ││
+local   : ││                                                                            ││
 @@ row 06
 upstream: ││[    47] DEBUG auth::jwt          Cache hit ratio: 0.94
-local   : ││ / info                                 ││Max lines: 5000                   ││
+local   : ││[0001] INFO  server::http     Request received GET /api/v1/status           ││
 @@ row 07
 upstream: ││[    48]  WARN cache::redis       Worker picked up job from queue
-local   : ││ mode=literal case=insensitive          ││Burst: every 3 ticks / 2 lines    ││
+local   : ││[0002] DEBUG db::pool         Connection acquired (pool: 8/10)              ││
 @@ row 08
 upstream: ││[    49]  WARN queue::worker      Rate limit threshold approaching
-local   : ││ context=0 matches=4                    ││Follow mode: on                   ││
+local   : ││[0003] INFO  auth::jwt        Token validated for user 'admin'              ││
 @@ row 09
 upstream: ││[    50] ERROR api::handler       Garbage collection cycle completed
-local   : ││ 08:00 «info»  showcase booted          ││Paused: false result_scroll=0     ││
+local   : ││[0004] WARN  cache::redis     Cache miss for key 'dashboard:v2'             ││
 @@ row 10
 upstream: ││[    51] TRACE core::runtime      Metric batch flushed to backend
-local   : ││ 08:03 «info»  command palette ranked   │└──────────────────────────────────┘│
+local   : ││[0005] ERROR queue::worker    Failed to process job #42: timeout            ││
 @@ row 11
 upstream: ││[    52]  INFO metrics::push      Configuration hot-reload triggered
-local   : ││ 11 results                             │┌─ Search Controls f0 r0 d0 ───────┐│
+local   : ││[0006] INFO  api::handler     Response sent 200 OK (12ms)                   ││
 @@ row 12
 upstream: ││[    53]  INFO config::reload     Retry attempt 2/3 for downstream call
-local   : ││ 08:04 «info»  macro replay loop        ││focus=0 selected_result=0         ││
+local   : ││[0007] DEBUG core::runtime    Frame budget: 2.1ms/16.7ms (12.6%)            ││
 @@ row 13
 upstream: ││[    54]  INFO server::http       Scheduled maintenance window check
-local   : ││ stabilized                             ││selected_diagnostic=0             ││
+local   : ││[0008] TRACE render::diff     Dirty rows: 3, strategy: partial              ││
 @@ row 14
 upstream: ││[    55]  INFO db::pool           Request processed successfully
-local   : ││ 08:06 «info»  windows terminal         ││/ open search | Enter submit | Esc││
+local   : ││[0009] INFO  widgets::table   Table rendered: 5x3, 15 cells                 ││
 @@ row 15
 upstream: ││[    56]  INFO auth::jwt          Connection pool health check passed
-local   : ││ viewport detected                      ││close                             ││
+local   : ││[0010] WARN  layout::flex     Constraint overflow: min > available          ││
 @@ row 16
 upstream: ││[    57]  INFO cache::redis       Token refresh completed for session
-local   : ││                                        ││n/N next/prev match | f filter    ││
+local   : ││[0011] INFO  server::http     Request received POST /api/v1/data            ││
 @@ row 17
 upstream: ││[    58] DEBUG queue::worker      Cache hit ratio: 0.94
-local   : ││                                        ││Ctrl+C case sensitivity           ││
+local   : ││[0012] ERROR db::pool         Connection pool exhausted (10/10)             ││
 @@ row 18
 upstream: ││[    59] DEBUG api::handler       Worker picked up job from queue
-local   : ││                                        │└──────────────────────────────────┘│
+local   : ││[0013] INFO  runtime::program  Tick #130 completed                          ││
 @@ row 19
 upstream: ││[    60] DEBUG core::runtime      Rate limit threshold approaching
-local   : ││                                        │┌─ Diagnostics ────────────────────┐│
+local   : ││                                                                            ││
 @@ row 20
 upstream: ││[    61]  WARN metrics::push      Garbage collection cycle completed
-local   : ││                                        ││FTUI_LOGSEARCH_DIAGNOSTICS=true   ││
+local   : ││                                                                            ││
 @@ row 21
 upstream: ││[    62]  WARN config::reload     Metric batch flushed to backend
-local   : ││                                        ││JSONL fields: seq timestamp_us    ││
+local   : ││                                                                            ││
 @@ row 22
 upstream: ││[    63] ERROR server::http       Configuration hot-reload triggered
-local   : │└────────────────────────────────────────┘└──────────────────────────────────┘│
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 23
 upstream: ││[    64] TRACE db::pool           Retry attempt 2/3 for downstream call
-local   : └──────────────────────────────────────────────────────────────────────────────┘
+local   : ╰──────────────────────────────────────────────────────────────────────────────╯
 @@ row 24
 upstream:  T[    65]  INFO auth::jwt          Scheduled maintenance window check
 local   : Log Search [20/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

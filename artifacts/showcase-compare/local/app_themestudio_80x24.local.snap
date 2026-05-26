@@ -1,24 +1,24 @@
-﻿ 1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
-┌─ Theme Studio ───────────────────────────────────────────────────────────────┐
-│┌─ Presets [focus C┌─ Token Inspector ───────────────────────────────────────┐│
-││     ThemeState  ││         Token    Category Hex      Contrast WCAG        ││
-││>    Cybercurrentr│>        fg::PRIMAForegroun#F8FAFC  13.6:1   AAA         ││
-││     Darcupreset ││         fg::SECONForegroun#CBD5E1  9.7:1    AAA         ││
-││     Solarpreset ││         fg::MUTEDForegroun#94A3B8  5.8:1    AA          ││
-││     Nord preset ││         fg::DISABForegroun#64748B  3.9:1    AA Large    ││
-││     High presetst│         bg::DEEP Backgroun#020617  1.0:1    Fail        ││
-││                 ││         bg::BASE Backgroun#0F172A  1.0:1    Fail        ││
-││                 │└─────────────────────────────────────────────────────────┘│
-││                 │┌─ Export ────────────────────────────────────────────────┐│
-││                 ││Press E to export theme                                  ││
-││                 ││Status: idle                                             ││
-││                 │└─────────────────────────────────────────────────────────┘│
-││                 │┌─ Diagnostics + Telemetry ───────────────────────────────┐│
-││                 ││Diagnostics scroll: 0                                    ││
-││                 ││FTUI_THEME_STUDIO_DIAGNOSTICS=true                       ││
-││                 ││FTUI_THEME_STUDIO_DETERMINISTIC=true                     ││
-││                 ││Events: focus_changed, preset_changed, token_changed,    ││
-│└─────────────────┘└─────────────────────────────────────────────────────────┘│
-│Presets: Cyberpunk Aurora, Darcula, Solar, Nord, High Contrast |              │
-└──────────────────────────────────────────────────────────────────────────────┘
+﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+╭─────────────────────────────────Theme Studio─────────────────────────────────╮
+│╭────────────────────────────────Theme Studio────────────────────────────────╮│
+││Current Theme: Cyberpunk Aurora                                             ││
+││                                                                            ││
+││Palette:                                                                    ││
+││  Background:  #0A0E14                                                      ││
+││  Foreground:  #C8D2DC                                                      ││
+││  Primary:     #5CCFE6                                                      ││
+││  Secondary:   #B8CFE6                                                      ││
+││  Accent:      #FFCC66                                                      ││
+││  Success:     #A6E3A1                                                      ││
+││  Warning:     #F9E2AF                                                      ││
+││  Error:       #F38BA8                                                      ││
+││                                                                            ││
+││Presets:                                                                    ││
+││  1. Cyberpunk Aurora (current)                                             ││
+││  2. Solarized Dark                                                         ││
+││  3. Dracula                                                                ││
+││  4. Nord                                                                   ││
+││  5. Monokai                                                                ││
+│╰────────────────────────────────────────────────────────────────────────────╯│
+╰──────────────────────────────────────────────────────────────────────────────╯
 Theme Studio [30/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

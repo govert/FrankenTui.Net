@@ -2,79 +2,79 @@
 Upstream snapshot: app_mouseplayground_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 841
-Local nonblank chars: 1279
-Local/upstream char ratio: 1.521
+Local nonblank chars: 698
+Local/upstream char ratio: 0.830
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
 @@ row 02
 upstream: ╭───────────────────────────────────────────────────Mouse Playground────────────
-local   : ┌─ Mouse Playground ───────────────────────────────────────────────────────────┐
+local   : ╭───────────────────────────────Mouse Playground───────────────────────────────╮
 @@ row 03
 upstream: │┏ ► Hit-Test Targets ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓╭   Even
-local   : │┌─ Hit-Test Targets [focus] ───┐┌─ Event Log ────────────┐┌─ Controls + Diagnos
+local   : │╭──────────────────────────────Mouse Playground──────────────────────────────╮│
 @@ row 04
 upstream: │┃ ┏━━━━━━━━━━━━━┓  ╭─────────────╮  ╭─────────────╮  ╭─────────────╮  ┃│No even
-local   : ││      TargetHitId State Clicks││Kind  Event Pos   Context│Tab cycles focus: ││
+local   : ││Mouse Position: (40, 12)                                                    ││
 @@ row 05
 upstream: │┃ ┃   T1 (0)    ┃  │   T2 (0)    │  │   T3 (0)    │  │   T4 (0)    │  ┃│
-local   : ││>     T1    id=1  hover 0     ││mouse_Left D12,5  target=│Targets -> Event  ││
+local   : ││Last Event: Move                                                            ││
 @@ row 06
 upstream: │┃ ┃             ┃  │             │  │             │  │             │  ┃│
-local   : ││      T2    id=2  idle  0     ││mouse_Left U12,5  target=│Log -> Stats      ││
+local   : ││Button: None                                                                ││
 @@ row 07
 upstream: │┃ ┃             ┃  │             │  │             │  │             │  ┃│
-local   : ││      T3    id=3  idle  0     ││mouse_Left D18,8  target=│Arrow keys / hjkl ││
+local   : ││                                                                            ││
 @@ row 08
 upstream: │┃ ┃             ┃  │             │  │             │  │             │  ┃│
-local   : ││      T4    id=4  idle  0     ││mouse_Move  25,9  target=│navigate targets  ││
+local   : ││Click targets:                                                              ││
 @@ row 09
 upstream: │┃ ┃             ┃  │             │  │             │  │             │  ┃│
-local   : ││      T5    id=5  idle  0     ││mouse_Scroll40,12 target=│Space/Enter clicks││
+local   : ││                                                                            ││
 @@ row 10
 upstream: │┃ ┃             ┃  │             │  │             │  │             │  ┃│
-local   : ││      T6    id=6  idle  0     ││hit_teHit Te25,9  target=│focused target    ││
+local   : ││┌─ Button 1 ─┐  ┌─ Button 2 ─┐                                              ││
 @@ row 11
 upstream: │┃ ┗━━━━━━━━━━━━━┛  ╰─────────────╯  ╰─────────────╯  ╰─────────────╯  ┃│
-local   : ││      T7    id=7  idle  0     ││hover_Hovere25,9  prev=3 │Home/g first      ││
+local   : │││   Click!   │  │   Click!   │                                              ││
 @@ row 12
 upstream: │┃ ╭─────────────╮  ╭─────────────╮  ╭─────────────╮  ╭─────────────╮  ┃│
-local   : ││      T8    id=8  idle  0     ││targetClickktargetclicks=│target | End/G    ││
+local   : ││└────────────┘  └────────────┘                                              ││
 @@ row 13
 upstream: │┃ │   T5 (0)    │  │   T6 (0)    │  │   T7 (0)    │  │   T8 (0)    │  ┃│
-local   : ││      T9    id=9  idle  0     ││overlaOverla-e    enabled│last target       ││
+local   : ││                                                                            ││
 @@ row 14
 upstream: │┃ │             │  │             │  │             │  │             │  ┃│
-local   : ││      T10   id=10 idle  0     ││jitterJitter-togglenabled│O toggle overlay |││
+local   : ││┌─ Toggle ───┐                                                              ││
 @@ row 15
 upstream: │┃ │             │  │             │  │             │  │             │  ┃│
-local   : ││      T11   id=11 idle  0     │└────────────────────────┘│J toggle jitter   ││
+local   : │││  [ ] OFF   │                                                              ││
 @@ row 16
 upstream: │┃ │             │  │             │  │             │  │             │  ┃│
-local   : ││      T12   id=12 idle  0     │┌─ Stats + Overlay ──────┐│stats | C clear   ││
+local   : ││└────────────┘                                                              ││
 @@ row 17
 upstream: │┃ │             │  │             │  │             │  │             │  ┃│
-local   : ││                              ││Hover: T1               ││log               ││
+local   : ││                                                                            ││
 @@ row 18
 upstream: │┃ │             │  │             │  │             │  │             │  ┃│
-local   : ││                              ││Pos: (10, 4)            ││                  ││
+local   : ││Scroll: 0                                                                   ││
 @@ row 19
 upstream: │┃ ╰─────────────╯  ╰─────────────╯  ╰─────────────╯  ╰─────────────╯  ┃│
-local   : ││                              ││Overlay: OFF            ││FTUI_MOUSE_DIAGNOS││
+local   : ││Drag: idle                                                                  ││
 @@ row 20
 upstream: │┃ ╭─────────────╮  ╭─────────────╮  ╭─────────────╮  ╭─────────────╮  ┃╰───────
-local   : ││                              ││Jitter Stats: OFF       ││TICS=true         ││
+local   : ││Hit-test: active                                                            ││
 @@ row 21
 upstream: │┃ │   T9 (0)    │  │   T10 (0)   │  │   T11 (0)   │  │   T12 (0)   │  ┃╭   Stat
-local   : ││                              ││Focus: 0 focus          ││FTUI_MOUSE_DETERMI││
+local   : ││                                                                            ││
 @@ row 22
 upstream: │┃ │             │  │             │  │             │  │             │  ┃│Hover:
-local   : │└──────────────────────────────┘└────────────────────────┘└──────────────────┘│
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 23
 upstream: │┃ │             │  │             │  │             │  │             │  ┃│Overlay
-local   : └──────────────────────────────────────────────────────────────────────────────┘
+local   : ╰──────────────────────────────────────────────────────────────────────────────╯
 @@ row 24
 upstream: d)  Tab/Shift+Tab: next/prev  0x0 00:00            │  │             │  ┃│
 local   : Mouse Playground [26/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

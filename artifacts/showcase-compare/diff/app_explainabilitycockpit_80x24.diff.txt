@@ -2,79 +2,79 @@
 Upstream snapshot: app_explainabilitycockpit_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 698
-Local nonblank chars: 1402
-Local/upstream char ratio: 2.009
+Local nonblank chars: 801
+Local/upstream char ratio: 1.148
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
 @@ row 02
 upstream: ╭────────────────────────────────────────────────Explainability Cockpit─────────
-local   : ┌─ Explainability Cockpit ─────────────────────────────────────────────────────┐
+local   : ╭────────────────────────────Explainability Cockpit────────────────────────────╮
 @@ row 03
 upstream: │Explainability Cockpit · source: (disabled)
-local   : │Explainability Cockpit | source: (disabled) | state=live | focus=0            │
+local   : │╭───────────────────────────Explainability Cockpit───────────────────────────╮│
 @@ row 04
 upstream: │Evidence source disabled
-local   : │Loaded deterministic sample evidence for diff, resize, budget, and timeline   │
+local   : ││Diff Decision Evidence:                                                     ││
 @@ row 05
 upstream: │╭───────────────────────────────────────────────Explainability Cockpit─────────
-local   : │┌─ Diff Strategy ────────┐┌─ Resize Regime (BOCPD) ┌─ Budget Decisions ────┐  │
+local   : ││                                                                            ││
 @@ row 06
 upstream: ││Evidence source disabled
-local   : ││Decision: full          ││Decision: coalesce     ││Decision: hold         │  │
+local   : ││Frame: 42                                                                   ││
 @@ row 07
 upstream: ││Enable evidence logging to populate this cockpit.
-local   : ││Why: strategy full;     ││(burst)                ││Frame: 0.00ms / 16.00ms│  │
+local   : ││Strategy: Dirty Rows (3 rows, 15 cells)                                     ││
 @@ row 08
 upstream: ││Set FTUI_DEMO_EVIDENCE_JSONL to a writable path.
-local   : │└────────────────────────┘└───────────────────────┘└───────────────────────┘  │
+local   : ││Cost: 250µs (vs 500µs full redraw)                                          ││
 @@ row 09
 upstream: ││Example: FTUI_DEMO_EVIDENCE_JSONL=/tmp/ftui_evidence.jsonl cargo run -p ftui-d
-local   : │┌─ Decision Timeline ────────────────────────────────────────────────────────┐│
+local   : ││                                                                            ││
 @@ row 10
 upstream: ││
-local   : ││Timeline scroll: 0                                                          ││
+local   : ││Why dirty rows?                                                             ││
 @@ row 11
 upstream: ││
-local   : ││diff   #  0 strategy full | mu=0.31 sigma2=0.12                             ││
+local   : ││  - Posterior mean: 0.87                                                    ││
 @@ row 12
 upstream: ││
-local   : ││resize #  1 coalesce burst | LBF=1.23                                       ││
+local   : ││  - Risk tolerance: 0.10                                                    ││
 @@ row 13
 upstream: ││
-local   : ││budget #  2 hold budget | e=0.05                                            ││
+local   : ││  - Budget pressure: low (12.6%)                                            ││
 @@ row 14
 upstream: ││
-local   : ││scroll: n/p or Up/Down; click panels to focus; mouse wheel over timeline    ││
+local   : ││  - Hysteresis: not triggered                                               ││
 @@ row 15
 upstream: ││
-local   : │└────────────────────────────────────────────────────────────────────────────┘│
+local   : ││  - Cooldown: 0 frames remaining                                            ││
 @@ row 16
 upstream: │╰──────────────────────────────────────────────────────────────────────────────
-local   : │┌─ Source + Controls ────────────────────────────────────────────────────────┐│
+local   : ││                                                                            ││
 @@ row 17
 upstream: │╔═════════════════════════════════════════════════Decision Timeline════════════
-local   : ││Explainability Cockpit | source: (disabled)                                 ││
+local   : ││Budget:                                                                     ││
 @@ row 18
 upstream: │║No recent decisions.
-local   : ││State: live | Auto-refresh: on | Overlay: off | Source scroll: 0            ││
+local   : ││  Used:  2.1ms / 16.7ms (12.6%)                                             ││
 @@ row 19
 upstream: │║
-local   : ││Set FTUI_DEMO_EVIDENCE_JSONL or FTUI_HARNESS_EVIDENCE_JSONL to a writable   ││
+local   : ││  Diff:  0.25ms                                                             ││
 @@ row 20
 upstream: │║
-local   : ││path.                                                                       ││
+local   : ││  Render: 0.50ms                                                            ││
 @@ row 21
 upstream: │║
-local   : ││Refresh every 5 ticks unless paused; max evidence lines=400; max timeline   ││
+local   : ││  Present: 0.25ms                                                           ││
 @@ row 22
 upstream: │║
-local   : │└────────────────────────────────────────────────────────────────────────────┘│
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 23
 upstream: │║
-local   : └──────────────────────────────────────────────────────────────────────────────┘
+local   : ╰──────────────────────────────────────────────────────────────────────────────╯
 @@ row 24
 upstream: b/Shift+Tab: next/prev        0x0 00:00
 local   : Explainability Cockpit [33/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

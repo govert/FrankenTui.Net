@@ -1,24 +1,24 @@
-﻿ 1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
-┌─ Advanced Text Editor ───────────────────────────────────────────────────────┐
-│Welcome to the Advanced Text Editor!   ┌─ Search / Replace ──────────────────┐│
-│                                       │Search / Replace                     ││
-│This is a demonstration of FrankenTUI's│Search: editor                       ││
-│ text editing capabilities.            │Replace: buffer                      ││
-│You can edit text, select regions, sear│2/5 | Focus: editor | Cursor line: 9 ││
-│ch, and replace.                       │Ctrl+R: Replace | Ctrl+A: Replace all││
-│                                       │                                     ││
-│Features:                              │Focus: editor -> search -> replace   ││
-│- Multi-line editing with▌line numbers │Ctrl+Left/Right, Tab/Shift+Tab cycle ││
-│- Selection with Shift+Arrow keys      └─────────────────────────────────────┘│
-│- Undo (Ctrl+Z) and Redo (Ctrl+Y)      ┌─ Undo History ──────────────────────┐│
-│- Search (Ctrl+F) with next/prev match │Undo History                         ││
-│- Replace (Ctrl+H) single or all matche│Selected history row: 0              ││
-│s                                      │Undo (3)                             ││
-│                                       │  text_edited insert "buffer"        ││
-│Unicode support: emoji, CJK, accented t│  replace_performed editor->buffer   ││
-│ext                                    │  selection_cleared                  ││
-│                                       │                                     ││
-│                                       │Redo (1)                             ││
-│Ln 9, Col 26 | Focus: editor | Match 2/│  redo_performed replace             │y
-└───────────────────────────────────────└─────────────────────────────────────┘┘
+﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+╭─────────────────────────────Advanced Text Editor─────────────────────────────╮
+│╭────────────────────────────Advanced Text Editor────────────────────────────╮│
+││ 1 │ use std::collections::HashMap;                                         ││
+││ 2 │                                                                        ││
+││ 3 │ fn main() {                                                            ││
+││ 4 │     let mut map = HashMap::new();                                      ││
+││ 5 │     map.insert("key", "value");                                        ││
+││ 6 │                                                                        ││
+││ 7 │     for (k, v) in &map {                                               ││
+││ 8 │         println!("{k}: {v}");                                          ││
+││ 9 │     }                                                                  ││
+││10 │ }                                                                      ││
+││11 │                                                                        ││
+││12 │ // TODO: Add error handling                                            ││
+││13 │ // TODO: Add unit tests                                                ││
+││14 │                                                                        ││
+││15 │ #[cfg(test)]                                                           ││
+││16 │ mod tests {                                                            ││
+││17 │     use super::*;                                                      ││
+││18 │                                                                        ││
+│╰────────────────────────────────────────────────────────────────────────────╯│
+╰──────────────────────────────────────────────────────────────────────────────╯
 Advanced Text Editor [25/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

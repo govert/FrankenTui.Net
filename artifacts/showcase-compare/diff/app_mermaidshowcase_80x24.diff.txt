@@ -2,79 +2,79 @@
 Upstream snapshot: app_mermaidshowcase_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 1148
-Local nonblank chars: 970
-Local/upstream char ratio: 0.845
+Local nonblank chars: 726
+Local/upstream char ratio: 0.632
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
 @@ row 02
 upstream: ╭───────────────────────────────────────────────────Mermaid Showcase────────────
-local   : ┌─ Mermaid Showcase ───────────────────────────────────────────────────────────┐
+local   : ╭───────────────────────────────Mermaid Showcase───────────────────────────────╮
 @@ row 03
 upstream: │Mermaid Showcase | Flow Basic (1/29) | Layout: Auto | Score: 0.8 | Viewport: au
-local   : │mouse focus=0 sample_idx=0 zoom_step=0 panel_scroll=0 status_scroll=0         │
+local   : │╭──────────────────────────────Mermaid Showcase──────────────────────────────╮│
 @@ row 04
 upstream: │╭─────────────Samples─────────────╮╭────────────────────────────────────Viewpor
-local   : │Mermaid Showcase  Sample: Flow-01  Layout: Auto  Tier: Rich  Status: OK       │
+local   : ││graph TD                                                                    ││
 @@ row 05
 upstream: ││> Flow Basic [flow, S, branch, de││
-local   : │┌─ Library ──────┐┌─ Viewport ──────────────────────┐┌─ Controls ────────────┐│
+local   : ││    A[Start] --> B{Decision}                                                ││
 @@ row 06
 upstream: ││  Flow Subgraphs [flow, M, subgra││
-local   : ││› Flow-01 [Flow]││Plan ──▶ Audit                   ││Sample: Flow-01        ││
+local   : ││    B -->|Yes| C[Process]                                                   ││
 @@ row 07
 upstream: ││  Flow Dense [flow, L, dense, dag││
-local   : ││• Sequence-01 [Se│Audit ──▶ Port                   ││Glyph: unicode         ││
+local   : ││    B -->|No| D[End]                                                        ││
 @@ row 08
 upstream: ││  Flow Long Labels [flow, M, labe││
-local   : ││• State-01 [State│Port ──▶ Test                    ││Render: adaptive       ││
+local   : ││    C --> D                                                                 ││
 @@ row 09
 upstream: ││  Flow Unicode [flow, S, unicode,││
-local   : ││                ││Test ──▶ Ship                    ││Palette: default       ││
+local   : ││                                                                            ││
 @@ row 10
 upstream: ││  Flow Styles [flow, M, classdef,││ ⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤                ⣀⣀⣤⣄⣀
-local   : ││                ││                                 ││Guard: default         ││
+local   : ││flowchart LR                                                                ││
 @@ row 11
 upstream: ││  Sequence Mini [sequence, S, com││ ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿   Start    ⣄⡀ ⣀⣀⣤⣴   Check
-local   : ││                ││                                 ││Zoom: 100%  Pan: 0,0   ││
+local   : ││    subgraph Frontend                                                       ││
 @@ row 12
 upstream: ││  Sequence Checkout [sequence, M,││ ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿            ⠟⠋⠉⠙⠛⠻⠿
-local   : ││                ││                                 ││Viewport override: off ││
+local   : ││        UI --> API                                                          ││
 @@ row 13
 upstream: ││  Sequence Dense [sequence, L, de││ ⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛               ⠈⠉⠙⠛⠛⠉
-local   : ││                ││                                 ││Layout: auto           ││
+local   : ││    end                                                                     ││
 @@ row 14
 upstream: ││  Class Basic [class, S, inherita││
-local   : ││                ││                                 ││Tier: rich             ││
+local   : ││    subgraph Backend                                                        ││
 @@ row 15
 upstream: ││  Class Members [class, M, fields││
-local   : ││                ││                                 ││Wrap: wordchar         ││
+local   : ││        API --> DB[(Database)]                                              ││
 @@ row 16
 upstream: ││  State Basic [state, S, start-en││
-local   : ││                ││                                 │└───────────────────────┘│
+local   : ││        API --> Cache[(Redis)]                                              ││
 @@ row 17
 upstream: ││  State Composite [state, M, comp││
-local   : ││                ││                                 │┌─ Metrics ─────────────┐│
+local   : ││    end                                                                     ││
 @@ row 18
 upstream: ││  ER Basic [er, M, cardinality, r││
-local   : ││                ││                                 ││Parse: 2.96 ms         ││
+local   : ││                                                                            ││
 @@ row 19
 upstream: ││  Gantt Basic [gantt, M, sections│╰───────────────────────────────────────────
-local   : ││                ││                                 ││Layout: 1.11 ms        ││
+local   : ││sequenceDiagram                                                             ││
 @@ row 20
 upstream: ││  Mindmap Seed [mindmap, S, tree]│╭─────────────────────────────────────Metric
-local   : ││                ││                                 ││Render: 2.25 ms        ││
+local   : ││    Client->>Server: Request                                                ││
 @@ row 21
 upstream: ││  Mindmap Deep [mindmap, L, deep,││Cache: hit 27  miss 1  last hit
-local   : ││                ││                                 ││Iter: 20               ││
+local   : ││    Server->>DB: Query                                                      ││
 @@ row 22
 upstream: ││  Pie Basic [pie, S, title, showd││Warnings: 0
-local   : │└────────────────┘└─────────────────────────────────┘│Score: 3.10            ││
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 23
 upstream: ││  Pie Many [pie, M, many-slices] ││Parse: 0.09 ms
-local   : └─────────────────────────────────────────────────────│Violations: 0          │┘
+local   : ╰──────────────────────────────────────────────────────────────────────────────╯
 @@ row 24
 upstream: d)  Tab/Shift+Tab: next/prev  0x0 00:00 out: 0.10 ms
 local   : Mermaid Showcase [16/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

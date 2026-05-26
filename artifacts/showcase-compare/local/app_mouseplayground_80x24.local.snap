@@ -1,24 +1,24 @@
-﻿ 1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
-┌─ Mouse Playground ───────────────────────────────────────────────────────────┐
-│┌─ Hit-Test Targets [focus] ───┐┌─ Event Log ────────────┐┌─ Controls + Diagnos
-││      TargetHitId State Clicks││Kind  Event Pos   Context│Tab cycles focus: ││
-││>     T1    id=1  hover 0     ││mouse_Left D12,5  target=│Targets -> Event  ││
-││      T2    id=2  idle  0     ││mouse_Left U12,5  target=│Log -> Stats      ││
-││      T3    id=3  idle  0     ││mouse_Left D18,8  target=│Arrow keys / hjkl ││
-││      T4    id=4  idle  0     ││mouse_Move  25,9  target=│navigate targets  ││
-││      T5    id=5  idle  0     ││mouse_Scroll40,12 target=│Space/Enter clicks││
-││      T6    id=6  idle  0     ││hit_teHit Te25,9  target=│focused target    ││
-││      T7    id=7  idle  0     ││hover_Hovere25,9  prev=3 │Home/g first      ││
-││      T8    id=8  idle  0     ││targetClickktargetclicks=│target | End/G    ││
-││      T9    id=9  idle  0     ││overlaOverla-e    enabled│last target       ││
-││      T10   id=10 idle  0     ││jitterJitter-togglenabled│O toggle overlay |││
-││      T11   id=11 idle  0     │└────────────────────────┘│J toggle jitter   ││
-││      T12   id=12 idle  0     │┌─ Stats + Overlay ──────┐│stats | C clear   ││
-││                              ││Hover: T1               ││log               ││
-││                              ││Pos: (10, 4)            ││                  ││
-││                              ││Overlay: OFF            ││FTUI_MOUSE_DIAGNOS││
-││                              ││Jitter Stats: OFF       ││TICS=true         ││
-││                              ││Focus: 0 focus          ││FTUI_MOUSE_DETERMI││
-│└──────────────────────────────┘└────────────────────────┘└──────────────────┘│
-└──────────────────────────────────────────────────────────────────────────────┘
+﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+╭───────────────────────────────Mouse Playground───────────────────────────────╮
+│╭──────────────────────────────Mouse Playground──────────────────────────────╮│
+││Mouse Position: (40, 12)                                                    ││
+││Last Event: Move                                                            ││
+││Button: None                                                                ││
+││                                                                            ││
+││Click targets:                                                              ││
+││                                                                            ││
+││┌─ Button 1 ─┐  ┌─ Button 2 ─┐                                              ││
+│││   Click!   │  │   Click!   │                                              ││
+││└────────────┘  └────────────┘                                              ││
+││                                                                            ││
+││┌─ Toggle ───┐                                                              ││
+│││  [ ] OFF   │                                                              ││
+││└────────────┘                                                              ││
+││                                                                            ││
+││Scroll: 0                                                                   ││
+││Drag: idle                                                                  ││
+││Hit-test: active                                                            ││
+││                                                                            ││
+│╰────────────────────────────────────────────────────────────────────────────╯│
+╰──────────────────────────────────────────────────────────────────────────────╯
 Mouse Playground [26/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

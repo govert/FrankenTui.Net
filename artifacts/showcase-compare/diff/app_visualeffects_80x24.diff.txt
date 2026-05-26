@@ -2,79 +2,79 @@
 Upstream snapshot: app_visualeffects_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 1415
-Local nonblank chars: 1067
-Local/upstream char ratio: 0.754
+Local nonblank chars: 734
+Local/upstream char ratio: 0.519
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
 @@ row 02
 upstream: ╭────────────────────────────────────────────────────Visual Effects─────────────
-local   : ┌─ Visual Effects ─────────────────────────────────────────────────────────────┐
+local   : ╭────────────────────────────────Visual Effects────────────────────────────────╮
 @@ row 03
 upstream: │ ⬤ Metaballs │ ←/→ Switch │ [t] Text FX │ 48.1 FPS │ 20.8ms avg │ 16.0/31.6ms
-local   : │vfx mouse focus=0 effect_idx=2 effect=plasma harness_scroll=0                 │
+local   : │╭───────────────────────────────Visual Effects───────────────────────────────╮│
 @@ row 04
 upstream: │                                        ⣀⣀⣤⣤⣶⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-local   : │┌─ Plasma ─────────────────────────────┐┌─ Harness ──────────────────────────┐│
+local   : ││Effect: Matrix Rain                                                         ││
 @@ row 05
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣶⣦⣤⣤⣀⣀            ⣀⣠⣤⣴⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-local   : ││⣿⠋        ⢾⣿⣿⣿⣿⣿⠿⠛⠁     ⡀⠘⢿⣿⣿⣿⣿⣿⣄     ││Effect: plasma                      ││
+local   : ││FPS: 60  |  Particles: 500                                                  ││
 @@ row 06
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣶⣤⣤⣀⢀⣀⣤⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-local   : ││⠁            ⢀⠔⠁      ⡠⠊   ⠙⣿⣿⣿⣿⣿⣆    ││Label: Plasma                       ││
+local   : ││Speed: 1.0x  |  Density: high                                               ││
 @@ row 07
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢀⣠⣤⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-local   : ││ ⢀⣴⣶⣿⠆     ⢀⠔⢁⣤⣶⣶⣦⣄⡀⡠⠊      ⢈⠿⣿⣿⣿⣿⣆   ││Renderer:                           ││
+local   : ││Color: #00FF00                                                              ││
 @@ row 08
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢀⣀⣤⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-local   : ││⣰⣿⣿⣿⡟    ⢀⠔⠁⣴⣿⣿⣿⣿⣿⣿⣿⠆     ⢀⠔⠁ ⠈⠛⠿⣿⣿⡀  ││local-effect-braille-canvas         ││
+local   : ││                                                                            ││
 @@ row 09
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣀⣤⣴⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿────────────Markdown Overlay────────────⣿
-local   : ││⣿⣿⣿⣿⠁  ⢀⠔⠁ ⣼⣿⣿⣿⣿⣿⠟⠋     ⢀⢿⣿⣿⣶⣄   ⡈⠉   ││Mode: braille                       ││
+local   : ││Controls:                                                                   ││
 @@ row 10
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣀⣤⣴⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│FrankenTUI Visual FX                         ⣿
-local   : ││⣿⣿⣿⡏ ⢀⠔⠁  ⣸⣿⣿⣿⡿⠋      ⢀⠔⠁⠈⢿⣿⣿⣿⣧⡠⠊     ││focus=0                             ││
+local   : ││  Space  play/pause                                                         ││
 @@ row 11
 upstream: ⣿⣿⣿⢀⣀⣤⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│                                             ⣿
-local   : ││⣿⣿⣿⢁⠔⠁    ⠻⠛⡩⠊  ⣀⣀⣀ ⢀⠔⠁   ⠘⣿⣿⣿⣿⡇      ││harness_scroll=0                    ││
+local   : ││  ←/→    cycle effects                                                      ││
 @@ row 12
 upstream: ⣿⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│This panel is real markdown rendered on top o⣿
-local   : ││⣿⣿⣿⠁      ⡠⠊  ⢀⣾⣿⣿⣿⣷⡅      ⣹⣿⣿⣿⣷      ││                                    ││
+local   : ││  ↑/↓    adjust speed                                                       ││
 @@ row 13
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│animated backdrops.                          ⣿
-local   : ││⣿⣿⣿     ⡠⠊    ⢸⣿⣿⣿⣿⠁     ⡠⠊⢸⣿⣿⣿⣿ ⢀⠔⠁  ││Layered trigonometric plasma field. ││
+local   : ││  r      reset                                                              ││
 @@ row 14
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│• deterministic output                       ⣿
-local   : ││⣿⣿⣿   ⡠⠊      ⢘⣿⣿⣿⣿⣷⠆  ⡠⠊  ⢸⣿⣿⣿⣿⠔⠁    ││                                    ││
+local   : ││  c      cycle colors                                                       ││
 @@ row 15
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│• alpha-correct compositing                  ⣿
-local   : ││⣿⣿⣿ ⡠⠊    ⣠⣀⢀⠔⠁⠈⠛⠛⠛⠁ ⡠⠊   ⢀⣿⣿⣿⣿⡇      ││                                    ││
+local   : ││  d      toggle debug                                                       ││
 @@ row 16
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│• crisp text over motion                     ⣿
-local   : ││⣿⣿⣿⡏      ⢻⣿⣿⣶⣄⡀   ⡠⠊     ⣼⣿⣿⣿⡿⠁      ││                                    ││
+local   : ││                                                                            ││
 @@ row 17
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│                                             ⣿
-local   : ││⣿⣿⣿⣿    ⢀⠔⠉⢿⣿⣿⣿⣿⣶⣤⡊      ⣼⣿⣿⣿⠟⠁       ││                                    ││
+local   : ││Effects:                                                                    ││
 @@ row 18
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│`←/→` switch effects · `p` palette · `t` text⣿
-local   : ││⢻⣿⣿⣿⣇  ⠔⠁  ⠈⢿⣿⣿⣿⣿⣿⣿⣶⡄  ⢀⠔⠉⠉⠉   ⣀⣤⣾⣿⠂  ││                                    ││
+local   : ││  Matrix Rain  •  Fire  •  Snow                                             ││
 @@ row 19
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│                                             ⣿
-local   : ││ ⠙⢿⣿⣿⡄       ⡹⠿⣿⣿⡿⠟⠋ ⢀⠔⠁     ⣠⣾⣿⣿⣿⡟   ││                                    ││
+local   : ││  Plasma  •  Starfield  •  Conway                                           ││
 @@ row 20
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│                                             ⣿
-local   : ││    ⠉      ⠠⠊      ⢀⠔⠁     ⢀⣾⣿⣿⣿⣿⡟    ││                                    ││
+local   : ││  Particles  •  Wave  •  Vortex                                             ││
 @@ row 21
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│                                             ⣿
-local   : ││⣷⡀        ⣴⣶⣶⣶⣶⣶⣤⣀⠔⠁     ⢀⣴⣿⣿⣿⣿⣿⠟     ││                                    ││
+local   : ││                                                                            ││
 @@ row 22
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│                                             ⣿
-local   : │└──────────────────────────────────────┘└────────────────────────────────────┘│
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 23
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿╰─────────────────────────────────────────────⣿
-local   : └──────────────────────────────────────────────────────────────────────────────┘
+local   : ╰──────────────────────────────────────────────────────────────────────────────╯
 @@ row 24
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
 local   : Visual Effects [18/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)
