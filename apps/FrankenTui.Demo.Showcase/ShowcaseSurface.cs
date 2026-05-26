@@ -243,20 +243,20 @@ internal static class ShowcaseSurface
             "table_theme_gallery" => BuildTableThemeGallery(state),
             "terminal_capabilities" => BuildTerminalCapabilities(state),
             "macro_recorder" => BuildMacroRecorder(state),
-            "performance" => BuildPerformance(state),
+            "performance" => Screen14Performance.Build(state),
             "markdown_rich_text" => BuildMarkdown(state),
             "mermaid_showcase" => BuildMermaid(state),
             "mermaid_mega_showcase" => BuildMermaidMega(state),
             "visual_effects" => BuildVisualEffects(state),
-            "responsive_demo" => BuildResponsive(state),
+            "responsive_demo" => Screen19Responsive.Build(state),
             "log_search" => BuildLogSearch(state),
-            "notifications" => BuildNotifications(state),
+            "notifications" => Screen21Notifications.Build(state),
             "action_timeline" => BuildActionTimeline(state),
             "intrinsic_sizing" => BuildIntrinsicSizing(state),
             "layout_inspector" => BuildLayoutInspector(state),
             "advanced_text_editor" => BuildAdvancedTextEditor(state),
             "mouse_playground" => BuildMousePlayground(state),
-            "form_validation" => BuildFormValidation(state),
+            "form_validation" => Screen27FormValidation.Build(state),
             "virtualized_search" => BuildVirtualizedSearch(state),
             "async_tasks" => BuildAsyncTasks(state),
             "theme_studio" => BuildThemeStudio(state),
@@ -265,12 +265,12 @@ internal static class ShowcaseSurface
             "explainability_cockpit" => BuildExplainability(state),
             "i18n_demo" => BuildI18n(state),
             "voi_overlay" => BuildVoiOverlay(state),
-            "inline_mode_story" => BuildInlineModeStory(state),
+            "inline_mode_story" => Screen36InlineMode.Build(state),
             "accessibility_panel" => BuildAccessibility(state),
             "widget_builder" => BuildWidgetBuilder(state),
             "command_palette_lab" => BuildCommandPaletteLab(state),
             "determinism_lab" => BuildDeterminismLab(state),
-            "hyperlink_playground" => BuildHyperlinkPlayground(state),
+            "hyperlink_playground" => Screen41Hyperlink.Build(state),
             "kanban_board" => BuildKanbanBoard(state),
             "markdown_live_editor" => BuildMarkdownLiveEditor(state),
             "drag_drop" => BuildDragDrop(state),
@@ -3855,7 +3855,7 @@ internal static class ShowcaseSurface
     private static IWidget BuildPlaceholder(ShowcaseDemoState state) =>
         Panel("Placeholder", $"{state.CurrentScreen.Title}\n\n{state.CurrentScreen.Blurb}");
 
-    private static IWidget Panel(string title, string text) =>
+    internal static IWidget Panel(string? title, string text) =>
         new PanelWidget
         {
             Title = title,

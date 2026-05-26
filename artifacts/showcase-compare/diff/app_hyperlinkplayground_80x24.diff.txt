@@ -2,79 +2,79 @@
 Upstream snapshot: app_hyperlinkplayground_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 779
-Local nonblank chars: 1291
-Local/upstream char ratio: 1.657
+Local nonblank chars: 994
+Local/upstream char ratio: 1.276
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
 @@ row 02
 upstream: ╭─────────────────────────────────────────────────Hyperlink Playground──────────
-local   : ┌─ Hyperlink Playground ───────────────────────────────────────────────────────┐
+local   : ╭─────────────────────────────Hyperlink Playground─────────────────────────────╮
 @@ row 03
 upstream: │Hyperlink Playground  OSC-8 + Hit Regions
-local   : │Hyperlink Playground | OSC-8 + Hit Regions                                    │
+local   : │╭────────────────────────────────────────────────────────────────────────────╮│
 @@ row 04
 upstream: │Up/Down move · Tab cycle · Enter activate · Mouse hover/click
-local   : │Up/Down move | Tab cycle | Enter activate | Mouse hover/click                 │
+local   : ││Hyperlink Playground  OSC-8 + Hit Regions                                   ││
 @@ row 05
 upstream: │
-local   : │                                                                              │
+local   : ││Up/Down move · Tab cycle · Enter activate · Mouse hover/click               ││
 @@ row 06
 upstream: │╭Links (OSC-8)──────────────────────────────────────╮╭Details & Registry───────
-local   : │┌─ Links (OSC-8) [focus 1] ───────┐┌─ Details & Registry ────┐┌─ Controls + JSO
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 07
 upstream: ││> ]8;;https://ftui.devFrankenTUI]8;;                                       ││S
-local   : ││>   FrankenTUI  https://ftui.dev ││Selected: FrankenTUI     ││Up/Down move │ │
+local   : │╭────────────────────Links (OSC-8)─────────────────────╮╭─Details & Registry─╮│
 @@ row 08
 upstream: ││  ]8;;https://ftui.dev/docsDocs]8;;
-local   : ││Docs        https://ftui.dev/docs││URL: https://ftui.dev    ││focus | Tab  │ │
+local   : ││> FrankenTUI                                          ││Selected: FrankenTUI││
 @@ row 09
 upstream: ││  ]8;;https://github.com/Dicklesworthstone/frankentuiGitHub]8;;
-local   : ││GitHub                           ││Registry ID: 1           ││cycle links |│ │
+local   : ││  Docs                                                ││URL:                ││
 @@ row 10
 upstream: ││  ]8;;https://iterm2.com/documentation-escape-codes.htmlOSC 8 Spec]8;;
-local   : ││https://github.com/Dicklesworthst││Hit: id=8000 region=Link ││Enter        │ │
+local   : ││  GitHub                                              ││https://ftui.dev    ││
 @@ row 11
 upstream: ││  ]8;;https://vt100.net/docs/vt510-rm/OSC.htmlANSI Reference]8;;
-local   : ││one/frankentui                   ││data=1                   ││activate |   │ │
+local   : ││  OSC 8 Spec                                          ││Registry ID: 1      ││
 @@ row 12
 upstream: ││                                                   ││OSC 8 close: \x1b]8;;\x1b
-local   : ││OSC 8 Spec                       ││OSC 8 open:              ││Space        │ │
+local   : ││  ANSI Reference                                      ││Hit: id=8000        ││
 @@ row 13
 upstream: ││                                                   ││Notes: Project home + ove
-local   : ││https://iterm2.com/documentation-││\x1b]8;;https://ftui.dev\││activate | c │ │
+local   : ││                                                      ││region=Link data=1  ││
 @@ row 14
 upstream: ││                                                   ││Hover: None
-local   : ││escape-codes.html                ││x1b\                     ││copy URL     │ │
+local   : ││                                                      ││OSC 8 open:         ││
 @@ row 15
 upstream: ││                                                   ││
-local   : ││ANSI Reference                   ││OSC 8 close:             ││Mouse:       │ │
+local   : ││                                                      ││\x1b]8;;https://ftui││
 @@ row 16
 upstream: ││                                                   ││Registry map
-local   : ││https://vt100.net/docs/vt510-rm/O││\x1b]8;;\x1b\            ││move/drag    │ │
+local   : ││                                                      ││.dev\x1b\           ││
 @@ row 17
 upstream: ││                                                   ││[1] FrankenTUI
-local   : ││SC.html                          ││Notes: FrankenTUI target ││hover, down  │ │
+local   : ││                                                      ││OSC 8 close:        ││
 @@ row 18
 upstream: ││                                                   ││[2] Docs
-local   : ││                                 ││Hover: None | Action:    ││selects, up  │ │
+local   : ││                                                      ││\x1b]8;;\x1b\       ││
 @@ row 19
 upstream: ││                                                   ││[3] GitHub
-local   : ││Each row registers LinkRegistry  ││idle                     ││activates    │ │
+local   : ││                                                      ││Notes: Project home ││
 @@ row 20
 upstream: ││                                                   ││[4] OSC 8 Spec
-local   : ││id plus HitRegion::Link data.    ││Copied: no | Activations:││when inside  │ │
+local   : ││                                                      ││+ overview          ││
 @@ row 21
 upstream: ││                                                   ││[5] ANSI Reference
-local   : │└─────────────────────────────────┘└─────────────────────────┘└─────────────┘ │
+local   : ││                                                      ││Hover: None         ││
 @@ row 22
 upstream: ││                                                   ││
-local   : │LinkRegistry | HitRegion::Link | OSC-8 open/close | FTUI_LINK_REPORT_PATH     │
+local   : │╰──────────────────────────────────────────────────────╯╰────────────────────╯│
 @@ row 23
 upstream: ││                                                   ││
-local   : └──────────────────────────────────────────────────────────────────────────────┘
+local   : ╰──────────────────────────────────────────────────────────────────────────────╯
 @@ row 24
 upstream: orced)Tab/Shift+Tab: next/prev0x0 00:00              ││
 local   : Hyperlink Playground [41/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

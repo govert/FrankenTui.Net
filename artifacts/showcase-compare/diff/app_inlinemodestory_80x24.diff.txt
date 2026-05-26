@@ -2,79 +2,79 @@
 Upstream snapshot: app_inlinemodestory_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 922
-Local nonblank chars: 1304
-Local/upstream char ratio: 1.414
+Local nonblank chars: 1184
+Local/upstream char ratio: 1.284
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
 @@ row 02
 upstream: ╭─────────────────────────────────────────────────────Inline Mode───────────────
-local   : ┌─ Inline Mode ────────────────────────────────────────────────────────────────┐
+local   : ╭─────────────────────────────────Inline Mode──────────────────────────────────╮
 @@ row 03
 upstream: │Mode: Inline  |  Compare: OFF  |  Anchor: Bottom  |  UI height: 2  |  Rate: 2/t
-local   : │Mode: Inline | Compare: OFF | Anchor: Bottom | UI height: 1 | Rate: 1/tick |  │
+local   : │╭────────────────────────────────────────────────────────────────────────────╮│
 @@ row 04
 upstream: │Status: Live  |  Lines: 114  |  Scrollback preserved in inline mode
-local   : │focus=0                                                                       │
+local   : ││Mode: Inline  |  Compare: OFF  |  Anchor: Bottom  |  UI height: 2  |  Rate: ││
 @@ row 05
 upstream: │╭Inline Mode Story─────────────────────────────────────────────────────────────
-local   : │┌─ Inline Mode Story ──────┐┌─ Alt-screen Story ───┐┌─ Controls + Mouse ───┐  │
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 06
 upstream: ││000094 [ERROR] render  scrollback ok
-local   : ││000060 [INFO ] core       ││ALT-SCREEN MODE -     ││Space pause/resume    │  │
+local   : │╭─────────────────────────────Inline Mode Story──────────────────────────────╮│
 @@ row 07
 upstream: ││000095 [DEBUG] render  scrollback ok
-local   : ││scrollback ok             ││SCROLLBACK HIDDEN     ││stream                │  │
+local   : ││[000094] [ERROR] render  scrollback ok                                      ││
 @@ row 08
 upstream: ││000096 [INFO ] runtime scrollback ok
-local   : ││000061 [WARN ] render     ││Full-screen takeover  ││A toggle chrome anchor│  │
+local   : ││[000095] [DEBUG] render  scrollback ok                                      ││
 @@ row 09
 upstream: ││000097 [WARN ] runtime scrollback ok
-local   : ││inline anchor             ││(logs do not persist) ││(top/bottom)          │  │
+local   : ││[000096] [INFO ] runtime scrollback ok                                      ││
 @@ row 10
 upstream: ││000098 [ERROR] runtime inline anchor
-local   : ││000062 [ERROR] runtime    ││                      ││C toggle inline vs alt│  │
+local   : ││[000097] [WARN ] runtime scrollback ok                                      ││
 @@ row 11
 upstream: ││000099 [DEBUG] widgets inline anchor
-local   : ││budget check              ││Compare mode: disabled││comparison            │  │
+local   : ││[000098] [ERROR] runtime inline anchor                                      ││
 @@ row 12
 upstream: ││000100 [INFO ] widgets inline anchor
-local   : ││000063 [DEBUG] widgets    ││renders Inline        │└──────────────────────┘  │
+local   : ││[000099] [DEBUG] widgets inline anchor                                      ││
 @@ row 13
 upstream: ││000101 [WARN ] widgets inline anchor
-local   : ││diff pass                 ││(scrollback preserved)│┌─ State + Limits ─────┐  │
+local   : ││[000100] [INFO ] widgets inline anchor                                      ││
 @@ row 14
 upstream: ││000102 [ERROR] io      inline anchor
-local   : ││                          ││beside Alt-screen     ││State scroll: 0       │  │
+local   : ││[000101] [WARN ] widgets inline anchor                                      ││
 @@ row 15
 upstream: ││000103 [DEBUG] io      inline anchor
-local   : ││INLINE MODE - SCROLLBACK  ││(scrollback hidden).  ││MAX_LOG_LINES=2000 |  │  │
+local   : ││[000102] [ERROR] io      inline anchor                                      ││
 @@ row 16
 upstream: ││000104 [INFO ] io      inline anchor
-local   : ││PRESERVED                 ││Clicking the alt      ││INITIAL_LOG_LINES=60  │  │
+local   : ││[000103] [DEBUG] io      inline anchor                                      ││
 @@ row 17
 upstream: ││000105 [WARN ] layout  budget check
-local   : ││Anchor: BOTTOM | UI       ││header drills into    ││LOG_RATE_OPTIONS=[1,2,│  │
+local   : ││[000104] [INFO ] io      inline anchor                                      ││
 @@ row 18
 upstream: ││000106 [ERROR] layout  budget check
-local   : ││height: 1 | Log rate:     ││alt-screen mode when  ││5,10]                 │  │
+local   : ││[000105] [WARN ] layout  budget check                                       ││
 @@ row 19
 upstream: ││000107 [DEBUG] layout  budget check
-local   : ││1/tick                    ││comparing.            ││UI_HEIGHT_OPTIONS=[1,2│  │
+local   : ││[000106] [ERROR] layout  budget check                                       ││
 @@ row 20
 upstream: ││000108 [INFO ] core    budget check
-local   : ││Logs stream underneath    ││                      │└──────────────────────┘  │
+local   : ││[000107] [DEBUG] layout  budget check                                       ││
 @@ row 21
 upstream: ││000109 [WARN ] core    budget check
-local   : │└──────────────────────────┘└──────────────────────┘                          │
+local   : ││[000108] [INFO ] core    budget check                                       ││
 @@ row 22
 upstream: ││000110 [ERROR] core    budget check
-local   : │Space pause(live) | A anchor(Bottom) | C compare(off) | D defaults | H        │
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 23
 upstream: ││000111 [DEBUG] render  budget check
-local   : └──────────────────────────────────────────────────────────────────────────────┘
+local   : ╰──────────────────────────────────────────────────────────────────────────────╯
 @@ row 24
 upstream:  Tab/112ftINFO  nrender  diff pass
 local   : Inline Mode [36/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

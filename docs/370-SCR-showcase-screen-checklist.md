@@ -37,7 +37,7 @@ Compare with: `dotnet run --project tools/FrankenTui.ShowcaseCompare -- --screen
   - .NET target: `BuildAdvancedFeatures()`
 - [ ] **18. Visual Effects** — `visual_effects.rs` (5,784L) — 2 sessions
   - .NET target: `BuildVisualEffects()`
-- [ ] **19. Responsive Layout** — `responsive_demo.rs` (732L)
+- [x] **19. Responsive Layout** — `responsive_demo.rs` (732L)
   - .NET target: `BuildResponsive()`
 - [ ] **23. Intrinsic Sizing** — `intrinsic_sizing.rs` (985L)
   - .NET target: `BuildIntrinsicSizing()`
@@ -69,7 +69,7 @@ Compare with: `dotnet run --project tools/FrankenTui.ShowcaseCompare -- --screen
   - .NET target: `BuildMacroRecorder()`
 - [ ] **26. Mouse Playground** — `mouse_playground.rs` (2,631L) — 1 session
   - .NET target: `BuildMousePlayground()`
-- [ ] **27. Form Validation** — `form_validation.rs` (861L)
+- [x] **27. Form Validation** — `form_validation.rs` (861L)
   - .NET target: `BuildFormValidation()`
 - [ ] **39. Command Palette Evidence Lab** — `command_palette_lab.rs` (1,013L)
   - .NET target: `BuildCommandPaletteLab()`
@@ -95,11 +95,11 @@ Compare with: `dotnet run --project tools/FrankenTui.ShowcaseCompare -- --screen
 
 - [ ] **12. Terminal Capabilities** — `terminal_capabilities.rs` (2,477L) — 1 session
   - .NET target: `BuildTerminalCapabilities()`
-- [ ] **14. Performance** — `performance.rs` (591L)
+- [x] **14. Performance** — `performance.rs` (591L)
   - .NET target: `BuildPerformance()`
 - [ ] **20. Log Search** — `log_search.rs` (2,531L) — 1 session
   - .NET target: `BuildLogSearch()`
-- [ ] **21. Notifications** — `notifications.rs` (636L)
+- [x] **21. Notifications** — `notifications.rs` (636L)
   - .NET target: `BuildNotifications()`
 - [ ] **22. Action Timeline** — `action_timeline.rs` (1,707L)
   - .NET target: `BuildActionTimeline()`
@@ -117,13 +117,13 @@ Compare with: `dotnet run --project tools/FrankenTui.ShowcaseCompare -- --screen
   - .NET target: `BuildExplainability()`
 - [ ] **35. VOI Overlay** — `voi_overlay.rs` (785L)
   - .NET target: `BuildVoiOverlay()`
-- [ ] **36. Inline Mode** — `inline_mode_story.rs` (723L)
+- [x] **36. Inline Mode** — `inline_mode_story.rs` (723L)
   - .NET target: `BuildInlineModeStory()`
 - [x] **37. Accessibility** — `accessibility_panel.rs` (571L)
   - .NET target: `BuildAccessibility()`
 - [ ] **40. Determinism Lab** — `determinism_lab.rs` (1,353L)
   - .NET target: `BuildDeterminismLab()`
-- [ ] **41. Hyperlink Playground** — `hyperlink_playground.rs` (564L)
+- [x] **41. Hyperlink Playground** — `hyperlink_playground.rs` (564L)
   - .NET target: `BuildHyperlinkPlayground()`
 - [ ] **45. Quake E1M1 (Easter Egg)** — `quake.rs` (1,548L)
   - .NET target: `BuildQuake()`

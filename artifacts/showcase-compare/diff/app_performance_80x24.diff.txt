@@ -2,79 +2,79 @@
 Upstream snapshot: app_performance_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 1486
-Local nonblank chars: 1110
-Local/upstream char ratio: 0.747
+Local nonblank chars: 1566
+Local/upstream char ratio: 1.054
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
 @@ row 02
 upstream: ╭─────────────────────────────────────────────────────Performance───────────────
-local   : ┌─ Performance ────────────────────────────────────────────────────────────────┐
+local   : ╭─────────────────────────────────Performance──────────────────────────────────╮
 @@ row 03
 upstream: │╭─────────────────────────Virtualized List (10000 items)───────────────────────
-local   : │┌─ Virtualized List (10000 items) [focus] ──────────┐┌─ Performance Stats ───┐│
+local   : │╭───────────────────────Virtualized List (10000 items)───────────────────────╮│
 @@ row 04
 upstream: ││[    0]  INFO server::http       Event #00000: simulated log entry with payloa
-local   : ││          Index     Level     Module    Message    ││Total items:  10000    ││
+local   : ││[    0]  INFO server::http    Event #00000: simulated log entry with payload││
 @@ row 05
 upstream: ││[    1] DEBUG db::pool           Event #00001: simulated log entry with payloa
-local   : ││>             0     INFO      server::htEvent #00000│Selected:     1 / 10000│h
+local   : ││[    1] DEBUG db::pool        Event #00001: simulated log entry with payload││
 @@ row 06
 upstream: ││[    2]  WARN auth::jwt          Event #00002: simulated log entry with payloa
-local   : ││              1     DEBUG     db::pool  Event #00001│Focus:        0 focus  │h
+local   : ││[    2]  WARN auth::jwt       Event #00002: simulated log entry with payload││
 @@ row 07
 upstream: ││[    3] ERROR cache::redis       Event #00003: simulated log entry with payloa
-local   : ││              2     WARN      auth::jwt Event #00002│Scroll:       0        │h
+local   : ││[    3] ERROR cache::redis    Event #00003: simulated log entry with payload││
 @@ row 08
 upstream: ││[    4] TRACE queue::worker      Event #00004: simulated log entry with payloa
-local   : ││              3     ERROR     cache::redEvent #00003│Viewport:     14 rows  │h
+local   : ││[    4] TRACE queue::worker   Event #00004: simulated log entry with payload││
 @@ row 09
 upstream: ││[    5]  INFO api::handler       Event #00005: simulated log entry with payloa
-local   : ││              4     TRACE     queue::worEvent #00004│Visible:      0..14    │h
+local   : ││[    5]  INFO api::handler    Event #00005: simulated log entry with payload││
 @@ row 10
 upstream: ││[    6] DEBUG core::runtime      Event #00006: simulated log entry with payloa
-local   : ││              5     INFO      api::handlEvent #00005│Progress:     0.0%     │h
+local   : ││[    6] DEBUG core::runtime   Event #00006: simulated log entry with payload││
 @@ row 11
 upstream: 0│[    7]  WARN server::http       Event #00007: simulated log entry with payloa
-local   : ││              6     DEBUG     core::runtEvent #00006│Tick:         0        │h
+local   : ││[    7]  WARN server::http    Event #00007: simulated log entry with payload││
 @@ row 12
 upstream: ││[    8] ERROR db::pool           Event #00008: simulated log entry with payloa
-local   : ││              7     WARN      server::htEvent #00007│                       │h
+local   : ││[    8] ERROR db::pool        Event #00008: simulated log entry with payload││
 @@ row 13
 upstream: ││[    9] TRACE auth::jwt          Event #00009: simulated log entry with payloa
-local   : ││              8     ERROR     db::pool  Event #00008│Only visible rows are  │h
+local   : ││[    9] TRACE auth::jwt       Event #00009: simulated log entry with payload││
 @@ row 14
 upstream: ││[   10]  INFO cache::redis       Event #00010: simulated log entry with payloa
-local   : ││              9     TRACE     auth::jwt Event #00009│rendered.              │h
+local   : ││[   10]  INFO cache::redis    Event #00010: simulated log entry with payload││
 @@ row 15
 upstream: ││[   11] DEBUG queue::worker      Event #00011: simulated log entry with payloa
-local   : ││             10     INFO      cache::redEvent #00010│Rendering 14 of 10000  │h
+local   : ││[   11] DEBUG queue::worker   Event #00011: simulated log entry with payload││
 @@ row 16
 upstream: ││[   12]  WARN api::handler       Event #00012: simulated log entry with payloa
-local   : ││             11     DEBUG     queue::worEvent #00011│items.                 │h
+local   : ││[   12]  WARN api::handler    Event #00012: simulated log entry with payload││
 @@ row 17
 upstream: ││[   13] ERROR core::runtime      Event #00013: simulated log entry with payloa
-local   : ││             12     WARN      api::handlEvent #00012│                       │h
+local   : ││[   13] ERROR core::runtime   Event #00013: simulated log entry with payload││
 @@ row 18
 upstream: ││[   14] TRACE server::http       Event #00014: simulated log entry with payloa
-local   : ││             13     ERROR     core::runtEvent #00013│                       │h
+local   : ││[   14] TRACE server::http    Event #00014: simulated log entry with payload││
 @@ row 19
 upstream: ││[   15]  INFO db::pool           Event #00015: simulated log entry with payloa
-local   : ││                                                   ││                       ││
+local   : ││[   15]  INFO db::pool        Event #00015: simulated log entry with payload││
 @@ row 20
 upstream: ││[   16] DEBUG auth::jwt          Event #00016: simulated log entry with payloa
-local   : ││                                                   ││                       ││
+local   : ││[   16] DEBUG auth::jwt       Event #00016: simulated log entry with payload││
 @@ row 21
 upstream: ││[   17]  WARN cache::redis       Event #00017: simulated log entry with payloa
-local   : │└───────────────────────────────────────────────────┘└───────────────────────┘│
+local   : ││[   17]  WARN cache::redis    Event #00017: simulated log entry with payload││
 @@ row 22
 upstream: ││[   18] ERROR queue::worker      Event #00018: simulated log entry with payloa
-local   : │Item 1/10000 | focus=0 focus | j/k: scroll | Ctrl+D/U: page | g/G: jump       │
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 23
 upstream: ││[   19] TRACE api::handler       Event #00019: simulated log entry with payloa
-local   : └──────────────────────────────────────────────────────────────────────────────┘
+local   : ╰──────────────────────────────────────────────────────────────────────────────╯
 @@ row 24
 upstream:  Tab/Shift+Tab: next/prev     0x0 00:00  #00020: simulated log entry with payloa
 local   : Performance [14/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

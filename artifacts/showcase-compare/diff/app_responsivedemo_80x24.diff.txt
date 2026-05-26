@@ -2,79 +2,79 @@
 Upstream snapshot: app_responsivedemo_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 662
-Local nonblank chars: 1026
-Local/upstream char ratio: 1.550
+Local nonblank chars: 844
+Local/upstream char ratio: 1.275
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
 @@ row 02
 upstream: ╭──────────────────────────────────────────────────Responsive Layout────────────
-local   : ┌─ Responsive Layout ──────────────────────────────────────────────────────────┐
+local   : ╭──────────────────────────────Responsive Layout───────────────────────────────╮
 @@ row 03
 upstream: │ Breakpoint: SM (60-89) │ Width: 80 │ Thresholds: sm≥60 md≥90 lg≥120 xl≥160
-local   : │responsive mouse focus=0 width_offset=0 custom_bp=off aside=auto | Breakpoint:│
+local   : │Breakpoint: SM (60-89) | Width: 80 | Thresholds: sm≥60 md≥90 lg≥120 xl≥160    │
 @@ row 04
 upstream: │╭Sidebar───────────────────╮╭Content───────────────────────────────────────────
-local   : │┌─ Layout Info ──────────────────────────────────────────────────────────────┐│
+local   : │                                                                              │
 @@ row 05
 upstream: ││Breakpoint: SM (60-89)    ││Columns: 1 │ Breakpoint: SM (60-89) │ 80×24
-local   : ││Columns: 1 | Breakpoint: SM (60-89) | 80x24 | Offset: 0                     ││
+local   : │╭──────────Sidebar───────────╮╭───────────────────Content────────────────────╮│
 @@ row 06
 upstream: ││Layout: stacked           ││
-local   : ││                                                                            ││
+local   : ││Breakpoint: SM (60-89)      ││Columns: 1                                    ││
 @@ row 07
 upstream: ││                          ││Padding: 2 │ Style: normal
-local   : ││Padding: 2 | Style: normal                                                  ││
+local   : ││Layout: stacked             ││                                              ││
 @@ row 08
 upstream: ││Sidebar: hidden (md+)     ││
-local   : ││                                                                            ││
+local   : ││                            ││Padding: 2                                    ││
 @@ row 09
 upstream: ││Aside:   hidden (lg+)     ││The layout adapts to the terminal width.
-local   : ││The layout adapts to the terminal width.                                    ││
+local   : ││Sidebar: hidden (md+)       ││Style: normal                                 ││
 @@ row 10
 upstream: ││                          ││Resize your terminal to see the layout switch
-local   : │└────────────────────────────────────────────────────────────────────────────┘│
+local   : ││Aside:   hidden (lg+)       ││                                              ││
 @@ row 11
 upstream: ││[b] Toggle BPs            ││between 1-column, 2-column, and 3-column modes.
-local   : │┌─ Visibility ───────────────────────────────────────────────────────────────┐│
+local   : ││                            ││The layout adapts to the terminal width.      ││
 @@ row 12
 upstream: ││[Current: default]        ││
-local   : ││Sidebar: hidden (md+)                                                       ││
+local   : ││[b] Toggle BPs              ││Resize your terminal to see the layout switch ││
 @@ row 13
 upstream: ││                          ││
-local   : ││Aside:   hidden (lg+)                                                       ││
+local   : ││[Current: default]          ││between 1-column, 2-column, and 3-column      ││
 @@ row 14
 upstream: ││                          ││
-local   : ││                                                                            ││
+local   : ││                            ││modes.                                        ││
 @@ row 15
 upstream: ││                          ││
-local   : ││                                                                            ││
+local   : ││                            ││                                              ││
 @@ row 16
 upstream: ││                          ││
-local   : │└────────────────────────────────────────────────────────────────────────────┘│
+local   : ││                            ││                                              ││
 @@ row 17
 upstream: ││                          ││
-local   : │┌─ Responsive Values ────────────────────────────────────────────────────────┐│
+local   : ││                            ││                                              ││
 @@ row 18
 upstream: ││                          ││
-local   : ││Padding: 2                                                                  ││
+local   : ││                            ││                                              ││
 @@ row 19
 upstream: ││                          ││
-local   : ││Style: normal                                                               ││
+local   : ││                            ││                                              ││
 @@ row 20
 upstream: ││                          ││
-local   : ││                                                                            ││
+local   : ││                            ││                                              ││
 @@ row 21
 upstream: ││                          ││
-local   : ││                                                                            ││
+local   : ││                            ││                                              ││
 @@ row 22
 upstream: ││                          ││
-local   : │└────────────────────────────────────────────────────────────────────────────┘│
+local   : │╰────────────────────────────╯╰──────────────────────────────────────────────╯│
 @@ row 23
 upstream: ││                          ││
-local   : └──────────────────────────────────────────────────────────────────────────────┘
+local   : ╰──────────────────────────────────────────────────────────────────────────────╯
 @@ row 24
 upstream: ed) Tab/Shift+Tab: next/prev  0x0 00:00
 local   : Responsive Layout [19/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

@@ -1,24 +1,24 @@
-﻿ 1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
-┌─ Responsive Layout ──────────────────────────────────────────────────────────┐
-│responsive mouse focus=0 width_offset=0 custom_bp=off aside=auto | Breakpoint:│
-│┌─ Layout Info ──────────────────────────────────────────────────────────────┐│
-││Columns: 1 | Breakpoint: SM (60-89) | 80x24 | Offset: 0                     ││
-││                                                                            ││
-││Padding: 2 | Style: normal                                                  ││
-││                                                                            ││
-││The layout adapts to the terminal width.                                    ││
-│└────────────────────────────────────────────────────────────────────────────┘│
-│┌─ Visibility ───────────────────────────────────────────────────────────────┐│
-││Sidebar: hidden (md+)                                                       ││
-││Aside:   hidden (lg+)                                                       ││
-││                                                                            ││
-││                                                                            ││
-│└────────────────────────────────────────────────────────────────────────────┘│
-│┌─ Responsive Values ────────────────────────────────────────────────────────┐│
-││Padding: 2                                                                  ││
-││Style: normal                                                               ││
-││                                                                            ││
-││                                                                            ││
-│└────────────────────────────────────────────────────────────────────────────┘│
-└──────────────────────────────────────────────────────────────────────────────┘
+﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+╭──────────────────────────────Responsive Layout───────────────────────────────╮
+│Breakpoint: SM (60-89) | Width: 80 | Thresholds: sm≥60 md≥90 lg≥120 xl≥160    │
+│                                                                              │
+│╭──────────Sidebar───────────╮╭───────────────────Content────────────────────╮│
+││Breakpoint: SM (60-89)      ││Columns: 1                                    ││
+││Layout: stacked             ││                                              ││
+││                            ││Padding: 2                                    ││
+││Sidebar: hidden (md+)       ││Style: normal                                 ││
+││Aside:   hidden (lg+)       ││                                              ││
+││                            ││The layout adapts to the terminal width.      ││
+││[b] Toggle BPs              ││Resize your terminal to see the layout switch ││
+││[Current: default]          ││between 1-column, 2-column, and 3-column      ││
+││                            ││modes.                                        ││
+││                            ││                                              ││
+││                            ││                                              ││
+││                            ││                                              ││
+││                            ││                                              ││
+││                            ││                                              ││
+││                            ││                                              ││
+││                            ││                                              ││
+│╰────────────────────────────╯╰──────────────────────────────────────────────╯│
+╰──────────────────────────────────────────────────────────────────────────────╯
 Responsive Layout [19/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

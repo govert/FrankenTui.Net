@@ -2,79 +2,79 @@
 Upstream snapshot: app_notifications_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 491
-Local nonblank chars: 1158
-Local/upstream char ratio: 2.358
+Local nonblank chars: 721
+Local/upstream char ratio: 1.468
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
 @@ row 02
 upstream: ╭────────────────────────────────────────────────────Notifications──────────────
-local   : ┌─ Notifications ──────────────────────────────────────────────────────────────┐
+local   : ╭────────────────────────────────Notifications─────────────────────────────────╮
 @@ row 03
 upstream: │╭──────────────Notification Demo──────────────╮
-local   : │┌─ Notification Demo [success f┌─ Notification Stack [toast 0] ──────────────┐│
+local   : │╭─────────────────────────────Notification Demo──────────────────────────────╮│
 @@ row 04
 upstream: ││Press keys to trigger notifications:         │
-local   : ││Press keys to trigger        ││Priority   Toast      Actions    TTL         ││
+local   : ││Press keys to trigger notifications:                                        ││
 @@ row 05
 upstream: ││                                             │
-local   : ││notifications:               ││Urgent     Critical AlAck / Snoozpersistent  ││
+local   : ││                                                                            ││
 @@ row 06
 upstream: ││  s  Success notification                    │
-local   : ││                             ││High       Error      Retry      8s          ││
+local   : ││  s  Success notification                                                   ││
 @@ row 07
 upstream: ││  e  Error with Retry action                 │
-local   : ││  s  Success notification    ││Normal     Operation c-mpleted   5s          ││
+local   : ││  e  Error with Retry action                                                ││
 @@ row 08
 upstream: ││  w  Warning notification                    │
-local   : ││  e  Error with Retry action ││Normal     Low disk sp-ce        6s          ││
+local   : ││  w  Warning notification                                                   ││
 @@ row 09
 upstream: ││  i  Info notification                       │
-local   : ││  w  Warning notification    ││Low        Update avai-able      4s          ││
+local   : ││  i  Info notification                                                      ││
 @@ row 10
 upstream: ││  u  Urgent with Ack/Snooze actions          │
-local   : ││  i  Info notification       ││                                             ││
+local   : ││  u  Urgent with Ack/Snooze actions                                         ││
 @@ row 11
 upstream: ││  d  Dismiss all notifications               │
-local   : ││u  Urgent with Ack/Snooze    ││                                             ││
+local   : ││  d  Dismiss all notifications                                              ││
 @@ row 12
 upstream: ││                                             │
-local   : ││actions                      ││                                             ││
+local   : ││                                                                            ││
 @@ row 13
 upstream: ││Queue: 0 visible, 0 pending                  │
-local   : ││d  Dismiss all notifications │└─────────────────────────────────────────────┘│
+local   : ││Queue: 0 visible, 0 pending                                                 ││
 @@ row 14
 upstream: ││Total shown: 0                               │
-local   : ││                             │┌─ Toast Queue Lifecycle ─────────────────────┐│
+local   : ││Total shown: 0                                                              ││
 @@ row 15
 upstream: ││Last action: (none)                          │
-local   : ││Queue: 1 visible, 4 pending  ││Lifecycle                                    ││
+local   : ││Last action: (none)                                                         ││
 @@ row 16
 upstream: ││                                             │
-local   : ││Config: max_visible=4        ││push -> display -> auto-dismiss              ││
+local   : ││                                                                            ││
 @@ row 17
 upstream: ││                                             │
-local   : ││max_queued=20                ││manual dismiss -> promote pending            ││
+local   : ││                                                                            ││
 @@ row 18
 upstream: ││                                             │
-local   : ││Position: TopRight           ││action invocation -> last_action             ││
+local   : ││                                                                            ││
 @@ row 19
 upstream: ││                                             │
-local   : ││Selected trigger: success    ││Scroll offset: 0                             ││
+local   : ││                                                                            ││
 @@ row 20
 upstream: ││                                             │
-local   : ││Selected toast: 0            ││                                             ││
+local   : ││                                                                            ││
 @@ row 21
 upstream: ││                                             │
-local   : ││Focus: 0 focus               ││Toast styles                                 ││
+local   : ││                                                                            ││
 @@ row 22
 upstream: ││                                             │
-local   : │└─────────────────────────────┘└─────────────────────────────────────────────┘│
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 23
 upstream: ││                                             │
-local   : └──────────────────────────────────────────────────────────────────────────────┘
+local   : ╰──────────────────────────────────────────────────────────────────────────────╯
 @@ row 24
 upstream:   Tab/Shift+Tab: next/prev    0x0 00:00        │
 local   : Notifications [21/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

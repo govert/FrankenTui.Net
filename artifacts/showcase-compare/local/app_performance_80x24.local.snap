@@ -1,24 +1,24 @@
-﻿ 1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
-┌─ Performance ────────────────────────────────────────────────────────────────┐
-│┌─ Virtualized List (10000 items) [focus] ──────────┐┌─ Performance Stats ───┐│
-││          Index     Level     Module    Message    ││Total items:  10000    ││
-││>             0     INFO      server::htEvent #00000│Selected:     1 / 10000│h
-││              1     DEBUG     db::pool  Event #00001│Focus:        0 focus  │h
-││              2     WARN      auth::jwt Event #00002│Scroll:       0        │h
-││              3     ERROR     cache::redEvent #00003│Viewport:     14 rows  │h
-││              4     TRACE     queue::worEvent #00004│Visible:      0..14    │h
-││              5     INFO      api::handlEvent #00005│Progress:     0.0%     │h
-││              6     DEBUG     core::runtEvent #00006│Tick:         0        │h
-││              7     WARN      server::htEvent #00007│                       │h
-││              8     ERROR     db::pool  Event #00008│Only visible rows are  │h
-││              9     TRACE     auth::jwt Event #00009│rendered.              │h
-││             10     INFO      cache::redEvent #00010│Rendering 14 of 10000  │h
-││             11     DEBUG     queue::worEvent #00011│items.                 │h
-││             12     WARN      api::handlEvent #00012│                       │h
-││             13     ERROR     core::runtEvent #00013│                       │h
-││                                                   ││                       ││
-││                                                   ││                       ││
-│└───────────────────────────────────────────────────┘└───────────────────────┘│
-│Item 1/10000 | focus=0 focus | j/k: scroll | Ctrl+D/U: page | g/G: jump       │
-└──────────────────────────────────────────────────────────────────────────────┘
+﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+╭─────────────────────────────────Performance──────────────────────────────────╮
+│╭───────────────────────Virtualized List (10000 items)───────────────────────╮│
+││[    0]  INFO server::http    Event #00000: simulated log entry with payload││
+││[    1] DEBUG db::pool        Event #00001: simulated log entry with payload││
+││[    2]  WARN auth::jwt       Event #00002: simulated log entry with payload││
+││[    3] ERROR cache::redis    Event #00003: simulated log entry with payload││
+││[    4] TRACE queue::worker   Event #00004: simulated log entry with payload││
+││[    5]  INFO api::handler    Event #00005: simulated log entry with payload││
+││[    6] DEBUG core::runtime   Event #00006: simulated log entry with payload││
+││[    7]  WARN server::http    Event #00007: simulated log entry with payload││
+││[    8] ERROR db::pool        Event #00008: simulated log entry with payload││
+││[    9] TRACE auth::jwt       Event #00009: simulated log entry with payload││
+││[   10]  INFO cache::redis    Event #00010: simulated log entry with payload││
+││[   11] DEBUG queue::worker   Event #00011: simulated log entry with payload││
+││[   12]  WARN api::handler    Event #00012: simulated log entry with payload││
+││[   13] ERROR core::runtime   Event #00013: simulated log entry with payload││
+││[   14] TRACE server::http    Event #00014: simulated log entry with payload││
+││[   15]  INFO db::pool        Event #00015: simulated log entry with payload││
+││[   16] DEBUG auth::jwt       Event #00016: simulated log entry with payload││
+││[   17]  WARN cache::redis    Event #00017: simulated log entry with payload││
+│╰────────────────────────────────────────────────────────────────────────────╯│
+╰──────────────────────────────────────────────────────────────────────────────╯
 Performance [14/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)
