@@ -2,6 +2,16 @@ using FrankenTui.Core;
 
 namespace FrankenTui.Render;
 
+/// <summary>Border corner and edge characters for a border set.</summary>
+public readonly record struct BorderSet(
+    char Vertical, char Horizontal,
+    char TopLeft, char TopRight, char BottomLeft, char BottomRight)
+{
+    public static readonly BorderSet Rounded = new('│', '─', '╭', '╮', '╰', '╯');
+    public static readonly BorderSet Square = new('│', '─', '┌', '┐', '└', '┘');
+    public static readonly BorderSet Double = new('║', '═', '╔', '╗', '╚', '╝');
+}
+
 public static class BufferPainter
 {
     public static void WriteText(
@@ -63,7 +73,7 @@ public static class BufferPainter
         }
     }
 
-    public static void DrawBorder(Buffer buffer, Rect rect, Cell template)
+    public static void DrawBorder(Buffer buffer, Rect rect, Cell template, BorderSet border)
     {
         ArgumentNullException.ThrowIfNull(buffer);
 
@@ -77,13 +87,16 @@ public static class BufferPainter
         var top = rect.Y;
         var bottom = (ushort)(rect.Bottom - 1);
 
-        DrawHorizontalLine(buffer, left, top, rect.Width, template.WithChar('─'));
-        DrawHorizontalLine(buffer, left, bottom, rect.Width, template.WithChar('─'));
-        DrawVerticalLine(buffer, left, top, rect.Height, template.WithChar('│'));
-        DrawVerticalLine(buffer, right, top, rect.Height, template.WithChar('│'));
-        buffer.Set(left, top, template.WithChar('┌'));
-        buffer.Set(right, top, template.WithChar('┐'));
-        buffer.Set(left, bottom, template.WithChar('└'));
-        buffer.Set(right, bottom, template.WithChar('┘'));
+        DrawHorizontalLine(buffer, left, top, rect.Width, template.WithChar(border.Horizontal));
+        DrawHorizontalLine(buffer, left, bottom, rect.Width, template.WithChar(border.Horizontal));
+        DrawVerticalLine(buffer, left, top, rect.Height, template.WithChar(border.Vertical));
+        DrawVerticalLine(buffer, right, top, rect.Height, template.WithChar(border.Vertical));
+        buffer.Set(left, top, template.WithChar(border.TopLeft));
+        buffer.Set(right, top, template.WithChar(border.TopRight));
+        buffer.Set(left, bottom, template.WithChar(border.BottomLeft));
+        buffer.Set(right, bottom, template.WithChar(border.BottomRight));
     }
+
+    public static void DrawBorder(Buffer buffer, Rect rect, Cell template) =>
+        DrawBorder(buffer, rect, template, BorderSet.Square);
 }

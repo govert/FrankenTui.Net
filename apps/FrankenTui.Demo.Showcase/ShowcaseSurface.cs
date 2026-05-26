@@ -287,18 +287,23 @@ internal static class ShowcaseSurface
 
     private static IWidget BuildScreenTabs(ShowcaseDemoState state)
     {
-        var tabs = ShowcaseCatalog.Screens
-            .Select((screen, index) =>
-            {
-                var keyLabel = index < 9 ? $"{index + 1}" : index == 9 ? "0" : "-";
-                return $"{keyLabel}: {screen.ShortLabel}";
-            })
-            .ToArray();
-        return new TabsWidget
+        var current = ShowcaseCatalog.ClampScreenNumber(state.CurrentScreenNumber);
+        var items = new List<string>();
+        var lineWidth = 0;
+        for (var i = 0; i < ShowcaseCatalog.Screens.Count; i++)
         {
-            Tabs = tabs,
-            SelectedIndex = ShowcaseCatalog.ClampScreenNumber(state.CurrentScreenNumber) - 1
-        };
+            var screen = ShowcaseCatalog.Screens[i];
+            var keyLabel = i < 9 ? (i + 1).ToString() : i == 9 ? "0" : "-";
+            var prefix = i == 0 ? " " : "│";
+            var isActive = i + 1 == current;
+            var label = isActive ? string.Concat(keyLabel, ": [", screen.ShortLabel, "] ")
+                                : string.Concat(keyLabel, ": ", screen.ShortLabel, " ");
+            var segment = prefix + label;
+            lineWidth += segment.Length;
+            if (lineWidth > 80) break;
+            items.Add(segment);
+        }
+        return new ParagraphWidget(string.Concat(items));
     }
 
     private static IWidget BuildAppNavigation() =>
