@@ -52,7 +52,7 @@ Compare with: `dotnet run --project tools/FrankenTui.ShowcaseCompare -- --screen
 
 - [ ] **8. Data Viz** — `3d_data.rs` (5,791L) — 2 sessions
   - .NET target: `BuildDataViz()`
-- [ ] **11. Table Theme Gallery** — `table_theme_gallery.rs` (1,260L)
+- [x] **11. Table Theme Gallery** — `table_theme_gallery.rs` (1,260L)
   - .NET target: `BuildTableThemeGallery()`
 - [ ] **16. Mermaid Showcase** — `mermaid_showcase.rs` (6,494L) — 2 sessions
   - .NET target: `BuildMermaid()`
@@ -61,11 +61,11 @@ Compare with: `dotnet run --project tools/FrankenTui.ShowcaseCompare -- --screen
 
 ## Interaction & Forms (7 screens)
 
-- [ ] **7. Forms & Input** — `forms_input.rs` (1,377L)
+- [x] **7. Forms & Input** — `forms_input.rs` (1,377L)
   - .NET target: `BuildFormsInput()`
-- [ ] **9. File Browser** — `file_browser.rs` (1,197L)
+- [x] **9. File Browser** — `file_browser.rs` (1,197L)
   - .NET target: `BuildFileBrowser()`
-- [ ] **13. Macro Recorder** — `macro_recorder.rs` (1,629L)
+- [x] **13. Macro Recorder** — `macro_recorder.rs` (1,629L)
   - .NET target: `BuildMacroRecorder()`
 - [ ] **26. Mouse Playground** — `mouse_playground.rs` (2,631L) — 1 session
   - .NET target: `BuildMousePlayground()`
@@ -73,7 +73,7 @@ Compare with: `dotnet run --project tools/FrankenTui.ShowcaseCompare -- --screen
   - .NET target: `BuildFormValidation()`
 - [x] **39. Command Palette Evidence Lab** — `command_palette_lab.rs` (1,013L)
   - .NET target: `BuildCommandPaletteLab()`
-- [ ] **42. Kanban Board** — `kanban_board.rs` (1,355L)
+- [x] **42. Kanban Board** — `kanban_board.rs` (1,355L)
   - .NET target: `BuildKanbanBoard()`
 
 ## Text & Editing (6 screens)
@@ -101,7 +101,7 @@ Compare with: `dotnet run --project tools/FrankenTui.ShowcaseCompare -- --screen
   - .NET target: `BuildLogSearch()`
 - [x] **21. Notifications** — `notifications.rs` (636L)
   - .NET target: `BuildNotifications()`
-- [ ] **22. Action Timeline** — `action_timeline.rs` (1,707L)
+- [x] **22. Action Timeline** — `action_timeline.rs` (1,707L)
   - .NET target: `BuildActionTimeline()`
 - [ ] **28. Virtualized Search** — `virtualized_search.rs` (2,192L) — 1 session
   - .NET target: `BuildVirtualizedSearch()`
@@ -111,11 +111,11 @@ Compare with: `dotnet run --project tools/FrankenTui.ShowcaseCompare -- --screen
   - .NET target: `BuildThemeStudio()`
 - [ ] **31. Time-Travel Studio** — `snapshot_player.rs` (2,586L) — 1 session
   - .NET target: `BuildSnapshotPlayer()`
-- [ ] **32. Performance Challenge** — `performance_hud.rs` (1,604L)
+- [x] **32. Performance Challenge** — `performance_hud.rs` (1,604L)
   - .NET target: `BuildPerformanceChallenge()`
 - [ ] **33. Explainability Cockpit** — `explainability_cockpit.rs` (1,400L)
   - .NET target: `BuildExplainability()`
-- [ ] **35. VOI Overlay** — `voi_overlay.rs` (785L)
+- [x] **35. VOI Overlay** — `voi_overlay.rs` (785L)
   - .NET target: `BuildVoiOverlay()`
 - [x] **36. Inline Mode** — `inline_mode_story.rs` (723L)
   - .NET target: `BuildInlineModeStory()`
