@@ -57,14 +57,14 @@ Runtime infrastructure — retry, cancellation, locale, etc.
 
 | # | Module | Target File | Effort |
 |---|---|---|---|
-| E1 | `retry.rs` (697L) | `FrankenTui.Runtime/RetryPolicy.cs` | 25 min |
-| E2 | `cancellation.rs` (251L) | `FrankenTui.Runtime/Cancellation.cs` | 15 min |
-| E3 | `locale.rs` (323L) | `FrankenTui.Runtime/Locale.cs` | 15 min |
-| E4 | `debug_trace.rs` (93L) | `FrankenTui.Runtime/DebugTrace.cs` | 10 min |
-| E5 | `log_sink.rs` (275L) | `FrankenTui.Runtime/LogSink.cs` | 15 min |
-| E6 | `subscription.rs` (2037L) | `FrankenTui.Runtime/Subscription.cs` | 45 min |
-| E7 | `policy_registry.rs` (452L) | `FrankenTui.Runtime/PolicyRegistry.cs` | 20 min |
-| E8 | `schema_compat.rs` (672L) | `FrankenTui.Runtime/SchemaCompat.cs` | 25 min |
+| E1 | `retry.rs` (697L) | `FrankenTui.Runtime/RuntimeCore.cs` | ✅ |
+| E2 | `cancellation.rs` (251L) | `FrankenTui.Runtime/RuntimeCore.cs` | ✅ |
+| E3 | `locale.rs` (323L) | `FrankenTui.Runtime/RuntimeCore.cs` | ✅ |
+| E4 | `debug_trace.rs` (93L) | `FrankenTui.Runtime/RuntimeCore.cs` | ✅ |
+| E5 | `log_sink.rs` (275L) | `FrankenTui.Runtime/RuntimeCore.cs` | ✅ |
+| E6 | `subscription.rs` (2037L) | `FrankenTui.Runtime/RuntimeCore.cs` | ✅ |
+| E7 | `policy_registry.rs` (452L) | `FrankenTui.Runtime/RuntimeCore.cs` | ✅ |
+| E8 | `schema_compat.rs` (672L) | `FrankenTui.Runtime/RuntimeCore.cs` | ✅ |
 
 ## Phase F: Telemetry (1-2 sessions, ~8 items)
 
@@ -72,14 +72,14 @@ Evidence, telemetry, and tracing infrastructure.
 
 | # | Module | Target File | Effort |
 |---|---|---|---|
-| F1 | `telemetry.rs` (2108L) | `FrankenTui.Runtime/Telemetry.cs` | 45 min |
-| F2 | `telemetry_schema.rs` (282L) | `FrankenTui.Runtime/TelemetrySchema.cs` | 15 min |
-| F3 | `metrics_registry.rs` (714L) | `FrankenTui.Runtime/MetricsRegistry.cs` | 30 min |
-| F4 | `event_trace.rs` (2254L) | `FrankenTui.Runtime/EventTrace.cs` | 45 min |
-| F5 | `schedule_trace.rs` (1541L) | `FrankenTui.Runtime/ScheduleTrace.cs` | 30 min |
-| F6 | `timeline_aggregator.rs` (990L) | `FrankenTui.Runtime/TimelineAggregator.cs` | 30 min |
-| F7 | `evidence_bridges.rs` (520L) | `FrankenTui.Runtime/EvidenceBridges.cs` | 20 min |
-| F8 | `evidence_telemetry.rs` (502L) | `FrankenTui.Runtime/EvidenceTelemetry.cs` | 20 min |
+| F1 | `telemetry.rs` (2108L) | Uses existing `TelemetryEvent` in `TelemetrySchema.cs` | ✅ |
+| F2 | `telemetry_schema.rs` (282L) | Existing `TelemetrySchema.cs` | ✅ |
+| F3 | `metrics_registry.rs` (714L) | `FrankenTui.Runtime/TelemetryInfra.cs` | ✅ |
+| F4 | `event_trace.rs` (2254L) | `FrankenTui.Runtime/TelemetryInfra.cs` | ✅ |
+| F5 | `schedule_trace.rs` (1541L) | `FrankenTui.Runtime/TelemetryInfra.cs` | ✅ |
+| F6 | `timeline_aggregator.rs` (990L) | `FrankenTui.Runtime/TelemetryInfra.cs` | ✅ |
+| F7 | `evidence_bridges.rs` (520L) | `FrankenTui.Runtime/TelemetryInfra.cs` | ✅ |
+| F8 | `evidence_telemetry.rs` (502L) | `FrankenTui.Runtime/TelemetryInfra.cs` | ✅ |
 
 ## Phase G: Performance Governance (1-2 sessions, ~7 items)
 
