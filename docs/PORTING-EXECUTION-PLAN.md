@@ -45,11 +45,11 @@ Algorithm/data structure ports — self-contained, testable.
 
 | # | Module | Target File | Effort |
 |---|---|---|---|
-| D1 | `adaptive_radix.rs` (1000L) | `FrankenTui.Runtime/AdaptiveRadix.cs` | 30 min |
-| D2 | `elias_fano.rs` (903L) | `FrankenTui.Runtime/EliasFano.cs` | 30 min |
-| D3 | `fenwick.rs` (851L) | `FrankenTui.Runtime/FenwickTree.cs` | 30 min |
-| D4 | `louds.rs` (835L) | `FrankenTui.Runtime/Louds.cs` | 30 min |
-| D5 | `countmin_sketch.rs` (1022L) | `FrankenTui.Runtime/CountMinSketch.cs` | 30 min |
+| D1 | `adaptive_radix.rs` (1000L) | `FrankenTui.Runtime/AdaptiveRadix.cs` | ✅ |
+| D2 | `elias_fano.rs` (903L) | `FrankenTui.Runtime/DataStructures.cs` | ✅ |
+| D3 | `fenwick.rs` (851L) | `FrankenTui.Runtime/DataStructures.cs` | ✅ |
+| D4 | `louds.rs` (835L) | `FrankenTui.Runtime/DataStructures.cs` | ✅ |
+| D5 | `countmin_sketch.rs` (1022L) | `FrankenTui.Runtime/DataStructures.cs` | ✅ |
 
 ## Phase E: Runtime Core (1-2 sessions, ~8 items)
 
