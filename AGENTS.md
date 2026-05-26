@@ -7,6 +7,11 @@ documentation.
 
 ## Current Doctrine
 
+- **This is a direct, faithful, line-for-line port of the Rust FrankenTUI codebase
+  to .NET.** Every screen, widget, subsystem, and tool upstream must have a
+  corresponding .NET implementation that produces identical output. When in doubt,
+  the Rust code is the source of truth. Never settle for "close enough" — the
+  target is bit-identical rendered output and behavior.
 - `CHARTER.md` is the prescriptive execution doctrine for this repository.
 - If supporting docs drift, `CHARTER.md` wins unless a later governance document
   explicitly says otherwise.
