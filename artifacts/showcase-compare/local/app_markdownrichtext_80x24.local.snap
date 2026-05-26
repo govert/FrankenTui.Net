@@ -1,24 +1,24 @@
-﻿ 1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
-┌─ Markdown ───────────────────────────────────────────────────────────────────┐
-│┌─ Markdown Renderer [scrol┌─ LLM Streaming Simulation┌─ Style Sampler ──────┐│
-││▌ GitHub-Flavored        ││▌ FrankenTUI Streaming   ││Bold  Dim  Italic     ││
-││Markdown (Rich Demo)     ││Report                   ││Underline             ││
-││                         ││                         ││Strikethrough  Reverse││
-││▌▌ LaTeX + Symbols       │││ [!NOTE]                ││Blink                 ││
-││                         │││ This stream simulates  ││Dbl-Underline         ││
-││Inline math: E = mc^2, α ││an L                     ││Curly-Underline       ││
-││+ β = γ.                 ││                         │└──────────────────────┘│
-││                         ││                         │┌─ Unicode Showcase ───┐│
-││▌▌ Admonitions           ││                         ││Text   Type   Cells   ││
-││                         ││                         ││Hello  ASCII  5       ││
-│││ [!NOTE]                ││                         ││ni hao CJK    8       ││
-│││ Information note with  ││                         ││konnichHiragan10      ││
-││rich emphasis.           ││                         ││alpha bGreek  10      ││
-││                         │└─────────────────────────┘│arrows Symbols7       ││
-│││ [!TIP]                 │┌─ Markdown Detection ────┐│blocks Block e4.      ││
-│││ Use <kbd>Tab</kbd> and ││Detection: 7 indicators |││                      ││
-││<kbd>Shift+Tab</kbd> to  ││Likely                   │└──────────────────────┘│
-││navigate.                ││Confidence: 35%          │┌─ Wrap: Word | Align: Le
-│└─────────────────────────┘└─────────────────────────┘└──────────────────────┘│
-└──────────────────────────────────────────────────────────────────────────────┘
+﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+╭───────────────────────────────────Markdown───────────────────────────────────╮
+│╭─────────────────────────────Markdown Rich Text─────────────────────────────╮│
+││# Markdown Rendering                                                        ││
+││                                                                            ││
+││## Headers                                                                  ││
+││                                                                            ││
+││### H3: Smaller header                                                      ││
+││                                                                            ││
+││**Bold text** and *italic text* and `code`.                                 ││
+││                                                                            ││
+││> Blockquote: This is a quoted section.                                     ││
+││                                                                            ││
+││---                                                                         ││
+││                                                                            ││
+││- Unordered list item 1                                                     ││
+││- Unordered list item 2                                                     ││
+││                                                                            ││
+││1. Ordered item one                                                         ││
+││2. Ordered item two                                                         ││
+││                                                                            ││
+│╰────────────────────────────────────────────────────────────────────────────╯│
+╰──────────────────────────────────────────────────────────────────────────────╯
 Markdown [15/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

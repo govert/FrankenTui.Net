@@ -2,79 +2,79 @@
 Upstream snapshot: app_terminalcapabilities_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 1054
-Local nonblank chars: 1217
-Local/upstream char ratio: 1.155
+Local nonblank chars: 867
+Local/upstream char ratio: 0.823
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
 @@ row 02
 upstream: ╭────────────────────────────────────────────────Terminal Capabilities──────────
-local   : ┌─ Terminal Capabilities ──────────────────────────────────────────────────────┐
+local   : ╭────────────────────────────Terminal Capabilities─────────────────────────────╮
 @@ row 03
 upstream: │╭─────────────────────────────────────────── Terminal Capability Explorer ─────
-local   : │┌─ Capability Matrix ────┐┌─ Evidence Ledger ─────┐┌─ Profile Simulation ────┐│
+local   : │╭───────────────────────────Terminal Capabilities────────────────────────────╮│
 @@ row 04
 upstream: ││Profile: detected | View: Matrix
-local   : ││CapabiDetectEffectPolicy││View modes: Matrix ->  ││Profile Simulation       ││
+local   : ││Terminal Capability Matrix                                                  ││
 @@ row 05
 upstream: ││Color depth: truecolor | Mux: no | Sync output: no
-local   : ││true_cyesr  yes   allow ││Evidence -> Simulation ││active=detected          ││
+local   : ││                                                                            ││
 @@ row 06
 upstream: ││Scroll region: yes | Hyperlinks: yes | Clipboard: yes | overrides: none
-local   : ││sync_oprobe defer safe ou│Selected: sync_output  ││detected -> modern ->    ││
+local   : ││Feature              Supported  Notes                                       ││
 @@ row 07
 upstream: │╰──────────────────────────────────────────────────────────────────────────────
-local   : ││hyperloscs  osc8  allow ││                       ││xterm-256color           ││
+local   : ││───                  ─────────  ─────                                       ││
 @@ row 08
 upstream: │╭ Capability Matrix ───────────────────────────────────────────────╮╭ Details ─
-local   : ││kitty_noyboafallbakey par│Evidence Ledger        ││xterm -> vt100 -> dumb   ││
+local   : ││True Color           ✓         24-bit color                                 ││
 @@ row 09
 upstream: ││Capability               │Detected │Effective│Fallback            ││Capability
-local   : ││focus_probestrackeinput p│environment            ││tmux -> screen -> zellij ││
+local   : ││Italic               ✓         Italic text                                  ││
 @@ row 10
 upstream: ││True color (24-bit)      │yes      │yes      │enabled             ││Detected:
-local   : ││mouse_standbstandbuser to│TERM=xterm-256color    ││kitty -> windows-console ││
+local   : ││Bold                 ✓         Bold text                                    ││
 @@ row 11
 upstream: ││256-color palette        │yes      │yes      │enabled             ││Effective:
-local   : ││                        ││da1 primary response   ││-> linux-console         ││
+local   : ││Underline            ✓         Underlined                                   ││
 @@ row 12
 upstream: ││Synchronized output      │no       │no       │unsynced repaint    ││Fallback:
-local   : ││                        ││cached                 ││                         ││
+local   : ││Strikethrough        ✓         Strikethrough                                ││
 @@ row 13
 upstream: ││Scroll region (DECSTBM)  │yes      │yes      │enabled             ││Reason: De
-local   : ││                        ││da2 extended response  ││profile_cycled           ││
+local   : ││Overline             ✓         Overline                                     ││
 @@ row 14
 upstream: ││OSC 8 hyperlinks         │yes      │yes      │enabled             ││
-local   : ││                        ││cached                 ││profile_reset            ││
+local   : ││Dim                  ✓         Dimmed text                                  ││
 @@ row 15
 upstream: ││Kitty keyboard protocol  │no       │no       │legacy keys         ││
-local   : ││                        ││decrpm sync-output     ││simulation_activated     ││
+local   : ││Reverse              ✓         Reversed colors                              ││
 @@ row 16
 upstream: ││Focus events             │yes      │yes      │enabled             ││
-local   : ││                        ││probe=false            ││environment_read         ││
+local   : ││Blink                ✓         Blinking text                                ││
 @@ row 17
 upstream: ││Bracketed paste          │yes      │yes      │enabled             ││
-local   : ││                        ││osc color and hyperlink││report_exported          ││
+local   : ││Hidden               ✓         Hidden text                                  ││
 @@ row 18
 upstream: ││SGR mouse                │yes      │yes      │enabled             ││
-local   : ││                        ││probes                 ││                         ││
+local   : ││Kitty Keyboard       ✓         Enhanced keys                                ││
 @@ row 19
 upstream: ││OSC 52 clipboard         │yes      │yes      │enabled             │╰──────────
-local   : ││                        ││timeout bounded        ││P cycle | R reset | 0-5  ││
+local   : ││Bracketed Paste      ✓         Bracketed paste                              ││
 @@ row 20
 upstream: ││                                                                  │╭ Fallback
-local   : ││                        ││terminal reads         ││quick profile | E export ││
+local   : ││Synchronized Output  ✓         Sync updates                                 ││
 @@ row 21
 upstream: ││                                                                  ││Sync outpu
-local   : ││                        ││prior                  ││JSONL                    ││
+local   : ││OSC-8 Links          ✓         Hyperlinks                                   ││
 @@ row 22
 upstream: ││                                                                  ││Scroll reg
-local   : │└────────────────────────┘└───────────────────────┘└─────────────────────────┘│
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 23
 upstream: ││                                                                  ││Mux safety
-local   : └──────────────────────────────────────────────────────────────────────────────┘
+local   : ╰──────────────────────────────────────────────────────────────────────────────╯
 @@ row 24
 upstream: /Shift+Tab: next/prev         0x0 00:00                             │╰──────────
 local   : Terminal Capabilities [12/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

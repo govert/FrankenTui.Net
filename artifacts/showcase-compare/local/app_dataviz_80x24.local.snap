@@ -1,24 +1,24 @@
-﻿ 1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms  [8
-┌─ Data Viz ───────────────────────────────────────────────────────────────────┐
-│[==========                            ]┌─ Narrative ────────────────────────┐│
-│frame budget used                       │Active panel: Progress              ││
-│                                        │Selected metric row: 0              ││
-│                                        │Narrative detail: 0                 ││
-│[=================================     ]│Context action: clear               ││
-│cache reuse                             │                                    ││
-│                                        │Detail: progress lanes selected;    ││
-│                                        │chart parity remains pending.       ││
-│Metric              Value               │                                    ││
-│FPS target          60                  │The .NET port does not yet have     ││
-│Dirty rows          3                   │upstream chart/canvas widgets, so   ││
-│Frames              1                   │this screen uses density through    ││
-│Cells               128                 │tables, progress lanes, and runtime ││
-│                                        │counters.                           ││
-│                                        │                                    ││
-│                                        │                                    ││
-│                                        │                                    ││
-│                                        │                                    ││
-│                                        │                                    ││
-│                                        └────────────────────────────────────┘│
-└──────────────────────────────────────────────────────────────────────────────┘
+﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+╭───────────────────────────────────Data Viz───────────────────────────────────╮
+│╭─ Chart: CPU Usage ─────────────────────────────────────────────────────────╮│
+││ 100% ┤                                                                   │  │
+││  80% ┤     ▄▄▄▄                                                           │ │
+││  60% ┤   ▄▄████▄▄    ▄▄▄▄                                                  ││
+││  40% ┤  ▄█████████▄ ▄████▄                                                 ││
+││  20% ┤ ▄█████████████████▄                                                │ │
+││   0% └─────────────────────────────────────────────────────────────────────││
+│╰────────────────────────────────────────────────────────────────────────────╯│
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
 Data Viz [8/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

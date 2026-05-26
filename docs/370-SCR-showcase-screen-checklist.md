@@ -21,7 +21,7 @@ Compare with: `dotnet run --project tools/FrankenTui.ShowcaseCompare -- --screen
 
 ## Tour (1 screen)
 
-- [ ] **1. Guided Tour** — `guided_tour.rs` (1 session)
+- [x] **1. Guided Tour** — `guided_tour.rs` (1 session)
   - Upstream: `crates/ftui-demo-showcase/src/screens/guided_tour.rs`
   - .NET target: `apps/FrankenTui.Demo.Showcase/ShowcaseSurface.cs` → `BuildGuidedTour()`
 
@@ -29,9 +29,9 @@ Compare with: `dotnet run --project tools/FrankenTui.ShowcaseCompare -- --screen
 
 - [ ] **2. Dashboard** — `dashboard.rs` (7,057L) — 2 sessions
   - .NET target: `BuildDashboard()`
-- [ ] **5. Widget Gallery** — `widget_gallery.rs` (2,348L) — 1 session
+- [x] **5. Widget Gallery** — `widget_gallery.rs` (2,348L) — 1 session
   - .NET target: `BuildWidgetGallery()`
-- [ ] **6. Layout Lab** — `layout_lab.rs` (4,019L) — 2 sessions
+- [x] **6. Layout Lab** — `layout_lab.rs` (4,019L) — 2 sessions
   - .NET target: `BuildLayoutLab()`
 - [x] **10. Advanced** — `advanced_features.rs` (1,057L)
   - .NET target: `BuildAdvancedFeatures()`
@@ -50,7 +50,7 @@ Compare with: `dotnet run --project tools/FrankenTui.ShowcaseCompare -- --screen
 
 ## Visuals & Charts (4 screens)
 
-- [ ] **8. Data Viz** — `3d_data.rs` (5,791L) — 2 sessions
+- [x] **8. Data Viz** — `3d_data.rs` (5,791L) — 2 sessions
   - .NET target: `BuildDataViz()`
 - [x] **11. Table Theme Gallery** — `table_theme_gallery.rs` (1,260L)
   - .NET target: `BuildTableThemeGallery()`
@@ -78,11 +78,11 @@ Compare with: `dotnet run --project tools/FrankenTui.ShowcaseCompare -- --screen
 
 ## Text & Editing (6 screens)
 
-- [ ] **3. Shakespeare** — `shakespeare.rs` (1,882L)
+- [x] **3. Shakespeare** — `shakespeare.rs` (1,882L)
   - .NET target: `BuildShakespeare()`
-- [ ] **4. Code Explorer** — `code_explorer.rs` (2,478L) — 1 session
+- [x] **4. Code Explorer** — `code_explorer.rs` (2,478L) — 1 session
   - .NET target: `BuildCodeExplorer()`
-- [ ] **15. Markdown** — `markdown_rich_text.rs` (1,578L)
+- [x] **15. Markdown** — `markdown_rich_text.rs` (1,578L)
   - .NET target: `BuildMarkdown()`
 - [ ] **25. Advanced Text Editor** — `advanced_text_editor.rs` (2,133L) — 1 session
   - .NET target: `BuildAdvancedTextEditor()`
@@ -93,7 +93,7 @@ Compare with: `dotnet run --project tools/FrankenTui.ShowcaseCompare -- --screen
 
 ## Systems & Infrastructure (17 screens)
 
-- [ ] **12. Terminal Capabilities** — `terminal_capabilities.rs` (2,477L) — 1 session
+- [x] **12. Terminal Capabilities** — `terminal_capabilities.rs` (2,477L) — 1 session
   - .NET target: `BuildTerminalCapabilities()`
 - [x] **14. Performance** — `performance.rs` (591L)
   - .NET target: `BuildPerformance()`

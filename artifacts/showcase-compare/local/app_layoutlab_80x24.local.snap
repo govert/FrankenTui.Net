@@ -1,24 +1,24 @@
-﻿ 1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets  [6: Layout]  7: Forms   8
-┌─ Layout Lab ─────────────────────────────────────────────────────────────────┐
-│┌─ Pane Workspace [focus zoom=0] ──────┐┌─ Workspace Metrics [scroll=0] ─────┐│
-││selected_pane_index=0 context=idle    ││Selected: editor local_index=0      ││
-││mouse=layout_lab:workspace            ││Mode: Compare focus=0 zoom=0        ││
-││┌─ Files ─────────┐┌─ Logs ──────────┐││Hash: D5B520171B43                  ││
-│││                 ││                 │││Timeline: 0 actions scroll=0        ││
-│││ files           ││ logs            │││Load: default workspace             ││
-│││                 ││                 │││Context: idle                       ││
-│││                 ││                 │││Mouse: workspace click cycles pane, ││
-│││                 ││                 │││wheel zooms; metrics wheel scrolls  ││
-│││                 ││                 │││                                    ││
-││└─────────────────┘└─────────────────┘││                                    ││
-││┌─ Editor * ──────┐┌─ HUD ───────────┐││                                    ││
-│││                 ││                 │││                                    ││
-│││ selected=editor ││ hud             │││                                    ││
-│││ mode=Compare    ││                 │││                                    ││
-│││ hash=D5B520171B ││                 │││                                    ││
-│││ 43              ││                 │││                                    ││
-│││                 ││                 │││                                    ││
-││└─────────────────┘└─────────────────┘││                                    ││
-│└──────────────────────────────────────┘└────────────────────────────────────┘│
-└──────────────────────────────────────────────────────────────────────────────┘
+﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: [Layout] │ 7: Forms
+╭──────────────────────────────────Layout Lab──────────────────────────────────╮
+│╭─────────────────────────────────Layout Lab─────────────────────────────────╮│
+││Constraint Types:                                                           ││
+││                                                                            ││
+││  Fixed(10)    — exactly 10 rows/cols                                       ││
+││  Min(5)       — at least 5, grows if space                                 ││
+││  Max(20)      — at most 20, shrinks if needed                              ││
+││  Percentage(50) — 50% of available space                                   ││
+││  Fill(1)     — takes remaining space                                       ││
+││                                                                            ││
+││Layout direction: Vertical                                                  ││
+││                                                                            ││
+││Children:                                                                   ││
+││  Fixed 3  → ███                                                            ││
+││  Min 5    → ████████                                                       ││
+││  Max 6    → ██████                                                         ││
+││  Fill     → ████████████████                                               ││
+││                                                                            ││
+││                                                                            ││
+││                                                                            ││
+│╰────────────────────────────────────────────────────────────────────────────╯│
+╰──────────────────────────────────────────────────────────────────────────────╯
 Layout Lab [6/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

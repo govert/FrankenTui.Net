@@ -1,24 +1,24 @@
-﻿[1: Tour]  2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
-┌─ Guided Tour ────────────────────────────────────────────────────────────────┐
-│┌─ Guided Tour ──────────────────────────────────────────────────────────────┐│
-││FrankenTui.Net now launches an upstream-shaped terminal showcase.           ││
+﻿ 1: [Tour] │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+╭─────────────────────────────────Guided Tour──────────────────────────────────╮
+│╭────────────────────────────────Guided Tour─────────────────────────────────╮│
+││Welcome to the FrankenTUI Demo Showcase!                                    ││
 ││                                                                            ││
-││Start a guided tour through the screen catalog with Enter or Space.         ││
-││Start screen: 2 | Speed: 1x                                                 ││
-││Use Up/Down or j/k to choose a start screen, +/- to tune speed, r to reset. ││
-││Use --tour to launch directly into autoplay, or --screen N to start on a    ││
-││specific screen.                                                            ││
+││This tour walks you through the key screens.                                ││
 ││                                                                            ││
-││Featured stops:                                                             ││
-││2 Dashboard                                                                 ││
-││5 Widget Gallery                                                            ││
-││6 Layout Lab                                                                ││
-││15 Markdown                                                                 ││
-││16 Mermaid Showcase                                                         ││
-││30 Theme Studio                                                             ││
-││40 Determinism Lab                                                          ││
+││Press Enter or Space to start the tour.                                     ││
 ││                                                                            ││
+││  n / p  step through tour steps                                            ││
+││  Space  pause/resume tour                                                  ││
+││  Esc    exit tour                                                          ││
+││  Tab    next screen                                                        ││
 ││                                                                            ││
-│└────────────────────────────────────────────────────────────────────────────┘│
-└──────────────────────────────────────────────────────────────────────────────┘
+││Screens in tour:                                                            ││
+││  1. Dashboard                                                              ││
+││  2. Widget Gallery                                                         ││
+││  3. Layout Lab                                                             ││
+││  4. Forms & Input                                                          ││
+││  5. Data Viz                                                               ││
+││                                                                            ││
+│╰────────────────────────────────────────────────────────────────────────────╯│
+╰──────────────────────────────────────────────────────────────────────────────╯
 Guided Tour [1/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

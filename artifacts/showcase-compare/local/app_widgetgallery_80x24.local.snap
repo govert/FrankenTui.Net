@@ -1,24 +1,24 @@
-﻿ 1: Tour   2: Dash   3: Shakes   4: Code  [5: Widgets]  6: Layout   7: Forms   8
-┌─ Widget Gallery ─────────────────────────────────────────────────────────────┐
-│┌─ Progress [focus] ───────────────────┐┌─ Tabs [2] ─────────────────────────┐│
-││[====                                ]││ Core   Text  [Layout]  Extras      ││
-││render completeness                   ││                                    ││
-││                                      ││                                    ││
-││                                      ││                                    ││
-│└──────────────────────────────────────┘└────────────────────────────────────┘│
-│┌─ List [4] ───────────────────────────┐┌─ Table [1] ────────────────────────┐│
-││• Paragraph                           ││Widget      State       Notes       ││
-││• Panel                               ││List        ready       selection + fo
-││• Table                               ││Tree        ready       hierarchy view
-││• Tabs                                ││TextArea    ready       cursor + statu
-││› Tree                                ││Mermaid     contract    extras surface
-││• TextArea                            ││                                    ││
-││• Progress                            ││                                    ││
-││                                      ││                                    ││
-││                                      ││                                    ││
-││                                      ││                                    ││
-││                                      ││                                    ││
-││                                      ││                                    ││
-│└──────────────────────────────────────┘└────────────────────────────────────┘│
-└──────────────────────────────────────────────────────────────────────────────┘
+﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: [Widgets] │ 6: Layout │ 7: Forms
+╭────────────────────────────────Widget Gallery────────────────────────────────╮
+│╭───────────────────────────────Widget Gallery───────────────────────────────╮│
+││Block: bordered container with optional title                               ││
+││                                                                            ││
+││Paragraph: "The quick brown fox jumps over the lazy dog."                   ││
+││                                                                            ││
+││Table:                                                                      ││
+││| Col A | Col B | Col C |                                                   ││
+││|-------|-------|-------|                                                   ││
+││|   a1  |   b1  |   c1  |                                                   ││
+││|   a2  |   b2  |   c2  |                                                   ││
+││                                                                            ││
+││List:                                                                       ││
+││  • Item one                                                                ││
+││  • Item two                                                                ││
+││  • Item three                                                              ││
+││                                                                            ││
+││Gauge: [████████░░] 80%                                                     ││
+││                                                                            ││
+││Sparkline: ▁▂▃▄▅▆▇█▇▆▅▄▃▂▁                                                  ││
+│╰────────────────────────────────────────────────────────────────────────────╯│
+╰──────────────────────────────────────────────────────────────────────────────╯
 Widget Gallery [5/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)
