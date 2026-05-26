@@ -13,7 +13,6 @@ public sealed class BarChartWidget : IWidget
     private static readonly char[] BarChars = [' ', '▁', '▂', '▃', '▄', '▅', '▆', '▇', '█'];
 
     private readonly IReadOnlyList<BarGroup> _groups;
-    private bool _vertical = true;
     private bool _stacked;
     private ushort _barWidth = 1;
     private ushort _barGap;
