@@ -2,79 +2,79 @@
 Upstream snapshot: app_voioverlay_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 805
-Local nonblank chars: 1423
-Local/upstream char ratio: 1.768
+Local nonblank chars: 743
+Local/upstream char ratio: 0.923
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
 @@ row 02
 upstream: ╭─────────────────────────────────────────────────────VOI Overlay───────────────
-local   : ┌─ VOI Overlay ────────────────────────────────────────────────────────────────┐
+local   : ╭─────────────────────────────────VOI Overlay──────────────────────────────────╮
 @@ row 03
 upstream: │ src: inline-auto|fallback  focus: —  Tab:section v:detail n/p:ledger
-local   : │VOI Overlay | Galaxy-Brain sampler debug overlay | source: demo:fallback |    │
+local   : │╭────────────────────────────────VOI Overlay─────────────────────────────────╮│
 @@ row 04
 upstream: │
-local   : │┌─ Decision ─────────────┐┌─ Observation ─────────┐┌─ Overlay Controls ────┐  │
+local   : ││Value of Information Analysis                                               ││
 @@ row 05
 upstream: │                         ╭───────────────────────────VOI Overlay───────────────
-local   : ││event_idx: 0            ││sample_idx: 0          ││VOI Overlay | src:     │  │
+local   : ││                                                                            ││
 @@ row 06
 upstream: │                         │VOI Overlay (tick 27) [demo:fallback]
-local   : ││should_sample: false    ││violated: true         ││inline-auto|fallback | │  │
+local   : ││Current Decision: Render strategy                                           ││
 @@ row 07
 upstream: │                         │-----------------------------------------------------
-local   : ││reason:                 ││posterior_mean: 0.430  ││focus:                 │  │
+local   : ││Alternatives:                                                               ││
 @@ row 08
 upstream: │                         │Decision: SKIP    reason: voi_lt_cost
-local   : ││blocked_by_min_interval ││alpha: 3.00 | beta:    ││Decision/Posterior/Obse│  │
+local   : ││  1. Full redraw (cost: 500µs)                                              ││
 @@ row 09
 upstream: │                         │log10 BF: -1.883  score/cost
-local   : ││score: 0.111 | cost:    ││3.00                   ││rvation/Ledger         │  │
+local   : ││  2. Dirty rows (cost: 250µs)                                               ││
 @@ row 10
 upstream: │                         │E: 1.438 / 20.00  boundary: 0.275
-local   : ││0.100                   ││source:                ││State: visible=true    │  │
+local   : ││  3. Skip frame (cost: 0µs)                                                 ││
 @@ row 11
 upstream: │                         │
-local   : ││log_bayes_factor: 1.20  ││runtime:inline-auto or ││detail=collapsed       │  │
+local   : ││                                                                            ││
 @@ row 12
 upstream:                           │Posterior Core
-local   : │└────────────────────────┘└───────────────────────┘│selected_ledger_idx=0  │  │
+local   : ││Expected Value:                                                             ││
 @@ row 13
 upstream: │                         │-----------------------------------------------------
-local   : │┌─ Posterior ────────────┐┌─ VOI Ledger ──────────┐│resets=0               │  │
+local   : ││  Full:    0.85                                                             ││
 @@ row 14
 upstream: -----------               │p ~ Beta(a,b)  a=2.00  b=10.00
-local   : ││alpha: 2.00 | beta: 3.00││> Decision  #  0       ││Centered overlay area  │  │
+local   : ││  Dirty:   0.92                                                             ││
 @@ row 15
 upstream: │                         │mu=0.1667  Var=0.010684
-local   : ││mean: 0.400 | variance: ││sample=false           ││clamps to terminal     │  │
+local   : ││  Skip:    0.45                                                             ││
 @@ row 16
 upstream: │                         │VOI = Var[p] - E[Var|1]
-local   : ││0.040                   ││voi_gain=0.011 LBF=1.20││size; style uses       │  │
+local   : ││                                                                            ││
 @@ row 17
 upstream: │                         │VOI = 0.010684 - 0.009862 = 0.000822
-local   : ││expected_variance_after:││Observation #  0       ││rounded border and deep│  │
+local   : ││Decision: Dirty rows                                                        ││
 @@ row 18
 upstream: │                         │
-local   : ││0.029                   ││violated=true          ││background.            │  │
+local   : ││Confidence: 0.92                                                            ││
 @@ row 19
 upstream: │                         │Decision Equation
-local   : ││voi_gain: 0.011         ││posterior_mean=0.430   ││Tab cycle section | v  │  │
+local   : ││                                                                            ││
 @@ row 20
 upstream: │                         │-----------------------------------------------------
-local   : ││InlineAutoRemeasureConfi││Decision  #  1         ││toggle detail | n/p or │  │
+local   : ││Evidence:                                                                   ││
 @@ row 21
 upstream: -----------               │score=0.001048  cost=0.080000
-local   : │└────────────────────────┘└───────────────────────┘└───────────────────────┘  │
+local   : ││  - Posterior mean: 0.87                                                    ││
 @@ row 22
 upstream: │                         │log10 BF = log10(0.001048/0.080000) = -1.883
-local   : │r reset(0) | v detail(collapsed) | n/p ledger(0) | Tab section | mouse        │
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 23
 upstream: │                         │
-local   : └──────────────────────────────────────────────────────────────────────────────┘
+local   : ╰──────────────────────────────────────────────────────────────────────────────╯
 @@ row 24
 upstream: -----------Tab: next/prev  Last Sample
 local   : VOI Overlay [35/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

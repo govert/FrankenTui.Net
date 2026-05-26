@@ -1,24 +1,24 @@
-﻿ 1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
-┌─ Macro Recorder ─────────────────────────────────────────────────────────────┐
-│┌─ Macro Recorder [focus] ───────────────────────────────────────────────────┐│
-││State: idle   Events: 5   Duration: 1060ms                                  ││
-││Speed: 1.00x   Loop: Off   Progress:  20%   Filtered: 0                     ││
-││Focus: [Controls] Timeline Detail Scenarios   mouse=focus                   ││
-││Quick Start: Enter load scenario | Space record | Up/Down scrub timeline    ││
-││Space/r record/stop | Enter/p play/pause | Esc stop | l loop | +/- speed    ││
+﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+╭────────────────────────────────Macro Recorder────────────────────────────────╮
+│╭───────────────────────────────Macro Recorder───────────────────────────────╮│
 ││Status: Idle                                                                ││
-│└────────────────────────────────────────────────────────────────────────────┘│
-│┌─ Timeline [0] ─────────────────────────────┐┌─ Event Detail ───────────────┐│
-││        #       Delay   At      Event       ││Selected: #000                ││
-││>       001     +0200ms @0200ms key:Tab     ││Delay: 200ms   At: 200ms      ││
-││        002     +0400ms @0400ms key:Tab     ││                              ││
-││        003     +0600ms @0600ms key:?       ││Event: key:Tab                ││
-││        004     +0800ms @0800ms key:BackTab ││Kind: Key                     ││
-││        005     +1100ms @1100ms key:?       │└──────────────────────────────┘│
-││                                            │┌─ Scenario Runner [0] ────────┐│
-││                                            ││Preset scenarios (Enter to    ││
-││                                            ││load)                         ││
-││                                            ││                              ││
-│└────────────────────────────────────────────┘└──────────────────────────────┘│
-└──────────────────────────────────────────────────────────────────────────────┘
+││Mode: Record                                                                ││
+││Buffer: 0 events                                                            ││
+││                                                                            ││
+││Controls:                                                                   ││
+││  r  Record                                                                 ││
+││  p  Play                                                                   ││
+││  s  Stop                                                                   ││
+││  e  Export                                                                 ││
+││  l  Load                                                                   ││
+││  c  Clear                                                                  ││
+││                                                                            ││
+││Macro format: JSON                                                          ││
+││Events: key, mouse, tick                                                    ││
+││                                                                            ││
+││History: (empty)                                                            ││
+││                                                                            ││
+││                                                                            ││
+│╰────────────────────────────────────────────────────────────────────────────╯│
+╰──────────────────────────────────────────────────────────────────────────────╯
 Macro Recorder [13/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

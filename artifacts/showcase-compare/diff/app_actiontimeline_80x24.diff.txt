@@ -2,79 +2,79 @@
 Upstream snapshot: app_actiontimeline_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 1100
-Local nonblank chars: 1156
-Local/upstream char ratio: 1.051
+Local nonblank chars: 1030
+Local/upstream char ratio: 0.936
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
 @@ row 02
 upstream: ╭───────────────────────────────────────────────────Action Timeline─────────────
-local   : ┌─ Action Timeline ────────────────────────────────────────────────────────────┐
+local   : ╭───────────────────────────────Action Timeline────────────────────────────────╮
 @@ row 03
 upstream: │╭──────────────────────────────────────────────────Filters + Follow────────────
-local   : │┌─ Filters + Follow [focus] ─────────────────────────────────────────────────┐│
+local   : │╭──────────────────────────────Filters + Follow──────────────────────────────╮│
 @@ row 04
 upstream: ││Follow[F]: ON  Component[C]: all  Severity[S]: all  Type[T]: all  Clear[X]
 local   : ││Follow[F]: ON  Component[C]: all  Severity[S]: all  Type[T]: all  Clear[X]  ││
 @@ row 05
 upstream: │╰──────────────────────────────────────────────────────────────────────────────
-local   : ││Active filter: all | Selected event: 0                                      ││
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 06
 upstream: │╭─────────────────────────Event Timeline──────────────────────────╮╭───────────
-local   : ││Focus: 0 focus                                                              ││
+local   : │╭────────────────Event Timeline────────────────╮╭───────────Detail───────────╮│
 @@ row 07
 upstream: ││   4 ERROR render  cmd     Command dispatched to model           ││ID: 25
-local   : ││Max events: 500 | Burst: every 2 ticks | Initial events: 12                 ││
+local   : ││4 ERROR render  cmd     Command dispatched to ││ID: 25                      ││
 @@ row 08
 upstream: ││   6 DEBUG widgets sub     Subscription tick delivered           ││Tick: 26
-local   : ││Enter toggles detail expansion | Up/Down or j/k navigate                    ││
+local   : ││model                                         ││Type: render                ││
 @@ row 09
 upstream: ││   8 WARN  core    sub     Subscription tick delivered           ││Severity: D
-local   : ││PgUp/PgDn page | Home/End jump | Click select | Scroll navigate             ││
+local   : ││   3 WARN  render  model   State update queued││Severity: ERROR             ││
 @@ row 10
 upstream: EB  10 TRACE runtime render  Frame diff computed                   ││Component:r
-local   : ││                                                                            ││
+local   : ││   2 INFO  render  effect  Side-effect emitted││Component: render           ││
 @@ row 11
 upstream: un  12 INFO  render  present Presenter emitted ANSI batch          ││Type: cmd
-local   : ││Diagnostic spans:                                                           ││
+local   : ││   1 DEBUG render  diff    Frame diff computed││Action: cmd                 ││
 @@ row 12
 upstream:     14 ERROR widgets present Presenter emitted ANSI batch          ││
-local   : ││action_timeline::new                                                        ││
+local   : ││   0 INFO  runtime start   Runtime initialized││                            ││
 @@ row 13
 upstream: ││  16 DEBUG core    caps    Capability probe updated              ││Summary:
-local   : ││action_timeline::update                                                     ││
+local   : ││                                              ││Description:                ││
 @@ row 14
 upstream: ││  18 WARN  runtime budget  Render budget degraded                ││  Command d
-local   : ││action_timeline::tick                                                       ││
+local   : ││                                              ││Command dispatched to model ││
 @@ row 15
 upstream: is  20 TRACE render  budget  Render budget degraded                ││
-local   : ││action_timeline::buffer_eviction                                            ││
+local   : ││                                              ││for processing.             ││
 @@ row 16
 upstream: ││  22 INFO  widgets input   Key event processed                   ││Fields:
-local   : │└────────────────────────────────────────────────────────────────────────────┘│
+local   : ││                                              ││                            ││
 @@ row 17
 upstream: ││  24 ERROR core    cmd     Command dispatched to model           ││  latency_7
-local   : │┌─ Event Timeline [selected 0] ────────────────┐┌─ Event Detail ─────────────┐│
+local   : ││                                              ││                            ││
 @@ row 18
 upstream: 1│  26 DEBUG runtime cmd     Command dispatched to model           ││  diff_cel9
-local   : ││Tick     Severity ComponentType     Summary   ││ID: 100                     ││
+local   : ││                                              ││                            ││
 @@ row 19
 upstream: 8                                                                  ││  ansi_byte
-local   : ││0        TRACE    core     input    Key event p│Tick: 0                     ││
+local   : ││                                              ││                            ││
 @@ row 20
 upstream: 224                                                                ││
-local   : ││0        TRACE    core     input    Key event p│Severity: TRACE             ││
+local   : ││                                              ││                            ││
 @@ row 21
 upstream: ││                                                                 ││
-local   : ││0        TRACE    core     input    Key event p│Component: core             ││
+local   : ││                                              ││                            ││
 @@ row 22
 upstream: ││                                                                 ││
-local   : │└──────────────────────────────────────────────┘└────────────────────────────┘│
+local   : │╰──────────────────────────────────────────────╯╰────────────────────────────╯│
 @@ row 23
 upstream:                                                                    ││
-local   : └──────────────────────────────────────────────────────────────────────────────┘
+local   : ╰──────────────────────────────────────────────────────────────────────────────╯
 @@ row 24
 upstream: )  Tab/Shift+Tab: next/prev   0x0 00:00                            ││
 local   : Action Timeline [22/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

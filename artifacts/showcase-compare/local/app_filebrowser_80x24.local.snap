@@ -1,24 +1,24 @@
-﻿ 1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
-┌─ File Browser ───────────────────────────────────────────────────────────────┐
-│┌─ Files [row 0 scroll 0] ─────────────┐┌─ Preview ──────────────────────────┐│
-││└ .external                           ││file mouse focus=0 tree_scroll=0    ││
-││  └ frankentui                        ││preview_scroll=0                    ││
-││    └ README.md                       ││Selected row: 0                     ││
-││    └ crates                          ││Selected: .external                 ││
-││      └ ftui-demo-showcase            ││Tree scroll: 0                      ││
-││└ apps                                ││Preview scroll: 0                   ││
-││  └ FrankenTui.Demo.Showcase          ││                                    ││
-││└ src                                 ││README.md                           ││
-││  └ FrankenTui.Extras                 ││                                    ││
-││  └ FrankenTui.Tty                    ││FrankenTui.Net is a traceable,      ││
-││└ tests                               ││updateable .NET 10 port of          ││
-││  └ FrankenTui.Tests.Headless         ││FrankenTUI.                         ││
-││                                      ││                                    ││
-││                                      ││Use --screen N to land directly on a││
-││                                      ││showcase screen.                    ││
-││                                      ││                                    ││
-││                                      ││                                    ││
-││                                      ││                                    ││
-│└──────────────────────────────────────┘└────────────────────────────────────┘│
-└──────────────────────────────────────────────────────────────────────────────┘
+﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+╭─────────────────────────────────File Browser─────────────────────────────────╮
+│╭────────────Files────────────╮╭──────────────────Preview───────────────────╮ │
+││📁 src/                      ││// FrankenTui.sln                           │ │
+││  📁 FrankenTui.Core/        ││                                            │ │
+││    📄 Rect.cs               ││Microsoft Visual Studio Solution File,      │ │
+││    📄 Cell.cs               ││Format Version 12.00                        │ │
+││  📁 FrankenTui.Render/      ││# Visual Studio Version 17                  │ │
+││    📄 Buffer.cs             ││VisualStudioVersion = 17.0.31903.59         │ │
+││    📄 Frame.cs              ││MinimumVisualStudioVersion = 10.0.40219.1   │ │
+││  📁 FrankenTui.Widgets/     ││Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EF│ │
+││    📄 Block.cs              ││BC}")                                       │ │
+││    📄 Paragraph.cs          ││= "FrankenTui.Core"                         │ │
+││    📄 Table.cs              ││                                            │ │
+││  📁 FrankenTui.Runtime/     ││                                            │ │
+││    📄 Program.cs            ││                                            │ │
+││  📄 FrankenTui.sln          ││                                            │ │
+││                             ││                                            │ │
+││                             ││                                            │ │
+││                             ││                                            │ │
+││                             ││                                            │ │
+│╰─────────────────────────────╯╰────────────────────────────────────────────╯ │
+╰──────────────────────────────────────────────────────────────────────────────╯
 File Browser [9/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

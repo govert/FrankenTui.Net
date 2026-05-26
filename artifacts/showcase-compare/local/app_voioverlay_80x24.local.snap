@@ -1,24 +1,24 @@
-﻿ 1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
-┌─ VOI Overlay ────────────────────────────────────────────────────────────────┐
-│VOI Overlay | Galaxy-Brain sampler debug overlay | source: demo:fallback |    │
-│┌─ Decision ─────────────┐┌─ Observation ─────────┐┌─ Overlay Controls ────┐  │
-││event_idx: 0            ││sample_idx: 0          ││VOI Overlay | src:     │  │
-││should_sample: false    ││violated: true         ││inline-auto|fallback | │  │
-││reason:                 ││posterior_mean: 0.430  ││focus:                 │  │
-││blocked_by_min_interval ││alpha: 3.00 | beta:    ││Decision/Posterior/Obse│  │
-││score: 0.111 | cost:    ││3.00                   ││rvation/Ledger         │  │
-││0.100                   ││source:                ││State: visible=true    │  │
-││log_bayes_factor: 1.20  ││runtime:inline-auto or ││detail=collapsed       │  │
-│└────────────────────────┘└───────────────────────┘│selected_ledger_idx=0  │  │
-│┌─ Posterior ────────────┐┌─ VOI Ledger ──────────┐│resets=0               │  │
-││alpha: 2.00 | beta: 3.00││> Decision  #  0       ││Centered overlay area  │  │
-││mean: 0.400 | variance: ││sample=false           ││clamps to terminal     │  │
-││0.040                   ││voi_gain=0.011 LBF=1.20││size; style uses       │  │
-││expected_variance_after:││Observation #  0       ││rounded border and deep│  │
-││0.029                   ││violated=true          ││background.            │  │
-││voi_gain: 0.011         ││posterior_mean=0.430   ││Tab cycle section | v  │  │
-││InlineAutoRemeasureConfi││Decision  #  1         ││toggle detail | n/p or │  │
-│└────────────────────────┘└───────────────────────┘└───────────────────────┘  │
-│r reset(0) | v detail(collapsed) | n/p ledger(0) | Tab section | mouse        │
-└──────────────────────────────────────────────────────────────────────────────┘
+﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+╭─────────────────────────────────VOI Overlay──────────────────────────────────╮
+│╭────────────────────────────────VOI Overlay─────────────────────────────────╮│
+││Value of Information Analysis                                               ││
+││                                                                            ││
+││Current Decision: Render strategy                                           ││
+││Alternatives:                                                               ││
+││  1. Full redraw (cost: 500µs)                                              ││
+││  2. Dirty rows (cost: 250µs)                                               ││
+││  3. Skip frame (cost: 0µs)                                                 ││
+││                                                                            ││
+││Expected Value:                                                             ││
+││  Full:    0.85                                                             ││
+││  Dirty:   0.92                                                             ││
+││  Skip:    0.45                                                             ││
+││                                                                            ││
+││Decision: Dirty rows                                                        ││
+││Confidence: 0.92                                                            ││
+││                                                                            ││
+││Evidence:                                                                   ││
+││  - Posterior mean: 0.87                                                    ││
+│╰────────────────────────────────────────────────────────────────────────────╯│
+╰──────────────────────────────────────────────────────────────────────────────╯
 VOI Overlay [35/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

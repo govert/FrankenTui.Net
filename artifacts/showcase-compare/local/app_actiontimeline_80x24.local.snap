@@ -1,24 +1,24 @@
-﻿ 1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
-┌─ Action Timeline ────────────────────────────────────────────────────────────┐
-│┌─ Filters + Follow [focus] ─────────────────────────────────────────────────┐│
+﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+╭───────────────────────────────Action Timeline────────────────────────────────╮
+│╭──────────────────────────────Filters + Follow──────────────────────────────╮│
 ││Follow[F]: ON  Component[C]: all  Severity[S]: all  Type[T]: all  Clear[X]  ││
-││Active filter: all | Selected event: 0                                      ││
-││Focus: 0 focus                                                              ││
-││Max events: 500 | Burst: every 2 ticks | Initial events: 12                 ││
-││Enter toggles detail expansion | Up/Down or j/k navigate                    ││
-││PgUp/PgDn page | Home/End jump | Click select | Scroll navigate             ││
-││                                                                            ││
-││Diagnostic spans:                                                           ││
-││action_timeline::new                                                        ││
-││action_timeline::update                                                     ││
-││action_timeline::tick                                                       ││
-││action_timeline::buffer_eviction                                            ││
-│└────────────────────────────────────────────────────────────────────────────┘│
-│┌─ Event Timeline [selected 0] ────────────────┐┌─ Event Detail ─────────────┐│
-││Tick     Severity ComponentType     Summary   ││ID: 100                     ││
-││0        TRACE    core     input    Key event p│Tick: 0                     ││
-││0        TRACE    core     input    Key event p│Severity: TRACE             ││
-││0        TRACE    core     input    Key event p│Component: core             ││
-│└──────────────────────────────────────────────┘└────────────────────────────┘│
-└──────────────────────────────────────────────────────────────────────────────┘
+│╰────────────────────────────────────────────────────────────────────────────╯│
+│╭────────────────Event Timeline────────────────╮╭───────────Detail───────────╮│
+││4 ERROR render  cmd     Command dispatched to ││ID: 25                      ││
+││model                                         ││Type: render                ││
+││   3 WARN  render  model   State update queued││Severity: ERROR             ││
+││   2 INFO  render  effect  Side-effect emitted││Component: render           ││
+││   1 DEBUG render  diff    Frame diff computed││Action: cmd                 ││
+││   0 INFO  runtime start   Runtime initialized││                            ││
+││                                              ││Description:                ││
+││                                              ││Command dispatched to model ││
+││                                              ││for processing.             ││
+││                                              ││                            ││
+││                                              ││                            ││
+││                                              ││                            ││
+││                                              ││                            ││
+││                                              ││                            ││
+││                                              ││                            ││
+│╰──────────────────────────────────────────────╯╰────────────────────────────╯│
+╰──────────────────────────────────────────────────────────────────────────────╯
 Action Timeline [22/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)
