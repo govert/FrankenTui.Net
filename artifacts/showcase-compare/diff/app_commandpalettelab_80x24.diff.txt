@@ -2,79 +2,79 @@
 Upstream snapshot: app_commandpalettelab_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 595
-Local nonblank chars: 971
-Local/upstream char ratio: 1.632
+Local nonblank chars: 1019
+Local/upstream char ratio: 1.713
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
 @@ row 02
 upstream: ╭─────────────────────────────────────────────Command Palette Evidence Lab──────
-local   : ┌─ Command Palette Evidence Lab ───────────────────────────────────────────────┐
+local   : ╭─────────────────────────Command Palette Evidence Lab─────────────────────────╮
 @@ row 03
 upstream: │Match Mode: 0 All  1 Exact  2 Prefix  3 WordStart  4 Substring  5 Fuzzy
-local   : │Match Mode: 0 All 1 Exact 2 Prefix 3 WordStart 4 Substring 5 Fuzzy |          │
+local   : │Match Mode: 0 All  1 Exact  2 Prefix  3 WordStart  4 Substring  5 Fuzzy       │
 @@ row 04
 upstream: │Type to filter · ↑/↓ navigate · Enter execute · b bench · m cycle
-local   : │active=All                                                                    │
+local   : │Type to filter · ↑/↓ navigate · Enter execute · b bench · m cycle             │
 @@ row 05
 upstream: │                                                                  ╭────────────
-local   : │┌─ Command Palette ──────────────────────┐┌─ Evidence Ledger ────────────────┐│
+local   : │╭─────Command Palette──────╮╭────────────────────────────────────────────────╮│
 @@ row 06
 upstream: │                                                                  │Selected: Go
-local   : ││                                        ││Selected Result                   ││
+local   : ││>log                      ││Selected: Go to Log Search                      ││
 @@ row 07
 upstream: │                                                                  │Match: Subst
-local   : ││ > log_                                 ││Go to Log Search                  ││
+local   : ││> [Navigation] Go to Log  ││Match: Substring                                ││
 @@ row 08
 upstream: │                                                                  │Why this won
-local   : ││ › Go to Log Search [-]                 ││Match: Substring  P=89.7%         ││
+local   : ││Search                    ││Why this won: substring match on "log"          ││
 @@ row 09
 upstream: │             ╭───────── Command Palette ──────────╮               │substring
-local   : ││                                        ││Top command: cmd:logs             ││
+local   : ││                          ││MatchType: BestFirst                            ││
 @@ row 10
 upstream: │             │>log                                │               │
-local   : ││                                        ││match_type  bf=2  substring match ││
+local   : ││                          ││substring scoring                               ││
 @@ row 11
 upstream: │             │> [Navigation] Go to Log Search     │               │MatchType: B
-local   : ││                                        ││position  bf=1.071  first match at││
+local   : ││                          ││Position: BestFirst position 6                  ││
 @@ row 12
 upstream: │             │                                    │               │substring
-local   : ││                                        ││position 6                        ││
+local   : ││                          ││WordBoundary: false                             ││
 @@ row 13
 upstream: │             ╰────────────────────────────────────╯               │Position: BF
-local   : ││                                        ││word_boundary  bf=1.3  1 word     ││
+local   : ││                          ││Full matches not found                          ││
 @@ row 14
 upstream: │                                                                  │position 6
-local   : ││                                        ││boundary matches                  ││
+local   : ││                          ││TitleLength: 22 chars, score based on length of ││
 @@ row 15
 upstream: │                                                                  │WordBoundary
-local   : ││                                        ││┌─ Bench (determi┌─ Hint Ranker ─┐││
+local   : ││                          ││title                                           ││
 @@ row 16
 upstream: │                                                                  │matches
-local   : ││                                        │││Bench: OFF     ││1. Enter       │││
+local   : ││                          │╰────────────────────────────────────────────────╯│
 @@ row 17
 upstream: │                                                                  │TitleLength:
-local   : ││                                        │││frame=000      ││Execute EU=0.83│││
+local   : ││                          │╭─────────────Bench (deterministic)──────────────╮│
 @@ row 18
 upstream: │                                                                  │of title
-local   : ││                                        │││processed=0    ││V=0.75 VOI=0.14│││
+local   : ││                          ││Status: OFF                                     ││
 @@ row 19
 upstream: │                                                                  │
-local   : ││                                        │││step=3         ││2. Ctrl+P Open │││
+local   : ││                          ││Processed: 0 queries                            ││
 @@ row 20
 upstream: │                                                                  │
-local   : ││                                        │││query='log'    ││Palette EU=0.88│││
+local   : ││                          ││Latency: 0us avg                                ││
 @@ row 21
 upstream: │                                                                  │╭─Bench (det
-local   : ││                                        ││└───────────────┘└───────────────┘││
+local   : ││                          ││                                                ││
 @@ row 22
 upstream: │                                                                  ││Status: OFF
-local   : │└────────────────────────────────────────┘└──────────────────────────────────┘│
+local   : │╰──────────────────────────╯╰────────────────────────────────────────────────╯│
 @@ row 23
 upstream: │                                                                  ││Processed:
-local   : └──────────────────────────────────────────────────────────────────────────────┘
+local   : ╰──────────────────────────────────────────────────────────────────────────────╯
 @@ row 24
 upstream:  Tab/Shift+Tab: next/prev     0x0 00:00                            ││Latency: 0u
 local   : Command Palette Evidence Lab [39/45]  default [h] [cmd] [p] [d]  Mouse: AUTO

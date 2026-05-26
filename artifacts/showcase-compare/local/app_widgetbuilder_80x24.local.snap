@@ -1,24 +1,24 @@
-﻿ 1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
-┌─ Widget Builder ─────────────────────────────────────────────────────────────┐
-│Preset: Starter Kit | Widgets: 4 | focus=0 | [P] cycle [S] save [X] export    │
-│Widget Builder Sandbox | deterministic presets, editable props, preview=on,   │
-│┌─ Presets ──────────────────┐┌─ Props ──────────────────────────────────────┐│
-││> Starter Kit               ││Selected: Paragraph (#1)                      ││
-││  Status Wall               ││Enabled: on (E)                               ││
-││  Minimal                   ││Border: on (B)                                ││
-││  Custom 1                  ││Title: on (T)                                 ││
-││                            ││Accent: 1 (C)                                 ││
-│└────────────────────────────┘│Value: 40 ([ / ])                             ││
-│┌─ Widget Tree ──────────────┐└──────────────────────────────────────────────┘│
-││> 01. Paragraph [on]        │┌─ Export + Mouse ─────────────────────────────┐│
-││  02. List [on]             ││event=widget_builder_export                   ││
-││  03. Progress [on]         ││status=idle | saved=false | props_scroll=0    ││
-││  04. Sparkline [on]        ││run_id=FTUI_WIDGET_BUILDER_RUN_ID | preset_id ││
-││  05. Badge [on]            ││| preset_name | preset_index                  ││
-││                            ││widget_count | props_hash | preset.widgets[] |││
-││WidgetKind ids: paragraph,  ││outcome=ok                                    ││
-│└────────────────────────────┘└──────────────────────────────────────────────┘│
-│                                                                              │
-│J/K select(1) | P presets(Starter Kit) | S save(idle) | X export(idle) |      │
-└──────────────────────────────────────────────────────────────────────────────┘
+﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+╭────────────────────────────────Widget Builder────────────────────────────────╮
+│╭───────────────────────────────Widget Builder───────────────────────────────╮│
+││Widget Type: Paragraph                                                      ││
+││                                                                            ││
+││Properties:                                                                 ││
+││  text: "Hello, FrankenTUI!"                                                ││
+││  alignment: Left                                                           ││
+││  wrap: Word                                                                ││
+││  style: Default                                                            ││
+││                                                                            ││
+││Output:                                                                     ││
+││Hello, FrankenTUI!                                                          ││
+││                                                                            ││
+││                                                                            ││
+││                                                                            ││
+││                                                                            ││
+││                                                                            ││
+││                                                                            ││
+││                                                                            ││
+││                                                                            ││
+│╰────────────────────────────────────────────────────────────────────────────╯│
+╰──────────────────────────────────────────────────────────────────────────────╯
 Widget Builder [38/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

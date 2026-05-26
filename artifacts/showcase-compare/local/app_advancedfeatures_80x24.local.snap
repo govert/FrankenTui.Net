@@ -1,24 +1,24 @@
-﻿ 1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
-┌─ Advanced ───────────────────────────────────────────────────────────────────┐
-│┌─ Patterns [focus selected 0] ────────┐┌─ Composite ────────────────────────┐│
-││› inline mode contract                ││advanced mouse focus=0 context=clear││
-││• runtime input pipeline              ││Selected pattern: 0                 ││
-││• evidence capture                    ││Composite mode: porting             ││
-││• SIMD acceleration                   ││Context action: clear               ││
-││• web parity reuse                    ││                                    ││
-││                                      ││This screen groups the port-specific││
-││                                      ││composites that now sit under an    ││
-││                                      ││upstream-shaped showcase shell      ││
-││                                      ││instead of the earlier hosted-parity││
-││                                      ││dashboard.                          ││
-││                                      ││                                    ││
-││                                      ││                                    ││
-││                                      ││                                    ││
-││                                      ││                                    ││
-││                                      ││                                    ││
-││                                      ││                                    ││
-││                                      ││                                    ││
-││                                      ││                                    ││
-│└──────────────────────────────────────┘└────────────────────────────────────┘│
-└──────────────────────────────────────────────────────────────────────────────┘
+﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+╭───────────────────────────────────Advanced───────────────────────────────────╮
+│╭───────────────────Error Traceback────────────────────╮╭───────Timers───────╮│
+││── Application Error ──                               ││Compact timer:      ││
+││"src/main.rs", line 42, in main                       ││4m57.9s (0%)        ││
+││   40 | fn main() -> Result<()> {                     ││Clock timer:   01:59││
+││   41 |     let config = Config::load()?;             ││                    ││
+││ ❱ 42 |     app::run(config)?;                        ││Spinners:           ││
+││   43 |     Ok(())                                    ││dots        ⠧       ││
+││   44 | }                                             ││line        \       ││
+││  File "src/app.rs", line 128, in run                 ││braille     ⠧       ││
+││   125 | pub fn run(config: Config) -> Result<()> {   │╰────────────────────╯│
+││126 |     let db = Database::connect(&config.db_url)?;│╭───────State────────╮│
+││   127 |     let server = Server::new(db);            ││State: Idle         ││
+││ ❱ 128 |     server.listen(config.port)?;             ││Macro: none         ││
+││   129 |     Ok(())                                   ││Events: 0           ││
+││   130 | }                                            ││Duration: -         ││
+││  File "src/database.rs", line 56, in connect         ││Speed: 1.00x        ││
+││   53 | pub fn connect(url: &str) -> Result<Self> {   ││Loop: Off           ││
+││   54 |     let pool = Pool::builder()                │╰────────────────────╯│
+││   55 |         .max_size(10)                         │╭────────────────────╮│
+│╰──────────────────────────────────────────────────────╯╰────────────────────╯│
+╰──────────────────────────────────────────────────────────────────────────────╯
 Advanced [10/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

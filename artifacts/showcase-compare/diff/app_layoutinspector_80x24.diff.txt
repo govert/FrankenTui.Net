@@ -2,79 +2,79 @@
 Upstream snapshot: app_layoutinspector_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 925
-Local nonblank chars: 1283
-Local/upstream char ratio: 1.387
+Local nonblank chars: 863
+Local/upstream char ratio: 0.933
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
 @@ row 02
 upstream: ╭───────────────────────────────────────────────────Layout Inspector────────────
-local   : ┌─ Layout Inspector ───────────────────────────────────────────────────────────┐
+local   : ╭───────────────────────────────Layout Inspector───────────────────────────────╮
 @@ row 03
 upstream: │╭───────────────Inspector────────────────╮  ╭───────────────────Layout─────────
-local   : │┌─ Layout Inspector [focus┌─ Constraint Overlay ────────┐┌─ Pane Studio ─────┐│
+local   : │╭──────────────Inspector───────────────╮╭───────────────Layout───────────────╮│
 @@ row 04
 upstream: ││Scenario: Flex Trio                     │  │╭Fixed 44x3 [0..∞ x 3..3])────────
-local   : ││Scenario: Flex Trio     ││Constraint Overlay           ││Embedded workspace ││
+local   : ││Scenario: Flex Trio                   ││Fixed 44x3 [0..∞ x 3..3]            ││
 @@ row 05
 upstream: ││Details: Vertical flex: Fixed + Min + Ma│  ││
-local   : ││Details: Vertical flex: ││visible | Step Constraints   ││visible at wide    ││
+local   : ││Details: Vertical flex: Fixed + Min + ││                                    ││
 @@ row 06
 upstream: ││Step: Constraints - Inspect min/max boun│  │╰─────────────────────────────────
-local   : ││Fixed + Min + Max       ││style:                       ││sizes.             ││
+local   : ││Max                                   ││Min 44x4→44x7 [0..∞ x 4..∞]         ││
 @@ row 07
 upstream: ││                                        │  │
-local   : ││Step: Constraints       ││  show_borders=false         ││                   ││
+local   : ││Step: Constraints - Inspect min/max   ││                                    ││
 @@ row 08
 upstream: ││Overlay: on   Tree: on                  │  │.Min 44x4→44x7 [0..∞ x 4..∞]──────
-local   : ││Overlay: on   Tree: on  ││  show_size_diff=true        ││FlexRoot / GridRoot││
+local   : ││bounds                                ││Max 44x6→44x3 [0..∞ x 0..6]         ││
 @@ row 09
 upstream: ││                                        │  ││
-local   : ││Focus: 0 focus          ││  show_labels=true           ││/ FitRoot records  ││
+local   : ││                                      ││                                    ││
 @@ row 10
 upstream: ││Keys: n/p scenario  [/ ] step  o overlay│  ││
-local   : ││                        ││                             ││are compared       ││
+local   : ││Overlay: on   Tree: on                ││                                    ││
 @@ row 11
 upstream: ││                                        │  │.
-local   : ││Keys: n/p scenario  [/] ││Scenario blocks:             ││against requested  ││
+local   : ││                                      ││                                    ││
 @@ row 12
 upstream: ││FlexRoot  req 44x15  got 44x15  min 0x0 │  ││
-local   : ││step  o overlay  t tree │└─────────────────────────────┘│and received rects.││
+local   : ││Keys: n/p scenario  [/ ] step  o      ││                                    ││
 @@ row 13
 upstream: ││  Fixed  req 44x3  got 44x3  min 0x3  ma│  ││
-local   : ││r reset                 │┌─ Layout Tree ───────────────┐│                   ││
+local   : ││overlay                               ││                                    ││
 @@ row 14
 upstream: ││  Min  req 44x4  got 44x7  min 0x4  max │  │╰─────────────────────────────────
-local   : ││Mouse: click info cycles││Widget RequestReceiveStatus  ││Drag panes | Right ││
+local   : ││                                      ││                                    ││
 @@ row 15
 upstream: ││  Max  req 44x6  got 44x3  min 0x0  max │  │
-local   : ││scenario | click viz    ││FlexRoo0x0    80x21  OK      ││click mode | Wheel ││
+local   : ││FlexRoot  req 44x15  got 44x15  min   ││                                    ││
 @@ row 16
 upstream: ││                                        │  │.Max 44x6→44x3 [0..∞ x 0..6]──────
-local   : ││steps | right click     ││  Fixed0x3    40x3   OK      ││magnetism          ││
+local   : ││0x0                                   ││                                    ││
 @@ row 17
 upstream: ││                                        │  ││
-local   : ││toggles overlay         ││  Min  0x4    40x8   OK      ││                   ││
+local   : ││Fixed  req 44x3  got 44x3  min 0x3    ││                                    ││
 @@ row 18
 upstream: ││                                        │  │.─────────────────────────────────
-local   : ││Pane rail: Drag panes | ││  Max  0x6    40x6   OK      ││ConstraintOverlay  ││
+local   : ││max ∞x3                               ││                                    ││
 @@ row 19
 upstream: ││                                        │  ╰──────────────────────────────────
-local   : ││Right click mode | Wheel││                             ││and LayoutDebugger ││
+local   : ││Min  req 44x4  got 44x7  min 0x4  max ││                                    ││
 @@ row 20
 upstream: ││                                        │
-local   : ││magnetism               ││                             ││parity hooks remain││
+local   : ││∞x∞                                   ││                                    ││
 @@ row 21
 upstream: ││                                        │  ╭────────────────────Tree──────────
-local   : ││                        ││                             ││tracked under      ││
+local   : ││Max  req 44x6  got 44x3  min 0x0  max ││                                    ││
 @@ row 22
 upstream: ││                                        │  │FlexRoot req=44x15 got=44x15 min=0
-local   : │└────────────────────────┘└─────────────────────────────┘└───────────────────┘│
+local   : │╰──────────────────────────────────────╯╰────────────────────────────────────╯│
 @@ row 23
 upstream: ││                                        │  │  Fixed req=44x3 got=44x3 min=0x3
-local   : └──────────────────────────────────────────────────────────────────────────────┘
+local   : ╰──────────────────────────────────────────────────────────────────────────────╯
 @@ row 24
 upstream: d)  Tab/Shift+Tab: next/prev  0x0 00:00   │  │  Min req=44x4 got=44x7 min=0x4 ma
 local   : Layout Inspector [24/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

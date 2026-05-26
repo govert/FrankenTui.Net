@@ -2,79 +2,79 @@
 Upstream snapshot: app_widgetbuilder_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 1036
-Local nonblank chars: 1240
-Local/upstream char ratio: 1.197
+Local nonblank chars: 621
+Local/upstream char ratio: 0.599
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
 @@ row 02
 upstream: ╭────────────────────────────────────────────────────Widget Builder─────────────
-local   : ┌─ Widget Builder ─────────────────────────────────────────────────────────────┐
+local   : ╭────────────────────────────────Widget Builder────────────────────────────────╮
 @@ row 03
 upstream: │Preset: Starter Kit  |  Widgets: 4  |  [P] cycle  [S] save  [X] export
-local   : │Preset: Starter Kit | Widgets: 4 | focus=0 | [P] cycle [S] save [X] export    │
+local   : │╭───────────────────────────────Widget Builder───────────────────────────────╮│
 @@ row 04
 upstream: │
-local   : │Widget Builder Sandbox | deterministic presets, editable props, preview=on,   │
+local   : ││Widget Type: Paragraph                                                      ││
 @@ row 05
 upstream: │╭Presets───────────────────╮╭Intro Paragraph───────────────────────────────────
-local   : │┌─ Presets ──────────────────┐┌─ Props ──────────────────────────────────────┐│
+local   : ││                                                                            ││
 @@ row 06
 upstream: ││>  Starter Kit            ││Compose widgets, tweak props, and observe layout c
-local   : ││> Starter Kit               ││Selected: Paragraph (#1)                      ││
+local   : ││Properties:                                                                 ││
 @@ row 07
 upstream: ││Status Wall               ││
-local   : ││  Status Wall               ││Enabled: on (E)                               ││
+local   : ││  text: "Hello, FrankenTUI!"                                                ││
 @@ row 08
 upstream: ││Minimal                   │╰──────────────────────────────────────────────────
-local   : ││  Minimal                   ││Border: on (B)                                ││
+local   : ││  alignment: Left                                                           ││
 @@ row 09
 upstream: ││                          │╭Checklist─────────────────────────────────────────
-local   : ││  Custom 1                  ││Title: on (T)                                 ││
+local   : ││  wrap: Word                                                                ││
 @@ row 10
 upstream: ││                          ││Wireframe
-local   : ││                            ││Accent: 1 (C)                                 ││
+local   : ││  style: Default                                                            ││
 @@ row 11
 upstream: ││                          ││* Implement
-local   : │└────────────────────────────┘│Value: 40 ([ / ])                             ││
+local   : ││                                                                            ││
 @@ row 12
 upstream: ││                          │╰──────────────────────────────────────────────────
-local   : │┌─ Widget Tree ──────────────┐└──────────────────────────────────────────────┘│
+local   : ││Output:                                                                     ││
 @@ row 13
 upstream: │╰──────────────────────────╯╭Build Progress────────────────────────────────────
-local   : ││> 01. Paragraph [on]        │┌─ Export + Mouse ─────────────────────────────┐│
+local   : ││Hello, FrankenTUI!                                                          ││
 @@ row 14
 upstream: │╭Widget Tree───────────────╮│
-local   : ││  02. List [on]             ││event=widget_builder_export                   ││
+local   : ││                                                                            ││
 @@ row 15
 upstream: ││>  01. Paragraph [on]     ││                                          65%
-local   : ││  03. Progress [on]         ││status=idle | saved=false | props_scroll=0    ││
+local   : ││                                                                            ││
 @@ row 16
 upstream: ││02. List [on]             │╰──────────────────────────────────────────────────
-local   : ││  04. Sparkline [on]        ││run_id=FTUI_WIDGET_BUILDER_RUN_ID | preset_id ││
+local   : ││                                                                            ││
 @@ row 17
 upstream: ││03. Progress [on]         │╭Throughput────────────────────────────────────────
-local   : ││  05. Badge [on]            ││| preset_name | preset_index                  ││
+local   : ││                                                                            ││
 @@ row 18
 upstream: ││04. Sparkline [on]        ││▁▄ ▅▇▃█▅▄▇▁▅
-local   : ││                            ││widget_count | props_hash | preset.widgets[] |││
+local   : ││                                                                            ││
 @@ row 19
 upstream: ││                          ││
-local   : ││WidgetKind ids: paragraph,  ││outcome=ok                                    ││
+local   : ││                                                                            ││
 @@ row 20
 upstream: ││                          │╰──────────────────────────────────────────────────
-local   : │└────────────────────────────┘└──────────────────────────────────────────────┘│
+local   : ││                                                                            ││
 @@ row 21
 upstream: ││                          │
-local   : │                                                                              │
+local   : ││                                                                            ││
 @@ row 22
 upstream: │╰──────────────────────────╯
-local   : │J/K select(1) | P presets(Starter Kit) | S save(idle) | X export(idle) |      │
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 23
 upstream: │╭Props─────────────────────────────────────────────────────────────────────────
-local   : └──────────────────────────────────────────────────────────────────────────────┘
+local   : ╰──────────────────────────────────────────────────────────────────────────────╯
 @@ row 24
 upstream:    Tab/Shift+Tab: next/prev   0x0 00:00
 local   : Widget Builder [38/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

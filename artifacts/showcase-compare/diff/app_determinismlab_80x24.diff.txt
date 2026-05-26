@@ -2,79 +2,79 @@
 Upstream snapshot: app_determinismlab_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 959
-Local nonblank chars: 1268
-Local/upstream char ratio: 1.322
+Local nonblank chars: 766
+Local/upstream char ratio: 0.799
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
 @@ row 02
 upstream: ╭───────────────────────────────────────────────────Determinism Lab─────────────
-local   : ┌─ Determinism Lab ────────────────────────────────────────────────────────────┐
+local   : ╭───────────────────────────────Determinism Lab────────────────────────────────╮
 @@ row 03
 upstream: │Determinism Lab  Seed: 7  Frame: 27  Status: Live  Fault: off
-local   : │Determinism Lab | seed=7 | frame=0 | active=DirtyRows | fault=ON | paused=no |│
+local   : │╭──────────────────────────────Determinism Lab───────────────────────────────╮│
 @@ row 04
 upstream: │
-local   : │focus=0                                                                       │
+local   : ││Seed: 42                                                                    ││
 @@ row 05
 upstream: │┌Equivalence──────────────────────────────────────────────────────────┐┌Scene P
-local   : │┌─ Equivalence ─────────────────────────────┐┌─ Scene Preview ──────────────┐ │
+local   : ││Checksum: 0xDEADBEEF                                                        ││
 @@ row 06
 upstream: ││Strategy  Changes   Checksum             Status                      ││OTYFKRX
-local   : ││Strategy    Changes   Checksum             ││A..F....Q.....T..O....M....X..│ │
+local   : ││Frames: 1000                                                                ││
 @@ row 07
 upstream: OLFMLY  NKV X.NMI.52  E0D977b9ee8257bc8ba   OK                         ││.PED.TO
-local   : ││Status                                     ││..C....P....Z....             │ │
+local   : ││Hash: SHA-256                                                               ││
 @@ row 08
 upstream: LEDiFWERowsCPDDIFB52LKXEL977b9ee8257bc8ba   OK                         ││.FQP..W
-local   : ││Full           118   0x000000008a2f3d9c    ││..B....L....R....D....H....N..│ │
+local   : ││                                                                            ││
 @@ row 09
 upstream: T.RullZQJ.ZK.Q  Q0V0 B IJ977b9ee8257bc8ba   OK                         ││AJYH.OU
-local   : ││OK                                         ││..V....E....K....             │ │
+local   : ││Deterministic: YES                                                          ││
 @@ row 10
 upstream: XMAABAFS ON.DSVRWMJG  D ALZKTF ORQP  Y                                 ││WJQXYPU
-local   : ││> DirtyRows       42   0x000000008a2f3d63  ││....O....cursor..Y....S....I..│ │
+local   : ││All frames match reference checksums.                                       ││
 @@ row 11
 upstream: FURULRWVTe: d2b782 cbc6d1 00f37d 0e44b9 2d3750 347b12 ef8dd7 89442b 33c││QPW.QRM
-local   : ││MISMATCH                                   ││..W....G....U....             │ │
+local   : ││                                                                            ││
 @@ row 12
 upstream: XM  FYJKB.X.FAJKX HQNUB T.Z UM.Q   A                                   ││...Z.DP
-local   : ││FullRedraw    1080   0x000000008a2f3d9c    │└──────────────────────────────┘ │
+local   : ││Run with --seed=42 for reproducibility.                                     ││
 @@ row 13
 upstream: ││NceGarH.DYBaselNMLV(G.KU D.XCLQX                                     ││GNCHQHA
-local   : │└───────────────────────────────────────────┘┌─ Checks ─────────────────────┐ │
+local   : ││                                                                            ││
 @@ row 14
 upstream: PEZITSJOJSA 1SEQJJUVLOC.GSJH.XAPFQRQLYSpace pause  F fault  E export  E││KRKPMZK
-local   : │┌─ Report + Determinism Env ────────────────┐│Scenarios (click/Enter):      │ │
+local   : ││Checksums verified:                                                         ││
 @@ row 15
 upstream: SJRSZWAnSNCPOKFFSYOCTaMFKSODBRW.YDEGress Enter.                        ││YNAPEXW
-local   : ││Report scroll: 0 | export=idle             ││> Baseline (10f)              │ │
+local   : ││  Frame 0: ✓ 0xDEADBEEF                                                     ││
 @@ row 16
 upstream: .AKeLO: EOSeHODRrunIR.FCRted OA ruB all  C log checksum                ││YTQVWTG
-local   : ││JSONL export path:                         ││  Drift (30f)                 │ │
+local   : ││  Frame 1: ✓ 0xCAFEBABE                                                     ││
 @@ row 17
 upstream: OX GY.OTPEVMBNAUJEGWBMLQ ARKJ WX MHKQ                                  │└───────
-local   : ││FTUI_DETERMINISM_LAB_REPORT or             ││  Fault Injection (1f)        │ │
+local   : ││  Frame 2: ✓ 0x8BADF00D                                                     ││
 @@ row 18
 upstream: ││                                                                     │┌Checks─
-local   : ││determinism_lab_report.jsonl               ││                              │ │
+local   : ││                                                                            ││
 @@ row 19
 upstream: ││                                                                     ││Scenari
-local   : ││Manual checksum log: idle                  ││Runs (click row to inspect):  │ │
+local   : ││Test: ftui_determinism_checksum_equivalence                                 ││
 @@ row 20
 upstream: ││                                                                     ││> Basel
-local   : │└───────────────────────────────────────────┘└──────────────────────────────┘ │
+local   : ││Status: PASS                                                                ││
 @@ row 21
 upstream: ││                                                                     ││  Drift
-local   : │                                                                              │
+local   : ││                                                                            ││
 @@ row 22
 upstream: ││                                                                     ││  Fault
-local   : │1/2/3 strategy(DirtyRows) | [/] seed(7) | Space pause(live) | F fault(on) | E │
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 23
 upstream: ││                                                                     ││Runs  (
-local   : └──────────────────────────────────────────────────────────────────────────────┘
+local   : ╰──────────────────────────────────────────────────────────────────────────────╯
 @@ row 24
 upstream: )  Tab/Shift+Tab: next/prev   0x0 00:00                                ││
 local   : Determinism Lab [40/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

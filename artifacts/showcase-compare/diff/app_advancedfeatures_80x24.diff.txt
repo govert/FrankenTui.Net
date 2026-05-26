@@ -2,79 +2,79 @@
 Upstream snapshot: app_advancedfeatures_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 1061
-Local nonblank chars: 832
-Local/upstream char ratio: 0.784
+Local nonblank chars: 1190
+Local/upstream char ratio: 1.122
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour   2: Dash   3: Shakes   4: Code   5: Widgets   6: Layout   7: Forms   8
+local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
 @@ row 02
 upstream: ╭───────────────────────────────────────────────────────Advanced────────────────
-local   : ┌─ Advanced ───────────────────────────────────────────────────────────────────┐
+local   : ╭───────────────────────────────────Advanced───────────────────────────────────╮
 @@ row 03
 upstream: │╭─────────────────────Error Traceback─────────────────────╮╭───────────────────
-local   : │┌─ Patterns [focus selected 0] ────────┐┌─ Composite ────────────────────────┐│
+local   : │╭───────────────────Error Traceback────────────────────╮╭───────Timers───────╮│
 @@ row 04
 upstream: ││── Application Error ──                                  ││Compact timer: 4m57
-local   : ││› inline mode contract                ││advanced mouse focus=0 context=clear││
+local   : ││── Application Error ──                               ││Compact timer:      ││
 @@ row 05
 upstream: .9s (0%) "src/main.rs", line 42, in main                   ││Clock timer:   01:5
-local   : ││• runtime input pipeline              ││Selected pattern: 0                 ││
+local   : ││"src/main.rs", line 42, in main                       ││4m57.9s (0%)        ││
 @@ row 06
 upstream: 9│   40 │ fn main() -> Result<()> {                        ││
-local   : ││• evidence capture                    ││Composite mode: porting             ││
+local   : ││   40 | fn main() -> Result<()> {                     ││Clock timer:   01:59││
 @@ row 07
 upstream: ││   41 │     let config = Config::load()?;                ││Spinners:
-local   : ││• SIMD acceleration                   ││Context action: clear               ││
+local   : ││   41 |     let config = Config::load()?;             ││                    ││
 @@ row 08
 upstream: ││ ❱ 42 │     app::run(config)?;                           ││dots        ⠧
-local   : ││• web parity reuse                    ││                                    ││
+local   : ││ ❱ 42 |     app::run(config)?;                        ││Spinners:           ││
 @@ row 09
 upstream: ││   43 │     Ok(())                                       ││line        \
-local   : ││                                      ││This screen groups the port-specific││
+local   : ││   43 |     Ok(())                                    ││dots        ⠧       ││
 @@ row 10
 upstream: ││   44 │ }                                                ││braille     ⠧
-local   : ││                                      ││composites that now sit under an    ││
+local   : ││   44 | }                                             ││line        \       ││
 @@ row 11
 upstream: ││  File "src/app.rs", line 128, in run                    ││Progress: ░░░░░░░░░
-local   : ││                                      ││upstream-shaped showcase shell      ││
+local   : ││  File "src/app.rs", line 128, in run                 ││braille     ⠧       ││
 @@ row 12
 upstream: ││   125 │ pub fn run(config: Config) -> Result<()> {      │╰───────────────────
-local   : ││                                      ││instead of the earlier hosted-parity││
+local   : ││   125 | pub fn run(config: Config) -> Result<()> {   │╰────────────────────╯│
 @@ row 13
 upstream: ││   126 │     let db = Database::connect(&config.db_url)?;│╭───────────────────
-local   : ││                                      ││dashboard.                          ││
+local   : ││126 |     let db = Database::connect(&config.db_url)?;│╭───────State────────╮│
 @@ row 14
 upstream: ││   127 │     let server = Server::new(db);               ││State: Idle
-local   : ││                                      ││                                    ││
+local   : ││   127 |     let server = Server::new(db);            ││State: Idle         ││
 @@ row 15
 upstream: ││ ❱ 128 │     server.listen(config.port)?;                ││Macro: none
-local   : ││                                      ││                                    ││
+local   : ││ ❱ 128 |     server.listen(config.port)?;             ││Macro: none         ││
 @@ row 16
 upstream: ││   129 │     Ok(())                                      ││Events: 0
-local   : ││                                      ││                                    ││
+local   : ││   129 |     Ok(())                                   ││Events: 0           ││
 @@ row 17
 upstream: ││   130 │ }                                               ││Duration: -
-local   : ││                                      ││                                    ││
+local   : ││   130 | }                                            ││Duration: -         ││
 @@ row 18
 upstream: ││  File "src/database.rs", line 56, in connect            ││Speed: 1.00x
-local   : ││                                      ││                                    ││
+local   : ││  File "src/database.rs", line 56, in connect         ││Speed: 1.00x        ││
 @@ row 19
 upstream: ││   53 │ pub fn connect(url: &str) -> Result<Self> {      ││Loop: Off
-local   : ││                                      ││                                    ││
+local   : ││   53 | pub fn connect(url: &str) -> Result<Self> {   ││Loop: Off           ││
 @@ row 20
 upstream: ││   54 │     let pool = Pool::builder()                   │╰───────────────────
-local   : ││                                      ││                                    ││
+local   : ││   54 |     let pool = Pool::builder()                │╰────────────────────╯│
 @@ row 21
 upstream: ││   55 │         .max_size(10)                            │╭───────────────────
-local   : ││                                      ││                                    ││
+local   : ││   55 |         .max_size(10)                         │╭────────────────────╮│
 @@ row 22
 upstream: ││ ❱ 56 │         .build(url)?;                            ││FrankenTUI Demo Sho
-local   : │└──────────────────────────────────────┘└────────────────────────────────────┘│
+local   : │╰──────────────────────────────────────────────────────╯╰────────────────────╯│
 @@ row 23
 upstream: ││   57 │     Ok(Self { pool })                            ││
-local   : └──────────────────────────────────────────────────────────────────────────────┘
+local   : ╰──────────────────────────────────────────────────────────────────────────────╯
 @@ row 24
 upstream: Tab/Shift+Tab: next/prev      0x0 00:00                    ││Framework: ftui (Ru
 local   : Advanced [10/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)
