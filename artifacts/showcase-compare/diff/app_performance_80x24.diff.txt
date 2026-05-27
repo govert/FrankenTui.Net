@@ -26,10 +26,10 @@ upstream: â”‚â”‚[    2]  WARN auth::jwt          Event #00002: simulat
 local   : ││[    2]  WARN auth::jwt          Event #0││Scroll:       0                  ││
 @@ row 07
 upstream: â”‚â”‚[    3] ERROR cache::redis       Event #00003: simulated log entry with pa
-local   : ││[    3] ERROR cache::redis       Event #0││Viewport:     17 rows            ││
+local   : ││[    3] ERROR cache::redis       Event #0││Viewport:     40 rows            ││
 @@ row 08
 upstream: â”‚â”‚[    4] TRACE queue::worker      Event #00004: simulated log entry with pa
-local   : ││[    4] TRACE queue::worker      Event #0││Visible:      0..17              ││
+local   : ││[    4] TRACE queue::worker      Event #0││Visible:      0..40              ││
 @@ row 09
 upstream: â”‚â”‚[    5]  INFO api::handler       Event #00005: simulated log entry with pa
 local   : ││[    5]  INFO api::handler       Event #0││Progress:     0.0%               ││
@@ -44,7 +44,7 @@ upstream: â”‚â”‚[    8] ERROR db::pool           Event #00008: simulat
 local   : ││[    8] ERROR db::pool           Event #0││Only visible rows are rendered.  ││
 @@ row 13
 upstream: â”‚â”‚[    9] TRACE auth::jwt          Event #00009: simulated log entry with pa
-local   : ││[    9] TRACE auth::jwt          Event #0││Rendering 17 of 10000 items.     ││
+local   : ││[    9] TRACE auth::jwt          Event #0││Rendering 40 of 10000 items.     ││
 @@ row 14
 upstream: â”‚â”‚[   10]  INFO cache::redis       Event #00010: simulated log entry with pa
 local   : ││[   10]  INFO cache::redis       Event #0││░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    ││

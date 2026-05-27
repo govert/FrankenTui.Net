@@ -28,45 +28,72 @@ public static class LayoutSolver
 
         var total = direction == LayoutDirection.Horizontal ? bounds.Width : bounds.Height;
         var lengths = new int[constraints.Count];
-        var fillIndexes = new List<int>();
-        var reserved = 0;
+        var growIndices = new List<int>();
+        var remaining = (int)total;
 
-        for (var index = 0; index < constraints.Count; index++)
+        // Pass 1: Hard minimums (Fixed, Minimum)
+        // Rust: "Allocate hard minimums. These constraints are non-negotiable."
+        for (var i = 0; i < constraints.Count; i++)
         {
-            var constraint = constraints[index];
-            lengths[index] = constraint.Kind switch
+            var c = constraints[i];
+            switch (c.Kind)
             {
-                LayoutConstraintKind.Fixed => constraint.Value,
-                LayoutConstraintKind.Minimum => constraint.Value,
-                LayoutConstraintKind.Percentage => (total * constraint.Value) / 100,
-                LayoutConstraintKind.Fill => 0,
-                _ => 0
-            };
-
-            if (constraint.Kind == LayoutConstraintKind.Fill)
-            {
-                fillIndexes.Add(index);
+                case LayoutConstraintKind.Fixed:
+                    var sz = Math.Min(c.Value, remaining);
+                    lengths[i] = sz;
+                    remaining -= sz;
+                    break;
+                case LayoutConstraintKind.Minimum:
+                    var mn = Math.Min(c.Value, remaining);
+                    lengths[i] = mn;
+                    remaining -= mn;
+                    growIndices.Add(i);  // Min can grow beyond minimum
+                    break;
+                case LayoutConstraintKind.Fill:
+                    growIndices.Add(i);  // Fill starts at 0, can grow
+                    break;
+                case LayoutConstraintKind.MinFill:
+                    var mf = Math.Min(c.Value, remaining);
+                    lengths[i] = mf;
+                    remaining -= mf;
+                    growIndices.Add(i);  // MinFill can grow beyond minimum
+                    break;
             }
-
-            reserved += lengths[index];
         }
 
-        var remaining = Math.Max(0, total - reserved);
-        if (fillIndexes.Count > 0)
+        // Pass 2: Soft constraints (Percentage)
+        // Rust: "These fill remaining space after hard minimums."
+        for (var i = 0; i < constraints.Count; i++)
         {
-            var totalWeight = fillIndexes.Sum(index => constraints[index].Value);
-            var consumed = 0;
-            for (var offset = 0; offset < fillIndexes.Count; offset++)
+            if (constraints[i].Kind == LayoutConstraintKind.Percentage)
             {
-                var index = fillIndexes[offset];
-                var weight = constraints[index].Value;
-                var share = offset == fillIndexes.Count - 1
+                var target = (total * constraints[i].Value) / 100;
+                var needed = Math.Max(0, target - lengths[i]);
+                var alloc = Math.Min(needed, remaining);
+                lengths[i] += alloc;
+                remaining -= alloc;
+            }
+        }
+
+        // Pass 3: Grow loop — distribute remaining among growable constraints
+        // Rust: "Iterative distribution to flexible constraints"
+        if (remaining > 0 && growIndices.Count > 0)
+        {
+            var totalWeight = growIndices.Sum(i => constraints[i].Value > 0 ? (int)constraints[i].Value : 1);
+            var consumed = 0;
+            for (var offset = 0; offset < growIndices.Count; offset++)
+            {
+                var i = growIndices[offset];
+                var weight = constraints[i].Value > 0 ? (int)constraints[i].Value : 1;
+                var share = offset == growIndices.Count - 1
                     ? remaining - consumed
                     : (remaining * weight) / totalWeight;
-                lengths[index] = share;
+                lengths[i] += share;
                 consumed += share;
             }
+            remaining = 0;
         }
+        // If no grow indices, remaining space stays unused (Rust Flex Min behavior)
 
         var result = new Rect[constraints.Count];
         var cursorX = bounds.X;
@@ -92,8 +119,8 @@ public static class LayoutSolver
             constraints,
             lengths,
             total,
-            reserved,
-            remaining,
+            0,
+            0,
             result,
             LayoutCacheKey.Create(bounds, direction, constraints).ToString(),
             false);
