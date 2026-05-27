@@ -3862,6 +3862,14 @@ internal static class ShowcaseSurface
             Child = new ParagraphWidget(text)
         };
 
+    /// <summary>Panel with raw (no-wrap) text content.</summary>
+    internal static IWidget PanelRaw(string? title, string text) =>
+        new PanelWidget
+        {
+            Title = title,
+            Child = new RawTextBlock(text)
+        };
+
     private sealed class DeterministicVfxCanvasWidget(int frame, string? effect) : IWidget
     {
         public void Render(RuntimeRenderContext context)

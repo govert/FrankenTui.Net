@@ -1,7 +1,34 @@
+using FrankenTui.Core;
 using FrankenTui.Layout;
+using FrankenTui.Render;
+using FrankenTui.Runtime;
 using FrankenTui.Widgets;
 
 namespace FrankenTui.Demo.Showcase;
+
+/// <summary>Widget that renders raw text without borders or wrapping, clipped to bounds.</summary>
+internal sealed class RawTextBlock(string text) : IWidget
+{
+    void IRuntimeView.Render(RuntimeRenderContext context)
+    {
+        var buf = context.Buffer;
+        var lines = text.Replace("\r\n", "\n").Split('\n');
+        var maxRows = Math.Min(lines.Length, context.Bounds.Height);
+        for (var row = 0; row < maxRows; row++)
+        {
+            var y = (ushort)(context.Bounds.Y + row);
+            var line = lines[row];
+            var maxCols = Math.Min(line.Length, context.Bounds.Width);
+            for (var col = 0; col < maxCols; col++)
+            {
+                var x = (ushort)(context.Bounds.X + col);
+                buf.Set(x, y, Cell.FromChar(line[col]));
+            }
+        }
+    }
+
+    public Size Measure(Size available) => available;
+}
 
 /// <summary>Screen 41: Hyperlink Playground. Ported from hyperlink_playground.rs.</summary>
 internal static class Screen41Hyperlink
@@ -57,22 +84,16 @@ internal static class Screen14Performance
 {
     public static IWidget Build(ShowcaseDemoState state)
     {
-        var levels = new[] { "INFO", "DEBUG", "WARN", "ERROR", "TRACE" };
+        // Exact match to upstream performance.rs format
+        var severities = new[] { " INFO", "DEBUG", " WARN", "ERROR", "TRACE" };
         var modules = new[] { "server::http", "db::pool", "auth::jwt", "cache::redis", "queue::worker",
                               "api::handler", "core::runtime", "server::http", "db::pool", "auth::jwt",
                               "cache::redis", "queue::worker", "api::handler", "core::runtime", "server::http",
                               "db::pool", "auth::jwt", "cache::redis", "queue::worker", "api::handler" };
-
         var logLines = new List<string>();
         for (var i = 0; i < 20; i++)
-        {
-            var level = levels[i % 5];
-            var mod = modules[i];
-            var pad = level.Length == 4 ? " " : "";
-            logLines.Add($"[{i,5}] {pad}{level} {mod,-15} Event #{i:D5}: simulated log entry with payload");
-        }
-        var panel = ShowcaseSurface.Panel("Virtualized List (10000 items)", string.Join("\n", logLines));
-        return panel;
+            logLines.Add($"[{i,5}] {severities[i % 5]} {modules[i],-18} Event #{i:D5}: simulated log entry with payload data");
+        return ShowcaseSurface.PanelRaw("Virtualized List (10000 items)", string.Join("\n", logLines));
     }
 }
 

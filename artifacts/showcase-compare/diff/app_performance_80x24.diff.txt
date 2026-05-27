@@ -2,8 +2,8 @@
 Upstream snapshot: app_performance_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 1486
-Local nonblank chars: 1566
-Local/upstream char ratio: 1.054
+Local nonblank chars: 1512
+Local/upstream char ratio: 1.017
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -17,58 +17,58 @@ upstream: │╭─────────────────────�
 local   : │╭───────────────────────Virtualized List (10000 items)───────────────────────╮│
 @@ row 04
 upstream: ││[    0]  INFO server::http       Event #00000: simulated log entry with payloa
-local   : ││[    0]  INFO server::http    Event #00000: simulated log entry with payload││
+local   : ││[    0]  INFO server::http       Event #00000: simulated log entry with payl││
 @@ row 05
 upstream: ││[    1] DEBUG db::pool           Event #00001: simulated log entry with payloa
-local   : ││[    1] DEBUG db::pool        Event #00001: simulated log entry with payload││
+local   : ││[    1] DEBUG db::pool           Event #00001: simulated log entry with payl││
 @@ row 06
 upstream: ││[    2]  WARN auth::jwt          Event #00002: simulated log entry with payloa
-local   : ││[    2]  WARN auth::jwt       Event #00002: simulated log entry with payload││
+local   : ││[    2]  WARN auth::jwt          Event #00002: simulated log entry with payl││
 @@ row 07
 upstream: ││[    3] ERROR cache::redis       Event #00003: simulated log entry with payloa
-local   : ││[    3] ERROR cache::redis    Event #00003: simulated log entry with payload││
+local   : ││[    3] ERROR cache::redis       Event #00003: simulated log entry with payl││
 @@ row 08
 upstream: ││[    4] TRACE queue::worker      Event #00004: simulated log entry with payloa
-local   : ││[    4] TRACE queue::worker   Event #00004: simulated log entry with payload││
+local   : ││[    4] TRACE queue::worker      Event #00004: simulated log entry with payl││
 @@ row 09
 upstream: ││[    5]  INFO api::handler       Event #00005: simulated log entry with payloa
-local   : ││[    5]  INFO api::handler    Event #00005: simulated log entry with payload││
+local   : ││[    5]  INFO api::handler       Event #00005: simulated log entry with payl││
 @@ row 10
 upstream: ││[    6] DEBUG core::runtime      Event #00006: simulated log entry with payloa
-local   : ││[    6] DEBUG core::runtime   Event #00006: simulated log entry with payload││
+local   : ││[    6] DEBUG core::runtime      Event #00006: simulated log entry with payl││
 @@ row 11
 upstream: 0│[    7]  WARN server::http       Event #00007: simulated log entry with payloa
-local   : ││[    7]  WARN server::http    Event #00007: simulated log entry with payload││
+local   : ││[    7]  WARN server::http       Event #00007: simulated log entry with payl││
 @@ row 12
 upstream: ││[    8] ERROR db::pool           Event #00008: simulated log entry with payloa
-local   : ││[    8] ERROR db::pool        Event #00008: simulated log entry with payload││
+local   : ││[    8] ERROR db::pool           Event #00008: simulated log entry with payl││
 @@ row 13
 upstream: ││[    9] TRACE auth::jwt          Event #00009: simulated log entry with payloa
-local   : ││[    9] TRACE auth::jwt       Event #00009: simulated log entry with payload││
+local   : ││[    9] TRACE auth::jwt          Event #00009: simulated log entry with payl││
 @@ row 14
 upstream: ││[   10]  INFO cache::redis       Event #00010: simulated log entry with payloa
-local   : ││[   10]  INFO cache::redis    Event #00010: simulated log entry with payload││
+local   : ││[   10]  INFO cache::redis       Event #00010: simulated log entry with payl││
 @@ row 15
 upstream: ││[   11] DEBUG queue::worker      Event #00011: simulated log entry with payloa
-local   : ││[   11] DEBUG queue::worker   Event #00011: simulated log entry with payload││
+local   : ││[   11] DEBUG queue::worker      Event #00011: simulated log entry with payl││
 @@ row 16
 upstream: ││[   12]  WARN api::handler       Event #00012: simulated log entry with payloa
-local   : ││[   12]  WARN api::handler    Event #00012: simulated log entry with payload││
+local   : ││[   12]  WARN api::handler       Event #00012: simulated log entry with payl││
 @@ row 17
 upstream: ││[   13] ERROR core::runtime      Event #00013: simulated log entry with payloa
-local   : ││[   13] ERROR core::runtime   Event #00013: simulated log entry with payload││
+local   : ││[   13] ERROR core::runtime      Event #00013: simulated log entry with payl││
 @@ row 18
 upstream: ││[   14] TRACE server::http       Event #00014: simulated log entry with payloa
-local   : ││[   14] TRACE server::http    Event #00014: simulated log entry with payload││
+local   : ││[   14] TRACE server::http       Event #00014: simulated log entry with payl││
 @@ row 19
 upstream: ││[   15]  INFO db::pool           Event #00015: simulated log entry with payloa
-local   : ││[   15]  INFO db::pool        Event #00015: simulated log entry with payload││
+local   : ││[   15]  INFO db::pool           Event #00015: simulated log entry with payl││
 @@ row 20
 upstream: ││[   16] DEBUG auth::jwt          Event #00016: simulated log entry with payloa
-local   : ││[   16] DEBUG auth::jwt       Event #00016: simulated log entry with payload││
+local   : ││[   16] DEBUG auth::jwt          Event #00016: simulated log entry with payl││
 @@ row 21
 upstream: ││[   17]  WARN cache::redis       Event #00017: simulated log entry with payloa
-local   : ││[   17]  WARN cache::redis    Event #00017: simulated log entry with payload││
+local   : ││[   17]  WARN cache::redis       Event #00017: simulated log entry with payl││
 @@ row 22
 upstream: ││[   18] ERROR queue::worker      Event #00018: simulated log entry with payloa
 local   : │╰────────────────────────────────────────────────────────────────────────────╯│
