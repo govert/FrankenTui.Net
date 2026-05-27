@@ -2,15 +2,37 @@ using FrankenTui.Core;
 
 namespace FrankenTui.Layout;
 
+/// <summary>1D size hint for intrinsic content measurement.
+/// Matches Rust LayoutSizeHint.</summary>
+public readonly record struct SizeHint(ushort Min, ushort Preferred, ushort? Max)
+{
+    public static readonly SizeHint Zero = new(0, 0, null);
+    public static readonly SizeHint Fill = new(0, 0, null);
+    public static SizeHint Fixed(ushort size) => new(size, size, size);
+    public static SizeHint AtLeast(ushort min) => new(min, min, null);
+}
+
 public static class LayoutSolver
 {
     public static IReadOnlyList<Rect> Split(Rect bounds, LayoutDirection direction, IReadOnlyList<LayoutConstraint> constraints) =>
         SplitWithTrace(bounds, direction, constraints).Result;
 
+    /// <summary>Split with a measurer for FitContent constraints.
+    /// Matches Rust Flex::split_with_measurer.</summary>
+    public static IReadOnlyList<Rect> SplitWithMeasurer(
+        Rect bounds,
+        LayoutDirection direction,
+        IReadOnlyList<LayoutConstraint> constraints,
+        Func<int, ushort, SizeHint> measurer)
+    {
+        return SplitWithTrace(bounds, direction, constraints, measurer).Result;
+    }
+
     public static LayoutTrace SplitWithTrace(
         Rect bounds,
         LayoutDirection direction,
         IReadOnlyList<LayoutConstraint> constraints,
+        Func<int, ushort, SizeHint>? measurer = null,
         LayoutCache? cache = null)
     {
         ArgumentNullException.ThrowIfNull(constraints);
@@ -52,26 +74,39 @@ public static class LayoutSolver
                 case LayoutConstraintKind.Fill:
                     growIndices.Add(i);  // Fill starts at 0, can grow
                     break;
-                case LayoutConstraintKind.MinFill:
-                    var mf = Math.Min(c.Value, remaining);
-                    lengths[i] = mf;
-                    remaining -= mf;
-                    growIndices.Add(i);  // MinFill can grow beyond minimum
+                case LayoutConstraintKind.FitContent:
+                    var hint = measurer?.Invoke(i, (ushort)remaining) ?? SizeHint.Zero;
+                    var fc = Math.Min(hint.Min, remaining);
+                    lengths[i] = fc;
+                    remaining -= fc;
                     break;
             }
         }
 
-        // Pass 2: Soft constraints (Percentage)
+        // Pass 2: Soft constraints (Percentage, FitContent preferred)
         // Rust: "These fill remaining space after hard minimums."
         for (var i = 0; i < constraints.Count; i++)
         {
-            if (constraints[i].Kind == LayoutConstraintKind.Percentage)
+            var c = constraints[i];
+            switch (c.Kind)
             {
-                var target = (total * constraints[i].Value) / 100;
-                var needed = Math.Max(0, target - lengths[i]);
-                var alloc = Math.Min(needed, remaining);
-                lengths[i] += alloc;
-                remaining -= alloc;
+                case LayoutConstraintKind.Percentage:
+                    var target = (total * c.Value) / 100;
+                    var needed = Math.Max(0, target - lengths[i]);
+                    var alloc = Math.Min(needed, remaining);
+                    lengths[i] += alloc;
+                    remaining -= alloc;
+                    break;
+                case LayoutConstraintKind.FitContent:
+                    var hint = measurer?.Invoke(i, (ushort)remaining) ?? SizeHint.Zero;
+                    var preferred = Math.Max(hint.Min, hint.Preferred);
+                    if (hint.Max.HasValue)
+                        preferred = Math.Min(preferred, hint.Max.Value);
+                    var needed2 = Math.Max(0, preferred - lengths[i]);
+                    var alloc2 = Math.Min(needed2, remaining);
+                    lengths[i] += alloc2;
+                    remaining -= alloc2;
+                    break;
             }
         }
 
@@ -133,5 +168,5 @@ public static class LayoutSolver
         LayoutDirection direction,
         IReadOnlyList<LayoutConstraint> constraints,
         LayoutCache cache) =>
-        SplitWithTrace(bounds, direction, constraints, cache);
+        SplitWithTrace(bounds, direction, constraints, measurer: null, cache);
 }

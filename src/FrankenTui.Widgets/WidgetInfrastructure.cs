@@ -1,4 +1,5 @@
 using FrankenTui.Core;
+using FrankenTui.Layout;
 using FrankenTui.Runtime;
 
 namespace FrankenTui.Widgets;
@@ -85,4 +86,11 @@ public sealed class MeasureCache
 public interface IMeasurableWidget : IWidget
 {
     Size Measure(Size available);
+
+    /// <summary>Measure intrinsic size along one axis for FitContent layout.
+    /// Matches Rust MeasurableWidget → Flex::split_with_measurer.</summary>
+    SizeHint MeasureAxis(Size available, LayoutDirection direction) =>
+        direction == LayoutDirection.Vertical
+            ? SizeHint.Fixed((ushort)Measure(available).Height)
+            : SizeHint.Fixed((ushort)Measure(available).Width);
 }

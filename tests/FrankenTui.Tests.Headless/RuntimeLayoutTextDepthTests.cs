@@ -18,12 +18,12 @@ public sealed class RuntimeLayoutTextDepthTests
             new Rect(0, 0, 60, 8),
             LayoutDirection.Horizontal,
             [LayoutConstraint.Fixed(6), LayoutConstraint.Fill(), LayoutConstraint.Percentage(25)],
-            cache);
+            measurer: null, cache);
         var second = LayoutSolver.SplitWithTrace(
             new Rect(0, 0, 60, 8),
             LayoutDirection.Horizontal,
             [LayoutConstraint.Fixed(6), LayoutConstraint.Fill(), LayoutConstraint.Percentage(25)],
-            cache);
+            measurer: null, cache);
 
         Assert.False(first.CacheHit);
         Assert.True(second.CacheHit);

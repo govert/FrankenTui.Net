@@ -8,9 +8,9 @@ public readonly record struct LayoutConstraint(LayoutConstraintKind Kind, ushort
 
     public static LayoutConstraint Fill(ushort weight = 1) => new(LayoutConstraintKind.Fill, Math.Max((ushort)1, weight));
 
-    /// <summary>Non-greedy fill: takes minimum then shares remaining space.
-    /// Matches Rust Flex Constraint::Min(N).</summary>
-    public static LayoutConstraint MinFill(ushort min = 1) => new(LayoutConstraintKind.MinFill, Math.Max((ushort)1, min));
+    /// <summary>Size to fit content. Requires IMeasurableWidget on child.
+    /// Matches Rust Constraint::FitContent.</summary>
+    public static LayoutConstraint FitContent => new(LayoutConstraintKind.FitContent, 0);
 
     public static LayoutConstraint Percentage(ushort value) => new(LayoutConstraintKind.Percentage, value);
 }

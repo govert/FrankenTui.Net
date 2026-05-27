@@ -7,7 +7,7 @@ using FrankenTui.Widgets;
 namespace FrankenTui.Demo.Showcase;
 
 /// <summary>Widget that renders raw text without borders or wrapping, clipped to bounds.</summary>
-internal sealed class RawTextBlock(string text) : IWidget
+internal sealed class RawTextBlock(string text) : IWidget, IMeasurableWidget
 {
     void IRuntimeView.Render(RuntimeRenderContext context)
     {
@@ -27,7 +27,22 @@ internal sealed class RawTextBlock(string text) : IWidget
         }
     }
 
-    public Size Measure(Size available) => available;
+    public Size Measure(Size available)
+    {
+        var lines = text.Split('\n');
+        return new Size(
+            (ushort)(lines.Length > 0 ? Math.Min(lines.Max(l => l.Length), available.Width) : 0),
+            (ushort)Math.Min(lines.Length, available.Height));
+    }
+
+    public SizeHint MeasureAxis(Size available, LayoutDirection direction)
+    {
+        var lines = text.Split('\n');
+        if (direction == LayoutDirection.Vertical)
+            return SizeHint.Fixed((ushort)lines.Length);
+        else
+            return SizeHint.Fixed((ushort)(lines.Length > 0 ? lines.Max(l => l.Length) : 0));
+    }
 }
 
 /// <summary>Screen 41: Hyperlink Playground. Ported from hyperlink_playground.rs.</summary>
@@ -114,10 +129,14 @@ internal static class Screen14Performance
         return new StackWidget(
             LayoutDirection.Vertical,
             [
-                (LayoutConstraint.Minimum(1), new StackWidget(
+                (LayoutConstraint.FitContent, new StackWidget(
                     LayoutDirection.Horizontal,
                     [
-                        (LayoutConstraint.Minimum(40), listPanel),
+                        (LayoutConstraint.FitContent, new PanelWidget
+                        {
+                            Title = $"Virtualized List ({totalItems} items)",
+                            Child = new RawTextBlock(string.Join("\n", logLines))
+                        }),
                         (LayoutConstraint.Fixed(35), statsPanel)
                     ])),
                 (LayoutConstraint.Fixed(1), new ParagraphWidget(status))

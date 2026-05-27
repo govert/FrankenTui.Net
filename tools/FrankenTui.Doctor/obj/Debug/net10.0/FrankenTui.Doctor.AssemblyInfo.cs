@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FrankenTui.Doctor")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b5f685ffafe2bac5d45b0adc671091c0b7f1c9cf")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2d25f47da27cf34a42aa916175054b4a1dd7de74")]
 [assembly: System.Reflection.AssemblyProductAttribute("FrankenTui.Doctor")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FrankenTui.Doctor")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

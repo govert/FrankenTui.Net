@@ -2,8 +2,8 @@
 Upstream snapshot: app_performance_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 1498
-Local nonblank chars: 1188
-Local/upstream char ratio: 0.793
+Local nonblank chars: 1512
+Local/upstream char ratio: 1.009
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -14,64 +14,64 @@ upstream: â•­â”€â”€â”€â”€â”€â”€â”€â”�
 local   : ╭─────────────────────────────────Performance──────────────────────────────────╮
 @@ row 03
 upstream: â”‚â•­â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-local   : │╭─────Virtualized List (10000 items)──────╮╭────────Performance Stats────────╮│
+local   : │╭───────────────────────Virtualized List (10000 items)───────────────────────╮│
 @@ row 04
 upstream: â”‚â”‚[    0]  INFO server::http       Event #00000: simulated log entry with pa
-local   : ││[    0]  INFO server::http       Event #0││Total items:  10000              ││
+local   : ││[    0]  INFO server::http       Event #00000: simulated log entry with payl││
 @@ row 05
 upstream: â”‚â”‚[    1] DEBUG db::pool           Event #00001: simulated log entry with pa
-local   : ││[    1] DEBUG db::pool           Event #0││Selected:     1 / 10000          ││
+local   : ││[    1] DEBUG db::pool           Event #00001: simulated log entry with payl││
 @@ row 06
 upstream: â”‚â”‚[    2]  WARN auth::jwt          Event #00002: simulated log entry with pa
-local   : ││[    2]  WARN auth::jwt          Event #0││Scroll:       0                  ││
+local   : ││[    2]  WARN auth::jwt          Event #00002: simulated log entry with payl││
 @@ row 07
 upstream: â”‚â”‚[    3] ERROR cache::redis       Event #00003: simulated log entry with pa
-local   : ││[    3] ERROR cache::redis       Event #0││Viewport:     40 rows            ││
+local   : ││[    3] ERROR cache::redis       Event #00003: simulated log entry with payl││
 @@ row 08
 upstream: â”‚â”‚[    4] TRACE queue::worker      Event #00004: simulated log entry with pa
-local   : ││[    4] TRACE queue::worker      Event #0││Visible:      0..40              ││
+local   : ││[    4] TRACE queue::worker      Event #00004: simulated log entry with payl││
 @@ row 09
 upstream: â”‚â”‚[    5]  INFO api::handler       Event #00005: simulated log entry with pa
-local   : ││[    5]  INFO api::handler       Event #0││Progress:     0.0%               ││
+local   : ││[    5]  INFO api::handler       Event #00005: simulated log entry with payl││
 @@ row 10
 upstream: â”‚â”‚[    6] DEBUG core::runtime      Event #00006: simulated log entry with pa
-local   : ││[    6] DEBUG core::runtime      Event #0││Tick:         0                  ││
+local   : ││[    6] DEBUG core::runtime      Event #00006: simulated log entry with payl││
 @@ row 11
 upstream: 0”‚â”‚[    7]  WARN server::http       Event #00007: simulated log entry with pa
-local   : ││[    7]  WARN server::http       Event #0││                                 ││
+local   : ││[    7]  WARN server::http       Event #00007: simulated log entry with payl││
 @@ row 12
 upstream: â”‚â”‚[    8] ERROR db::pool           Event #00008: simulated log entry with pa
-local   : ││[    8] ERROR db::pool           Event #0││Only visible rows are rendered.  ││
+local   : ││[    8] ERROR db::pool           Event #00008: simulated log entry with payl││
 @@ row 13
 upstream: â”‚â”‚[    9] TRACE auth::jwt          Event #00009: simulated log entry with pa
-local   : ││[    9] TRACE auth::jwt          Event #0││Rendering 40 of 10000 items.     ││
+local   : ││[    9] TRACE auth::jwt          Event #00009: simulated log entry with payl││
 @@ row 14
 upstream: â”‚â”‚[   10]  INFO cache::redis       Event #00010: simulated log entry with pa
-local   : ││[   10]  INFO cache::redis       Event #0││░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    ││
+local   : ││[   10]  INFO cache::redis       Event #00010: simulated log entry with payl││
 @@ row 15
 upstream: â”‚â”‚[   11] DEBUG queue::worker      Event #00011: simulated log entry with pa
-local   : ││[   11] DEBUG queue::worker      Event #0││                                 ││
+local   : ││[   11] DEBUG queue::worker      Event #00011: simulated log entry with payl││
 @@ row 16
 upstream: â”‚â”‚[   12]  WARN api::handler       Event #00012: simulated log entry with pa
-local   : ││[   12]  WARN api::handler       Event #0││                                 ││
+local   : ││[   12]  WARN api::handler       Event #00012: simulated log entry with payl││
 @@ row 17
 upstream: â”‚â”‚[   13] ERROR core::runtime      Event #00013: simulated log entry with pa
-local   : ││[   13] ERROR core::runtime      Event #0││                                 ││
+local   : ││[   13] ERROR core::runtime      Event #00013: simulated log entry with payl││
 @@ row 18
 upstream: â”‚â”‚[   14] TRACE server::http       Event #00014: simulated log entry with pa
-local   : ││[   14] TRACE server::http       Event #0││                                 ││
+local   : ││[   14] TRACE server::http       Event #00014: simulated log entry with payl││
 @@ row 19
 upstream: â”‚â”‚[   15]  INFO db::pool           Event #00015: simulated log entry with pa
-local   : ││[   15]  INFO db::pool           Event #0││                                 ││
+local   : ││[   15]  INFO db::pool           Event #00015: simulated log entry with payl││
 @@ row 20
 upstream: â”‚â”‚[   16] DEBUG auth::jwt          Event #00016: simulated log entry with pa
-local   : ││[   16] DEBUG auth::jwt          Event #0││                                 ││
+local   : ││[   16] DEBUG auth::jwt          Event #00016: simulated log entry with payl││
 @@ row 21
 upstream: â”‚â”‚[   17]  WARN cache::redis       Event #00017: simulated log entry with pa
-local   : │╰─────────────────────────────────────────╯╰─────────────────────────────────╯│
+local   : ││[   17]  WARN cache::redis       Event #00017: simulated log entry with payl││
 @@ row 22
 upstream: â”‚â”‚[   18] ERROR queue::worker      Event #00018: simulated log entry with pa
-local   : │Item 1/10000 | j/k: scroll | Ctrl+D/U: page | g/G: jump                       │
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 23
 upstream: â”‚â”‚[   19] TRACE api::handler       Event #00019: simulated log entry with pa
 local   : ╰──────────────────────────────────────────────────────────────────────────────╯

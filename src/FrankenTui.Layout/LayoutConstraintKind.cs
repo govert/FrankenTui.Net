@@ -6,7 +6,7 @@ public enum LayoutConstraintKind
     Minimum,
     Fill,
     Percentage,
-    /// <summary>Like Fill but non-greedy: takes minimum then shares remaining
-    /// proportionally with other MinFill constraints. Matches Rust Flex Min.</summary>
-    MinFill
+    /// <summary>Size to fit content. Requires a measurer callback in the solver.
+    /// Matches Rust Constraint::FitContent.</summary>
+    FitContent
 }
