@@ -2,8 +2,8 @@
 Upstream snapshot: app_actiontimeline_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 1100
-Local nonblank chars: 1030
-Local/upstream char ratio: 0.936
+Local nonblank chars: 1095
+Local/upstream char ratio: 0.995
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -23,55 +23,55 @@ upstream: │╰─────────────────────�
 local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 06
 upstream: │╭─────────────────────────Event Timeline──────────────────────────╮╭───────────
-local   : │╭────────────────Event Timeline────────────────╮╭───────────Detail───────────╮│
+local   : │╭───────────────Event Timeline───────────────╮╭─────────Event Detail─────────╮│
 @@ row 07
 upstream: ││   4 ERROR render  cmd     Command dispatched to model           ││ID: 25
-local   : ││4 ERROR render  cmd     Command dispatched to ││ID: 25                      ││
+local   : ││4 ERROR render  cmd     Command dispatched  ││ID: 25                        ││
 @@ row 08
 upstream: ││   6 DEBUG widgets sub     Subscription tick delivered           ││Tick: 26
-local   : ││model                                         ││Type: render                ││
+local   : ││to model                                    ││Tick: 4                       ││
 @@ row 09
 upstream: ││   8 WARN  core    sub     Subscription tick delivered           ││Severity: D
-local   : ││   3 WARN  render  model   State update queued││Severity: ERROR             ││
+local   : ││3 WARN  render  model   State update queued ││Severity: ERROR               ││
 @@ row 10
 upstream: EB  10 TRACE runtime render  Frame diff computed                   ││Component:r
-local   : ││   2 INFO  render  effect  Side-effect emitted││Component: render           ││
+local   : ││2 INFO  render  effect  Side-effect emitted ││Component: render             ││
 @@ row 11
 upstream: un  12 INFO  render  present Presenter emitted ANSI batch          ││Type: cmd
-local   : ││   1 DEBUG render  diff    Frame diff computed││Action: cmd                 ││
+local   : ││1 DEBUG render  diff    Frame diff computed ││Type: cmd                     ││
 @@ row 12
 upstream:     14 ERROR widgets present Presenter emitted ANSI batch          ││
-local   : ││   0 INFO  runtime start   Runtime initialized││                            ││
+local   : ││0 INFO  runtime start   Runtime initialized ││                              ││
 @@ row 13
 upstream: ││  16 DEBUG core    caps    Capability probe updated              ││Summary:
-local   : ││                                              ││Description:                ││
+local   : ││                                            ││Action: Command dispatched to ││
 @@ row 14
 upstream: ││  18 WARN  runtime budget  Render budget degraded                ││  Command d
-local   : ││                                              ││Command dispatched to model ││
+local   : ││Active filter: all  |  Selected event: 0    ││model                         ││
 @@ row 15
 upstream: is  20 TRACE render  budget  Render budget degraded                ││
-local   : ││                                              ││for processing.             ││
+local   : ││Focus: 0 focus                              ││                              ││
 @@ row 16
 upstream: ││  22 INFO  widgets input   Key event processed                   ││Fields:
-local   : ││                                              ││                            ││
+local   : ││Max events: 500  |  Burst: every 2 ticks  | ││                              ││
 @@ row 17
 upstream: ││  24 ERROR core    cmd     Command dispatched to model           ││  latency_7
-local   : ││                                              ││                            ││
+local   : ││Initial events: 12                          ││                              ││
 @@ row 18
 upstream: 1│  26 DEBUG runtime cmd     Command dispatched to model           ││  diff_cel9
-local   : ││                                              ││                            ││
+local   : ││                                            ││                              ││
 @@ row 19
 upstream: 8                                                                  ││  ansi_byte
-local   : ││                                              ││                            ││
+local   : ││                                            ││                              ││
 @@ row 20
 upstream: 224                                                                ││
-local   : ││                                              ││                            ││
+local   : ││                                            ││                              ││
 @@ row 21
 upstream: ││                                                                 ││
-local   : ││                                              ││                            ││
+local   : ││                                            ││                              ││
 @@ row 22
 upstream: ││                                                                 ││
-local   : │╰──────────────────────────────────────────────╯╰────────────────────────────╯│
+local   : │╰────────────────────────────────────────────╯╰──────────────────────────────╯│
 @@ row 23
 upstream:                                                                    ││
 local   : ╰──────────────────────────────────────────────────────────────────────────────╯

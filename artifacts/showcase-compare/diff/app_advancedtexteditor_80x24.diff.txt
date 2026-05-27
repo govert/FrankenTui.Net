@@ -2,8 +2,8 @@
 Upstream snapshot: app_advancedtexteditor_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 810
-Local nonblank chars: 755
-Local/upstream char ratio: 0.932
+Local nonblank chars: 907
+Local/upstream char ratio: 1.120
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -14,7 +14,7 @@ upstream: ╭──────────────────────�
 local   : ╭─────────────────────────────Advanced Text Editor─────────────────────────────╮
 @@ row 03
 upstream: │╭───────────────────────────────────────────────────────Editor─────────────────
-local   : │╭────────────────────────────Advanced Text Editor────────────────────────────╮│
+local   : │╭────────────────────────────────────────────────────────────────────────────╮│
 @@ row 04
 upstream: ││ 1  Welcome to the Advanced Text Editor!
 local   : ││ 1 │ use std::collections::HashMap;                                         ││
@@ -62,13 +62,13 @@ upstream: ││15  Unicode support:
 local   : ││15 │ #[cfg(test)]                                                           ││
 @@ row 19
 upstream: ││16  - Emoji: 🎉 🚀 ✨
-local   : ││16 │ mod tests {                                                            ││
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 20
 upstream: ││17  - CJK: 你好世界
-local   : ││17 │     use super::*;                                                      ││
+local   : │╭────────────────────────────────────────────────────────────────────────────╮│
 @@ row 21
 upstream: ││18  - Accented: café résumé naïve
-local   : ││18 │                                                                        ││
+local   : ││Find: []  |  Replace: []  |  Matches: 0                                     ││
 @@ row 22
 upstream: ││19
 local   : │╰────────────────────────────────────────────────────────────────────────────╯│

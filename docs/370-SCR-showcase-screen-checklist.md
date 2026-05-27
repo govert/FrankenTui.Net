@@ -101,7 +101,7 @@ Compare with: `dotnet run --project tools/FrankenTui.ShowcaseCompare -- --screen
   - .NET target: `BuildLogSearch()`
 - [x] **21. Notifications** — `notifications.rs` (636L)
   - .NET target: `BuildNotifications()`
-- [x] **22. Action Timeline** — `action_timeline.rs` (1,707L)
+- [x] **22. Action Timeline (0.995)** — `action_timeline.rs` (1,707L)
   - .NET target: `BuildActionTimeline()`
 - [x] **28. Virtualized Search** — `virtualized_search.rs` (2,192L) — 1 session
   - .NET target: `BuildVirtualizedSearch()`

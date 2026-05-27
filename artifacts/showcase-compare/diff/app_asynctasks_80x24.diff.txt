@@ -2,8 +2,8 @@
 Upstream snapshot: app_asynctasks_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 583
-Local nonblank chars: 786
-Local/upstream char ratio: 1.348
+Local nonblank chars: 857
+Local/upstream char ratio: 1.470
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -14,43 +14,43 @@ upstream: ╭──────────────────────�
 local   : ╭─────────────────────────────────Async Tasks──────────────────────────────────╮
 @@ row 03
 upstream: │Q:0 R:2 D:1 F:0 | FIFO[First-In-First-Out] | Aging:✓
-local   : │╭────────────────────────────────Async Tasks─────────────────────────────────╮│
+local   : │╭─────────────────────────────────Job Queue──────────────────────────────────╮│
 @@ row 04
 upstream: │╭─────────────────────────────Task Queue──────────────────────────────╮╭───────
-local   : ││Job Queue:                                                                  ││
+local   : ││● Task 1: Port widgets      [████████░░] 80% ACTIVE                         ││
 @@ row 05
 upstream: ││▶ Running  [M] Initial Setup                             ██████░  90%││ID: 1
-local   : ││                                                                            ││
+local   : ││● Task 2: Add test suite    [██████░░░░] 60% ACTIVE                         ││
 @@ row 06
 upstream: ││  Running  [L] Data Sync                                 ████░░░  54%││Name: I
-local   : ││● Task 1: Port widgets      [████████░░] 80% ACTIVE                         ││
+local   : ││● Task 3: Fix layout bug    [██████████] 100% DONE                          ││
 @@ row 07
 upstream: ││  Done     [H] Cache Warm                                            ││State:R
-local   : ││● Task 2: Add test suite    [██████░░░░] 60% ACTIVE                         ││
+local   : ││○ Task 4: Deploy to staging [░░░░░░░░░░] 0% PENDING                         ││
 @@ row 08
 upstream: unning                                                                 ││Priorit
-local   : ││● Task 3: Fix layout bug    [██████████] 100% DONE                          ││
+local   : ││○ Task 5: Run benchmarks    [░░░░░░░░░░] 0% PENDING                         ││
 @@ row 09
 upstream: ││                                                                     ││Progres
-local   : ││○ Task 4: Deploy to staging [░░░░░░░░░░] 0% PENDING                         ││
+local   : ││                                                                            ││
 @@ row 10
 upstream: 0%                                                                     ││Elapsed
-local   : ││○ Task 5: Run benchmarks    [░░░░░░░░░░] 0% PENDING                         ││
+local   : ││                                                                            ││
 @@ row 11
 upstream: 0 ticks                                                                ││Estimat
 local   : ││                                                                            ││
 @@ row 12
 upstream: ││                                                                     ││
-local   : ││Workers: 4 active                                                           ││
+local   : ││                                                                            ││
 @@ row 13
 upstream: ││                                                                     ││
-local   : ││Queue depth: 2 pending                                                      ││
+local   : ││                                                                            ││
 @@ row 14
 upstream: ││                                                                     ││
-local   : ││Throughput: 142 tasks/min                                                   ││
+local   : ││                                                                            ││
 @@ row 15
 upstream: ││                                                                     │╰───────
-local   : ││Avg latency: 34ms                                                           ││
+local   : ││                                                                            ││
 @@ row 16
 upstream: ││                                                                     │╭───────
 local   : ││                                                                            ││
@@ -65,10 +65,10 @@ upstream: ││                                                                
 local   : ││                                                                            ││
 @@ row 20
 upstream: ││                                                                     ││Started
-local   : ││                                                                            ││
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 21
 upstream: : Initial Setup                                                        ││Started
-local   : ││                                                                            ││
+local   : │╭────────────────────────────────────────────────────────────────────────────╮│
 @@ row 22
 upstream: : Data Sync                                                            ││Started
 local   : │╰────────────────────────────────────────────────────────────────────────────╯│

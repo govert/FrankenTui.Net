@@ -1,24 +1,24 @@
 ﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
 ╭──────────────────────────────Virtualized Search──────────────────────────────╮
-│╭─────────────────────────────Virtualized Search─────────────────────────────╮│
-││Search: [type to filter]  |  Showing 0-19 of 10,000  |  Scroll: 0           ││
+│╭───────────────────────────────────Search───────────────────────────────────╮│
+│╰────────────────────────────────────────────────────────────────────────────╯│
+│╭──────────────────────────────Virtualized List──────────────────────────────╮│
+││[0000] Item #00000 — Virtualized list entry 0                               ││
+││[0001] Item #00001 — Virtualized list entry 1                               ││
+││[0002] Item #00002 — Virtualized list entry 2                               ││
+││[0003] Item #00003 — Virtualized list entry 3                               ││
+││[0004] Item #00004 — Virtualized list entry 4                               ││
+││[0005] Item #00005 — Virtualized list entry 5                               ││
+││[0006] Item #00006 — Virtualized list entry 6                               ││
+││[0007] Item #00007 — Virtualized list entry 7                               ││
+││[0008] Item #00008 — Virtualized list entry 8                               ││
+││[0009] Item #00009 — Virtualized list entry 9                               ││
+││[0010] Item #00010 — Virtualized list entry 10                              ││
+││[0011] Item #00011 — Virtualized list entry 11                              ││
+││[0012] Item #00012 — Virtualized list entry 12                              ││
+││[0013] Item #00013 — Virtualized list entry 13                              ││
+││[0014] Item #00014 — Virtualized list entry 14                              ││
 ││                                                                            ││
-││[0000] Item #00000 — This is a virtualized list entry with some content for ││
-││item number 0                                                               ││
-││[0001] Item #00001 — This is a virtualized list entry with some content for ││
-││item number 1                                                               ││
-││[0002] Item #00002 — This is a virtualized list entry with some content for ││
-││item number 2                                                               ││
-││[0003] Item #00003 — This is a virtualized list entry with some content for ││
-││item number 3                                                               ││
-││[0004] Item #00004 — This is a virtualized list entry with some content for ││
-││item number 4                                                               ││
-││[0005] Item #00005 — This is a virtualized list entry with some content for ││
-││item number 5                                                               ││
-││[0006] Item #00006 — This is a virtualized list entry with some content for ││
-││item number 6                                                               ││
-││[0007] Item #00007 — This is a virtualized list entry with some content for ││
-││item number 7                                                               ││
 │╰────────────────────────────────────────────────────────────────────────────╯│
 ╰──────────────────────────────────────────────────────────────────────────────╯
 Virtualized Search [28/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

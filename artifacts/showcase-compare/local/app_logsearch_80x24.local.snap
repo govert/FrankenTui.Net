@@ -1,21 +1,21 @@
 ﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
 ╭──────────────────────────────────Log Search──────────────────────────────────╮
-│╭─────────────────────────────────Log Search─────────────────────────────────╮│
-││Search: [type to filter]                                                    ││
+│╭───────────────────────────────────Search───────────────────────────────────╮│
+│╰────────────────────────────────────────────────────────────────────────────╯│
+│╭──────────────────────────────────Controls──────────────────────────────────╮│
+│╰────────────────────────────────────────────────────────────────────────────╯│
+│╭────────────────────────────────Log Entries─────────────────────────────────╮│
+││[0001] DEBUG db::pool           Event #00001: log entry with payload data   ││
+││[0002]  WARN auth::jwt          Event #00002: log entry with payload data   ││
+││[0003] ERROR cache::redis       Event #00003: log entry with payload data   ││
+││[0004] TRACE queue::worker      Event #00004: log entry with payload data   ││
+││[0005]  INFO server::http       Event #00005: log entry with payload data   ││
+││[0006] DEBUG db::pool           Event #00006: log entry with payload data   ││
+││[0007]  WARN auth::jwt          Event #00007: log entry with payload data   ││
+││[0008] ERROR cache::redis       Event #00008: log entry with payload data   ││
+││[0009] TRACE queue::worker      Event #00009: log entry with payload data   ││
+││[0010]  INFO server::http       Event #00010: log entry with payload data   ││
 ││                                                                            ││
-││[0001] INFO  server::http     Request received GET /api/v1/status           ││
-││[0002] DEBUG db::pool         Connection acquired (pool: 8/10)              ││
-││[0003] INFO  auth::jwt        Token validated for user 'admin'              ││
-││[0004] WARN  cache::redis     Cache miss for key 'dashboard:v2'             ││
-││[0005] ERROR queue::worker    Failed to process job #42: timeout            ││
-││[0006] INFO  api::handler     Response sent 200 OK (12ms)                   ││
-││[0007] DEBUG core::runtime    Frame budget: 2.1ms/16.7ms (12.6%)            ││
-││[0008] TRACE render::diff     Dirty rows: 3, strategy: partial              ││
-││[0009] INFO  widgets::table   Table rendered: 5x3, 15 cells                 ││
-││[0010] WARN  layout::flex     Constraint overflow: min > available          ││
-││[0011] INFO  server::http     Request received POST /api/v1/data            ││
-││[0012] ERROR db::pool         Connection pool exhausted (10/10)             ││
-││[0013] INFO  runtime::program  Tick #130 completed                          ││
 ││                                                                            ││
 ││                                                                            ││
 ││                                                                            ││

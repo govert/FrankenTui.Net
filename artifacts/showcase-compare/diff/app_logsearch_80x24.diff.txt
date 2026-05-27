@@ -2,8 +2,8 @@
 Upstream snapshot: app_logsearch_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 1278
-Local nonblank chars: 1175
-Local/upstream char ratio: 0.919
+Local nonblank chars: 1370
+Local/upstream char ratio: 1.072
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -14,52 +14,52 @@ upstream: ╭──────────────────────�
 local   : ╭──────────────────────────────────Log Search──────────────────────────────────╮
 @@ row 03
 upstream: │╭ Log Viewer ──────────────────────────────────────────────────────────────────
-local   : │╭─────────────────────────────────Log Search─────────────────────────────────╮│
+local   : │╭───────────────────────────────────Search───────────────────────────────────╮│
 @@ row 04
 upstream: ││[    45] DEBUG server::http       Connection pool health check passed
-local   : ││Search: [type to filter]                                                    ││
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 05
 upstream: ││[    46] DEBUG db::pool           Token refresh completed for session
-local   : ││                                                                            ││
+local   : │╭──────────────────────────────────Controls──────────────────────────────────╮│
 @@ row 06
 upstream: ││[    47] DEBUG auth::jwt          Cache hit ratio: 0.94
-local   : ││[0001] INFO  server::http     Request received GET /api/v1/status           ││
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 07
 upstream: ││[    48]  WARN cache::redis       Worker picked up job from queue
-local   : ││[0002] DEBUG db::pool         Connection acquired (pool: 8/10)              ││
+local   : │╭────────────────────────────────Log Entries─────────────────────────────────╮│
 @@ row 08
 upstream: ││[    49]  WARN queue::worker      Rate limit threshold approaching
-local   : ││[0003] INFO  auth::jwt        Token validated for user 'admin'              ││
+local   : ││[0001] DEBUG db::pool           Event #00001: log entry with payload data   ││
 @@ row 09
 upstream: ││[    50] ERROR api::handler       Garbage collection cycle completed
-local   : ││[0004] WARN  cache::redis     Cache miss for key 'dashboard:v2'             ││
+local   : ││[0002]  WARN auth::jwt          Event #00002: log entry with payload data   ││
 @@ row 10
 upstream: ││[    51] TRACE core::runtime      Metric batch flushed to backend
-local   : ││[0005] ERROR queue::worker    Failed to process job #42: timeout            ││
+local   : ││[0003] ERROR cache::redis       Event #00003: log entry with payload data   ││
 @@ row 11
 upstream: ││[    52]  INFO metrics::push      Configuration hot-reload triggered
-local   : ││[0006] INFO  api::handler     Response sent 200 OK (12ms)                   ││
+local   : ││[0004] TRACE queue::worker      Event #00004: log entry with payload data   ││
 @@ row 12
 upstream: ││[    53]  INFO config::reload     Retry attempt 2/3 for downstream call
-local   : ││[0007] DEBUG core::runtime    Frame budget: 2.1ms/16.7ms (12.6%)            ││
+local   : ││[0005]  INFO server::http       Event #00005: log entry with payload data   ││
 @@ row 13
 upstream: ││[    54]  INFO server::http       Scheduled maintenance window check
-local   : ││[0008] TRACE render::diff     Dirty rows: 3, strategy: partial              ││
+local   : ││[0006] DEBUG db::pool           Event #00006: log entry with payload data   ││
 @@ row 14
 upstream: ││[    55]  INFO db::pool           Request processed successfully
-local   : ││[0009] INFO  widgets::table   Table rendered: 5x3, 15 cells                 ││
+local   : ││[0007]  WARN auth::jwt          Event #00007: log entry with payload data   ││
 @@ row 15
 upstream: ││[    56]  INFO auth::jwt          Connection pool health check passed
-local   : ││[0010] WARN  layout::flex     Constraint overflow: min > available          ││
+local   : ││[0008] ERROR cache::redis       Event #00008: log entry with payload data   ││
 @@ row 16
 upstream: ││[    57]  INFO cache::redis       Token refresh completed for session
-local   : ││[0011] INFO  server::http     Request received POST /api/v1/data            ││
+local   : ││[0009] TRACE queue::worker      Event #00009: log entry with payload data   ││
 @@ row 17
 upstream: ││[    58] DEBUG queue::worker      Cache hit ratio: 0.94
-local   : ││[0012] ERROR db::pool         Connection pool exhausted (10/10)             ││
+local   : ││[0010]  INFO server::http       Event #00010: log entry with payload data   ││
 @@ row 18
 upstream: ││[    59] DEBUG api::handler       Worker picked up job from queue
-local   : ││[0013] INFO  runtime::program  Tick #130 completed                          ││
+local   : ││                                                                            ││
 @@ row 19
 upstream: ││[    60] DEBUG core::runtime      Rate limit threshold approaching
 local   : ││                                                                            ││

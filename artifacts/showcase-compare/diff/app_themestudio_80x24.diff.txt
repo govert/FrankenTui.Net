@@ -2,8 +2,8 @@
 Upstream snapshot: app_themestudio_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 1088
-Local nonblank chars: 738
-Local/upstream char ratio: 0.678
+Local nonblank chars: 794
+Local/upstream char ratio: 0.730
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -14,64 +14,64 @@ upstream: ╭──────────────────────�
 local   : ╭─────────────────────────────────Theme Studio─────────────────────────────────╮
 @@ row 03
 upstream: │╭ ► Presets ────────────╮ ╭   Token Inspector ─────────────────────────────────
-local   : │╭────────────────────────────────Theme Studio────────────────────────────────╮│
+local   : │╭──────────────Theme Presets──────────────╮╭─────────────Palette─────────────╮│
 @@ row 04
 upstream: ││▶ Cyberpunk Aurora     │ │     fg::PRIMARY          #B3F4FF  13.6:1 AAA
-local   : ││Current Theme: Cyberpunk Aurora                                             ││
+local   : ││Current: Cyberpunk Aurora                ││Background:  #0A0E14             ││
 @@ row 05
 upstream: ││  Darcula              │ │     fg::SECONDARY        #91C5D0  8.7:1  AAA
-local   : ││                                                                            ││
+local   : ││                                         ││Foreground:  #C8D2DC             ││
 @@ row 06
 upstream: ││  Lumen Light          │ │     fg::MUTED            #739BA5  5.5:1  AA
-local   : ││Palette:                                                                    ││
+local   : ││  [1] Cyberpunk Aurora                   ││Primary:     #5CCFE6             ││
 @@ row 07
 upstream: ││  Nordic Frost         │ │     fg::DISABLED         #5A7883  3.5:1  AA Large
-local   : ││  Background:  #0A0E14                                                      ││
+local   : ││  [2] Solarized Dark                     ││Secondary:   #B8CFE6             ││
 @@ row 08
 upstream: ││  Doom                 │ │     bg::DEEP             #14181F  1.1:1  Fail
-local   : ││  Foreground:  #C8D2DC                                                      ││
+local   : ││  [3] Dracula                            ││Accent:      #FFCC66             ││
 @@ row 09
 upstream: ││  Quake                │ │     bg::BASE             #1A1F29  1.0:1  Fail
-local   : ││  Primary:     #5CCFE6                                                      ││
+local   : ││  [4] Nord                               ││Success:     #A6E3A1             ││
 @@ row 10
 upstream: ││  Monokai              │ │     bg::SURFACE          #2B3540  1.3:1  Fail
-local   : ││  Secondary:   #B8CFE6                                                      ││
+local   : ││  [5] Monokai                            ││Warning:     #F9E2AF             ││
 @@ row 11
 upstream: ││  Solarized Dark       │ │     bg::OVERLAY          #50495C  1.9:1  Fail
-local   : ││  Accent:      #FFCC66                                                      ││
+local   : ││  [6] GitHub Dark                        ││Error:       #F38BA8             ││
 @@ row 12
 upstream: ││  Solarized Light      │ │     bg::HIGHLIGHT        #606D78  3.1:1  AA Large
-local   : ││  Success:     #A6E3A1                                                      ││
+local   : ││  [7] One Dark                           ││                                 ││
 @@ row 13
 upstream: ││  Gruvbox Dark         │ │     accent::PRIMARY      #07B6FF  7.2:1  AAA
-local   : ││  Warning:     #F9E2AF                                                      ││
+local   : ││                                         ││                                 ││
 @@ row 14
 upstream: ││  Gruvbox Light        │ │     accent::SECONDARY    #F50DFF  5.0:1  AA
-local   : ││  Error:       #F38BA8                                                      ││
+local   : ││Press 1-7 to switch themes               ││                                 ││
 @@ row 15
 upstream: ││  One Dark             │ │     accent::SUCCESS      #11FAC0  12.2:1 AAA
-local   : ││                                                                            ││
+local   : ││                                         ││                                 ││
 @@ row 16
 upstream: ││  Tokyo Night          │ │     accent::WARNING      #F5F04A  13.7:1 AAA
-local   : ││Presets:                                                                    ││
+local   : ││                                         ││                                 ││
 @@ row 17
 upstream: ││  Catppuccin Mocha     │ │     accent::ERROR        #F5457F  4.7:1  AA
-local   : ││  1. Cyberpunk Aurora (current)                                             ││
+local   : ││                                         ││                                 ││
 @@ row 18
 upstream: ││  Rose Pine            │ │     accent::INFO         #07FAFF  12.7:1 AAA
-local   : ││  2. Solarized Dark                                                         ││
+local   : ││                                         ││                                 ││
 @@ row 19
 upstream: ││  Night Owl            │ │     accent::LINK         #44D1FF  9.3:1  AAA
-local   : ││  3. Dracula                                                                ││
+local   : ││                                         ││                                 ││
 @@ row 20
 upstream: ││  Dracula              │ │     StatusOpen           #11FAC0  12.2:1 AAA
-local   : ││  4. Nord                                                                   ││
+local   : ││                                         ││                                 ││
 @@ row 21
 upstream: ││  Material Ocean       │ │     StatusInProgress     #07FAFF  12.7:1 AAA
-local   : ││  5. Monokai                                                                ││
+local   : ││                                         ││                                 ││
 @@ row 22
 upstream: ││  Ayu Dark             │ │     StatusBlocked        #F5457F  4.7:1  AA
-local   : │╰────────────────────────────────────────────────────────────────────────────╯│
+local   : │╰─────────────────────────────────────────╯╰─────────────────────────────────╯│
 @@ row 23
 upstream: ││  Ayu Light            │ │     StatusClosed         #739BA5  5.5:1  AA
 local   : ╰──────────────────────────────────────────────────────────────────────────────╯

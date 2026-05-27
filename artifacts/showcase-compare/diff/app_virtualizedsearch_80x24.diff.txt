@@ -2,8 +2,8 @@
 Upstream snapshot: app_virtualizedsearch_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 1314
-Local nonblank chars: 1144
-Local/upstream char ratio: 0.871
+Local nonblank chars: 1237
+Local/upstream char ratio: 0.941
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -14,61 +14,61 @@ upstream: ╭──────────────────────�
 local   : ╭──────────────────────────────Virtualized Search──────────────────────────────╮
 @@ row 03
 upstream: │╭Search (/ to focus, Esc to clear)─────────────────────────────────────────────
-local   : │╭─────────────────────────────Virtualized Search─────────────────────────────╮│
+local   : │╭───────────────────────────────────Search───────────────────────────────────╮│
 @@ row 04
 upstream: ││Type to search...
-local   : ││Search: [type to filter]  |  Showing 0-19 of 10,000  |  Scroll: 0           ││
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 05
 upstream: │╰──────────────────────────────────────────────────────────────────────────────
-local   : ││                                                                            ││
+local   : │╭──────────────────────────────Virtualized List──────────────────────────────╮│
 @@ row 06
 upstream: │╭───────────────────────────────Items (10000 total)────────────────────────────
-local   : ││[0000] Item #00000 — This is a virtualized list entry with some content for ││
+local   : ││[0000] Item #00000 — Virtualized list entry 0                               ││
 @@ row 07
 upstream: ││[00000] Configuration :: CoreService initialized — payload_0
-local   : ││item number 0                                                               ││
+local   : ││[0001] Item #00001 — Virtualized list entry 1                               ││
 @@ row 08
 upstream: ││[00001] Authentication :: CoreService initialized — payload_1
-local   : ││[0001] Item #00001 — This is a virtualized list entry with some content for ││
+local   : ││[0002] Item #00002 — Virtualized list entry 2                               ││
 @@ row 09
 upstream: ││[00002] Database :: CoreService initialized — payload_2
-local   : ││item number 1                                                               ││
+local   : ││[0003] Item #00003 — Virtualized list entry 3                               ││
 @@ row 10
 upstream: ││[00003] Network :: CoreService initialized — payload_3
-local   : ││[0002] Item #00002 — This is a virtualized list entry with some content for ││
+local   : ││[0004] Item #00004 — Virtualized list entry 4                               ││
 @@ row 11
 upstream: ││[00004] FileSystem :: CoreService initialized — payload_4
-local   : ││item number 2                                                               ││
+local   : ││[0005] Item #00005 — Virtualized list entry 5                               ││
 @@ row 12
 upstream: ││[00005] Logging :: CoreService initialized — payload_5
-local   : ││[0003] Item #00003 — This is a virtualized list entry with some content for ││
+local   : ││[0006] Item #00006 — Virtualized list entry 6                               ││
 @@ row 13
 upstream: ││[00006] Security :: CoreService initialized — payload_6
-local   : ││item number 3                                                               ││
+local   : ││[0007] Item #00007 — Virtualized list entry 7                               ││
 @@ row 14
 upstream: ││[00007] Performance :: CoreService initialized — payload_7
-local   : ││[0004] Item #00004 — This is a virtualized list entry with some content for ││
+local   : ││[0008] Item #00008 — Virtualized list entry 8                               ││
 @@ row 15
 upstream: ││[00008] Configuration :: CoreService updated — payload_8
-local   : ││item number 4                                                               ││
+local   : ││[0009] Item #00009 — Virtualized list entry 9                               ││
 @@ row 16
 upstream: ││[00009] Authentication :: CoreService updated — payload_9
-local   : ││[0005] Item #00005 — This is a virtualized list entry with some content for ││
+local   : ││[0010] Item #00010 — Virtualized list entry 10                              ││
 @@ row 17
 upstream: ││[00010] Database :: CoreService updated — payload_10
-local   : ││item number 5                                                               ││
+local   : ││[0011] Item #00011 — Virtualized list entry 11                              ││
 @@ row 18
 upstream: ││[00011] Network :: CoreService updated — payload_11
-local   : ││[0006] Item #00006 — This is a virtualized list entry with some content for ││
+local   : ││[0012] Item #00012 — Virtualized list entry 12                              ││
 @@ row 19
 upstream: ││[00012] FileSystem :: CoreService updated — payload_12
-local   : ││item number 6                                                               ││
+local   : ││[0013] Item #00013 — Virtualized list entry 13                              ││
 @@ row 20
 upstream: ││[00013] Logging :: CoreService updated — payload_13
-local   : ││[0007] Item #00007 — This is a virtualized list entry with some content for ││
+local   : ││[0014] Item #00014 — Virtualized list entry 14                              ││
 @@ row 21
 upstream: ││[00014] Security :: CoreService updated — payload_14
-local   : ││item number 7                                                               ││
+local   : ││                                                                            ││
 @@ row 22
 upstream: ││[00015] Performance :: CoreService updated — payload_15
 local   : │╰────────────────────────────────────────────────────────────────────────────╯│

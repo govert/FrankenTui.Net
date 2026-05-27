@@ -3,22 +3,22 @@
 │╭──────────────────────────────Filters + Follow──────────────────────────────╮│
 ││Follow[F]: ON  Component[C]: all  Severity[S]: all  Type[T]: all  Clear[X]  ││
 │╰────────────────────────────────────────────────────────────────────────────╯│
-│╭────────────────Event Timeline────────────────╮╭───────────Detail───────────╮│
-││4 ERROR render  cmd     Command dispatched to ││ID: 25                      ││
-││model                                         ││Type: render                ││
-││   3 WARN  render  model   State update queued││Severity: ERROR             ││
-││   2 INFO  render  effect  Side-effect emitted││Component: render           ││
-││   1 DEBUG render  diff    Frame diff computed││Action: cmd                 ││
-││   0 INFO  runtime start   Runtime initialized││                            ││
-││                                              ││Description:                ││
-││                                              ││Command dispatched to model ││
-││                                              ││for processing.             ││
-││                                              ││                            ││
-││                                              ││                            ││
-││                                              ││                            ││
-││                                              ││                            ││
-││                                              ││                            ││
-││                                              ││                            ││
-│╰──────────────────────────────────────────────╯╰────────────────────────────╯│
+│╭───────────────Event Timeline───────────────╮╭─────────Event Detail─────────╮│
+││4 ERROR render  cmd     Command dispatched  ││ID: 25                        ││
+││to model                                    ││Tick: 4                       ││
+││3 WARN  render  model   State update queued ││Severity: ERROR               ││
+││2 INFO  render  effect  Side-effect emitted ││Component: render             ││
+││1 DEBUG render  diff    Frame diff computed ││Type: cmd                     ││
+││0 INFO  runtime start   Runtime initialized ││                              ││
+││                                            ││Action: Command dispatched to ││
+││Active filter: all  |  Selected event: 0    ││model                         ││
+││Focus: 0 focus                              ││                              ││
+││Max events: 500  |  Burst: every 2 ticks  | ││                              ││
+││Initial events: 12                          ││                              ││
+││                                            ││                              ││
+││                                            ││                              ││
+││                                            ││                              ││
+││                                            ││                              ││
+│╰────────────────────────────────────────────╯╰──────────────────────────────╯│
 ╰──────────────────────────────────────────────────────────────────────────────╯
 Action Timeline [22/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)
