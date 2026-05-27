@@ -47,43 +47,7 @@ internal static class Screen22ActionTimeline
 
 /// <summary>Screen 27: Form Validation. Ported from form_validation.rs.</summary>
 
-internal static class Screen25AdvTextEditor
-{
-    public static IWidget Build(ShowcaseDemoState state)
-    {
-        // view(): Flex::vertical([Min(1), Fixed(1)]) with search bar → Code panel
-        var code = ShowcaseSurface.PanelRaw(null, string.Join("\n",
-            " 1 │ use std::collections::HashMap;",
-            " 2 │",
-            " 3 │ fn main() {",
-            " 4 │     let mut map = HashMap::new();",
-            " 5 │     map.insert(\"key\", \"value\");",
-            " 6 │",
-            " 7 │     for (k, v) in &map {",
-            " 8 │         println!(\"{k}: {v}\");",
-            " 9 │     }",
-            "10 │ }",
-            "11 │",
-            "12 │ // TODO: Add error handling",
-            "13 │ // TODO: Add unit tests",
-            "14 │",
-            "15 │ #[cfg(test)]",
-            "16 │ mod tests {",
-            "17 │     use super::*;",
-            "18 │",
-            "19 │     #[test]",
-            "20 │     fn test_insert() {"));
 
-        var searchBar = ShowcaseSurface.Panel(null, "Find: []  |  Replace: []  |  Matches: 0");
-
-        return new StackWidget(LayoutDirection.Vertical, [
-            (LayoutConstraint.Fill(), code),
-            (LayoutConstraint.Fixed(3), searchBar)
-        ]);
-    }
-}
-
-/// <summary>Screen 20: Log Search. Ported from log_search.rs.</summary>
 internal static class Screen20LogSearch
 {
     public static IWidget Build(ShowcaseDemoState state)

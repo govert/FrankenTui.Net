@@ -53,22 +53,6 @@ internal static class Screen32PerfHud { public static IWidget Build(ShowcaseDemo
     ]);
 }}
 
-internal static class Screen33Explainability { public static IWidget Build(ShowcaseDemoState s) {
-    // view() → render(frame, area, CockpitMode::Full)
-    return ShowcaseSurface.Panel("Explainability Cockpit", string.Join("\n",
-        "Diff Decision Evidence  |  Frame: 42  |  Mode: Full",
-        "",
-        "Strategy: Dirty Rows (3 rows, 15 cells)",
-        "Cost: 250µs (vs 500µs full redraw)",
-        "",
-        "Why dirty rows?",
-        "  Posterior mean: 0.87  Risk tolerance: 0.10",
-        "  Budget pressure: low (12.6%)",
-        "  Hysteresis: not triggered  Cooldown: 0 frames",
-        "",
-        "Budget: Used 2.1ms/16.7ms (12.6%)",
-        "Degradation: None  Recovery: N/A"));
-}}
 
 internal static class Screen34I18n { public static IWidget Build(ShowcaseDemoState s) {
     // Flex::vertical([Fixed(3), Fill, Fixed(1)]) with locale bar + panels

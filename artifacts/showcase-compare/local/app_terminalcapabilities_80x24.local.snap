@@ -1,8 +1,6 @@
-﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+﻿1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 ╭────────────────────────────Terminal Capabilities─────────────────────────────╮
 │╭───────────────────────────Terminal Capabilities────────────────────────────╮│
-││Terminal Capability Matrix                                                  ││
-││                                                                            ││
 ││Feature              Supported  Notes                                       ││
 ││───                  ─────────  ─────                                       ││
 ││True Color           ✓         24-bit color                                 ││
@@ -19,6 +17,8 @@
 ││Bracketed Paste      ✓         Bracketed paste                              ││
 ││Synchronized Output  ✓         Sync updates                                 ││
 ││OSC-8 Links          ✓         Hyperlinks                                   ││
+││Mouse Capture        ✓         Mouse events                                 ││
+││Focus Events         ✓         Focus reporting                              ││
 │╰────────────────────────────────────────────────────────────────────────────╯│
 ╰──────────────────────────────────────────────────────────────────────────────╯
 Terminal Capabilities [12/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

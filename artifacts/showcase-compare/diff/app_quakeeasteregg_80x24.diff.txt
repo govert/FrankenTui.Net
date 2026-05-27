@@ -2,13 +2,13 @@
 Upstream snapshot: app_quakeeasteregg_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 1110
-Local nonblank chars: 766
-Local/upstream char ratio: 0.690
+Local nonblank chars: 744
+Local/upstream char ratio: 0.670
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+local   : 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 @@ row 02
 upstream: ╭───────────────────────────────────────────────Quake E1M1 (Easter Egg)─────────
 local   : ╭───────────────────────────Quake E1M1 (Easter Egg)────────────────────────────╮
@@ -26,25 +26,25 @@ upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠛⠁⢀⣠⣴⣾⣿⣿⣿�
 local   : ││                                                                            ││
 @@ row 07
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠛⢁⣠⣴⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿                                       ⢀⢤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤
-local   : ││                    ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿                                      ││
+local   : ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿   ⢀⣮⣿⡿⠿⠿⠿⠿⠛⠛⠛⠛⠉                                ││
 @@ row 08
 upstream: ⣿⣿⣿⣿⣿⡿⢛⣡⣴⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿                                       ⢀⣮⣿⡿⠿⠿⠿⠿⠛⠛⠛⠛⠉
-local   : ││                    ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿                                      ││
+local   : ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿   ⣷⣄         ⣿                                 ││
 @@ row 09
 upstream: │      ⢿⣿⣿⣻⣵⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿                                 ⣷⣄         ⣿
-local   : ││                    ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿                                      ││
+local   : ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿   ⣿⣿⣷⣄       ⣿                                 ││
 @@ row 10
 upstream: ⣿⣿⡿⠟⢂⡏⠉⠙⠛⠻⠿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿                                    ⣿⣿⣷⣄       ⣿
-local   : ││   Retro FPS renderer using braille and box-drawing characters.             ││
+local   : ││                                                                            ││
 @@ row 11
 upstream: ⣿⣿⠁⣠⣿⡇       ⠈⠉⠉⠛⠛⠿⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿                                    ⣿⣿⣿⣿⣿⣦⡀    ⣿
-local   : ││   Runs at ~30 FPS in terminal. Use V to toggle quality.                    ││
+local   : ││Retro FPS renderer using braille and box-drawing characters.                ││
 @@ row 12
 upstream: ⣿⡟⡰⣿⣿⡇                ⠉⠉⠛⠛⠻⠿⢿⣿⣿⣿                                    ⣿⣿⣿⣿⣿⣿⣿⣦⡀  ⣿
-local   : ││                                                                            ││
+local   : ││Runs at ~30 FPS in terminal.                                                ││
 @@ row 13
 upstream: ⣿⢃⡇⠈⠻⡇                        ⠈⠉                                    ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⣄⣿
-local   : ││   "The slipgate complex is the largest installation of its kind..."        ││
+local   : ││                                                                            ││
 @@ row 14
 upstream: ⡿⣸⡇                                                                 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷
 local   : ││                                                                            ││

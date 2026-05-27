@@ -1,23 +1,23 @@
-﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+﻿1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 ╭────────────────────────────Mermaid Mega Showcase─────────────────────────────╮
 │╭───────────────────────────Mermaid Mega Showcase────────────────────────────╮│
-││Diagram Types:                                                              ││
-││  flowchart  • sequence  • class                                            ││
-││  state      • er        • gantt                                            ││
-││  pie        • git       • mindmap                                          ││
-││  timeline   • sankey    • block                                            ││
+││Diagram Types: flowchart  sequence  class  state  er  gantt  pie  git       ││
 ││                                                                            ││
-││Controls:                                                                   ││
-││  ↑/↓ select type                                                           ││
-││  ←/→ adjust zoom                                                           ││
-││  r reset view                                                              ││
-││  e export SVG                                                              ││
-││  d toggle debug                                                            ││
+││Controls: ↑↓ select  ←→ zoom  r reset  e export  d debug                    ││
 ││                                                                            ││
-││Current: flowchart                                                          ││
-││Nodes: 12  Edges: 15                                                        ││
-││Render time: 2.3ms                                                          ││
-││Cache: warm (12 diagrams)                                                   ││
+││Current: flowchart  |  Nodes: 12  Edges: 15                                 ││
+││Render time: 2.3ms  |  Cache: warm (12 diagrams)                            ││
+││                                                                            ││
+││Performance knobs:                                                          ││
+││  Complexity: auto  Nodes: 12-500  Edges: 15-1200                           ││
+││  Render budget: 5ms  Degrade: simplify labels                              ││
+││                                                                            ││
+││                                                                            ││
+││                                                                            ││
+││                                                                            ││
+││                                                                            ││
+││                                                                            ││
+││                                                                            ││
 ││                                                                            ││
 │╰────────────────────────────────────────────────────────────────────────────╯│
 ╰──────────────────────────────────────────────────────────────────────────────╯

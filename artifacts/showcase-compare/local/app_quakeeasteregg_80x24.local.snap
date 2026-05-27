@@ -1,16 +1,16 @@
-﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+﻿1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 ╭───────────────────────────Quake E1M1 (Easter Egg)────────────────────────────╮
 │╭──────────────────────────Quake E1M1 (Easter Egg)───────────────────────────╮│
 ││WASD move · Arrows look · Space jump · F fire · V quality [Reduced] · R     ││
 ││reset                                                                       ││
 ││                                                                            ││
-││                    ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿                                      ││
-││                    ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿                                      ││
-││                    ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿                                      ││
-││   Retro FPS renderer using braille and box-drawing characters.             ││
-││   Runs at ~30 FPS in terminal. Use V to toggle quality.                    ││
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿   ⢀⣮⣿⡿⠿⠿⠿⠿⠛⠛⠛⠛⠉                                ││
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿   ⣷⣄         ⣿                                 ││
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿   ⣿⣿⣷⣄       ⣿                                 ││
 ││                                                                            ││
-││   "The slipgate complex is the largest installation of its kind..."        ││
+││Retro FPS renderer using braille and box-drawing characters.                ││
+││Runs at ~30 FPS in terminal.                                                ││
+││                                                                            ││
 ││                                                                            ││
 ││                                                                            ││
 ││                                                                            ││

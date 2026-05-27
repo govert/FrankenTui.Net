@@ -2,73 +2,73 @@
 Upstream snapshot: app_advancedtexteditor_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 810
-Local nonblank chars: 907
-Local/upstream char ratio: 1.120
+Local nonblank chars: 833
+Local/upstream char ratio: 1.028
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+local   : 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 @@ row 02
 upstream: ╭─────────────────────────────────────────────────Advanced Text Editor──────────
 local   : ╭─────────────────────────────Advanced Text Editor─────────────────────────────╮
 @@ row 03
 upstream: │╭───────────────────────────────────────────────────────Editor─────────────────
-local   : │╭────────────────────────────────────────────────────────────────────────────╮│
+local   : │╰───────────────────────────────────Search───────────────────────────────────╯│
 @@ row 04
 upstream: ││ 1  Welcome to the Advanced Text Editor!
-local   : ││ 1 │ use std::collections::HashMap;                                         ││
+local   : │╭────────────────────────────────────────────────────────────────────────────╮│
 @@ row 05
 upstream: ││ 2
-local   : ││ 2 │                                                                        ││
+local   : ││ 1 │ use std::collections::HashMap;                                         ││
 @@ row 06
 upstream: ││ 3  This is a demonstration of FrankenTUI's text editing capabilities.
-local   : ││ 3 │ fn main() {                                                            ││
+local   : ││ 2 │                                                                        ││
 @@ row 07
 upstream: ││ 4  You can edit text, select regions, search, and replace.
-local   : ││ 4 │     let mut map = HashMap::new();                                      ││
+local   : ││ 3 │ fn main() {                                                            ││
 @@ row 08
 upstream: ││ 5
-local   : ││ 5 │     map.insert("key", "value");                                        ││
+local   : ││ 4 │     let mut map = HashMap::new();                                      ││
 @@ row 09
 upstream: ││ 6  Features:
-local   : ││ 6 │                                                                        ││
+local   : ││ 5 │     map.insert("key", "value");                                        ││
 @@ row 10
 upstream: ││ 7  - Multi-line editing with line numbers
-local   : ││ 7 │     for (k, v) in &map {                                               ││
+local   : ││ 6 │                                                                        ││
 @@ row 11
 upstream: ││ 8  - Selection with Shift+Arrow keys
-local   : ││ 8 │         println!("{k}: {v}");                                          ││
+local   : ││ 7 │     for (k, v) in &map {                                               ││
 @@ row 12
 upstream: ││ 9  - Undo (Ctrl+Z) and Redo (Ctrl+Y)
-local   : ││ 9 │     }                                                                  ││
+local   : ││ 8 │         println!("{k}: {v}");                                          ││
 @@ row 13
 upstream: ││10  - Search (Ctrl+F) with next/prev match
-local   : ││10 │ }                                                                      ││
+local   : ││ 9 │     }                                                                  ││
 @@ row 14
 upstream: ││11  - Replace (Ctrl+H) single or all matches
-local   : ││11 │                                                                        ││
+local   : ││10 │ }                                                                      ││
 @@ row 15
 upstream: ││12
-local   : ││12 │ // TODO: Add error handling                                            ││
+local   : ││11 │                                                                        ││
 @@ row 16
 upstream: ││13  Try editing this text or loading your own content.
-local   : ││13 │ // TODO: Add unit tests                                                ││
+local   : ││12 │ // TODO: Add error handling                                            ││
 @@ row 17
 upstream: ││14
-local   : ││14 │                                                                        ││
+local   : ││13 │ // TODO: Add unit tests                                                ││
 @@ row 18
 upstream: ││15  Unicode support:
-local   : ││15 │ #[cfg(test)]                                                           ││
+local   : ││14 │                                                                        ││
 @@ row 19
 upstream: ││16  - Emoji: 🎉 🚀 ✨
-local   : │╰────────────────────────────────────────────────────────────────────────────╯│
+local   : ││15 │ #[cfg(test)]                                                           ││
 @@ row 20
 upstream: ││17  - CJK: 你好世界
-local   : │╭────────────────────────────────────────────────────────────────────────────╮│
+local   : ││16 │ mod tests {                                                            ││
 @@ row 21
 upstream: ││18  - Accented: café résumé naïve
-local   : ││Find: []  |  Replace: []  |  Matches: 0                                     ││
+local   : ││17 │     use super::*;                                                      ││
 @@ row 22
 upstream: ││19
 local   : │╰────────────────────────────────────────────────────────────────────────────╯│

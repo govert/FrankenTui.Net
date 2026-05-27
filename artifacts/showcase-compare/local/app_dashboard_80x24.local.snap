@@ -1,18 +1,18 @@
-﻿ 1: Tour │ 2: [Dash] │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+﻿1: Tour │ 2: [Dash] │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │
 ╭──────────────────────────────────Dashboard───────────────────────────────────╮
 │╭─────────────────────────────────Dashboard──────────────────────────────────╮│
 ││╭─ System Health ─────╮  ╭─ Recent Logs ───────────────────╮                ││
 │││ CPU:   42%  ████░░ │  │ 08:00 INFO  Showcase booted      │                ││
 │││ MEM:   68%  ██████░│  │ 08:01 DEBUG Diff decision FULL    │               ││
-│││ DISK:  23%  ██░░░░ │  │ 08:02 WARN  Replay ledger missing │               ││
+│││ DSK:   23%  ██░░░░ │  │ 08:02 WARN  Replay ledger missing │               ││
 │││ NET:   12%  █░░░░░ │  │ 08:03 INFO  Command palette ranked│               ││
 ││╰─────────────────────╯  ╰────────────────────────────────╯                 ││
 ││                                                                            ││
 ││╭─ Quick Stats ───────╮  ╭─ Active Tasks ────────────────╮                  ││
 │││ FPS:      60.0      │  │ ● Port widgets       [████░░] │                  ││
 │││ Frame:    0ms       │  │ ● Add tests          [██░░░░] │                  ││
-│││ Uptime:   2m 34s    │  │ ● Fix layout         [██████] │                  ││
-│││ Screens:  45        │  │ ○ Deploy              [░░░░░░] │                 ││
+│││ Screens:  45        │  │ ● Fix layout         [██████] │                  ││
+│││ Uptime:   2m 34s    │  │ ○ Deploy              [░░░░░░] │                 ││
 ││╰─────────────────────╯  ╰──────────────────────────────╯                   ││
 ││                                                                            ││
 ││                                                                            ││

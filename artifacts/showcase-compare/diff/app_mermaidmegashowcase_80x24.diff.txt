@@ -2,13 +2,13 @@
 Upstream snapshot: app_mermaidmegashowcase_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 833
-Local nonblank chars: 735
-Local/upstream char ratio: 0.882
+Local nonblank chars: 776
+Local/upstream char ratio: 0.932
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+local   : 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 @@ row 02
 upstream: ╭────────────────────────────────────────────────Mermaid Mega Showcase──────────
 local   : ╭────────────────────────────Mermaid Mega Showcase─────────────────────────────╮
@@ -17,55 +17,55 @@ upstream: │┌─────────────────────�
 local   : │╭───────────────────────────Mermaid Mega Showcase────────────────────────────╮│
 @@ row 04
 upstream: ││ Tier:auto Glyph:unicode Render:braille Wrap:wordchar Layout:auto Dir:auto Pal
-local   : ││Diagram Types:                                                              ││
+local   : ││Diagram Types: flowchart  sequence  class  state  er  gantt  pie  git       ││
 @@ row 05
 upstream: ││
-local   : ││  flowchart  • sequence  • class                                            ││
+local   : ││                                                                            ││
 @@ row 06
 upstream: ││
-local   : ││  state      • er        • gantt                                            ││
+local   : ││Controls: ↑↓ select  ←→ zoom  r reset  e export  d debug                    ││
 @@ row 07
 upstream: ││
-local   : ││  pie        • git       • mindmap                                          ││
+local   : ││                                                                            ││
 @@ row 08
 upstream: │└──────────────────────────────────────────────────────────────────────────────
-local   : ││  timeline   • sankey    • block                                            ││
+local   : ││Current: flowchart  |  Nodes: 12  Edges: 15                                 ││
 @@ row 09
 upstream: │┌ Flow Basic [default] ────────────────────────────────────────────────────────
-local   : ││                                                                            ││
+local   : ││Render time: 2.3ms  |  Cache: warm (12 diagrams)                            ││
 @@ row 10
 upstream: ││
-local   : ││Controls:                                                                   ││
+local   : ││                                                                            ││
 @@ row 11
 upstream: ││                                   ⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇
-local   : ││  ↑/↓ select type                                                           ││
+local   : ││Performance knobs:                                                          ││
 @@ row 12
 upstream: ││                                   ⢸⣿⣿⣿⣿⣿Start ⣿⣿⣿⣿⣿⡇
-local   : ││  ←/→ adjust zoom                                                           ││
+local   : ││  Complexity: auto  Nodes: 12-500  Edges: 15-1200                           ││
 @@ row 13
 upstream: ││                                   ⠘⠛⠛⠛⠛⠛⠛⠛⣛⣟⡛⠛⠛⠛⠛⠛⠛⠃
-local   : ││  r reset view                                                              ││
+local   : ││  Render budget: 5ms  Degrade: simplify labels                              ││
 @@ row 14
 upstream: ││                                           ⢘⣟
-local   : ││  e export SVG                                                              ││
+local   : ││                                                                            ││
 @@ row 15
 upstream: ││                                    ⢀⣀⣠⣤⣶⣾⣿⣿⣿⣿⣷⣶⣤⣤⣀⡀
-local   : ││  d toggle debug                                                            ││
+local   : ││                                                                            ││
 @@ row 16
 upstream: ││                                   ⠈⠉⠛⠛⠿⠿⣿⣿⣿⣿⣿⣿⡿⠿⠟⠛⠋⠁
 local   : ││                                                                            ││
 @@ row 17
 upstream: ││                                        ⣀⣀⠤⠝⠛⠥⢄⣀⡀
-local   : ││Current: flowchart                                                          ││
+local   : ││                                                                            ││
 @@ row 18
 upstream: ││                          ⣀⣀⣀⣀⣀⣀⣀⣀⣠⣾⣤⣒⣊⣉⣀⣀⡀  ⢀⣀⣀⣈⣉⣒⣢⣼⣦⣀⣀⣀⣀⣀⣀⣀⣀
-local   : ││Nodes: 12  Edges: 15                                                        ││
+local   : ││                                                                            ││
 @@ row 19
 upstream: arse: 0.0ms                 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇  ⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-local   : ││Render time: 2.3ms                                                          ││
+local   : ││                                                                            ││
 @@ row 20
 upstream: ayout: 0.1ms                ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇  ⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-local   : ││Cache: warm (12 diagrams)                                                   ││
+local   : ││                                                                            ││
 @@ row 21
 upstream: ender: 0.1ms                ⠉⠉⠉⠉⠉⠉⠉⠉⠛⠭⠭⣉⣉⠉⠉⠉⢁  ⢈⠉⠉⠉⢉⣉⡩⠭⠝⠋⠉⠉⠉⠉⠉⠉⠉
 local   : ││                                                                            ││

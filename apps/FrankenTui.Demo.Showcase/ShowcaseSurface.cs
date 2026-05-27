@@ -266,7 +266,7 @@ internal static class ShowcaseSurface
             "i18n_demo" => Screen34I18n.Build(state),
             "voi_overlay" => Screen35VoiOverlay.Build(state),
             "inline_mode_story" => Screen36InlineMode.Build(state),
-            "accessibility_panel" => BuildAccessibility(state),
+            "accessibility_panel" => Screen37Accessibility.Build(state),
             "widget_builder" => Screen38WidgetBuilder.Build(state),
             "command_palette_lab" => Screen39CmdPalette.Build(state),
             "determinism_lab" => Screen40Determinism.Build(state),

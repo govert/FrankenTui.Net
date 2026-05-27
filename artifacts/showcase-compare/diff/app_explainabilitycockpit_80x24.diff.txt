@@ -2,13 +2,13 @@
 Upstream snapshot: app_explainabilitycockpit_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 698
-Local nonblank chars: 786
-Local/upstream char ratio: 1.126
+Local nonblank chars: 801
+Local/upstream char ratio: 1.148
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+local   : 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 @@ row 02
 upstream: ╭────────────────────────────────────────────────Explainability Cockpit─────────
 local   : ╭────────────────────────────Explainability Cockpit────────────────────────────╮
@@ -17,40 +17,40 @@ upstream: │Explainability Cockpit · source: (disabled)
 local   : │╭───────────────────────────Explainability Cockpit───────────────────────────╮│
 @@ row 04
 upstream: │Evidence source disabled
-local   : ││Diff Decision Evidence  |  Frame: 42  |  Mode: Full                         ││
+local   : ││Frame: 42  |  Mode: Full  |  Refresh: 1s                                    ││
 @@ row 05
 upstream: │╭───────────────────────────────────────────────Explainability Cockpit─────────
 local   : ││                                                                            ││
 @@ row 06
 upstream: ││Evidence source disabled
-local   : ││Strategy: Dirty Rows (3 rows, 15 cells)                                     ││
+local   : ││Diff Decision:                                                              ││
 @@ row 07
 upstream: ││Enable evidence logging to populate this cockpit.
-local   : ││Cost: 250µs (vs 500µs full redraw)                                          ││
+local   : ││  Strategy: Dirty Rows (3 rows, 15 cells)                                   ││
 @@ row 08
 upstream: ││Set FTUI_DEMO_EVIDENCE_JSONL to a writable path.
-local   : ││                                                                            ││
+local   : ││  Cost: 250µs (vs 500µs full redraw)                                        ││
 @@ row 09
 upstream: ││Example: FTUI_DEMO_EVIDENCE_JSONL=/tmp/ftui_evidence.jsonl cargo run -p ftui-d
-local   : ││Why dirty rows?                                                             ││
+local   : ││  Why: Posterior mean 0.87, Risk 0.10, Budget pressure low (12.6%)          ││
 @@ row 10
 upstream: ││
-local   : ││  Posterior mean: 0.87  Risk tolerance: 0.10                                ││
+local   : ││                                                                            ││
 @@ row 11
 upstream: ││
-local   : ││  Budget pressure: low (12.6%)                                              ││
+local   : ││Budget: Used 2.1ms / 16.7ms (12.6%)                                         ││
 @@ row 12
 upstream: ││
-local   : ││  Hysteresis: not triggered  Cooldown: 0 frames                             ││
+local   : ││  Diff: 250µs  Render: 500µs  Present: 250µs  Overhead: 1.1ms               ││
 @@ row 13
 upstream: ││
 local   : ││                                                                            ││
 @@ row 14
 upstream: ││
-local   : ││Budget: Used 2.1ms/16.7ms (12.6%)                                           ││
+local   : ││Degradation: None  |  Recovery: N/A  |  Cooldown: 0 frames                  ││
 @@ row 15
 upstream: ││
-local   : ││Degradation: None  Recovery: N/A                                            ││
+local   : ││                                                                            ││
 @@ row 16
 upstream: │╰──────────────────────────────────────────────────────────────────────────────
 local   : ││                                                                            ││

@@ -1,13 +1,13 @@
-﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+﻿1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 ╭────────────────────────────────Accessibility─────────────────────────────────╮
-│╭─────────────────────── Accessibility Control Panel ────────────────────────╮│
+│╭────────────────────────Accessibility Control Panel─────────────────────────╮│
 ││Active Theme: Cyberpunk Aurora                                              ││
 ││Base Theme: Cyberpunk Aurora  Mode: Standard                                ││
 ││Motion: Full (1.0x)  Large Text: OFF                                        ││
 ││Shortcuts: h = contrast, m = motion, l = large text                         ││
 ││                                                                            ││
 │╰────────────────────────────────────────────────────────────────────────────╯│
-│╭──────────────────────── Toggles ────────────────────────╮╭─ WCAG Contrast ─╮│
+│╭─────────────────────────Toggles─────────────────────────╮╭──WCAG Contrast──╮│
 ││ [h] High Contrast: OFF                                  ││Primary on Base  ││
 ││ [m] Reduced Motion: OFF                                 ││4.7:1 AA         ││
 ││ [l] Large Text: OFF                                     ││Secondary on Base││
@@ -15,9 +15,9 @@
 ││                                                         ││Accent Primary   ││
 ││                                                         ││5.7:1 AA         ││
 │╰─────────────────────────────────────────────────────────╯│Accent Warning   ││
-│╭───────────────────── Live Preview ──────────────────────╮│4.8:1 AA         ││
+│╭──────────────────────Live Preview───────────────────────╮│4.8:1 AA         ││
 ││Preview text                                             │╰─────────────────╯│
-││The quick brown fox jumps over the lazy dog.             │╭ A11y Telemetry ─╮│
+││The quick brown fox jumps over the lazy dog.             │╭─A11y Telemetry──╮│
 ││Links look like this and code looks like fn main()       ││No a11y events   ││
 │╰─────────────────────────────────────────────────────────╯╰─────────────────╯│
 ╰──────────────────────────────────────────────────────────────────────────────╯

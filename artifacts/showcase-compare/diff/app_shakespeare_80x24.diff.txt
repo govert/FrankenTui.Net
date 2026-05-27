@@ -2,55 +2,55 @@
 Upstream snapshot: app_shakespeare_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 946
-Local nonblank chars: 843
-Local/upstream char ratio: 0.891
+Local nonblank chars: 834
+Local/upstream char ratio: 0.882
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour │ 2: Dash │ 3: [Shakes] │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+local   : 1: Tour │ 2: Dash │ 3: [Shakes] │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │
 @@ row 02
 upstream: ╭─────────────────────────────────────────────────────Shakespeare───────────────
 local   : ╭─────────────────────────────────Shakespeare──────────────────────────────────╮
 @@ row 03
 upstream: │┏━━━━━━━━━━━━━━━━━━━Complete Works of William Shakespeare━━━━━━━━━━━━━━━━━━━━┓╭
-local   : │╭────────────────────────────────Shakespeare─────────────────────────────────╮│
+local   : │╭───────────────────────────────────Search───────────────────────────────────╮│
 @@ row 04
 upstream: │┃      1 The Project Gutenberg eBook of The Complete Works of William Shakes█┃│
-local   : ││To be, or not to be, that is the question:                                  ││
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 05
 upstream: o matches yet                                                                │┃│
-local   : ││Whether 'tis nobler in the mind to suffer                                   ││
+local   : │╭────────────────────────────────Shakespeare─────────────────────────────────╮│
 @@ row 06
 upstream: │┃      3 This ebook is for the use of anyone anywhere in the United States a│┃│
-local   : ││The slings and arrows of outrageous fortune,                                ││
+local   : ││To be, or not to be, that is the question:                                  ││
 @@ row 07
 upstream: │┃      4 most other parts of the world at no cost and with almost no restric│┃│
-local   : ││Or to take arms against a sea of troubles,                                  ││
+local   : ││Whether 'tis nobler in the mind to suffer                                   ││
 @@ row 08
 upstream: │┃      5 whatsoever. You may copy it, give it away or re-use it under the te│┃│
-local   : ││And by opposing end them. To die: to sleep;                                 ││
+local   : ││The slings and arrows of outrageous fortune,                                ││
 @@ row 09
 upstream: │┃      6 of the Project Gutenberg License included with this ebook or online│┃│
-local   : ││No more; and by a sleep to say we end                                       ││
+local   : ││Or to take arms against a sea of troubles,                                  ││
 @@ row 10
 upstream: │┃      7 at www.gutenberg.org. If you are not located in the United States, │┃│
-local   : ││The heart-ache and the thousand natural shocks                              ││
+local   : ││And by opposing end them. To die: to sleep;                                 ││
 @@ row 11
 upstream: │┃      8 you will have to check the laws of the country where you are locate│┃│
-local   : ││That flesh is heir to, 'tis a consummation                                  ││
+local   : ││                                                                            ││
 @@ row 12
 upstream: │┃      9 before using this eBook.                                           │┃╰
-local   : ││Devoutly to be wish'd.                                                      ││
+local   : ││                                                                            ││
 @@ row 13
 upstream: │┃     10                                                                    │┃╭
 local   : ││                                                                            ││
 @@ row 14
 upstream: │┃     11 Title: The Complete Works of William Shakespeare                   │┃│
-local   : ││Search: [type to filter]                                                    ││
+local   : ││                                                                            ││
 @@ row 15
 upstream: │┃     12                                                                    │┃│
-local   : ││Matches: 5 lines found                                                      ││
+local   : ││                                                                            ││
 @@ row 16
 upstream: │┃     13 Author: William Shakespeare                                        │┃│
 local   : ││                                                                            ││

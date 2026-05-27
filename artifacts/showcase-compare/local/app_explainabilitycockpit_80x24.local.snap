@@ -1,18 +1,18 @@
-﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+﻿1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 ╭────────────────────────────Explainability Cockpit────────────────────────────╮
 │╭───────────────────────────Explainability Cockpit───────────────────────────╮│
-││Diff Decision Evidence  |  Frame: 42  |  Mode: Full                         ││
+││Frame: 42  |  Mode: Full  |  Refresh: 1s                                    ││
 ││                                                                            ││
-││Strategy: Dirty Rows (3 rows, 15 cells)                                     ││
-││Cost: 250µs (vs 500µs full redraw)                                          ││
+││Diff Decision:                                                              ││
+││  Strategy: Dirty Rows (3 rows, 15 cells)                                   ││
+││  Cost: 250µs (vs 500µs full redraw)                                        ││
+││  Why: Posterior mean 0.87, Risk 0.10, Budget pressure low (12.6%)          ││
 ││                                                                            ││
-││Why dirty rows?                                                             ││
-││  Posterior mean: 0.87  Risk tolerance: 0.10                                ││
-││  Budget pressure: low (12.6%)                                              ││
-││  Hysteresis: not triggered  Cooldown: 0 frames                             ││
+││Budget: Used 2.1ms / 16.7ms (12.6%)                                         ││
+││  Diff: 250µs  Render: 500µs  Present: 250µs  Overhead: 1.1ms               ││
 ││                                                                            ││
-││Budget: Used 2.1ms/16.7ms (12.6%)                                           ││
-││Degradation: None  Recovery: N/A                                            ││
+││Degradation: None  |  Recovery: N/A  |  Cooldown: 0 frames                  ││
+││                                                                            ││
 ││                                                                            ││
 ││                                                                            ││
 ││                                                                            ││

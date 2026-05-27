@@ -2,13 +2,13 @@
 Upstream snapshot: app_terminalcapabilities_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 1054
-Local nonblank chars: 867
-Local/upstream char ratio: 0.823
+Local nonblank chars: 896
+Local/upstream char ratio: 0.850
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+local   : 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 @@ row 02
 upstream: ╭────────────────────────────────────────────────Terminal Capabilities──────────
 local   : ╭────────────────────────────Terminal Capabilities─────────────────────────────╮
@@ -17,58 +17,58 @@ upstream: │╭─────────────────────�
 local   : │╭───────────────────────────Terminal Capabilities────────────────────────────╮│
 @@ row 04
 upstream: ││Profile: detected | View: Matrix
-local   : ││Terminal Capability Matrix                                                  ││
+local   : ││Feature              Supported  Notes                                       ││
 @@ row 05
 upstream: ││Color depth: truecolor | Mux: no | Sync output: no
-local   : ││                                                                            ││
+local   : ││───                  ─────────  ─────                                       ││
 @@ row 06
 upstream: ││Scroll region: yes | Hyperlinks: yes | Clipboard: yes | overrides: none
-local   : ││Feature              Supported  Notes                                       ││
+local   : ││True Color           ✓         24-bit color                                 ││
 @@ row 07
 upstream: │╰──────────────────────────────────────────────────────────────────────────────
-local   : ││───                  ─────────  ─────                                       ││
+local   : ││Italic               ✓         Italic text                                  ││
 @@ row 08
 upstream: │╭ Capability Matrix ───────────────────────────────────────────────╮╭ Details ─
-local   : ││True Color           ✓         24-bit color                                 ││
+local   : ││Bold                 ✓         Bold text                                    ││
 @@ row 09
 upstream: ││Capability               │Detected │Effective│Fallback            ││Capability
-local   : ││Italic               ✓         Italic text                                  ││
+local   : ││Underline            ✓         Underlined                                   ││
 @@ row 10
 upstream: ││True color (24-bit)      │yes      │yes      │enabled             ││Detected:
-local   : ││Bold                 ✓         Bold text                                    ││
+local   : ││Strikethrough        ✓         Strikethrough                                ││
 @@ row 11
 upstream: ││256-color palette        │yes      │yes      │enabled             ││Effective:
-local   : ││Underline            ✓         Underlined                                   ││
+local   : ││Overline             ✓         Overline                                     ││
 @@ row 12
 upstream: ││Synchronized output      │no       │no       │unsynced repaint    ││Fallback:
-local   : ││Strikethrough        ✓         Strikethrough                                ││
+local   : ││Dim                  ✓         Dimmed text                                  ││
 @@ row 13
 upstream: ││Scroll region (DECSTBM)  │yes      │yes      │enabled             ││Reason: De
-local   : ││Overline             ✓         Overline                                     ││
+local   : ││Reverse              ✓         Reversed colors                              ││
 @@ row 14
 upstream: ││OSC 8 hyperlinks         │yes      │yes      │enabled             ││
-local   : ││Dim                  ✓         Dimmed text                                  ││
+local   : ││Blink                ✓         Blinking text                                ││
 @@ row 15
 upstream: ││Kitty keyboard protocol  │no       │no       │legacy keys         ││
-local   : ││Reverse              ✓         Reversed colors                              ││
+local   : ││Hidden               ✓         Hidden text                                  ││
 @@ row 16
 upstream: ││Focus events             │yes      │yes      │enabled             ││
-local   : ││Blink                ✓         Blinking text                                ││
+local   : ││Kitty Keyboard       ✓         Enhanced keys                                ││
 @@ row 17
 upstream: ││Bracketed paste          │yes      │yes      │enabled             ││
-local   : ││Hidden               ✓         Hidden text                                  ││
+local   : ││Bracketed Paste      ✓         Bracketed paste                              ││
 @@ row 18
 upstream: ││SGR mouse                │yes      │yes      │enabled             ││
-local   : ││Kitty Keyboard       ✓         Enhanced keys                                ││
+local   : ││Synchronized Output  ✓         Sync updates                                 ││
 @@ row 19
 upstream: ││OSC 52 clipboard         │yes      │yes      │enabled             │╰──────────
-local   : ││Bracketed Paste      ✓         Bracketed paste                              ││
+local   : ││OSC-8 Links          ✓         Hyperlinks                                   ││
 @@ row 20
 upstream: ││                                                                  │╭ Fallback
-local   : ││Synchronized Output  ✓         Sync updates                                 ││
+local   : ││Mouse Capture        ✓         Mouse events                                 ││
 @@ row 21
 upstream: ││                                                                  ││Sync outpu
-local   : ││OSC-8 Links          ✓         Hyperlinks                                   ││
+local   : ││Focus Events         ✓         Focus reporting                              ││
 @@ row 22
 upstream: ││                                                                  ││Scroll reg
 local   : │╰────────────────────────────────────────────────────────────────────────────╯│

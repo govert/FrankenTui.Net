@@ -8,7 +8,7 @@ Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour │ 2: [Dash] │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+local   : 1: Tour │ 2: [Dash] │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │
 @@ row 02
 upstream: ╭──────────────────────────────────────────────────────Dashboard────────────────
 local   : ╭──────────────────────────────────Dashboard───────────────────────────────────╮
@@ -26,7 +26,7 @@ upstream: ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││C
 local   : │││ MEM:   68%  ██████░│  │ 08:01 DEBUG Diff decision FULL    │               ││
 @@ row 07
 upstream: ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││MEM ▅▂ ▃▁▄▄▂▂▇▅▃▅▂▃▄▆▄▇█▂▆▅▄ 42%││
-local   : │││ DISK:  23%  ██░░░░ │  │ 08:02 WARN  Replay ledger missing │               ││
+local   : │││ DSK:   23%  ██░░░░ │  │ 08:02 WARN  Replay ledger missing │               ││
 @@ row 08
 upstream: ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││NET ▁▁▁▁▁  ▁   ▇▁▁    ▁ █▁▁▁▁ 25││use ftui_core::event::E
 local   : │││ NET:   12%  █░░░░░ │  │ 08:03 INFO  Command palette ranked│               ││
@@ -47,10 +47,10 @@ upstream: ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││ 
 local   : │││ Frame:    0ms       │  │ ● Add tests          [██░░░░] │                  ││
 @@ row 14
 upstream: ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                ││EPS:1145  118x26
-local   : │││ Uptime:   2m 34s    │  │ ● Fix layout         [██████] │                  ││
+local   : │││ Screens:  45        │  │ ● Fix layout         [██████] │                  ││
 @@ row 15
 upstream: ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                ││Cyberpunk Aurora
-local   : │││ Screens:  45        │  │ ○ Deploy              [░░░░░░] │                 ││
+local   : │││ Uptime:   2m 34s    │  │ ○ Deploy              [░░░░░░] │                 ││
 @@ row 16
 upstream: ││Click → Visual Effe││Click → Data Viz                ││Click → Performance
 local   : ││╰─────────────────────╯  ╰──────────────────────────────╯                   ││
