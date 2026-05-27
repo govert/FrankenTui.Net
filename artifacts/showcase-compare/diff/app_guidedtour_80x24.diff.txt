@@ -2,76 +2,76 @@
 Upstream snapshot: app_guidedtour_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 1330
-Local nonblank chars: 749
-Local/upstream char ratio: 0.563
+Local nonblank chars: 548
+Local/upstream char ratio: 0.412
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: [Tour] │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+local   : 1: [Tour] │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │
 @@ row 02
 upstream: ╭──────────────────────────────────────────────────────Dashboard────────────────
 local   : ╭─────────────────────────────────Guided Tour──────────────────────────────────╮
 @@ row 03
 upstream: │FRANKENTUI DASHBOARD                                          ╭────────────────
-local   : │╭────────────────────────────────Guided Tour─────────────────────────────────╮│
+local   : │FRANKENTUI DASHBOARD  |  1/16 · Tour · LIVE  |  Speed 1.00x                   │
 @@ row 04
 upstream: │╭──────Plasma───────╮╭─────────Charts · Pulse─────────╮╭────Co│1/16 · Tour · LI
-local   : ││Welcome to the FrankenTUI Demo Showcase!                                    ││
+local   : │                       ⠹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿Charts · Pulse                  │
 @@ row 05
 upstream: ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││g:cycle · sparklines + mini bars││// run│Speed 1.00x · N6
-local   : ││                                                                            ││
+local   : │                        ⠈⠛⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿CPU ▃▃▂▂▁▁▄▃▄▂ 38%              │
 @@ row 06
 upstream: .9⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││CPU ▃ ▃▃▂▂▁▁▄▃▄▂▅▅▅▆▂▄▅▃▆▅▄▄ 38%││use st│Dashboard
-local   : ││This tour walks you through the key screens.                                ││
+local   : │                           ⠙⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿MEM ▅▂▃▁▄▄▂▂▇▅ 41%              │
 @@ row 07
 upstream: ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││MEM ▅▂ ▃▁▄▄▂▂▇▅▃▅▂▃▄▆▄▇█▂▆▅▄ 41%││      │This is the home
-local   : ││                                                                            ││
+local   : │                             ⠈⠛⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿NET ▁▁▁▁▁ ▁ ▇▁▁ 125             │
 @@ row 08
 upstream: ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││NET ▁▁▁▁▁  ▁   ▇▁▁    ▁ █▁▁▁▁125││use ft│clicked.
-local   : ││Press Enter or Space to start the tour.                                     ││
+local   : │                                ⠈⠙⠻⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿OUT ▁▁▁▃▁█ ▁▁ 134               │
 @@ row 09
 upstream: ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││OUT ▁▁▁▃▁█  ▁▁ ▁  ▁▁▇    ▁   134││use ft│Click a tile (or
-local   : ││                                                                            ││
+local   : │                                     ⠈⠉⠉⠉⠉⠉⠉  EPS █ 74% DSK █ 66%             │
 @@ row 10
 upstream: ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││EPS █  74% DSK █  66% IO  ░  11%││Click │Controls: Space
-local   : ││  n / p  step through tour steps                                            ││
+local   : │                                                                              │
 @@ row 11
 upstream: ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                │╰──────│Steps:
-local   : ││  Space  pause/resume tour                                                  ││
+local   : │                                                                              │
 @@ row 12
 upstream: ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                │╭──────│▶ Tour · Dashboa
-local   : ││  Esc    exit tour                                                          ││
+local   : │                                                                              │
 @@ row 13
 upstream: ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                ││Status│• Tour · Dashboa
-local   : ││  Tab    next screen                                                        ││
+local   : │                                                                              │
 @@ row 14
 upstream: ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                ││EPS:11│• Visuals · Merm
-local   : ││                                                                            ││
+local   : │                                                                              │
 @@ row 15
 upstream: ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                ││Cyberp│• Tour · Inline
-local   : ││Screens in tour:                                                            ││
+local   : │                                                                              │
 @@ row 16
 upstream: ││Click → Visual Effe││Click → Data Viz                ││Click ╰────────────────
-local   : ││  1. Dashboard                                                              ││
+local   : │                                                                              │
 @@ row 17
 upstream: │╰───────────────────╯╰────────────────────────────────╯╰───────────────────────
-local   : ││  2. Widget Gallery                                                         ││
+local   : │                                                                              │
 @@ row 18
 upstream: │╭Text FX · 3-Up (1/2│╭───────────Activity────────────│╭────Markdown · Complete─
-local   : ││  3. Layout Lab                                                             ││
+local   : │                                                                              │
 @@ row 19
 upstream: ─│Sample 1 of 3 · 3-U││SEV TIME  COMP  MESSAGE        ││FrankenTUI Field Notes
-local   : ││  4. Forms & Input                                                          ││
+local   : │                                                                              │
 @@ row 20
 upstream: ││1 · None · S1      ││ INFO  00:02   CPU spike detect││
-local   : ││  5. Data Viz                                                               ││
+local   : │                                                                              │
 @@ row 21
 upstream: ││# FX Lab · Determin││ INFO  00:02   CPU spike detect│││ Goal: deterministic ou
-local   : ││                                                                            ││
+local   : │                                                                              │
 @@ row 22
 upstream: tpu · FadeIn · S2    ││                               ││
-local   : │╰────────────────────────────────────────────────────────────────────────────╯│
+local   : │                                                                              │
 @@ row 23
 upstream: ││## GFM Stress · Led⋮│                               ⋮│Highlights
 local   : ╰──────────────────────────────────────────────────────────────────────────────╯

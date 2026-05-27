@@ -1,24 +1,24 @@
-﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+﻿1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 ╭───────────────────────────────Mermaid Showcase───────────────────────────────╮
-│╭──────────────────────────────Mermaid Showcase──────────────────────────────╮│
-││graph TD                                                                    ││
-││    A[Start] --> B{Decision}                                                ││
-││    B -->|Yes| C[Process]                                                   ││
-││    B -->|No| D[End]                                                        ││
-││    C --> D                                                                 ││
-││                                                                            ││
-││flowchart LR                                                                ││
-││    subgraph Frontend                                                       ││
-││        UI --> API                                                          ││
-││    end                                                                     ││
-││    subgraph Backend                                                        ││
-││        API --> DB[(Database)]                                              ││
-││        API --> Cache[(Redis)]                                              ││
-││    end                                                                     ││
-││                                                                            ││
-││sequenceDiagram                                                             ││
-││    Client->>Server: Request                                                ││
-││    Server->>DB: Query                                                      ││
-│╰────────────────────────────────────────────────────────────────────────────╯│
+│┌──────┐     ┌─────────┐                                                      │
+││ Start ├────>│ Decision │                                                    │
+│└──────┘     └────┬────┘                                                      │
+│                  │                                                           │
+│            ┌─────┴─────┐                                                     │
+│            │            │                                                    │
+│            ▼            ▼                                                    │
+│       ┌────────┐  ┌────────┐                                                 │
+│       │Process │  │  End   │                                                 │
+│       └────────┘  └────────┘                                                 │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
 ╰──────────────────────────────────────────────────────────────────────────────╯
 Mermaid Showcase [16/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

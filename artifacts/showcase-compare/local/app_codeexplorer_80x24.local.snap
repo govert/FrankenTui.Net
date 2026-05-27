@@ -1,24 +1,24 @@
-﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: [Code] │ 5: Widgets │ 6: Layout │ 7: Forms
+﻿1: Tour │ 2: Dash │ 3: Shakes │ 4: [Code] │ 5: Widgets │ 6: Layout │ 7: Forms │
 ╭────────────────────────────────Code Explorer─────────────────────────────────╮
-│╭───────────────────────────────Code Explorer────────────────────────────────╮│
-││📁 src/                                                                     ││
-││  📁 FrankenTui.Core/                                                       ││
-││    📄 Rect.cs          "Rectangle with position and size"                  ││
-││    📄 Cell.cs           "Terminal cell with char and style"                ││
-││  📁 FrankenTui.Render/                                                     ││
-││    📄 Buffer.cs         "2D cell buffer for rendering"                     ││
-││    📄 Frame.cs          "Frame with buffer and registry"                   ││
-││  📁 FrankenTui.Widgets/                                                    ││
-││    📄 Block.cs          "Bordered block widget"                            ││
-││    📄 Paragraph.cs      "Text paragraph widget"                            ││
-││  📁 FrankenTui.Runtime/                                                    ││
-││    📄 Program.cs        "Main program loop"                                ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-│╰────────────────────────────────────────────────────────────────────────────╯│
+│ 1 │ /*****************************************************                   │
+│ 2 │ ** This file is an amalgamation of many separate C                       │
+│ 3 │ ** source files from SQLite version 3.48.0.                              │
+│ 4 │ ** By combining all individual C code files into                         │
+│ 5 │ ** a single large file, the entire code can be                           │
+│ 6 │ ** compiled as a single translation unit.                                │
+│ 7 │ ** This allows many compilers to do optimizations                        │
+│ 8 │ ** that would not be possible if files were                              │
+│ 9 │ ** compiled separately.                                                  │
+│10 │ ** Performance improvements of 5% or more are                            │
+│11 │ ** commonly seen with single-unit compilation.                           │
+│12 │ *****************************************************/                   │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
 ╰──────────────────────────────────────────────────────────────────────────────╯
 Code Explorer [4/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

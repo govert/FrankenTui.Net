@@ -2,13 +2,13 @@
 Upstream snapshot: app_i18ndemo_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 653
-Local nonblank chars: 989
-Local/upstream char ratio: 1.515
+Local nonblank chars: 992
+Local/upstream char ratio: 1.519
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+local   : 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 @@ row 02
 upstream: ╭───────────────────────────────────────────────────i18n Stress Lab─────────────
 local   : ╭───────────────────────────────i18n Stress Lab────────────────────────────────╮

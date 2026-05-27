@@ -2,13 +2,13 @@
 Upstream snapshot: app_hyperlinkplayground_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 779
-Local nonblank chars: 994
-Local/upstream char ratio: 1.276
+Local nonblank chars: 997
+Local/upstream char ratio: 1.280
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+local   : 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 @@ row 02
 upstream: ╭─────────────────────────────────────────────────Hyperlink Playground──────────
 local   : ╭─────────────────────────────Hyperlink Playground─────────────────────────────╮

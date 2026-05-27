@@ -1,24 +1,24 @@
-﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: [Widgets] │ 6: Layout │ 7: Forms
+﻿1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: [Widgets] │ 6: Layout │ 7: Forms │
 ╭────────────────────────────────Widget Gallery────────────────────────────────╮
-│╭───────────────────────────────Widget Gallery───────────────────────────────╮│
-││Block: bordered container with optional title                               ││
-││                                                                            ││
-││Paragraph: "The quick brown fox jumps over the lazy dog."                   ││
-││                                                                            ││
-││Table:                                                                      ││
-││| Col A | Col B | Col C |                                                   ││
-││|-------|-------|-------|                                                   ││
-││|   a1  |   b1  |   c1  |                                                   ││
-││|   a2  |   b2  |   c2  |                                                   ││
-││                                                                            ││
-││List:                                                                       ││
-││  • Item one                                                                ││
-││  • Item two                                                                ││
-││  • Item three                                                              ││
-││                                                                            ││
-││Gauge: [████████░░] 80%                                                     ││
-││                                                                            ││
-││Sparkline: ▁▂▃▄▅▆▇█▇▆▅▄▃▂▁                                                  ││
-│╰────────────────────────────────────────────────────────────────────────────╯│
+│▸ A: Inputs │ B: Display │ C: Status │ D: Data Viz │ E: Navigation │ F: Misc  │
+│╭─ TextInput ───────────╮  ╭─ Masked Input ─╮  ╭─ Command Palette ────────╮   │
+││ user@example.com      │  │ ●●●●●●●●       │  │ >Type to search...       │   │
+││                       │  │                │  │ > [App] Quit    Exit      │  │
+│╰───────────────────────╯  ╰────────────────╯  │   [File] Open File       │   │
+│                                               ╰──────────────────────────╯   │
+│╭─ TextArea ──────────────────────────────────────────────────────────────╮   │
+││ 1  FrankenTUI text area                                                  │  │
+││ 2  - Multi-line editing                                                  │  │
+││ 3  - Soft wrap enabled                                                   │  │
+│╰──────────────────────────────────────────────────────────────────────────╯  │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
 ╰──────────────────────────────────────────────────────────────────────────────╯
 Widget Gallery [5/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

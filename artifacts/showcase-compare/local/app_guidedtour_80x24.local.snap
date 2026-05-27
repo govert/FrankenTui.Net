@@ -1,24 +1,24 @@
-﻿ 1: [Tour] │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+﻿1: [Tour] │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │
 ╭─────────────────────────────────Guided Tour──────────────────────────────────╮
-│╭────────────────────────────────Guided Tour─────────────────────────────────╮│
-││Welcome to the FrankenTUI Demo Showcase!                                    ││
-││                                                                            ││
-││This tour walks you through the key screens.                                ││
-││                                                                            ││
-││Press Enter or Space to start the tour.                                     ││
-││                                                                            ││
-││  n / p  step through tour steps                                            ││
-││  Space  pause/resume tour                                                  ││
-││  Esc    exit tour                                                          ││
-││  Tab    next screen                                                        ││
-││                                                                            ││
-││Screens in tour:                                                            ││
-││  1. Dashboard                                                              ││
-││  2. Widget Gallery                                                         ││
-││  3. Layout Lab                                                             ││
-││  4. Forms & Input                                                          ││
-││  5. Data Viz                                                               ││
-││                                                                            ││
-│╰────────────────────────────────────────────────────────────────────────────╯│
+│FRANKENTUI DASHBOARD  |  1/16 · Tour · LIVE  |  Speed 1.00x                   │
+│                       ⠹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿Charts · Pulse                  │
+│                        ⠈⠛⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿CPU ▃▃▂▂▁▁▄▃▄▂ 38%              │
+│                           ⠙⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿MEM ▅▂▃▁▄▄▂▂▇▅ 41%              │
+│                             ⠈⠛⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿NET ▁▁▁▁▁ ▁ ▇▁▁ 125             │
+│                                ⠈⠙⠻⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿OUT ▁▁▁▃▁█ ▁▁ 134               │
+│                                     ⠈⠉⠉⠉⠉⠉⠉  EPS █ 74% DSK █ 66%             │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
 ╰──────────────────────────────────────────────────────────────────────────────╯
 Guided Tour [1/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

@@ -2,13 +2,13 @@
 Upstream snapshot: app_performance_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 1498
-Local nonblank chars: 1512
-Local/upstream char ratio: 1.009
+Local nonblank chars: 1515
+Local/upstream char ratio: 1.011
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour â”‚ 2: Dash â”‚ 3: Shakes â”‚ 4: Code â”‚ 5: Widgets â”‚ 6: Layout â”‚
-local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+local   : 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 @@ row 02
 upstream: â•­â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
 local   : ╭─────────────────────────────────Performance──────────────────────────────────╮

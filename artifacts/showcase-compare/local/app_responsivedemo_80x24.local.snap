@@ -1,4 +1,4 @@
-﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+﻿1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 ╭──────────────────────────────Responsive Layout───────────────────────────────╮
 │Breakpoint: SM (60-89) | Width: 80 | Thresholds: sm≥60 md≥90 lg≥120 xl≥160    │
 │╭──────────Sidebar───────────╮╭───────────────────Content────────────────────╮│

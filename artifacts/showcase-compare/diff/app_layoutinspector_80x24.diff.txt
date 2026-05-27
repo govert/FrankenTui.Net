@@ -2,13 +2,13 @@
 Upstream snapshot: app_layoutinspector_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 925
-Local nonblank chars: 869
-Local/upstream char ratio: 0.939
+Local nonblank chars: 872
+Local/upstream char ratio: 0.943
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+local   : 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 @@ row 02
 upstream: ╭───────────────────────────────────────────────────Layout Inspector────────────
 local   : ╭───────────────────────────────Layout Inspector───────────────────────────────╮

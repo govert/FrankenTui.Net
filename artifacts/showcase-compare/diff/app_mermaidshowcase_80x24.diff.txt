@@ -2,76 +2,76 @@
 Upstream snapshot: app_mermaidshowcase_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 1148
-Local nonblank chars: 726
-Local/upstream char ratio: 0.632
+Local nonblank chars: 452
+Local/upstream char ratio: 0.394
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+local   : 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 @@ row 02
 upstream: ╭───────────────────────────────────────────────────Mermaid Showcase────────────
 local   : ╭───────────────────────────────Mermaid Showcase───────────────────────────────╮
 @@ row 03
 upstream: │Mermaid Showcase | Flow Basic (1/29) | Layout: Auto | Score: 0.8 | Viewport: au
-local   : │╭──────────────────────────────Mermaid Showcase──────────────────────────────╮│
+local   : │┌──────┐     ┌─────────┐                                                      │
 @@ row 04
 upstream: │╭─────────────Samples─────────────╮╭────────────────────────────────────Viewpor
-local   : ││graph TD                                                                    ││
+local   : ││ Start ├────>│ Decision │                                                    │
 @@ row 05
 upstream: ││> Flow Basic [flow, S, branch, de││
-local   : ││    A[Start] --> B{Decision}                                                ││
+local   : │└──────┘     └────┬────┘                                                      │
 @@ row 06
 upstream: ││  Flow Subgraphs [flow, M, subgra││
-local   : ││    B -->|Yes| C[Process]                                                   ││
+local   : │                  │                                                           │
 @@ row 07
 upstream: ││  Flow Dense [flow, L, dense, dag││
-local   : ││    B -->|No| D[End]                                                        ││
+local   : │            ┌─────┴─────┐                                                     │
 @@ row 08
 upstream: ││  Flow Long Labels [flow, M, labe││
-local   : ││    C --> D                                                                 ││
+local   : │            │            │                                                    │
 @@ row 09
 upstream: ││  Flow Unicode [flow, S, unicode,││
-local   : ││                                                                            ││
+local   : │            ▼            ▼                                                    │
 @@ row 10
 upstream: ││  Flow Styles [flow, M, classdef,││ ⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤                ⣀⣀⣤⣄⣀
-local   : ││flowchart LR                                                                ││
+local   : │       ┌────────┐  ┌────────┐                                                 │
 @@ row 11
 upstream: ││  Sequence Mini [sequence, S, com││ ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿   Start    ⣄⡀ ⣀⣀⣤⣴   Check
-local   : ││    subgraph Frontend                                                       ││
+local   : │       │Process │  │  End   │                                                 │
 @@ row 12
 upstream: ││  Sequence Checkout [sequence, M,││ ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿            ⠟⠋⠉⠙⠛⠻⠿
-local   : ││        UI --> API                                                          ││
+local   : │       └────────┘  └────────┘                                                 │
 @@ row 13
 upstream: ││  Sequence Dense [sequence, L, de││ ⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛               ⠈⠉⠙⠛⠛⠉
-local   : ││    end                                                                     ││
+local   : │                                                                              │
 @@ row 14
 upstream: ││  Class Basic [class, S, inherita││
-local   : ││    subgraph Backend                                                        ││
+local   : │                                                                              │
 @@ row 15
 upstream: ││  Class Members [class, M, fields││
-local   : ││        API --> DB[(Database)]                                              ││
+local   : │                                                                              │
 @@ row 16
 upstream: ││  State Basic [state, S, start-en││
-local   : ││        API --> Cache[(Redis)]                                              ││
+local   : │                                                                              │
 @@ row 17
 upstream: ││  State Composite [state, M, comp││
-local   : ││    end                                                                     ││
+local   : │                                                                              │
 @@ row 18
 upstream: ││  ER Basic [er, M, cardinality, r││
-local   : ││                                                                            ││
+local   : │                                                                              │
 @@ row 19
 upstream: ││  Gantt Basic [gantt, M, sections│╰───────────────────────────────────────────
-local   : ││sequenceDiagram                                                             ││
+local   : │                                                                              │
 @@ row 20
 upstream: ││  Mindmap Seed [mindmap, S, tree]│╭─────────────────────────────────────Metric
-local   : ││    Client->>Server: Request                                                ││
+local   : │                                                                              │
 @@ row 21
 upstream: ││  Mindmap Deep [mindmap, L, deep,││Cache: hit 27  miss 1  last hit
-local   : ││    Server->>DB: Query                                                      ││
+local   : │                                                                              │
 @@ row 22
 upstream: ││  Pie Basic [pie, S, title, showd││Warnings: 0
-local   : │╰────────────────────────────────────────────────────────────────────────────╯│
+local   : │                                                                              │
 @@ row 23
 upstream: ││  Pie Many [pie, M, many-slices] ││Parse: 0.09 ms
 local   : ╰──────────────────────────────────────────────────────────────────────────────╯

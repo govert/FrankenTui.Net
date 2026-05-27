@@ -2,13 +2,13 @@
 Upstream snapshot: app_markdownliveeditor_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 888
-Local nonblank chars: 881
-Local/upstream char ratio: 0.992
+Local nonblank chars: 884
+Local/upstream char ratio: 0.995
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+local   : 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 @@ row 02
 upstream: ╭─────────────────────────────────────────────────Live Markdown Editor──────────
 local   : ╭─────────────────────────────Live Markdown Editor─────────────────────────────╮

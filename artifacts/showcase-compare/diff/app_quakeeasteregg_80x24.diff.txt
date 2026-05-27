@@ -2,8 +2,8 @@
 Upstream snapshot: app_quakeeasteregg_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 1110
-Local nonblank chars: 744
-Local/upstream char ratio: 0.670
+Local nonblank chars: 560
+Local/upstream char ratio: 0.505
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -14,64 +14,64 @@ upstream: ╭──────────────────────�
 local   : ╭───────────────────────────Quake E1M1 (Easter Egg)────────────────────────────╮
 @@ row 03
 upstream: │WASD move · Arrows look · Space jump · F fire · V quality [Reduced] · R reset
-local   : │╭──────────────────────────Quake E1M1 (Easter Egg)───────────────────────────╮│
+local   : │WASD move · Arrows look · Space jump · F fire · V quality [Reduced] · R reset │
 @@ row 04
 upstream: │
-local   : ││WASD move · Arrows look · Space jump · F fire · V quality [Reduced] · R     ││
+local   : │                                                                              │
 @@ row 05
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠛  ⢀⣠⣴⣾⣿⣿⣿⣿⣿⣿
-local   : ││reset                                                                       ││
+local   : │    ⡏⠉⠉⠉⠉⠉⠉⠉⠉⠉⡏⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⡏⠉⠉⠉⠉⠉⠉⠉⠉⠉⡇                                 │
 @@ row 06
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠛⠁⢀⣠⣴⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-local   : ││                                                                            ││
+local   : │    ⡇         ⡇                ⢰  ⡇         ⡇                                 │
 @@ row 07
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠛⢁⣠⣴⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿                                       ⢀⢤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤
-local   : ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿   ⢀⣮⣿⡿⠿⠿⠿⠿⠛⠛⠛⠛⠉                                ││
+local   : │    ⡇         ⡇         ⡄      ⢸  ⡇         ⡇                                 │
 @@ row 08
 upstream: ⣿⣿⣿⣿⣿⡿⢛⣡⣴⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿                                       ⢀⣮⣿⡿⠿⠿⠿⠿⠛⠛⠛⠛⠉
-local   : ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿   ⣷⣄         ⣿                                 ││
+local   : │    ⡇         ⡇      ⢀⣀⣀⣇⣀⣀    ⢸  ⡇         ⡇                                 │
 @@ row 09
 upstream: │      ⢿⣿⣿⣻⣵⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿                                 ⣷⣄         ⣿
-local   : ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿   ⣿⣿⣷⣄       ⣿                                 ││
+local   : │    ⡇         ⡇      ⢸  ⡇ ⢸    ⢸  ⡇         ⡇                                 │
 @@ row 10
 upstream: ⣿⣿⡿⠟⢂⡏⠉⠙⠛⠻⠿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿                                    ⣿⣿⣷⣄       ⣿
-local   : ││                                                                            ││
+local   : │    ⡏⠉⠉⠉⠉⠉⠉⠉⠉⠉⠁      ⢸⠉⠁⡇⠉⢹    ⢸  ⡇         ⡇                                 │
 @@ row 11
 upstream: ⣿⣿⠁⣠⣿⡇       ⠈⠉⠉⠛⠛⠿⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿                                    ⣿⣿⣿⣿⣿⣦⡀    ⣿
-local   : ││Retro FPS renderer using braille and box-drawing characters.                ││
+local   : │    ⡇ ⢰⠒⠒⠒⠒⢲         ⠘⠒⠒⡗⠒⠚    ⠘  ⡇         ⡇                                 │
 @@ row 12
 upstream: ⣿⡟⡰⣿⣿⡇                ⠉⠉⠛⠛⠻⠿⢿⣿⣿⣿                                    ⣿⣿⣿⣿⣿⣿⣿⣦⡀  ⣿
-local   : ││Runs at ~30 FPS in terminal.                                                ││
+local   : │    ⡇ ⢸    ⢸            ⠇         ⡇     ⢀⢠⢰⢸⡇                                 │
 @@ row 13
 upstream: ⣿⢃⡇⠈⠻⡇                        ⠈⠉                                    ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⣄⣿
-local   : ││                                                                            ││
+local   : │    ⡇ ⢸⣀⣀⣀⣀⣸                      ⡇ ⢀⢠⢰⢸⢸⢸⢸⢸⡇                                 │
 @@ row 14
 upstream: ⡿⣸⡇                                                                 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷
-local   : ││                                                                            ││
+local   : │    ⡇                             ⡇ ⢸⢸⢸⢸⢸⢸⢸⢸⡇                                 │
 @@ row 15
 upstream: ⣄     ⣿⣇⣿⡇  ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿                        ⠇       ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-local   : ││                                                                            ││
+local   : │    ⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠁                                 │
 @@ row 16
 upstream: ⣿⣷⣄⡀  ⣿⣼⣿⡇  ⣿⣿⣿⡿⠛⠻⠿⣿⣿⣿                                    ⠉⠁⡅⠉⠁   ⠤⣤⣿⣿⡿⠿⠿⠿⠿⠿⠿⠿⠿⠿
-local   : ││                                                                            ││
+local   : │                                                                              │
 @@ row 17
 upstream: ⠿⠿⠿⠿⠦⣿⣯⣿⣿⡇⣜⣿⣿⣿⠏     ⣿    ⣿    ⣟⣿⣿⣿⢿⣿⣿⣿⣿                     ⠁        ⠉⠉⠛⠒⠶⠶⣖⣲⡶⠶⣶
-local   : ││                                                                            ││
+local   : │                                                                              │
 @@ row 18
 upstream: ⣶⣶⣶⣶⣶  ⣿⣿⣷⣿⣿⠟⠁⣠⣴⡇   ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿    ⣿    ⡀  ⢀    ⡀         ⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀    ⠈⠉⠙⠒
-local   : ││                                                                            ││
+local   : │                                                                              │
 @@ row 19
 upstream: ⣉⡁⣿⣿⣿⣿⣿⠟⣡⣴⣿⣿⣿⡇   ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿  ⢀⣠⣴⡤⠾⣻⣿⣿⣿⠶⠒⢒⣾⡷⠶⠶⠶⠶⠶⠖⢒⣲⣶⣿⣿⣿⣿⣿⣿⣿⣿⠿⠯⠭⠭⣭⡭⣉⠉⠉⠉⡉
-local   : ││                                                                            ││
+local   : │                                                                              │
 @@ row 20
 upstream: ⢹⣿⣿⣿⣿⣿⣿⣿⣿⡇   ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢀⣀⣴⣶⣶⣾⣿⣿⣿⣾⣿⣾⣿⣷⣿⡂⣰⣽⣿⣇⣀⣀⣀⣀⣤⣶⣿⣿⣿⣿⣿⣿⣿⡿⣿⣭⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-local   : ││                                                                            ││
+local   : │                                                                              │
 @@ row 21
 upstream: ⣿⣿⣿⣿⣿   ⣿⣿⠟⠛⠛⠛  ⠁   ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡂⠉⠉⠁⣿⣿⣿⣿⣿⣿⣿⣯⣟⣿⣟⣹⣽⣾⣿⣿⣿⣧⣤⣼⣾⣿⣿⣿⣿⣿⣿⣿⣟⣋⣁⣀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⣻⣿⡟
-local   : ││                                                                            ││
+local   : │                                                                              │
 @@ row 22
 upstream: │ ⣿          ⣿⣿⣿⣿⣿⣿⣿⣿⣀⠠ ⣶⣶⠶⠶⣿⣿⣿⣿⣦⣄⣸⣷⣮⣿⣿⣿⣻⣿⣿⣿⣿⣿⣥⣤⣤⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⣿⣿⣶⣦⣿⣭⣭⣵⣶⣶⣿⣿⣿⣗⣽⣿⣧⣿
-local   : │╰────────────────────────────────────────────────────────────────────────────╯│
+local   : │                                                                              │
 @@ row 23
 upstream: ⣿⡿⠿⠛⠛⠛⠋⣿⣿⡿⠿⠛⣿⣿⣿⣀⣠⣤⠶⠚⠉⣿⣿⣿⣿⣿⣦⣤⣿⣿⣿⣿⡿⠟⣿⣿⣿⣿⣿⣿⣀⣼⣿⣿⣾⣧⣾⣿⣿⣿⣿⣿⡿⢻⠛⠛⠟⠛⣻⠛⠛⣿⠻⢿⣿⣿⣿⣿⣿⣿⣿⣶⣽⣿⣿⣶⣿⣿⣿⢈
 local   : ╰──────────────────────────────────────────────────────────────────────────────╯

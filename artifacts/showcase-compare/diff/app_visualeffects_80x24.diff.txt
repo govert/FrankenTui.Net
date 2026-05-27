@@ -2,76 +2,76 @@
 Upstream snapshot: app_visualeffects_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 1415
-Local nonblank chars: 734
-Local/upstream char ratio: 0.519
+Local nonblank chars: 448
+Local/upstream char ratio: 0.317
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+local   : 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 @@ row 02
 upstream: ╭────────────────────────────────────────────────────Visual Effects─────────────
 local   : ╭────────────────────────────────Visual Effects────────────────────────────────╮
 @@ row 03
 upstream: │ ⬤ Metaballs │ ←/→ Switch │ [t] Text FX │ 48.1 FPS │ 20.8ms avg │ 16.0/31.6ms
-local   : │╭───────────────────────────────Visual Effects───────────────────────────────╮│
+local   : │⬤ Metaballs │ ←/→ Switch │ [t] Text FX │ FPS │ Frame time                     │
 @@ row 04
 upstream: │                                        ⣀⣀⣤⣤⣶⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-local   : ││Effect: Matrix Rain                                                         ││
+local   : │                    ⢀⣀⢄⣀                  ⢰⢝   ⢘⠄ ⢱                           │
 @@ row 05
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣶⣦⣤⣤⣀⣀            ⣀⣠⣤⣴⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-local   : ││FPS: 60  |  Particles: 500                                                  ││
+local   : │                  ⢀⡴⠓⠑⠢⡀⠑⢄                ⢱⠈⠢⢄⠤⠊  ⢰⠁                          │
 @@ row 06
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣶⣤⣤⣀⢀⣀⣤⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-local   : ││Speed: 1.0x  |  Density: high                                               ││
+local   : │                 ⢀⠗⡅   ⡕  ⢇                ⠑⢄   ⢀⠔⠁                           │
 @@ row 07
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢀⣠⣤⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-local   : ││Color: #00FF00                                                              ││
+local   : │                  ⢇⠈⠒⠔⠊  ⢀⠇                  ⠉⠑⠉⠁                             │
 @@ row 08
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢀⣀⣤⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-local   : ││                                                                            ││
+local   : │                   ⠑⢄⣀⢀⣀⠔⠁                                                    │
 @@ row 09
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣀⣤⣴⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿────────────Markdown Overlay────────────⣿
-local   : ││Controls:                                                                   ││
+local   : │                      ⠁                             ⢀⣔⢖⡑⠒⢄                    │
 @@ row 10
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣀⣤⣴⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│FrankenTUI Visual FX                         ⣿
-local   : ││  Space  play/pause                                                         ││
+local   : │                                                   ⣔⠏  ⠈⢆ ⠑⡄                  │
 @@ row 11
 upstream: ⣿⣿⣿⢀⣀⣤⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│                                             ⣿
-local   : ││  ←/→    cycle effects                                                      ││
+local   : │                                                  ⠐⡅⠣⣀⢀⡠⠃  ⡕                  │
 @@ row 12
 upstream: ⣿⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│This panel is real markdown rendered on top o⣿
-local   : ││  ↑/↓    adjust speed                                                       ││
+local   : │                  ⢀⣔⢖⡑⠒⢄                           ⠑⢄ ⠁  ⢀⠔⠁                  │
 @@ row 13
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│animated backdrops.                          ⣿
-local   : ││  r      reset                                                              ││
+local   : │                                                                              │
 @@ row 14
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│• deterministic output                       ⣿
-local   : ││  c      cycle colors                                                       ││
+local   : │                                                                              │
 @@ row 15
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│• alpha-correct compositing                  ⣿
-local   : ││  d      toggle debug                                                       ││
+local   : │                                                                              │
 @@ row 16
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│• crisp text over motion                     ⣿
-local   : ││                                                                            ││
+local   : │                                                                              │
 @@ row 17
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│                                             ⣿
-local   : ││Effects:                                                                    ││
+local   : │                                                                              │
 @@ row 18
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│`←/→` switch effects · `p` palette · `t` text⣿
-local   : ││  Matrix Rain  •  Fire  •  Snow                                             ││
+local   : │                                                                              │
 @@ row 19
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│                                             ⣿
-local   : ││  Plasma  •  Starfield  •  Conway                                           ││
+local   : │                                                                              │
 @@ row 20
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│                                             ⣿
-local   : ││  Particles  •  Wave  •  Vortex                                             ││
+local   : │                                                                              │
 @@ row 21
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│                                             ⣿
-local   : ││                                                                            ││
+local   : │                                                                              │
 @@ row 22
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│                                             ⣿
-local   : │╰────────────────────────────────────────────────────────────────────────────╯│
+local   : │                                                                              │
 @@ row 23
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿╰─────────────────────────────────────────────⣿
 local   : ╰──────────────────────────────────────────────────────────────────────────────╯

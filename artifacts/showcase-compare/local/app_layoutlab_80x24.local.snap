@@ -1,24 +1,24 @@
-﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: [Layout] │ 7: Forms
+﻿1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: [Layout] │ 7: Forms │
 ╭──────────────────────────────────Layout Lab──────────────────────────────────╮
-│╭─────────────────────────────────Layout Lab─────────────────────────────────╮│
-││Constraint Types:                                                           ││
-││                                                                            ││
-││  Fixed(10)    — exactly 10 rows/cols                                       ││
-││  Min(5)       — at least 5, grows if space                                 ││
-││  Max(20)      — at most 20, shrinks if needed                              ││
-││  Percentage(50) — 50% of available space                                   ││
-││  Fill(1)     — takes remaining space                                       ││
-││                                                                            ││
-││Layout direction: Vertical                                                  ││
-││                                                                            ││
-││Children:                                                                   ││
-││  Fixed 3  → ███                                                            ││
-││  Min 5    → ████████                                                       ││
-││  Max 6    → ██████                                                         ││
-││  Fill     → ████████████████                                               ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-│╰────────────────────────────────────────────────────────────────────────────╯│
+│Layout + Pane Studio  |  Preset: Flex Vertical  |  n/p: cycle presets  |  [/]:
+│                                                                              │
+│ ⢸⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⢽ ⣏⣉⣉⣉⣉⣉⡇                                      │
+│ ⢸⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⢺ ⡧⠤⠤⠤⠤⠤⡇                                      │
+│ ⢸⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣹ ⡗⠒⠒⠒⠒⠒⡇                                      │
+│                                 ⣏⣉⣉⣉⣉⣉⡇                                      │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│FlexRoot req=44x15 got=44x15 min=0x0 | Fixed=44x3 | Min=44x4 | Max=44x6       │
 ╰──────────────────────────────────────────────────────────────────────────────╯
 Layout Lab [6/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

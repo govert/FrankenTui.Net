@@ -2,76 +2,76 @@
 Upstream snapshot: app_codeexplorer_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 1346
-Local nonblank chars: 840
-Local/upstream char ratio: 0.624
+Local nonblank chars: 818
+Local/upstream char ratio: 0.608
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: [Code] │ 5: Widgets │ 6: Layout │ 7: Forms
+local   : 1: Tour │ 2: Dash │ 3: Shakes │ 4: [Code] │ 5: Widgets │ 6: Layout │ 7: Forms │
 @@ row 02
 upstream: ╭────────────────────────────────────────────────────Code Explorer──────────────
 local   : ╭────────────────────────────────Code Explorer─────────────────────────────────╮
 @@ row 03
 upstream: │╔═════════════════════════════════════sqlite3.c════════════════════════════════
-local   : │╭───────────────────────────────Code Explorer────────────────────────────────╮│
+local   : │ 1 │ /*****************************************************                   │
 @@ row 04
 upstream: │║      1 /*********************************************************************
-local   : ││📁 src/                                                                     ││
+local   : │ 2 │ ** This file is an amalgamation of many separate C                       │
 @@ row 05
 upstream: │║      2 ** This file is an amalgamation of many separate C source files from S
-local   : ││  📁 FrankenTui.Core/                                                       ││
+local   : │ 3 │ ** source files from SQLite version 3.48.0.                              │
 @@ row 06
 upstream: │║      3 ** version 3.48.0.  By combining all the individual C code files into
-local   : ││    📄 Rect.cs          "Rectangle with position and size"                  ││
+local   : │ 4 │ ** By combining all individual C code files into                         │
 @@ row 07
 upstream: │║      4 ** single large file, the entire code can be compiled as a single tran
-local   : ││    📄 Cell.cs           "Terminal cell with char and style"                ││
+local   : │ 5 │ ** a single large file, the entire code can be                           │
 @@ row 08
 upstream: │║      5 ** unit.  This allows many compilers to do optimizations that would no
-local   : ││  📁 FrankenTui.Render/                                                     ││
+local   : │ 6 │ ** compiled as a single translation unit.                                │
 @@ row 09
 upstream: │║      6 ** possible if the files were compiled separately.  Performance improv
-local   : ││    📄 Buffer.cs         "2D cell buffer for rendering"                     ││
+local   : │ 7 │ ** This allows many compilers to do optimizations                        │
 @@ row 10
 upstream: │║      7 ** of 5% or more are commonly seen when SQLite is compiled as a single
-local   : ││    📄 Frame.cs          "Frame with buffer and registry"                   ││
+local   : │ 8 │ ** that would not be possible if files were                              │
 @@ row 11
 upstream: │║      8 ** translation unit.
-local   : ││  📁 FrankenTui.Widgets/                                                    ││
+local   : │ 9 │ ** compiled separately.                                                  │
 @@ row 12
 upstream: │║      9 **
-local   : ││    📄 Block.cs          "Bordered block widget"                            ││
+local   : │10 │ ** Performance improvements of 5% or more are                            │
 @@ row 13
 upstream: │║     10 ** This file is all you need to compile SQLite.  To use SQLite in othe
-local   : ││    📄 Paragraph.cs      "Text paragraph widget"                            ││
+local   : │11 │ ** commonly seen with single-unit compilation.                           │
 @@ row 14
 upstream: │║     11 ** programs, you need this file and the "sqlite3.h" header file that d
-local   : ││  📁 FrankenTui.Runtime/                                                    ││
+local   : │12 │ *****************************************************/                   │
 @@ row 15
 upstream: │║     12 ** the programming interface to the SQLite library.  (If you do not ha
-local   : ││    📄 Program.cs        "Main program loop"                                ││
+local   : │                                                                              │
 @@ row 16
 upstream: │║     13 ** the "sqlite3.h" header file at hand, you will find a copy embedded
-local   : ││                                                                            ││
+local   : │                                                                              │
 @@ row 17
 upstream: │║     14 ** the text of this file.  Search for "Begin file sqlite3.h" to find t
-local   : ││                                                                            ││
+local   : │                                                                              │
 @@ row 18
 upstream: │║     15 ** of the embedded sqlite3.h header file.) Additional code files may b
-local   : ││                                                                            ││
+local   : │                                                                              │
 @@ row 19
 upstream: │║     16 ** if you want a wrapper to interface SQLite with your choice of progr
-local   : ││                                                                            ││
+local   : │                                                                              │
 @@ row 20
 upstream: │╚══════════════════════════════════════════════════════════════════════════════
-local   : ││                                                                            ││
+local   : │                                                                              │
 @@ row 21
 upstream: │╭──────────────────────────────────Telemetry Deck──────────────────────────────
-local   : ││                                                                            ││
+local   : │                                                                              │
 @@ row 22
 upstream: ││IO Lane                      Cache Hit                   Lock + TX
-local   : │╰────────────────────────────────────────────────────────────────────────────╯│
+local   : │                                                                              │
 @@ row 23
 upstream: ││                                                         LCK██████░░░░░░░░░░░░
 local   : ╰──────────────────────────────────────────────────────────────────────────────╯

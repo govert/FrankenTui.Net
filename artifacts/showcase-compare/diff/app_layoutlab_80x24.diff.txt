@@ -2,76 +2,76 @@
 Upstream snapshot: app_layoutlab_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 1352
-Local nonblank chars: 756
-Local/upstream char ratio: 0.559
+Local nonblank chars: 554
+Local/upstream char ratio: 0.410
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: [Layout] │ 7: Forms
+local   : 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: [Layout] │ 7: Forms │
 @@ row 02
 upstream: ╭──────────────────────────────────────────────────────Layout Lab───────────────
 local   : ╭──────────────────────────────────Layout Lab──────────────────────────────────╮
 @@ row 03
 upstream: │╭─────────────────────────────────────────────── Layout + Pane Studio ─────────
-local   : │╭─────────────────────────────────Layout Lab─────────────────────────────────╮│
+local   : │Layout + Pane Studio  |  Preset: Flex Vertical  |  n/p: cycle presets  |  [/]:
 @@ row 04
 upstream: ││┌───────────────── Preset 1: Flex Vertical ──────────────────┐ ┌──────────────
-local   : ││Constraint Types:                                                           ││
+local   : │                                                                              │
 @@ row 05
 upstream: │││┌─────────────────────────Fixed(5)─────────────────────────┐│ │mode:Focus sel
-local   : ││                                                                            ││
+local   : │ ⢸⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⢽ ⣏⣉⣉⣉⣉⣉⡇                                      │
 @@ row 06
 upstream: ││││60x5 @(3,4)                                               ││ │┃
-local   : ││  Fixed(10)    — exactly 10 rows/cols                                       ││
+local   : │ ⢸⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⢺ ⡧⠤⠤⠤⠤⠤⡇                                      │
 @@ row 07
 upstream: ││││                                                          ││ │┃ 25x5  @66,4
-local   : ││  Min(5)       — at least 5, grows if space                                 ││
+local   : │ ⢸⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣹ ⡗⠒⠒⠒⠒⠒⡇                                      │
 @@ row 08
 upstream: ││││                                                          ││ │┃
-local   : ││  Max(20)      — at most 20, shrinks if needed                              ││
+local   : │                                 ⣏⣉⣉⣉⣉⣉⡇                                      │
 @@ row 09
 upstream: │││└──────────────────────────────────────────────────────────┘│ │──────────■■■■
-local   : ││  Percentage(50) — 50% of available space                                   ││
+local   : │                                                                              │
 @@ row 10
 upstream: │││┌─────────────────────────Pct(30%)─────────────────────────┐│ │╭───────5 pane
-local   : ││  Fill(1)     — takes remaining space                                       ││
+local   : │                                                                              │
 @@ row 11
 upstream: ││││60x3 @(3,9)                                               ││ ││
-local   : ││                                                                            ││
+local   : │                                                                              │
 @@ row 12
 upstream: │││└──────────────────────────────────────────────────────────┘│ ││ 25x6  @66,9
-local   : ││Layout direction: Vertical                                                  ││
+local   : │                                                                              │
 @@ row 13
 upstream: │││┌──────────────────────────Min(3)──────────────────────────┐│ ││
-local   : ││                                                                            ││
+local   : │                                                                              │
 @@ row 14
 upstream: ││││60x3 @(3,12)                                              ││ ││
-local   : ││Children:                                                                   ││
+local   : │                                                                              │
 @@ row 15
 upstream: │││└──────────────────────────────────────────────────────────┘│ │╰─────────────
-local   : ││  Fixed 3  → ███                                                            ││
+local   : │                                                                              │
 @@ row 16
 upstream: ││└────────────────────────────────────────────────────────────┘ └──────────────
-local   : ││  Min 5    → ████████                                                       ││
+local   : │                                                                              │
 @@ row 17
 upstream: │╰──────────────────────────────────────────────────────────────────────────────
-local   : ││  Max 6    → ██████                                                         ││
+local   : │                                                                              │
 @@ row 18
 upstream: │───────────────────────────────────────────────────────────────────────────────
-local   : ││  Fill     → ████████████████                                               ││
+local   : │                                                                              │
 @@ row 19
 upstream: │╭───────────────── Controls ──────────────────╮╭─────────────────────────── Wid
-local   : ││                                                                            ││
+local   : │                                                                              │
 @@ row 20
 upstream: ││Preset: [1] Flex Vertical                    ││┌Padding───────────────────────
-local   : ││                                                                            ││
+local   : │                                                                              │
 @@ row 21
 upstream: ││Direction: Vertical (d)                      │││
-local   : ││                                                                            ││
+local   : │                                                                              │
 @@ row 22
 upstream: ││Alignment: Start (a)                         │││
-local   : │╰────────────────────────────────────────────────────────────────────────────╯│
+local   : │FlexRoot req=44x15 got=44x15 min=0x0 | Fixed=44x3 | Min=44x4 | Max=44x6       │
 @@ row 23
 upstream: ││Gap: 0 (+/-)                                 ││└──────────────────────────────
 local   : ╰──────────────────────────────────────────────────────────────────────────────╯

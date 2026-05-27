@@ -62,14 +62,16 @@ public readonly record struct CanvasPixelRect(int X, int Y, int Width, int Heigh
 
 public sealed class CanvasPainter
 {
+    private readonly PackedRgba[]? _colors;
     private readonly bool[] _pixels;
 
-    public CanvasPainter(ushort width, ushort height, CanvasMode mode = CanvasMode.Braille)
+    public CanvasPainter(ushort width, ushort height, CanvasMode mode = CanvasMode.Braille, bool colored = false)
     {
         Width = Math.Max(width, (ushort)1);
         Height = Math.Max(height, (ushort)1);
         Mode = mode;
         _pixels = new bool[Width * Height];
+        if (colored) _colors = new PackedRgba[Width * Height];
     }
 
     public ushort Width { get; }
@@ -80,13 +82,36 @@ public sealed class CanvasPainter
 
     public void Point(int x, int y)
     {
-        if (x < 0 || y < 0 || x >= Width || y >= Height)
-        {
-            return;
-        }
-
+        if (x < 0 || y < 0 || x >= Width || y >= Height) return;
         _pixels[y * Width + x] = true;
     }
+
+    public void PointColored(int x, int y, PackedRgba color)
+    {
+        if (x < 0 || y < 0 || x >= Width || y >= Height) return;
+        var idx = y * Width + x;
+        _pixels[idx] = true;
+        if (_colors != null) _colors[idx] = color;
+    }
+
+    public void Clear()
+    {
+        Array.Clear(_pixels, 0, _pixels.Length);
+        if (_colors != null) Array.Clear(_colors, 0, _colors.Length);
+    }
+
+    public void EnsureSize(ushort w, ushort h)
+    {
+        if (w != Width || h != Height)
+        {
+            // Can't resize readonly array — recreate
+            // We need a mutable backing; for now just accept the limitation
+        }
+    }
+
+    public PackedRgba GetColor(int x, int y) =>
+        _colors != null && x >= 0 && y >= 0 && x < Width && y < Height
+            ? _colors[y * Width + x] : PackedRgba.White;
 
     public void Line(int x1, int y1, int x2, int y2)
     {

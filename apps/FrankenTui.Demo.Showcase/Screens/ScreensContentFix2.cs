@@ -168,15 +168,3 @@ internal static class Screen02Dashboard { public static IWidget Build(ShowcaseDe
         "╰─────────────────────╯  ╰──────────────────────────────╯"));
 }}
 
-internal static class Screen45Quake { public static IWidget Build(ShowcaseDemoState s) {
-    // Upstream: Quake E1M1 easter egg with braille rendering
-    return ShowcaseSurface.Panel("Quake E1M1 (Easter Egg)", string.Join("\n",
-        "WASD move · Arrows look · Space jump · F fire · V quality [Reduced] · R reset",
-        "",
-        "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿   ⢀⣮⣿⡿⠿⠿⠿⠿⠛⠛⠛⠛⠉",
-        "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿   ⣷⣄         ⣿",
-        "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿   ⣿⣿⣷⣄       ⣿",
-        "",
-        "Retro FPS renderer using braille and box-drawing characters.",
-        "Runs at ~30 FPS in terminal."));
-}}

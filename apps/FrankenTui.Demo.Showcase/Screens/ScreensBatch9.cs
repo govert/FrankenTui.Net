@@ -160,22 +160,3 @@ internal static class Screen23Intrinsic { public static IWidget Build(ShowcaseDe
     ]);
 }}
 
-internal static class Screen08DataViz { public static IWidget Build(ShowcaseDemoState s) {
-    // 3d_data.rs: chart rendering with blocks
-    return ShowcaseSurface.Panel("Data Viz", string.Join("\n",
-        "Chart: CPU Usage",
-        "100% ┤     ▄▄▄▄",
-        " 80% ┤   ▄▄████▄▄    ▄▄▄▄",
-        " 60% ┤  ▄█████████▄ ▄████▄",
-        " 40% ┤ ▄█████████████████▄",
-        " 20% ┤ ▄███████████████████▄",
-        "  0% └────────────────────────────",
-        "",
-        "Chart: Memory",
-        "100% ┤ ████████████████████",
-        " 80% ┤ ████████████████████",
-        " 60% ┤ ██████████▌",
-        " 40% ┤ ██████████▌",
-        " 20% ┤ █████▌",
-        "  0% └────────────────────────────"));
-}}

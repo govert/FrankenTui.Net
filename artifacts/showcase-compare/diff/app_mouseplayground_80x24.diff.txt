@@ -2,13 +2,13 @@
 Upstream snapshot: app_mouseplayground_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 841
-Local nonblank chars: 784
-Local/upstream char ratio: 0.932
+Local nonblank chars: 787
+Local/upstream char ratio: 0.936
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+local   : 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 @@ row 02
 upstream: ╭───────────────────────────────────────────────────Mouse Playground────────────
 local   : ╭───────────────────────────────Mouse Playground───────────────────────────────╮
