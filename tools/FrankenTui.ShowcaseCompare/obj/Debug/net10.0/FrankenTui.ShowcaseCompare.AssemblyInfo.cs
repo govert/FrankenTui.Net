@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FrankenTui.ShowcaseCompare")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0c3d07e43b9fa4337481e41bf521edbbf947fcfd")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6862f830d5fd7d5c78cb470867bf2fe7c0134411")]
 [assembly: System.Reflection.AssemblyProductAttribute("FrankenTui.ShowcaseCompare")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FrankenTui.ShowcaseCompare")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

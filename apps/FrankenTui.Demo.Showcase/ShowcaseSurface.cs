@@ -274,7 +274,7 @@ internal static class ShowcaseSurface
             "kanban_board" => Screen42Kanban.Build(state),
             "markdown_live_editor" => Screen43MarkdownLive.Build(state),
             "drag_drop" => Screen44DragDrop.Build(state),
-            "quake_easter_egg" => Screen45Quake.Build(state),
+            "quake_easter_egg" => Screen45QuakePort.Build(state),
             _ => BuildPlaceholder(state)
         };
 
