@@ -68,7 +68,8 @@ def ansi_to_grid(data, width=80, height=24):
 def write_snapshot(screen, width=80, height=24):
     data = capture_ansi(screen, width, height)
     grid = ansi_to_grid(data, width, height)
-    result = '\n'.join(''.join(r).rstrip() for r in grid)
+    # Don't rstrip — preserve all border characters and positioning
+    result = '\n'.join(''.join(r) for r in grid)
     
     os.makedirs(UPSTREAM_DIR, exist_ok=True)
     slug = SLUGS.get(screen, f'screen{screen}')
