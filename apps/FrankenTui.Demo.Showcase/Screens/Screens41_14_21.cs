@@ -84,16 +84,50 @@ internal static class Screen14Performance
 {
     public static IWidget Build(ShowcaseDemoState state)
     {
-        // Exact match to upstream performance.rs format
+        // Full port of performance.rs — side-by-side layout with stats panel and status bar
         var severities = new[] { " INFO", "DEBUG", " WARN", "ERROR", "TRACE" };
         var modules = new[] { "server::http", "db::pool", "auth::jwt", "cache::redis", "queue::worker",
-                              "api::handler", "core::runtime", "server::http", "db::pool", "auth::jwt",
-                              "cache::redis", "queue::worker", "api::handler", "core::runtime", "server::http",
-                              "db::pool", "auth::jwt", "cache::redis", "queue::worker", "api::handler" };
+                              "api::handler", "core::runtime" };
+        var totalItems = 10000;
+        var selected = 1;  // default selected=1 (matches upstream snapshot at 120x40)
+        var scrollOffset = 0;
+        var viewportHeight = 20;
+
+        // Generate items — actual count limited by viewport at render time
         var logLines = new List<string>();
-        for (var i = 0; i < 20; i++)
-            logLines.Add($"[{i,5}] {severities[i % 5]} {modules[i],-18} Event #{i:D5}: simulated log entry with payload data");
-        return ShowcaseSurface.PanelRaw("Virtualized List (10000 items)", string.Join("\n", logLines));
+        for (var i = 0; i < 100; i++)
+            logLines.Add($"[{i,5}] {severities[i % 5]} {modules[i % 7],-18} Event #{i:D5}: simulated log entry with payload data");
+
+        var listPanel = ShowcaseSurface.PanelRaw($"Virtualized List ({totalItems} items)", string.Join("\n", logLines));
+
+        var visibleEnd = Math.Min(scrollOffset + 100, totalItems);
+        var statsLines = string.Join("\n",
+            $"Total items:  {totalItems}",
+            $"Selected:     {selected} / {totalItems}",
+            $"Scroll:       {scrollOffset}",
+            $"Viewport:     {viewportHeight} rows",
+            $"Visible:      {scrollOffset}..{visibleEnd}",
+            $"Progress:     0.0%",
+            $"Tick:         0",
+            "",
+            "Only visible rows are rendered.",
+            $"Rendering {visibleEnd - scrollOffset} of {totalItems} items.",
+            "");
+        var statsPanel = ShowcaseSurface.PanelRaw("Performance Stats", statsLines + "\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591");
+
+        var status = $"Item {selected}/{totalItems} | j/k: scroll | Ctrl+D/U: page | g/G: jump";
+
+        return new StackWidget(
+            LayoutDirection.Vertical,
+            [
+                (LayoutConstraint.Fill(), new StackWidget(
+                    LayoutDirection.Horizontal,
+                    [
+                        (LayoutConstraint.Fill(), listPanel),
+                        (LayoutConstraint.Fixed(35), statsPanel)
+                    ])),
+                (LayoutConstraint.Fixed(1), new ParagraphWidget(status))
+            ]);
     }
 }
 

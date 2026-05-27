@@ -1,24 +1,24 @@
 ﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
 ╭─────────────────────────────────Performance──────────────────────────────────╮
-│╭───────────────────────Virtualized List (10000 items)───────────────────────╮│
-││[    0]  INFO server::http       Event #00000: simulated log entry with payl││
-││[    1] DEBUG db::pool           Event #00001: simulated log entry with payl││
-││[    2]  WARN auth::jwt          Event #00002: simulated log entry with payl││
-││[    3] ERROR cache::redis       Event #00003: simulated log entry with payl││
-││[    4] TRACE queue::worker      Event #00004: simulated log entry with payl││
-││[    5]  INFO api::handler       Event #00005: simulated log entry with payl││
-││[    6] DEBUG core::runtime      Event #00006: simulated log entry with payl││
-││[    7]  WARN server::http       Event #00007: simulated log entry with payl││
-││[    8] ERROR db::pool           Event #00008: simulated log entry with payl││
-││[    9] TRACE auth::jwt          Event #00009: simulated log entry with payl││
-││[   10]  INFO cache::redis       Event #00010: simulated log entry with payl││
-││[   11] DEBUG queue::worker      Event #00011: simulated log entry with payl││
-││[   12]  WARN api::handler       Event #00012: simulated log entry with payl││
-││[   13] ERROR core::runtime      Event #00013: simulated log entry with payl││
-││[   14] TRACE server::http       Event #00014: simulated log entry with payl││
-││[   15]  INFO db::pool           Event #00015: simulated log entry with payl││
-││[   16] DEBUG auth::jwt          Event #00016: simulated log entry with payl││
-││[   17]  WARN cache::redis       Event #00017: simulated log entry with payl││
-│╰────────────────────────────────────────────────────────────────────────────╯│
+│╭─────Virtualized List (10000 items)──────╮╭────────Performance Stats────────╮│
+││[    0]  INFO server::http       Event #0││Total items:  10000              ││
+││[    1] DEBUG db::pool           Event #0││Selected:     1 / 10000          ││
+││[    2]  WARN auth::jwt          Event #0││Scroll:       0                  ││
+││[    3] ERROR cache::redis       Event #0││Viewport:     20 rows            ││
+││[    4] TRACE queue::worker      Event #0││Visible:      0..100             ││
+││[    5]  INFO api::handler       Event #0││Progress:     0.0%               ││
+││[    6] DEBUG core::runtime      Event #0││Tick:         0                  ││
+││[    7]  WARN server::http       Event #0││                                 ││
+││[    8] ERROR db::pool           Event #0││Only visible rows are rendered.  ││
+││[    9] TRACE auth::jwt          Event #0││Rendering 100 of 10000 items.    ││
+││[   10]  INFO cache::redis       Event #0││░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░   ││
+││[   11] DEBUG queue::worker      Event #0││                                 ││
+││[   12]  WARN api::handler       Event #0││                                 ││
+││[   13] ERROR core::runtime      Event #0││                                 ││
+││[   14] TRACE server::http       Event #0││                                 ││
+││[   15]  INFO db::pool           Event #0││                                 ││
+││[   16] DEBUG auth::jwt          Event #0││                                 ││
+│╰─────────────────────────────────────────╯╰─────────────────────────────────╯│
+│Item 1/10000 | j/k: scroll | Ctrl+D/U: page | g/G: jump                       │
 ╰──────────────────────────────────────────────────────────────────────────────╯
 Performance [14/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)
