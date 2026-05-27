@@ -1,0 +1,24 @@
+ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
+╭────────────────────────────────────────────────Performance Challenge──────────
+│PERFORMANCE CHALLENGE MODE — DEGRADATION TIERS                                 
+│╭──────Real-Time Metrics───────╮╭──────────────Tick Intervals (µs)─────────────
+││  Sim FPS:         9.5 (Minima││            █                                 
+││  Obs FPS:         9.5        ││     █      █           ▇ ▇                  5
+43237ms avgte:       9.5 tps    ││     █      █           █ █                  5
+4327ms (+0.0ms)67ms (+0.0ms)     │     █   █  █   █       █ █                  3
+2Usage:  608%                    │   ▇ █   █  █   █   █   █ █                   
+││  avg:    105.54              ││ █ █ █   █  █   █   █   █ █                   
+││  p50:    101.15              ││ █ █ █   █  █   █   █   █ █                   
+ █  p95:    115.81               │ █ █ █   █  █   █   █   █ █                   
+││  p99:    116.60              ││ █ █ █   █  █   █   █   █ █                   
+││  min:    100.09              ││ █ █ █   █  █   █   █   █ █                  5
+.0fpsax:    116.60              ││ █ █ █   █  █   █   █   █ █                   
+││                              ││ █ █ █   █  █   █   █   █ █                   
+││  Counters                    ││ █ █ █   █  █   █   █   █ █                   
+││  Views:            29        ││ ███ █   █  █   █   █   █ █                   
+││  Ticks:            28        ││ ███ █   █  █   █   █   █ █                   
+││  Samples:          27        ││ ███ █   █  █   █   █   █ █                   
+ ██░░ Minimal       1.00         │ ███ █   █  █   █   █   █ █                   
+││                              ││ ███ █   █  █   █   █   █ █                   
+││  Stress Harness              ││▄███ █   █  █   █ █ █   █ █                   
+0/120 budget:17ms | samples:0/120 ██████  ▆██ █ █ █ █▆███ ███                   

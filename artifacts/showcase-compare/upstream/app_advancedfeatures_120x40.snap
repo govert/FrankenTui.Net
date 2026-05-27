@@ -1,0 +1,30 @@
+ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8: DataViz │ 9: Files │ 0: Adv
+╭───────────────────────────────────────────────────────Advanced───────────────────────────────────────────────────────╮
+│╭─────────────────────Error Traceback─────────────────────╮╭────────────────────Timers & Spinners────────────────────╮│
+││── Application Error ──                                  ││Compact timer: 4m57.3s (0%)                              ││
+││  File "src/main.rs", line 42, in main                   ││Clock timer:   01:57 (2%)                                ││
+││   40 │ fn main() -> Result<()> {                        ││                                                         ││
+││   41 │     let config = Config::load()?;                ││Spinners:                                                ││
+││ ❱ 42 │     app::run(config)?;                           ││dots        ⠧                                            ││
+││   43 │     Ok(())                                       ││line        \                                            ││
+││   44 │ }                                                ││braille     ⠧                                            ││
+││  File "src/app.rs", line 128, in run                    ││Progress: ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  ││
+││   125 │ pub fn run(config: Config) -> Result<()> {      │╰─────────────────────────────────────────────────────────╯│
+││   126 │     let db = Database::connect(&config.db_url)?;│╭─────────────────────Macro Recorder──────────────────────╮│
+││   127 │     let server = Server::new(db);               ││State: Idle                                              ││
+││ ❱ 128 │     server.listen(config.port)?;                ││Macro: none                                              ││
+││   129 │     Ok(())                                      ││Events: 0                                                ││
+││   130 │ }                                               ││Duration: -                                              ││
+││  File "src/database.rs", line 56, in connect            ││Speed: 1.00x                                             ││
+││   53 │ pub fn connect(url: &str) -> Result<Self> {      ││Loop: Off                                                ││
+││   54 │     let pool = Pool::builder()                   │╰─────────────────────────────────────────────────────────╯│
+││   55 │         .max_size(10)                            │╭───────────────────────System Info───────────────────────╮│
+││ ❱ 56 │         .build(url)?;                            ││FrankenTUI Demo Showcase                                 ││
+││   57 │     Ok(Self { pool })                            ││                                                         ││
+││   58 │ }                                                ││Framework: ftui (Rust)                                   ││
+││ConnectionError: failed to connect to database: connectio││Rendering: 16-byte Cell model                            ││
+││                                                         ││Color: 24-bit true color (RGB)                           ││
+│╰─────────────────────────────────────────────────────────╯╰─────────────────────────────────────────────────────────╯│
+│Tick: 27 | Ctrl+←/→: panels | r: reset | Space: pause | Macro: r/p/l +/-                                              │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+ Advanced [10/45]  Cyberpunk Aurora [h] [cmd] [p] [d]  Mouse: OFF (forced)      Tab/Shift+Tab: next/prev      0x0 00:02

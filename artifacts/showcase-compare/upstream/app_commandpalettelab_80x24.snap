@@ -1,0 +1,24 @@
+ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
+╭─────────────────────────────────────────────Command Palette Evidence Lab──────
+│Match Mode: 0 All  1 Exact  2 Prefix  3 WordStart  4 Substring  5 Fuzzy        
+│Type to filter · ↑/↓ navigate · Enter execute · b bench · m cycle              
+│                                                                  ╭────────────
+│                                                                  │Selected: Go
+│                                                                  │Match: Subst
+│                                                                  │Why this won
+│             ╭───────── Command Palette ──────────╮               │substring   
+│             │>log                                │               │            
+│             │> [Navigation] Go to Log Search     │               │MatchType: B
+│             │                                    │               │substring   
+│             ╰────────────────────────────────────╯               │Position: BF
+│                                                                  │position 6  
+│                                                                  │WordBoundary
+│                                                                  │matches     
+│                                                                  │TitleLength:
+│                                                                  │of title    
+│                                                                  │            
+│                                                                  │            
+│                                                                  │╭─Bench (det
+│                                                                  ││Status: OFF
+│                                                                  ││Processed: 
+ Tab/Shift+Tab: next/prev     0x0 00:00                            ││Latency: 0u

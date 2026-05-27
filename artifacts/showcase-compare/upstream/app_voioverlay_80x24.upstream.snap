@@ -1,0 +1,24 @@
+ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
+╭─────────────────────────────────────────────────────VOI Overlay───────────────
+│ src: inline-auto|fallback  focus: —  Tab:section v:detail n/p:ledger          
+│                                                                               
+│                         ╭───────────────────────────VOI Overlay───────────────
+│                         │VOI Overlay (tick 28) [demo:fallback]                
+│                         │-----------------------------------------------------
+│                         │Decision: SKIP    reason: voi_lt_cost                
+│                         │log10 BF: -2.152  score/cost                         
+│                         │E: 0.951 / 20.00  boundary: 0.247                    
+│                         │                                                     
+                          │Posterior Core                                       
+│                         │-----------------------------------------------------
+-----------               │p ~ Beta(a,b)  a=1.00  b=11.00                       
+│                         │mu=0.0833  Var=0.005876                              
+│                         │VOI = Var[p] - E[Var|1]                              
+│                         │VOI = 0.005876 - 0.005424 = 0.000452                 
+│                         │                                                     
+│                         │Decision Equation                                    
+│                         │-----------------------------------------------------
+-----------               │score=0.000564  cost=0.080000                        
+│                         │log10 BF = log10(0.000564/0.080000) = -2.152         
+│                         │                                                     
+-----------Tab: next/prev  Last Sample                                          

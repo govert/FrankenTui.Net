@@ -1,0 +1,50 @@
+ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8: DataViz │ 9: Files │ 0: Adv                                                                                           
+╭───────────────────────────────────────────────────Mermaid Showcase───────────────────────────────────────────────────╮                                                                                
+│Mermaid Showcase | Flow Basic (1/29) | Layout: Auto | Score: 0.8 | Viewport: auto | OK                                │                                                                                
+│╭─────────────Samples─────────────╮╭────────────────────────────────────Viewport─────────────────────────────────────╮│                                                                                
+││> Flow Basic [flow, S, branch, de││                                                                                 ││                                                                                
+││  Flow Subgraphs [flow, M, subgra││                                                                                 ││                                                                                
+││  Flow Dense [flow, L, dense, dag││                                                          OK     ⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶ ││                                                                                
+││  Flow Long Labels [flow, M, labe││                                                                 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿ ││                                                                                
+││  Flow Unicode [flow, S, unicode,││                                                         ⡲⡶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿ ││                                                                                
+││  Flow Styles [flow, M, classdef,││ ⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤                ⣀⣀⣤⣄⣀        Yes⣀⠔⠉ ⠁⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛ ││                                                                                
+││  Sequence Mini [sequence, S, com││ ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿   Start    ⣄⡀ ⣀⣀⣤⣴   Check   ⣦⣤⣀⣀ ⢀⠤⠊                           ││                                                                                
+││  Sequence Checkout [sequence, M,││ ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿            ⠟⠋⠉⠙⠛⠻⠿           ⠿⠿⠛⠛⠉⠑⠤⡀                           ││                                                                                
+││  Sequence Dense [sequence, L, de││ ⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛               ⠈⠉⠙⠛⠛⠉⠉         ⠈⠒⢄   ⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤ ││                                                                                
+││  Class Basic [class, S, inherita││                                                   No   ⠉⣢⣧⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿ ││                                                                                
+││  Class Members [class, M, fields││                                                          Fix    ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿ ││                                                                                
+││  State Basic [state, S, start-en││                                                                 ⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿ ││                                                                                
+││  State Composite [state, M, comp││                                                                                 ││                                                                                
+││  ER Basic [er, M, cardinality, r││                                                                                 ││                                                                                
+││  Gantt Basic [gantt, M, sections│╰─────────────────────────────────────────────────────────────────────────────────╯│                                                                                
+││  Mindmap Seed [mindmap, S, tree]│╭─────────────────────────────────────Metrics─────────────────────────────────────╮│                                                                                
+││  Mindmap Deep [mindmap, L, deep,││Cache: hit 27  miss 1  last hit                                                  ││                                                                                
+││  Pie Basic [pie, S, title, showd││Warnings: 0                                                                      ││                                                                                
+││  Pie Many [pie, M, many-slices] ││Parse: 0.05 ms                                                                   ││                                                                                
+││  Gitgraph Basic [gitgraph, M, gi││Layout: 0.04 ms                                                                  ││                                                                                
+││  Journey Basic [journey, M, jour││Render: 0.00 ms                                                                  ││                                                                                
+││  Requirement Basic [requirement,││Viewport: auto                                                                   ││                                                                                
+│╰─────────────────────────────────╯╰─────────────────────────────────────────────────────────────────────────────────╯│                                                                                
+│j/k sample  Enter render  l layout  u links  m metrics  ? help                                                        │                                                                                
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯                                                                                
+ Mermaid Showcase [16/45]  Cyberpunk Aurora [h] [cmd] [p] [d]  Mouse: OFF (forced)  Tab/Shift+Tab: next/prev  0x0 00:02                                                                                 
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        

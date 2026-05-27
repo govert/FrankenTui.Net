@@ -1,0 +1,50 @@
+ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8: DataViz │ 9: Files │ 0: Adv                                                                                           
+╭─────────────────────────────────────────────Command Palette Evidence Lab─────────────────────────────────────────────╮                                                                                
+│Match Mode: 0 All  1 Exact  2 Prefix  3 WordStart  4 Substring  5 Fuzzy                                               │                                                                                
+│Type to filter · ↑/↓ navigate · Enter execute · b bench · m cycle                                                     │                                                                                
+│                                                                  ╭─────────────────Evidence Ledger──────────────────╮│                                                                                
+│                                                                  │Selected: Go to Log Search                        ││                                                                                
+│                                                                  │Match: Substring  P=74.3%  BF=2.89                ││                                                                                
+│                                                                  │Why this won: Go to Log Search · contiguous       ││                                                                                
+│             ╭───────── Command Palette ──────────╮               │substring                                         ││                                                                                
+│             │>log                                │               │                                                  ││                                                                                
+│             │> [Navigation] Go to Log Search     │               │MatchType: BF=2.00 (supports) - contiguous        ││                                                                                
+│             │                                    │               │substring                                         ││                                                                                
+│             ╰────────────────────────────────────╯               │Position: BF=1.07 (supports) - first match at     ││                                                                                
+│                                                                  │position 6                                        ││                                                                                
+│                                                                  │WordBoundary: BF=1.30 (supports) - 1 word boundary││                                                                                
+│                                                                  │matches                                           ││                                                                                
+│                                                                  │TitleLength: BF=1.04 (supports) - query covers 19%││                                                                                
+│                                                                  │of title                                          ││                                                                                
+│                                                                  │                                                  ││                                                                                
+│                                                                  │                                                  ││                                                                                
+│                                                                  │╭─Bench (deterministic)─╮ ╭─────Hint Ranker──────╮││                                                                                
+│                                                                  ││Status: OFF  QPS: 0.0  │ │1. Enter Execute      │││                                                                                
+│                                                                  ││Processed: 0  Query: - │ │EU=0.83  V=0.75       │││                                                                                
+│                                                                  ││Latency: 0us  (<       │ │2. Ctrl+P Open Palette│││                                                                                
+│                                                                  ││1000us)                │ │EU=0.88  V=0.75       │││                                                                                
+│                                                                  ││                       │ │3. ↑/↓ Navigate       │││                                                                                
+│                                                                  │╰───────────────────────╯ ╰──────────────────────╯││                                                                                
+│                                                                  ╰──────────────────────────────────────────────────╯│                                                                                
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯                                                                                
+ Command Palette Evidence Lab [39/45] [h] [cmd] [p] [d]  Mouse: OFF (forced)     Tab/Shift+Tab: next/prev     0x0 00:02                                                                                 
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        

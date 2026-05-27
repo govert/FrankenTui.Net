@@ -1,0 +1,50 @@
+ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8: DataViz │ 9: Files │ 0: Adv                                                                                           
+╭────────────────────────────────────────────────Performance Challenge─────────────────────────────────────────────────╮                                                                                
+│PERFORMANCE CHALLENGE MODE — DEGRADATION TIERS                                                                        │                                                                                
+│╭──────Real-Time Metrics───────╮╭──────────────Tick Intervals (µs)───────────────╮╭──────────Render Budget───────────╮│                                                                                
+││  Sim FPS:         9.1 (Minima││          █                                     ││  Budget: 16.67ms (60fps target)  ││                                                                                
+││  Obs FPS:         9.1        ││          █                                     ││  Observed: 110.42ms avg          ││                                                                                
+││  Tick Rate:       9.1 tps    ││          █                                     ││  Simulated: 110.42ms (+0.0ms)    ││                                                                                
+││                              ││          █                                     ││  Usage:  662%                    ││                                                                                
+││  Latency (ms)                ││          █                                     ││                                  ││                                                                                
+││  avg:    110.42              ││          █                                     ││  Budget Bar                      ││                                                                                
+││  p50:    110.44              ││          █                                     ││  ██████████████████████████████  ││                                                                                
+││  p95:    111.26              ││          █                                     ││                                  ││                                                                                
+││  p99:    112.60              ││         ██     ▅     █                         ││  Stress Harness                  ││                                                                                
+││  min:    109.08              ││         ██     ██    █                         ││  Mode: Off  | Load   0% | ~9.1fps││                                                                                
+││  max:    112.60              ││ █       ██     ██    █                         ││  Decision: stable                ││                                                                                
+││                              ││ █    █ ▅██ █ █ ██    █                         ││  Last change: tick 3 (recover)   ││                                                                                
+││  Counters                    ││ █    █ ███ █ █ ███▆█ █                         ││                                  ││                                                                                
+││  Views:            28        ││ █    █ ███ █ █ █████ █ █                       ││                                  ││                                                                                
+││  Ticks:            27        ││ █    █████ █████████ █▇█                       ││  Degradation Tier                ││                                                                                
+││  Samples:          26        ││ █▅   █████ █████████ ███                       ││  ██░░ Minimal                    ││                                                                                
+││  V/Tick:         1.00        ││ ███  ████████████████████                      ││                                  ││                                                                                
+││                              ││▆███  ████████████████████                      ││  Thresholds                      ││                                                                                
+││  Stress Harness              ││█████ ████████████████████                      ││  ◇ Full     ≥50fps               ││                                                                                
+││  Mode: Off  | Load   0% (+0.0││█████ ████████████████████                      ││  ◇ Reduced  20–49fps             ││                                                                                
+││  Decision: stable            ││112598µs                                        ││  ◆ Minimal  5–19fps              ││                                                                                
+││                              ││109084µs                                        ││  ◇ Safety   <5fps                ││                                                                                
+│╰──────────────────────────────╯╰────────────────────────────────────────────────╯╰──────────────────────────────────╯│                                                                                
+│s:stress(Off) | c:cool | r:reset | p:pause | m:mode(intervals) | 1-4:tier(Minimal) | budget:17ms | samples:26/120     │                                                                                
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯                                                                                
+ Performance Challenge [32/45] [h] [cmd] [p] [d]  Mouse: OFF (forced)        Tab/Shift+Tab: next/prev         0x0 00:02                                                                                 
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        

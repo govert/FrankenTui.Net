@@ -1,0 +1,31 @@
+ 1: Tour â”‚ 2: Dash â”‚ 3: Shakes â”‚ 4: Code â”‚ 5: Widgets â”‚ 6: Layout â”‚ 7: Forms â”‚ 8: DataViz â”‚ 9: Files â”‚
+â•­â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+â”‚â•­â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€Virtualized List (10000 items)â”€â”€â”€
+â”‚â”‚[    0]  INFO server::http       Event #00000: simulated log entry with payload dâ”‚â”‚Total items:  10000
+â”‚â”‚[    1] DEBUG db::pool           Event #00001: simulated log entry with payload dâ”‚â”‚Selected:     1 / 10000
+â”‚â”‚[    2]  WARN auth::jwt          Event #00002: simulated log entry with payload dâ”‚â”‚Scroll:       0
+â”‚â”‚[    3] ERROR cache::redis       Event #00003: simulated log entry with payload dâ”‚â”‚Viewport:     23 rows
+â”‚â”‚[    4] TRACE queue::worker      Event #00004: simulated log entry with payload dâ”‚â”‚Visible:      0..23
+â”‚â”‚[    5]  INFO api::handler       Event #00005: simulated log entry with payload dâ”‚â”‚Progress:     0.0%
+â”‚â”‚[    6] DEBUG core::runtime      Event #00006: simulated log entry with payload dâ”‚â”‚Tick: 18      0
+â”‚â”‚[    7]  WARN server::http       Event #00007: simulated log entry with payload dâ”‚â”‚
+â”‚â”‚[    8] ERROR db::pool           Event #00008: simulated log entry with payload dâ”‚â”‚Only visible rows are rende
+â”‚â”‚[    9] TRACE auth::jwt          Event #00009: simulated log entry with payload dâ”‚â”‚Rendering 23 of 10000 items
+â”‚â”‚[   10]  INFO cache::redis       Event #00010: simulated log entry with payload dâ”‚â”‚â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘
+â”‚â”‚[   11] DEBUG queue::worker      Event #00011: simulated log entry with payload dâ”‚â”‚
+â”‚â”‚[   12]  WARN api::handler       Event #00012: simulated log entry with payload dâ”‚â”‚
+â”‚â”‚[   13] ERROR core::runtime      Event #00013: simulated log entry with payload dâ”‚â”‚
+â”‚â”‚[   14] TRACE server::http       Event #00014: simulated log entry with payload dâ”‚â”‚
+â”‚â”‚[   15]  INFO db::pool           Event #00015: simulated log entry with payload dâ”‚â”‚
+â”‚â”‚[   16] DEBUG auth::jwt          Event #00016: simulated log entry with payload dâ”‚â”‚
+â”‚â”‚[   17]  WARN cache::redis       Event #00017: simulated log entry with payload dâ”‚â”‚
+â”‚â”‚[   18] ERROR queue::worker      Event #00018: simulated log entry with payload dâ”‚â”‚
+â”‚â”‚[   19] TRACE api::handler       Event #00019: simulated log entry with payload dâ”‚â”‚
+â”‚â”‚[   20]  INFO core::runtime      Event #00020: simulated log entry with payload dâ”‚â”‚
+â”‚â”‚[   21] DEBUG server::http       Event #00021: simulated log entry with payload dâ”‚â”‚
+â”‚â”‚[   22]  WARN db::pool           Event #00022: simulated log entry with payload dâ”‚â”‚
+â”‚â•°â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+â”‚Item 1/10000 | j/k: scroll | Ctrl+D/U: page | g/G: jump
+â•°â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+ Performance [14/45]  Cyberpunk Aurora [h] [cmd] [p] [d]  Mouse: OFF (forced)    Tab/Shift+Tab: next/prev     0x0 00:01
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â•¯

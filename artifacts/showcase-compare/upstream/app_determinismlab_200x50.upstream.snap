@@ -1,0 +1,50 @@
+ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8: DataViz │ 9: Files │ 0: Adv                                                                                           
+╭───────────────────────────────────────────────────Determinism Lab────────────────────────────────────────────────────╮                                                                                
+│Determinism Lab  Seed: 7  Frame: 27  Status: Live  Fault: off                                                         │                                                                                
+│                                                                                                                      │                                                                                
+│┌Equivalence──────────────────────────────────────────────────────────┐┌Scene Preview────────────────────────────────┐│                                                                                
+││Strategy  Changes   Checksum             Status                      ││OTYFKRM...STQ..XOL..CFMX.N....ODI.C.SBEB.LM..││                                                                                
+││Full            52   0x977b9ee8257bc8ba   OK                         ││.PED.TQ.OLEBAFWFEJCDKP.FIXAPK.WXELIHGX.FGZON.││                                                                                
+││DirtyRows       52   0x977b9ee8257bc8ba   OK                         ││.FQP..W.GT.ROZ.NQZKBE.Q...QV...JI.Q.S.Y.ILED.││                                                                                
+││FullRedraw    1080   0x977b9ee8257bc8ba   OK                         ││AJYH.OY.UXM..BAFSNODKDSVENY.MJG.MD.ZKTWVQ.OPY││                                                                                
+││                                                                     ││WJQXYP.FUFURULORWT...BCBQFQ..DC.UNCVUNW.CPSXQ││                                                                                
+││Timeline: d2b782 cbc6d1 00f37d 0e44b9 2d3750 347b12 ef8dd7 89442b 33c││QPW.QRQPG....JKBMXMJ.F.Z..MHMFAJKXK.QNU..T.ZA││                                                                                
+││                                                                     ││...Z.D...PO..N..G..H.DY....NML.VG.KLUD.XCLQX.││                                                                                
+││Scenario: Baseline (10f)                                             ││GNCHQHGHANWZITSJO.A..NSJQXKJUVOVC.SZEH.XAFQRY││                                                                                
+││Controls: 1/2/3 strategy  [/] seed  Space pause  F fault  E export  E││KRKPMZKPKPWRSZW.URANCPKFEFY.STODUFSFKBO.MRE.G││                                                                                
+││No runs yet. Click a scenario or press Enter.                        ││YNAPEX.HIXW.ALOOCHW.OHOD.F.ZINIR.FCR..UBO..BK││                                                                                
+││Keys: Enter/R run selected  A run all  C log checksum                ││YTQVWTGDOXAJY.OTETUVQNAJEJW.EBMLAR.JKVWXMHG.Q││                                                                                
+││                                                                     │└─────────────────────────────────────────────┘│                                                                                
+││                                                                     │┌Checks───────────────────────────────────────┐│                                                                                
+││                                                                     ││Scenarios  (click/Enter)  A all              ││                                                                                
+││                                                                     ││> Baseline (10f)                             ││                                                                                
+││                                                                     ││  Drift (30f)                                ││                                                                                
+││                                                                     ││  Fault Injection (1f)                       ││                                                                                
+││                                                                     ││Runs  (click row to inspect)                 ││                                                                                
+││                                                                     ││                                             ││                                                                                
+││                                                                     ││                                             ││                                                                                
+││                                                                     ││                                             ││                                                                                
+││                                                                     ││                                             ││                                                                                
+│└─────────────────────────────────────────────────────────────────────┘└─────────────────────────────────────────────┘│                                                                                
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯                                                                                
+ Determinism Lab [40/45]  Cyberpunk Aurora [h] [cmd] [p] [d]  Mouse: OFF (forced)  Tab/Shift+Tab: next/prev   0x0 00:02                                                                                 
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        

@@ -1,0 +1,24 @@
+ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
+╭──────────────────────────────────────────────────────Dashboard────────────────
+│FRANKENTUI DASHBOARD                                                           
+│╭──────Plasma───────╮╭─────────Charts · Pulse─────────╮╭────Code · Rust (1/28)─
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││g:cycle · sparklines + mini bars││// runtime.rs          
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││CPU ▃ ▃▃▂▂▁▁▄▃▄▂▅▅▅▆▂▄▅▃▆▅▄▄ 41%││use std::{collections::
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││MEM ▅▂ ▃▁▄▄▂▂▇▅▃▅▂▃▄▆▄▇█▂▆▅▄ 42%││                       
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││NET ▁▁▁▁▁  ▁   ▇▁▁    ▁ █▁▁▁▁ 25││use ftui_core::event::E
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││OUT ▁▁▁▃▁█  ▁▁ ▁  ▁▁▇    ▁    73││use ftui_render::cell::
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││EPS █  76% DSK █  67% IO  ░   4%││Click → Code Explorer  
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                │╰───────────────────────
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                │╭───────────Info────────
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                ││Status:NOMINAL FPS:9   
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                ││EPS:1145  118x26       
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                ││Cyberpunk Aurora       
+││Click → Visual Effe││Click → Data Viz                ││Click → Performance    
+│╰───────────────────╯╰────────────────────────────────╯╰───────────────────────
+│╭Text FX · 3-Up (1/2│╭───────────Activity────────────│╭────Markdown · Complete─
+─│Sample 1 of 3 · 3-U││SEV TIME  COMP  MESSAGE        ││FrankenTUI Field Notes  
+││1 · None · S1      ││ INFO  00:02   CPU spike detect││                        
+││# FX Lab · Determin││ INFO  00:02   CPU spike detect│││ Goal: deterministic ou
+tpu · FadeIn · S2    ││                               ││                        
+││## GFM Stress · Led⋮│                               ⋮│Highlights              
+Tab/Shift+Tab: next/prev      0x0 00:00               ││✓ Inline mode with      

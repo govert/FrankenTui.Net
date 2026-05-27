@@ -1,0 +1,50 @@
+ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8: DataViz │ 9: Files │ 0: Adv                                                                                           
+╭─────────────────────────────────────────────────────Performance──────────────────────────────────────────────────────╮                                                                                
+│╭─────────────────────────Virtualized List (10000 items)──────────────────────────╮╭────────Performance Stats────────╮│                                                                                
+││[    0]  INFO server::http       Event #00000: simulated log entry with payload d││Total items:  10000              ││                                                                                
+││[    1] DEBUG db::pool           Event #00001: simulated log entry with payload d││Selected:     1 / 10000          ││                                                                                
+││[    2]  WARN auth::jwt          Event #00002: simulated log entry with payload d││Scroll:       0                  ││                                                                                
+││[    3] ERROR cache::redis       Event #00003: simulated log entry with payload d││Viewport:     23 rows            ││                                                                                
+││[    4] TRACE queue::worker      Event #00004: simulated log entry with payload d││Visible:      0..23              ││                                                                                
+││[    5]  INFO api::handler       Event #00005: simulated log entry with payload d││Progress:     0.0%               ││                                                                                
+││[    6] DEBUG core::runtime      Event #00006: simulated log entry with payload d││Tick:         27                 ││                                                                                
+││[    7]  WARN server::http       Event #00007: simulated log entry with payload d││                                 ││                                                                                
+││[    8] ERROR db::pool           Event #00008: simulated log entry with payload d││Only visible rows are rendered.  ││                                                                                
+││[    9] TRACE auth::jwt          Event #00009: simulated log entry with payload d││Rendering 23 of 10000 items.     ││                                                                                
+││[   10]  INFO cache::redis       Event #00010: simulated log entry with payload d││░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  ││                                                                                
+││[   11] DEBUG queue::worker      Event #00011: simulated log entry with payload d││                                 ││                                                                                
+││[   12]  WARN api::handler       Event #00012: simulated log entry with payload d││                                 ││                                                                                
+││[   13] ERROR core::runtime      Event #00013: simulated log entry with payload d││                                 ││                                                                                
+││[   14] TRACE server::http       Event #00014: simulated log entry with payload d││                                 ││                                                                                
+││[   15]  INFO db::pool           Event #00015: simulated log entry with payload d││                                 ││                                                                                
+││[   16] DEBUG auth::jwt          Event #00016: simulated log entry with payload d││                                 ││                                                                                
+││[   17]  WARN cache::redis       Event #00017: simulated log entry with payload d││                                 ││                                                                                
+││[   18] ERROR queue::worker      Event #00018: simulated log entry with payload d││                                 ││                                                                                
+││[   19] TRACE api::handler       Event #00019: simulated log entry with payload d││                                 ││                                                                                
+││[   20]  INFO core::runtime      Event #00020: simulated log entry with payload d││                                 ││                                                                                
+││[   21] DEBUG server::http       Event #00021: simulated log entry with payload d││                                 ││                                                                                
+││[   22]  WARN db::pool           Event #00022: simulated log entry with payload d││                                 ││                                                                                
+│╰─────────────────────────────────────────────────────────────────────────────────╯╰─────────────────────────────────╯│                                                                                
+│Item 1/10000 | j/k: scroll | Ctrl+D/U: page | g/G: jump                                                               │                                                                                
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯                                                                                
+ Performance [14/45]  Cyberpunk Aurora [h] [cmd] [p] [d]  Mouse: OFF (forced)    Tab/Shift+Tab: next/prev     0x0 00:02                                                                                 
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        

@@ -1,0 +1,30 @@
+ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8: DataViz │ 9: Files │ 0: Adv
+╭────────────────────────────────────────────────────Widget Gallery────────────────────────────────────────────────────╮
+│▸ A: Inputs │   B: Display │   C: Status │   D: Data Viz │   E: Navigation │   F: Layout │   G: Utility │   H: Advance│
+│╭TextInput─────╮╭Masked Input─╮╭Command Palette─────────╮╭Log Viewer────────────╮  ┌────────── Pane Studio ──────────┐│
+││o@example.com ││••••••       ││                        ││INFO  boot: FrankenTUI│  │mode:Focus sel:1 tl:0/0 ops:0 sp:││
+││              ││             ││ ╭─ Command Palette ──╮ ││demo started          │  │┃              ││               │││
+││              ││             ││ │>Type to search...  │ ││DEBUG layout: resolved│  │┃ 16x8  @85,4  ││ 17x8  @101,4  │││
+│╰──────────────╯╰─────────────╯│ │> [App] Quit  Exit …│ ││6 constraints         │  │┃              ││               │││
+│╭TextArea─────────────────────╮│ │  [File] Open File  │ ││WARN  io: slow disk   │  │┃              ││               │││
+││1  FrankenTUI text area      ││ ╰────────────────────╯ ││detected, using cache │  │┃              ││               │││
+││2  - Multi-line editing      ││                        ││INFO  render: diff    │  │┃              ││               │││
+││3  - Soft wrap enabled       │╰────────────────────────╯│cells=512 runs=18   0 │  │──────■■■──────────────■■■───────││
+││4  - Line numbers            │╭File Picker─────────────╮╰──────────────────────╯  │╭───5 pane-3───■╭───7 pane-4────╮││
+││                             ││.                       │╭ProgressBar───────────╮  ││              ■│               │││
+││                             ││> 📁 .beads             ││          0%          │  ││ 16x9  @85,12 ││ 17x9  @101,12 │││
+││                             ││  📁 .cargo             ││         25%          │  ││              ││               │││
+││                             ││  📁 .git               ││         50%          │  ││              ││               │││
+││                             ││  📁 .github            ││         75%          │  ││              ││               │││
+│╰─────────────────────────────╯│  📁 crates             │╰──────────────────────╯  ││              ││               │││
+│╭Checkbo╮╭Select╮╭Validation +╮╰────────────────────────╯╭Spinners──────────────╮  ││              ││               │││
+││[ ] Ena││Select││! Invalid e…│╭Notifications───────────╮│⠧ Loading (DOTS)      │  │╰──────────────│╰───────────────╯││
+││[x] Syn││Number││ETA  00:59  ││                        │╰──────────────────────╯  └─────────────────────────────────┘│
+││( ) Lig││Slider││🧭 …        ││                        │╭Toast─────────────────╮                                     │
+││(*) Dar││      ││            ││                        ││┌────────────────────┐│  ╭Pane Studio──────────────────────╮│
+││       ││      ││            ││                        │││Success             ││  │Drag docks | Right click mode | W││
+││       ││      ││            ││                        ││└✓ Settings saved suc┘│  │                                 ││
+│╰───────╯╰──────╯╰────────────╯╰────────────────────────╯╰──────────────────────╯  ╰─────────────────────────────────╯│
+│*.......                                                                                                              │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+ Widget Gallery [5/45]  Cyberpunk Aurora [h] [cmd] [p] [d]  Mouse: OFF (forced)   Tab/Shift+Tab: next/prev    0x0 00:02

@@ -1,0 +1,50 @@
+ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8: DataViz │ 9: Files │ 0: Adv                                                                                           
+╭─────────────────────────────────────────────────────Async Tasks──────────────────────────────────────────────────────╮                                                                                
+│Q:0 R:2 D:1 F:0 | FIFO[First-In-First-Out] | Aging:✓                                                                  │                                                                                
+│╭─────────────────────────────Task Queue──────────────────────────────╮╭────────────────Task Details─────────────────╮│                                                                                
+││▶ Running  [M] Initial Setup                             ██████░  90%││ID: 1                                        ││                                                                                
+││  Running  [L] Data Sync                                 ████░░░  54%││Name: Initial Setup                          ││                                                                                
+││  Done     [H] Cache Warm                                            ││State: Running                               ││                                                                                
+││                                                                     ││Priority: 2                                  ││                                                                                
+││                                                                     ││Progress: 90%                                ││                                                                                
+││                                                                     ││Elapsed: 27 ticks                            ││                                                                                
+││                                                                     ││Estimated: 30 ticks                          ││                                                                                
+││                                                                     ││                                             ││                                                                                
+││                                                                     ││                                             ││                                                                                
+││                                                                     ││                                             ││                                                                                
+││                                                                     │╰─────────────────────────────────────────────╯│                                                                                
+││                                                                     │╭──────────────────Activity───────────────────╮│                                                                                
+││                                                                     ││Spawned: Initial Setup                       ││                                                                                
+││                                                                     ││Spawned: Data Sync                           ││                                                                                
+││                                                                     ││Spawned: Cache Warm                          ││                                                                                
+││                                                                     ││Started: Initial Setup                       ││                                                                                
+││                                                                     ││Started: Data Sync                           ││                                                                                
+││                                                                     ││Started: Cache Warm                          ││                                                                                
+││                                                                     ││                                             ││                                                                                
+││                                                                     ││                                             ││                                                                                
+││                                                                     ││                                             ││                                                                                
+││                                                                     ││                                             ││                                                                                
+│╰─────────────────────────────────────────────────────────────────────╯╰─────────────────────────────────────────────╯│                                                                                
+│n:spawn  c:cancel  s:scheduler  a:aging  r:retry  j/k:nav                                                             │                                                                                
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯                                                                                
+ Async Tasks [29/45]  Cyberpunk Aurora [h] [cmd] [p] [d]  Mouse: OFF (forced)    Tab/Shift+Tab: next/prev     0x0 00:02                                                                                 
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        

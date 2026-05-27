@@ -1,0 +1,50 @@
+ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8: DataViz │ 9: Files │ 0: Adv                                                                                           
+╭───────────────────────────────────────────────────────Markdown───────────────────────────────────────────────────────╮                                                                                
+│╭───────────Markdown Renderer───────────╮ ╭──LLM Streaming Simulation | Complete──╮ ╭─────────Style Sampler──────────╮│                                                                                
+││GitHub-Flavored Markdown (Rich Demo)   │ │FrankenTUI Streaming Report — "Galaxy  │ │Bold  Dim  Italic  Underline    ││                                                                                
+││                                       │ │Brain" Edition                         │ │Strikethrough  Reverse  Blink   ││                                                                                
+││LaTeX + Symbols                        │ │                                       │ │Dbl-Underline  Curly-Underline  ││                                                                                
+││                                       │ │ℹ  NOTE                                │ │                                ││                                                                                
+││Inline math: E = mc², α + β = γ, Δ x ≈ │ │┃ This stream simulates an LLM response│ │Error  Success  Warning  Link  C││                                                                                
+││0.001.                                 │ │┃ rendered incrementally with full GFM │ │                                ││                                                                                
+││                                       │ │┃ support.                             │ ╰────────────────────────────────╯│                                                                                
+││Block math:                            │ │                                       │                                   │                                                                                
+││                                       │ │💡 TIP                                  │ ╭────────Unicode Showcase────────╮│                                                                                
+││  ∑ᵢ₌₁ⁿ xᵢ = n(n+1)/2                  │ │┃ Inline-first output keeps logs       │ │Text        │Type        │Cells ││                                                                                
+││                                       │ │┃ scrolling while the UI stays stable. │ │Hello       │ASCII       │5     ││                                                                                
+││  ∫_{−∞}^{∞} e^{−x²} dx = √{π}         │ │                                       │ │你好世界    │CJK         │8     ││                                                                                    
+││                                       │ │⚠  WARNING                             │ │こんにちは  │Hiragana    │10    ││                                                                                     
+││Admonitions                            │ │┃ Rendering is deterministic. If you   │ │🦀🔥✨      │Emoji       │6     ││                                                                                   
+││                                       │ │┃ see flicker, it is a bug.            │ │café        │Latin+accent│4     ││                                                                                
+││ℹ  NOTE                                │ │                                       │ │α β γ δ     │Greek       │7     ││                                                                                
+││┃ Information note with rich emphasis. │ │TL;DR                                  │ │→ ← ↑ ↓     │Arrows      │7     ││                                                                                
+││                                       │ │• ✅ Zero-flicker rendering via Buffer  │ ╰────────────────────────────────╯│                                                                                
+││💡 TIPP                                 ││→ Diff → Presenter                     │                                   │                                                                                 
+││┃ Use Tab and Shift+Tab to navigate.   │ │• ✅ Eviden▌ce-ledger decisions (Bayes  │ ╭────Wrap: Word | Align: Left────╮│                                                                                
+││                                       │ │  [███████████████████████████████████]│ │w: cycle wrap | a: cycle alignme││                                                                                
+││⚠  WARNING                             │ │  Detection: 6 indicators | Confident  │ │The quick brown fox jumps over  ││                                                                                
+││┃ Unsafe mode is forbidden in this     │ │  Confidence: 100% | Chars: 2955/2955  │ │the lazy dog.                   ││                                                                                
+││┃ project.                             │ │  Space: play/pause | r: restart | f: t│ │Supercalifragilisticexpialidocio││                                                                                
+│╰───────────────────────────────────────╯ ╰───────────────────────────────────────╯ ╰────────────────────────────────╯│                                                                                
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯                                                                                
+ Markdown [15/45]  Cyberpunk Aurora [h] [cmd] [p] [d]  Mouse: OFF (forced)      Tab/Shift+Tab: next/prev      0x0 00:02                                                                                 
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        

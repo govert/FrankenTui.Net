@@ -1,0 +1,50 @@
+ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8: DataViz │ 9: Files │ 0: Adv                                                                                           
+╭──────────────────────────────────────────────────────Dashboard───────────────────────────────────────────────────────╮                                                                                
+│FRANKENTUI DASHBOARD                                                                                                  │                                                                                
+│╭──────Plasma───────╮╭─────────Charts · Pulse─────────╮╭────Code · Rust (1/28)─────╮  ┌──────── Pane Studio ─────────┐│                                                                                
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││g:cycle · sparklines + mini bars││// runtime.rs              │  │mode:Focus sel:1 tl:0/0 ops:0 ││                                                                                
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││CPU ▃ ▃▃▂▂▁▁▄▃▄▂▅▅▅▆▂▄▅▃▆▅▄▄ 41%││use std::{collections::Hash│  │┃             ││             │││                                                                                
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││MEM ▅▂ ▃▁▄▄▂▂▇▅▃▅▂▃▄▆▄▇█▂▆▅▄ 42%││                           │  │┃ 15x8  @88,4 ││ 15x8  @103, │││                                                                                
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││NET ▁▁▁▁▁  ▁   ▇▁▁    ▁ █▁▁▁▁ 25││use ftui_core::event::Event│  │┃             ││             │││                                                                                
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││OUT ▁▁▁▃▁█  ▁▁ ▁  ▁▁▇    ▁    73││use ftui_render::cell::Cell│  │┃             ││             │││                                                                                
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││EPS █  76% DSK █  67% IO  ░   4%││Click → Code Explorer      │  │┃             ││             │││                                                                                
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                │╰───────────────────────────╯  │┃             ││             │││                                                                                
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                │╭───────────Info────────────╮  │──────■■■────────────■■■──────││                                                                                
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                ││Status:NOMINAL FPS:9       │  │╭──5 pane-3───■╭──7 pane-4───╮││                                                                                
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                ││EPS:1145  118x26           │  ││             ■│             │││                                                                                
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                ││Cyberpunk Aurora           │  ││ 15x9  @88,1 ││ 15x9  @103, │││                                                                                
+││Click → Visual Effe││Click → Data Viz                ││Click → Performance        │  ││             ││             │││                                                                                
+│╰───────────────────╯╰────────────────────────────────╯╰───────────────────────────╯  ││             ││             │││                                                                                
+│╭Text FX · 3-Up (1/2│╭───────────Activity────────────│╭────Markdown · Complete────╮   ││             ││             │││                                                                                
+││Sample 1 of 3 · 3-U││SEV TIME  COMP  MESSAGE        ││FrankenTUI Field Notes     │   ││             ││             │││                                                                                
+││1 · None · S1      ││ INFO  00:02   CPU spike detect││                           │   ││             ││             │││                                                                                
+││# FX Lab · Determin││ INFO  00:02   CPU spike detect│││ Goal: deterministic outpu│   │╰─────────────│╰─────────────╯││                                                                                
+││2 · FadeIn · S2    ││                               ││                           │   └──────────────────────────────┘│                                                                                
+││## GFM Stress · Led⋮│                               ⋮│Highlights                 │                                   │                                                                                
+││3 · FadeOut · S3   ││                               ││✓ Inline mode with         │   ╭Pane Studio───────────────────╮│                                                                                
+││### Runtime Ledger ││                               ││scrollback                 │   │Drag docks | Right click mode ││                                                                                
+││drag panes in dashb││Click → Action Timeline        ││Click → Markdown           │   │                              ││                                                                                
+│╰───────────────────│╰───────────────────────────────│╰───────────────────────────╯   ╰──────────────────────────────╯│                                                                                
+│g:charts c:code e:fx m:md | drag bottom dividers: resize | 1-9:screens | t:theme | q:quit                             │                                                                                
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯                                                                                
+ Dashboard [2/45]  Cyberpunk Aurora [h] [cmd] [p] [d]  Mouse: OFF (forced)      Tab/Shift+Tab: next/prev      0x0 00:02                                                                                 
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        

@@ -1,0 +1,50 @@
+ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8: DataViz │ 9: Files │ 0: Adv                                                                                           
+╭────────────────────────────────────────────────────Accessibility─────────────────────────────────────────────────────╮                                                                                
+│╭─────────────────────────────────────────── Accessibility Control Panel ────────────────────────────────────────────╮│                                                                                
+││Active Theme: Cyberpunk Aurora                                                                                      ││                                                                                
+││Base Theme: Cyberpunk Aurora  Mode: Standard                                                                        ││                                                                                
+││Motion: Full (1.0x)  Large Text: OFF                                                                                ││                                                                                
+││Shortcuts: h = contrast, m = motion, l = large text                                                                 ││                                                                                
+││                                                                                                                    ││                                                                                
+│╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯│                                                                                
+│╭──────────────────────── Toggles ────────────────────────╮╭───────────────────── WCAG Contrast ─────────────────────╮│                                                                                
+││ [h] High Contrast: OFF                                  ││Primary on Base    13.6:1 AAA                            ││                                                                                
+││ [m] Reduced Motion: OFF                                 ││Secondary on Base   8.7:1 AAA                            ││                                                                                
+││ [l] Large Text: OFF                                     ││Accent Primary      7.2:1 AAA                            ││                                                                                
+││Shift+A opens the compact overlay                        ││Accent Warning     13.7:1 AAA                            ││                                                                                
+││                                                         ││Accent Error        4.7:1 AA                             ││                                                                                
+││                                                         ││                                                         ││                                                                                
+│╰─────────────────────────────────────────────────────────╯│Minimum ratio: 4.7:1 AA                                  ││                                                                                
+│╭───────────────────── Live Preview ──────────────────────╮│AA >= 4.5, AAA >= 7.0, Large Text >= 3.0                 ││                                                                                
+││Preview text                                             │╰─────────────────────────────────────────────────────────╯│                                                                                
+││The quick brown fox jumps over the lazy dog.             │╭──────────────────── A11y Telemetry ─────────────────────╮│                                                                                
+││Links look like this and code looks like fn main()       ││No a11y events yet. Toggle a mode to emit telemetry.     ││                                                                                
+││Status: OK  Error                                        ││                                                         ││                                                                                
+││Animations active                                        ││                                                         ││                                                                                
+││                                                         ││                                                         ││                                                                                
+││                                                         ││                                                         ││                                                                                
+││                                                         ││                                                         ││                                                                                
+││                                                         ││                                                         ││                                                                                
+│╰─────────────────────────────────────────────────────────╯╰─────────────────────────────────────────────────────────╯│                                                                                
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯                                                                                
+ Accessibility [37/45]  Cyberpunk Aurora [h] [cmd] [p] [d]  Mouse: OFF (forced)   Tab/Shift+Tab: next/prev    0x0 00:02                                                                                 
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        

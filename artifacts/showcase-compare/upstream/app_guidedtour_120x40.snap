@@ -1,0 +1,30 @@
+ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8: DataViz │ 9: Files │ 0: Adv
+╭──────────────────────────────────────────────────────Dashboard───────────────────────────────────────────────────────╮
+│FRANKENTUI DASHBOARD                                          ╭─────────────────────Guided Tour──────────────────────╮│
+│╭──────Plasma───────╮╭─────────Charts · Pulse─────────╮╭────Co│1/16 · Tour · LIVE                                    ││
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││g:cycle · sparklines + mini bars││// run│Speed 1.00x · Next 3.5s                               ││
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││CPU ▃ ▃▃▂▂▁▁▄▃▄▂▅▅▅▆▂▄▅▃▆▅▄▄ 41%││use st│Dashboard                                             ││
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││MEM ▅▂ ▃▁▄▄▂▂▇▅▃▅▂▃▄▆▄▇█▂▆▅▄ 42%││      │This is the home screen. Every tile is meant to be    ││
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││NET ▁▁▁▁▁  ▁   ▇▁▁    ▁ █▁▁▁▁ 25││use ft│clicked.                                              ││
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││OUT ▁▁▁▃▁█  ▁▁ ▁  ▁▁▇    ▁    73││use ft│Click a tile (or press Enter) to jump in.             ││
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││EPS █  76% DSK █  67% IO  ░   4%││Click │Controls: Space pause · ←/→ step · Esc exit           ││
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                │╰──────│Steps:                                                ││
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                │╭──────│▶ Tour · Dashboard                                    ││
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                ││Status│• Tour · Dashboard                                    ││
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                ││EPS:11│• Visuals · Mermaid Showcase                          ││
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                ││Cyberp│• Tour · Inline Mode                                  ││
+││Click → Visual Effe││Click → Data Viz                ││Click ╰──────────────────────────────────────────────────────╯│
+│╰───────────────────╯╰────────────────────────────────╯╰───────────────────────────╯  ││             ││             │││
+│╭Text FX · 3-Up (1/2│╭───────────Activity────────────│╭────Markdown · Complete────╮   ││             ││             │││
+││Sample 1 of 3 · 3-U││SEV TIME  COMP  MESSAGE        ││FrankenTUI Field Notes     │   ││             ││             │││
+││1 · None · S1      ││ INFO  00:02   CPU spike detect││                           │   ││             ││             │││
+││# FX Lab · Determin││ INFO  00:02   CPU spike detect│││ Goal: deterministic outpu│   │╰─────────────│╰─────────────╯││
+││2 · FadeIn · S2    ││                               ││                           │   └──────────────────────────────┘│
+││## GFM Stress · Led⋮│                               ⋮│Highlights                 │                                   │
+││3 · FadeOut · S3   ││                               ││✓ Inline mode with         │   ╭Pane Studio───────────────────╮│
+││### Runtime Ledger ││                               ││scrollback                 │   │Drag docks | Right click mode ││
+││drag panes in dashb││Click → Action Timeline        ││Click → Markdown           │   │                              ││
+│╰───────────────────│╰───────────────────────────────│╰───────────────────────────╯   ╰──────────────────────────────╯│
+│g:charts c:code e:fx m:md | drag bottom dividers: resize | 1-9:screens | t:theme | q:quit                             │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+ Dashboard [1/45]  Cyberpunk Aurora [h] [cmd] [p] [d]  Mouse: OFF (forced)      Tab/Shift+Tab: next/prev      0x0 00:02

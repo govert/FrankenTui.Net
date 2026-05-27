@@ -1,0 +1,50 @@
+ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8: DataViz │ 9: Files │ 0: Adv                                                                                           
+╭───────────────────────────────────────────────────Action Timeline────────────────────────────────────────────────────╮                                                                                
+│╭──────────────────────────────────────────────────Filters + Follow──────────────────────────────────────────────────╮│                                                                                
+││Follow[F]: ON  Component[C]: all  Severity[S]: all  Type[T]: all  Clear[X]                                          ││                                                                                
+│╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯│                                                                                
+│╭─────────────────────────Event Timeline──────────────────────────╮╭──────────────────Event Detail───────────────────╮│                                                                                
+││   4 ERROR render  cmd     Command dispatched to model           ││ID: 25                                           ││                                                                                
+││   6 DEBUG widgets sub     Subscription tick delivered           ││Tick: 26                                         ││                                                                                
+││   8 WARN  core    sub     Subscription tick delivered           ││Severity: DEBUG                                  ││                                                                                
+││  10 TRACE runtime render  Frame diff computed                   ││Component: runtime                               ││                                                                                
+││  12 INFO  render  present Presenter emitted ANSI batch          ││Type: cmd                                        ││                                                                                
+││  14 ERROR widgets present Presenter emitted ANSI batch          ││                                                 ││                                                                                
+││  16 DEBUG core    caps    Capability probe updated              ││Summary:                                         ││                                                                                
+││  18 WARN  runtime budget  Render budget degraded                ││  Command dispatched to model                    ││                                                                                
+││  20 TRACE render  budget  Render budget degraded                ││                                                 ││                                                                                
+││  22 INFO  widgets input   Key event processed                   ││Fields:                                          ││                                                                                
+││  24 ERROR core    cmd     Command dispatched to model           ││  latency_ms: 17                                 ││                                                                                
+││  26 DEBUG runtime cmd     Command dispatched to model           ││  diff_cells: 98                                 ││                                                                                
+││                                                                 ││  ansi_bytes: 1222                               ││                                                                                
+││                                                                 ││                                                 ││                                                                                
+││                                                                 ││                                                 ││                                                                                
+││                                                                 ││                                                 ││                                                                                
+││                                                                 ││                                                 ││                                                                                
+││                                                                 ││                                                 ││                                                                                
+││                                                                 ││                                                 ││                                                                                
+││                                                                 ││                                                 ││                                                                                
+││                                                                 ││                                                 ││                                                                                
+│╰─────────────────────────────────────────────────────────────────╯╰─────────────────────────────────────────────────╯│                                                                                
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯                                                                                
+ Action Timeline [22/45]  Cyberpunk Aurora [h] [cmd] [p] [d]  Mouse: OFF (forced)  Tab/Shift+Tab: next/prev   0x0 00:02                                                                                 
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        

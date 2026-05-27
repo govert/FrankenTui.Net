@@ -1,0 +1,30 @@
+ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8: DataViz │ 9: Files │ 0: Adv
+╭──────────────────────────────────────────────────Responsive Layout───────────────────────────────────────────────────╮
+│ Breakpoint: SM (60-89) │ Width: 80 │ Thresholds: sm≥60 md≥90 lg≥120 xl≥160                                           │
+│╭Sidebar───────────────────╮╭Content─────────────────────────────────────────────────────────────────────────────────╮│
+││Breakpoint: SM (60-89)    ││Columns: 1 │ Breakpoint: SM (60-89) │ 80×24                                             ││
+││Layout: stacked           ││                                                                                        ││
+││                          ││Padding: 2 │ Style: normal                                                              ││
+││Sidebar: hidden (md+)     ││                                                                                        ││
+││Aside:   hidden (lg+)     ││The layout adapts to the terminal width.                                                ││
+││                          ││Resize your terminal to see the layout switch                                           ││
+││[b] Toggle BPs            ││between 1-column, 2-column, and 3-column modes.                                         ││
+││[Current: default]        ││                                                                                        ││
+││                          ││                                                                                        ││
+││                          ││                                                                                        ││
+││                          ││                                                                                        ││
+││                          ││                                                                                        ││
+││                          ││                                                                                        ││
+││                          ││                                                                                        ││
+││                          ││                                                                                        ││
+││                          ││                                                                                        ││
+││                          ││                                                                                        ││
+││                          ││                                                                                        ││
+││                          ││                                                                                        ││
+││                          ││                                                                                        ││
+││                          ││                                                                                        ││
+││                          ││                                                                                        ││
+││                          ││                                                                                        ││
+│╰──────────────────────────╯╰────────────────────────────────────────────────────────────────────────────────────────╯│
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+ Responsive Layout [19/45]  Cyberpunk Aurora [h] [cmd] [p] [d]  Mouse: OFF (forced) Tab/Shift+Tab: next/prev  0x0 00:02

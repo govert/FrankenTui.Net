@@ -1,0 +1,50 @@
+ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8: DataViz │ 9: Files │ 0: Adv                                                                                           
+╭──────────────────────────────────────────────────────Log Search──────────────────────────────────────────────────────╮                                                                                
+│╭ Log Viewer ────────────────────────────────────────────────────────────────────────────────────────────────────────╮│                                                                                
+││[    45] DEBUG server::http       Connection pool health check passed                                               ││                                                                                
+││[    46] DEBUG db::pool           Token refresh completed for session                                               ││                                                                                
+││[    47] DEBUG auth::jwt          Cache hit ratio: 0.94                                                             ││                                                                                
+││[    48]  WARN cache::redis       Worker picked up job from queue                                                   ││                                                                                
+││[    49]  WARN queue::worker      Rate limit threshold approaching                                                  ││                                                                                
+││[    50] ERROR api::handler       Garbage collection cycle completed                                                ││                                                                                
+││[    51] TRACE core::runtime      Metric batch flushed to backend                                                   ││                                                                                
+││[    52]  INFO metrics::push      Configuration hot-reload triggered                                                ││                                                                                
+││[    53]  INFO config::reload     Retry attempt 2/3 for downstream call                                             ││                                                                                
+││[    54]  INFO server::http       Scheduled maintenance window check                                                ││                                                                                
+││[    55]  INFO db::pool           Request processed successfully                                                    ││                                                                                
+││[    56]  INFO auth::jwt          Connection pool health check passed                                               ││                                                                                
+││[    57]  INFO cache::redis       Token refresh completed for session                                               ││                                                                                
+││[    58] DEBUG queue::worker      Cache hit ratio: 0.94                                                             ││                                                                                
+││[    59] DEBUG api::handler       Worker picked up job from queue                                                   ││                                                                                
+││[    60] DEBUG core::runtime      Rate limit threshold approaching                                                  ││                                                                                
+││[    61]  WARN metrics::push      Garbage collection cycle completed                                                ││                                                                                
+││[    62]  WARN config::reload     Metric batch flushed to backend                                                   ││                                                                                
+││[    63] ERROR server::http       Configuration hot-reload triggered                                                ││                                                                                
+││[    64] TRACE db::pool           Retry attempt 2/3 for downstream call                                             ││                                                                                
+││[    65]  INFO auth::jwt          Scheduled maintenance window check                                                ││                                                                                
+││[    66]  INFO cache::redis       Request processed successfully                                                    ││                                                                                
+││[    67]  INFO queue::worker      Connection pool health check passed                                               ││                                                                                
+│╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯│                                                                                
+│ NORMAL | lines: 68 | gen: 68                                                                                         │                                                                                
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯                                                                                
+ Log Search [20/45]  Cyberpunk Aurora [h] [cmd] [p] [d]  Mouse: OFF (forced)     Tab/Shift+Tab: next/prev     0x0 00:02                                                                                 
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        

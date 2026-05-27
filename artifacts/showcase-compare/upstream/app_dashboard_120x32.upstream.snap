@@ -1,0 +1,30 @@
+ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8: DataViz │ 9: Files │ 0: Adv
+╭──────────────────────────────────────────────────────Dashboard───────────────────────────────────────────────────────╮
+│FRANKENTUI DASHBOARD                                                                                                  │
+│╭──────Plasma───────╮╭─────────Charts · Pulse─────────╮╭────Code · Rust (1/28)─────╮  ┌──────── Pane Studio ─────────┐│
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││g:cycle · sparklines + mini bars││// runtime.rs              │  │mode:Focus sel:1 tl:0/0 ops:0 ││
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿▁▁▃▃▄▂▅▅▅▆▂▄▅▃▅▅▄▄▅▅▅▆▇█6538▆▅▄▄ 46%││use std::{collections::Hash│  │┃             ││             │││
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿▄▂▂▆▅▃▅▂▃▄▅▄▆▇▂▆▅▃▂▆▄▅▇▄3█▂▆▅▄ 41%││                           │  │┃ 15x8  @88,4 ││ 15x8  @103, │││
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿▁ ▆ ▁ ▁ ▇ ▁▁▁▇  ▁ ▁7504 ▁ █▁▁▁▁ 14││use ftui_core::event::Event│  │┃             ││             │││
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿  ▁▁ ▁  ▁▁▇ ▁ ▁▁ ▂▁▁ 56    ▁   149││use ftui_render::cell::Cell│  │┃             ││             │││
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿734790█  77% DSK █  67% IO  ░   7%││Click → Code Explorer      │  │┃             ││             │││
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                │╰───────────────────────────╯  │┃             ││             │││
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                │╭───────────Info────────────╮  │──────■■■────────────■■■──────││
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿9│                                ││Status:NOMINAL FPS:0       │  │╭──5 pane-3───■╭──7 pane-4───╮││
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿5287  118x26                      ││EPS:1150  118x26           │  ││             ■│             │││
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                ││Cyberpunk Aurora           │  ││ 15x9  @88,1 ││ 15x9  @103, │││
+││Click → Visual Effe││Click → Data Viz                ││Click → Performance        │  ││             ││             │││
+│╰───────────────────╯╰────────────────────────────────╯╰───────────────────────────╯  ││             ││             │││
+│╭Text FX · 3-Up (1/2│╭───────────Activity────────────│╭────Markdown · Complete────╮   ││             ││             │││
+││Sample 1 of 3 · 3-U││SEV TIME  COMP  MESSAGE        ││FrankenTUI Field Notes     │   ││             ││             │││
+││1 · None · S1      ││ INFO  00:02   CPU spike detect││                           │   ││             ││             │││
+││# FX Lab · Determin││ INFO  00:02 CPCPU spike detect│││ Goal: deterministic outpu│   │╰─────────────│╰─────────────╯││
+││2 · FadeIn · S2    ││                               ││                           │   └──────────────────────────────┘│
+││## GFM Stress · LedHighlights                       ⋮│                           │                                   │
+││3 · FadeOut · S3   ││                               ││✓ Inline mode with         │   ╭Pane Studio───────────────────╮│
+││### Runtime Ledgerscrollback                        ││                           │   │Drag docks | Right click mode ││
+││drag panes in dashb││Click → Action Timeline        ││Click → Markdown           │   │                              ││
+│╰───────────────────│╰───────────────────────────────│╰───────────────────────────╯   ╰──────────────────────────────╯│
+│g:charts c:code e:fx m:md | drag bottom dividers: resize | 1-9:screens | t:theme | q:quit                             │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+ Dashboard [2/45]  Cyberpunk Aurora [h] [cmd] [p] [d]  Mouse: OFF (forced)      Tab/Shift+Tab: next/prev      0x0 00:03

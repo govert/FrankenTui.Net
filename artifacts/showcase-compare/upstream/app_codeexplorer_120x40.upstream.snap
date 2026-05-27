@@ -1,0 +1,30 @@
+ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8: DataViz │ 9: Files │ 0: Adv
+╭────────────────────────────────────────────────────Code Explorer─────────────────────────────────────────────────────╮
+│╔═════════════════════════════════════sqlite3.c═════════════════════════════════════╗╭───────────File Info───────────╮│
+│║      1 /*************************************************************************█║│{                              ││
+│║      2 ** This file is an amalgamation of many separate C source files from SQLit│║│  "filename": "sqlite3.c",     ││
+│║      3 ** version 3.48.0.  By combining all the individual C code files into this│║│  "lines": 261044,             ││
+│║      4 ** single large file, the entire code can be compiled as a single translat│║│  "size": "9.5 MB",            ││
+│║      5 ** unit.  This allows many compilers to do optimizations that would not be│║╰───────────────────────────────╯│
+│║      6 ** possible if the files were compiled separately.  Performance improvemen│║╭────────────Context────────────╮│
+│║      7 ** of 5% or more are commonly seen when SQLite is compiled as a single    │║│Line 1                         ││
+│║      8 ** translation unit.                                                      │║│                               ││
+│║      9 **                                                                        │║│Nearest function:              ││
+│║     10 ** This file is all you need to compile SQLite.  To use SQLite in other   │║│Top of file                    ││
+│║     11 ** programs, you need this file and the "sqlite3.h" header file that defin│║╰───────────────────────────────╯│
+│║     12 ** the programming interface to the SQLite library.  (If you do not have  │║╭───────────Hotspots────────────╮│
+│║     13 ** the "sqlite3.h" header file at hand, you will find a copy embedded with│║│▶    583  sqlite3_open         ││
+│║     14 ** the text of this file.  Search for "Begin file sqlite3.h" to find the s│║│     587  sqlite3_prepare_v2   ││
+│║     15 ** of the embedded sqlite3.h header file.) Additional code files may be ne│║│                               ││
+│║     16 ** if you want a wrapper to interface SQLite with your choice of programmi│║╰───────────────────────────────╯│
+│╚═══════════════════════════════════════════════════════════════════════════════════╝╭───────Radar + Spotlight───────╮│
+│╭──────────────────────────────────Telemetry Deck───────────────────────────────────╮│Type / for instant highlights  ││
+││IO Lane                      Cache Hit                   Lock + TX                 ││                               ││
+││                                                         LCK██████░░░░░░░░░░░░░░   ││Awaiting query...              ││
+││                                                                                   ││One-writer rule · deterministic││
+││                                                         TX █████████████░░░░░░░   ││                               ││
+││▇█████▇▇▆▆▅▄▃▃▂▁▁     ▁▁▂▃▃▄ ██▇▇▆▆▅▄▃▂▂▁▁     ▁▁▂▃▃▄▅▆▆                           ││                               ││
+│╰───────────────────────────────────────────────────────────────────────────────────╯╰───────────────────────────────╯│
+│ Mode: Source · Line 1/261044 (0%) · Matches: 0 | 9.5 MB | C                                                          │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+ Code Explorer [4/45]  Cyberpunk Aurora [h] [cmd] [p] [d]  Mouse: OFF (forced)    Tab/Shift+Tab: next/prev    0x0 00:02

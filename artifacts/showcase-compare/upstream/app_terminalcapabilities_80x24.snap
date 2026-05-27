@@ -1,0 +1,24 @@
+ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
+╭────────────────────────────────────────────────Terminal Capabilities──────────
+│╭─────────────────────────────────────────── Terminal Capability Explorer ─────
+││Profile: detected | View: Matrix                                              
+││Color depth: truecolor | Mux: no | Sync output: no                            
+││Scroll region: yes | Hyperlinks: yes | Clipboard: yes | overrides: none       
+│╰──────────────────────────────────────────────────────────────────────────────
+│╭ Capability Matrix ───────────────────────────────────────────────╮╭ Details ─
+││Capability               │Detected │Effective│Fallback            ││Capability
+││True color (24-bit)      │yes      │yes      │enabled             ││Detected: 
+││256-color palette        │yes      │yes      │enabled             ││Effective:
+││Synchronized output      │no       │no       │unsynced repaint    ││Fallback: 
+││Scroll region (DECSTBM)  │yes      │yes      │enabled             ││Reason: De
+││OSC 8 hyperlinks         │yes      │yes      │enabled             ││          
+││Kitty keyboard protocol  │no       │no       │legacy keys         ││          
+││Focus events             │yes      │yes      │enabled             ││          
+││Bracketed paste          │yes      │yes      │enabled             ││          
+││SGR mouse                │yes      │yes      │enabled             ││          
+││OSC 52 clipboard         │yes      │yes      │enabled             │╰──────────
+││                                                                  │╭ Fallback 
+││                                                                  ││Sync outpu
+││                                                                  ││Scroll reg
+││                                                                  ││Mux safety
+/Shift+Tab: next/prev         0x0 00:00                             │╰──────────

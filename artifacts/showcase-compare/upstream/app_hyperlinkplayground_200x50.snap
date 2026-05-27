@@ -1,0 +1,50 @@
+ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8: DataViz │ 9: Files │ 0: Adv                                                                                           
+╭─────────────────────────────────────────────────Hyperlink Playground─────────────────────────────────────────────────╮                                                                                
+│Hyperlink Playground  OSC-8 + Hit Regions                                                                             │                                                                                
+│Up/Down move · Tab cycle · Enter activate · Mouse hover/click                                                         │                                                                                
+│                                                                                                                      │                                                                                
+│╭Links (OSC-8)──────────────────────────────────────╮╭Details & Registry─────────────────────────────────────────────╮│                                                                                
+││> ]8;;https://ftui.devFrankenTUI]8;;                                       ││Selected: FrankenTUI                                           ││                                                        
+││  ]8;;https://ftui.dev/docsDocs]8;;                                             ││URL: https://ftui.dev                                          ││                                                   
+││  ]8;;https://github.com/Dicklesworthstone/frankentuiGitHub]8;;                                           ││Registry ID: 1                                                 ││                         
+││  ]8;;https://iterm2.com/documentation-escape-codes.htmlOSC 8 Spec]8;;                                       ││Hit: id=8000 region=Link data=1                                ││                      
+││  ]8;;https://vt100.net/docs/vt510-rm/OSC.htmlANSI Reference]8;;                                   ││OSC 8 open: \x1b]8;;https://ftui.dev\x1b\                      ││                                
+││                                                   ││OSC 8 close: \x1b]8;;\x1b\                                     ││                                                                                
+││                                                   ││Notes: Project home + overview                                 ││                                                                                
+││                                                   ││Hover: None                                                    ││                                                                                
+││                                                   ││                                                               ││                                                                                
+││                                                   ││Registry map                                                   ││                                                                                
+││                                                   ││[1] FrankenTUI                                                 ││                                                                                
+││                                                   ││[2] Docs                                                       ││                                                                                
+││                                                   ││[3] GitHub                                                     ││                                                                                
+││                                                   ││[4] OSC 8 Spec                                                 ││                                                                                
+││                                                   ││[5] ANSI Reference                                             ││                                                                                
+││                                                   ││                                                               ││                                                                                
+││                                                   ││                                                               ││                                                                                
+││                                                   ││                                                               ││                                                                                
+││                                                   ││                                                               ││                                                                                
+││                                                   ││                                                               ││                                                                                
+││                                                   ││                                                               ││                                                                                
+│╰───────────────────────────────────────────────────╯╰───────────────────────────────────────────────────────────────╯│                                                                                
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯                                                                                
+ Hyperlink Playground [41/45]  Cyberpunk Aurora [h] [cmd] [p] [d]  Mouse: OFF (forced)Tab/Shift+Tab: next/prev0x0 00:02                                                                                 
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
