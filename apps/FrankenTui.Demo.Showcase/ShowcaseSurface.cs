@@ -245,7 +245,7 @@ internal static class ShowcaseSurface
             "macro_recorder" => Screen13MacroRecorder.Build(state),
             "performance" => Screen14Performance.Build(state),
             "markdown_rich_text" => Screen15Markdown.Build(state),
-            "mermaid_showcase" => Screen16MermaidPort.Build(state),
+            "mermaid_showcase" => Screen16MermaidEngine.Build(state),
             "mermaid_mega_showcase" => Screen17MermaidMega.Build(state),
             "visual_effects" => Screen18VfxPort.Build(state),
             "responsive_demo" => Screen19Responsive.Build(state),

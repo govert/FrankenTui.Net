@@ -55,7 +55,7 @@ public sealed record MermaidShowcasePreferences(
     public static MermaidShowcasePreferences Default { get; } = new();
 }
 
-internal static class MermaidEngine
+public static class MermaidEngine
 {
     public static MermaidDiagram Parse(MermaidSample sample, MermaidConfig config)
     {
