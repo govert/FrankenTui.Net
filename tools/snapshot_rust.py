@@ -25,7 +25,8 @@ def capture_ansi(screen_num, width=80, height=24, delay_ms=3000):
         capture_output=True, timeout=delay_ms//1000 + 5,
         cwd='.external/frankentui',
         encoding='utf-8', errors='replace',
-        env={**os.environ, 'FTUI_DEMO_EXIT_AFTER_MS': str(delay_ms)})
+        env={**os.environ, 'FTUI_DEMO_EXIT_AFTER_MS': str(delay_ms),
+             'LINES': str(height), 'COLUMNS': str(width)})
     return proc.stdout
 
 def ansi_to_grid(data, width=80, height=24):
