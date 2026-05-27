@@ -2,49 +2,49 @@
 Upstream snapshot: app_formvalidation_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 553
-Local nonblank chars: 870
-Local/upstream char ratio: 1.573
+Local nonblank chars: 901
+Local/upstream char ratio: 1.629
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+local   : 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 @@ row 02
 upstream: ╭───────────────────────────────────────────────────Form Validation─────────────
 local   : ╭───────────────────────────────Form Validation────────────────────────────────╮
 @@ row 03
 upstream: │Mode: Real-time [M to toggle]                                          ╭───────
-local   : │╭────────────────────────────────────────────────────────────────────────────╮│
+local   : │Mode: Real-time [M to toggle]                                                 │
 @@ row 04
 upstream: │╭──────────────────────────Registration Form──────────────────────────╮│No vali
-local   : ││Mode: Real-time [M to toggle]  |  Errors: 0  |  Warnings: 0                 ││
+local   : │╭─────────────────────────────Registration Form──────────────────────────────╮│
 @@ row 05
 upstream: ││Username:         Enter username (required)                          ││
-local   : ││                                                                            ││
+local   : ││Username:         Enter username (required)                                 ││
 @@ row 06
 upstream: ││Email:            user@example.com                                   ││
-local   : ││                                                                            ││
+local   : ││Email:            user@example.com                                          ││
 @@ row 07
 upstream: ││Password:         Min 8 characters                                   ││
-local   : ││                                                                            ││
+local   : ││Password:         Min 8 characters                                          ││
 @@ row 08
 upstream: ││Confirm Password: Re-enter password                                  ││
-local   : ││                                                                            ││
+local   : ││Confirm Password: Re-enter password                                         ││
 @@ row 09
 upstream: ││Age:                25                                               ││
-local   : ││                                                                            ││
+local   : ││Age:                25                                                      ││
 @@ row 10
 upstream: ││Bio:              Max 100 characters                                 ││
-local   : ││                                                                            ││
+local   : ││Bio:              Max 100 characters                                        ││
 @@ row 11
 upstream: ││Website:          https://example.com                                ││
-local   : ││                                                                            ││
+local   : ││Website:          https://example.com                                       ││
 @@ row 12
 upstream: ││Role:               (Select a role)                                  ││
-local   : ││                                                                            ││
+local   : ││Role:               (Select a role)                                         ││
 @@ row 13
 upstream: ││Accept Terms:     [ ]                                                ││
-local   : ││                                                                            ││
+local   : ││Accept Terms:     [ ]                                                       ││
 @@ row 14
 upstream: ││                                                                     ││
 local   : ││                                                                            ││
@@ -53,25 +53,25 @@ upstream: ││                                                                
 local   : ││                                                                            ││
 @@ row 16
 upstream: ││                                                                     ││
-local   : │╰────────────────────────────────────────────────────────────────────────────╯│
+local   : ││                                                                            ││
 @@ row 17
 upstream: ││                                                                     ││
-local   : │╭──────────────Registration Form───────────────╮╭─────────Validation─────────╮│
+local   : ││                                                                            ││
 @@ row 18
 upstream: ││                                                                     ││
-local   : ││Username:         Enter username (required)   ││No validation errors yet.   ││
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 19
 upstream: ││                                                                     ││
-local   : ││Email:            user@example.com            ││                            ││
+local   : │╭─────────────────────────────────Validation─────────────────────────────────╮│
 @@ row 20
 upstream: ││                                                                     ││
-local   : ││Password:         Min 8 characters            ││All fields pass initial     ││
+local   : ││No validation errors yet.                                                   ││
 @@ row 21
 upstream: ││                                                                     ││
-local   : ││Confirm Password: Re-enter password           ││checks.                     ││
+local   : ││                                                                            ││
 @@ row 22
 upstream: ││                                                                     ││
-local   : │╰──────────────────────────────────────────────╯╰────────────────────────────╯│
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 23
 upstream: ││                                                                     ││
 local   : ╰──────────────────────────────────────────────────────────────────────────────╯

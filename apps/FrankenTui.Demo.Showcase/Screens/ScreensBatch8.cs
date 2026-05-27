@@ -19,22 +19,6 @@ internal static class Screen13MacroRecorder { public static IWidget Build(Showca
     ]);
 }}
 
-internal static class Screen21Notifications { public static IWidget Build(ShowcaseDemoState s) {
-    // Flex::horizontal([Percentage(40), Min(1)])
-    var instructions = ShowcaseSurface.Panel("Notification Demo", string.Join("\n",
-        "Press keys to trigger notifications:", "",
-        "  s  Success", "  e  Error with Retry",
-        "  w  Warning", "  i  Info",
-        "  u  Urgent with Ack/Snooze",
-        "  d  Dismiss all", "",
-        "Queue: 0 visible, 0 pending",
-        "Total shown: 0", "Last action: (none)"));
-    var stack = ShowcaseSurface.Panel("Notification Stack", "No active notifications.\n\nNotifications appear here with\nswipe-to-dismiss and action buttons.");
-    return new StackWidget(LayoutDirection.Horizontal, [
-        (LayoutConstraint.Percentage(40), instructions),
-        (LayoutConstraint.Fill(), stack)
-    ]);
-}}
 
 internal static class Screen31SnapshotPlayer { public static IWidget Build(ShowcaseDemoState s) {
     // Flex::vertical([Fixed(1), Min(1)]) → render_main_layout
@@ -200,20 +184,3 @@ internal static class Screen43MarkdownLive { public static IWidget Build(Showcas
     ]);
 }}
 
-internal static class Screen44DragDrop { public static IWidget Build(ShowcaseDemoState s) {
-    // Flex::vertical([Fixed(1), Min(3), Fixed(2)]) with mode tabs + sortable + cross-container
-    var tabs = new ParagraphWidget("Drag & Drop Lab  |  [Sortable List]  cross-container  keyboard drag  |  DemoMode: sortable");
-    var sortable = ShowcaseSurface.Panel("Sortable List", "> Item 1\n  Item 2\n  Item 3\n  Item 4\n  Item 5\n  Item 6\n  Item 7\n  Item 8\n\nLIST_SIZE=8 deterministic");
-    var cross = ShowcaseSurface.Panel("Cross-Container", "Drop here\n\ntarget A\ntarget B\n\nDrag items between lists.");
-    var keyboard = ShowcaseSurface.Panel("Keyboard Drag", "Tab: focus\nSpace: pick up\nArrows: move\nEnter: drop");
-    var instructions = new ParagraphWidget("Tab / Shift+Tab cycles DemoMode  |  mouse down on layout_tabs selects mode");
-    return new StackWidget(LayoutDirection.Vertical, [
-        (LayoutConstraint.Fixed(1), tabs),
-        (LayoutConstraint.Fill(), new StackWidget(LayoutDirection.Horizontal, [
-            (LayoutConstraint.Fill(), sortable),
-            (LayoutConstraint.Fixed(25), cross),
-            (LayoutConstraint.Fixed(20), keyboard)
-        ])),
-        (LayoutConstraint.Fixed(2), instructions)
-    ]);
-}}

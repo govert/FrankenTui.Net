@@ -2,13 +2,13 @@
 Upstream snapshot: app_tablethemegallery_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 341
-Local nonblank chars: 776
-Local/upstream char ratio: 2.276
+Local nonblank chars: 511
+Local/upstream char ratio: 1.499
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+local   : 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 @@ row 02
 upstream: ╭─────────────────────────────────────────────────Table Theme Gallery───────────
 local   : ╭─────────────────────────────Table Theme Gallery──────────────────────────────╮
@@ -17,58 +17,58 @@ upstream: │
 local   : │╭────────────────────────────Table Theme Gallery─────────────────────────────╮│
 @@ row 04
 upstream: │
-local   : ││╭─ Plain ───────────╮                                                       ││
+local   : ││                                                                            ││
 @@ row 05
 upstream: │
-local   : │││ Header 1 │ Header 2 │                                                     ││
+local   : ││                                                                            ││
 @@ row 06
 upstream: │
-local   : │││ Cell A   │ Cell B   │                                                     ││
+local   : ││                                                                            ││
 @@ row 07
 upstream: │
-local   : ││╰──────────┴──────────╯                                                     ││
+local   : ││                                                                            ││
 @@ row 08
 upstream: │
 local   : ││                                                                            ││
 @@ row 09
 upstream: │
-local   : ││╭─ Rounded ───────────╮                                                     ││
+local   : ││                                                                            ││
 @@ row 10
 upstream: │
-local   : │││ Header 1 │ Header 2 │                                                     ││
+local   : ││                                                                            ││
 @@ row 11
 upstream: │
-local   : │││ Cell A   │ Cell B   │                                                     ││
+local   : ││                                                                            ││
 @@ row 12
 upstream: │
-local   : ││╰──────────┴──────────╯                                                     ││
+local   : ││                                                                            ││
 @@ row 13
 upstream: │
 local   : ││                                                                            ││
 @@ row 14
 upstream: │
-local   : ││╭─ Double ───────────╮                                                      ││
+local   : ││                                                                            ││
 @@ row 15
 upstream: │
-local   : │││ Header 1 │ Header 2 │                                                     ││
+local   : ││                                                                            ││
 @@ row 16
 upstream: │
-local   : │││ Cell A   │ Cell B   │                                                     ││
+local   : ││                                                                            ││
 @@ row 17
 upstream: │
-local   : ││╰──────────┴──────────╯                                                     ││
+local   : ││                                                                            ││
 @@ row 18
 upstream: │
 local   : ││                                                                            ││
 @@ row 19
 upstream: │
-local   : ││╭─ Heavy ───────────╮                                                       ││
+local   : ││                                                                            ││
 @@ row 20
 upstream: │
-local   : │││ Header 1 │ Header 2 │                                                     ││
+local   : ││                                                                            ││
 @@ row 21
 upstream: │
-local   : │││ Cell A   │ Cell B   │                                                     ││
+local   : ││                                                                            ││
 @@ row 22
 upstream: │╭────────────────────────────────────────────Preview · Aurora · Markdown───────
 local   : │╰────────────────────────────────────────────────────────────────────────────╯│

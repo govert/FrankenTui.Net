@@ -1,24 +1,24 @@
-﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: [Forms]
+﻿1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: [Forms] │
 ╭────────────────────────────────Forms & Input─────────────────────────────────╮
-│Forms & Input  |  focus=Form  |  fields=3/6  |  mode=edit                     │
-│╭──────────Registration Form──────────╮╭────Password─────╮╭───Text Editor───╮ │
-││Name *:         Enter your name...   ││Password         ││1 │ Hello, world!│ │
-││Email *:        user@example.com     ││                 ││ 2 │             │ │
-││Role:             Developer          ││Strength: Medium ││3 │ This is a    │ │
-││Theme:          (1) Light            ││8 characters     ││multi-line       │ │
-││Age:              25                 ││                 ││4 │ text area    │ │
-││Accept Terms *: [ ]                  ││                 ││with             │ │
-││                                     ││                 ││5 │ line numbers.│ │
-││                                     ││                 ││ 6 │             │ │
-││                                     ││                 ││7 │ Use Ctrl+S to│ │
+│╭──────────Registration Form──────────╮╭─────Search──────╮╭───Text Editor───╮ │
+││ DRAFT   REQ 0/3   ERR 0   FIELDS 3/6││Search...        ││1  Hello, world! │ │
+││                                     ││                 ││2                │ │
+││Name *:         Enter your name...   ││                 ││3  This is a     │ │
+││Email *:        user@example.com     ││                 ││multi-line       │ │
+││Role:             Developer          ││                 ││4  text area with│ │
+││Theme:          (1) Light            ││                 ││5  line numbers. │ │
+││Age:              25                 ││                 ││6                │ │
+││Accept Terms *: [ ]                  ││                 ││7  Use Ctrl+S to │ │
 ││                                     ││                 ││save.            │ │
 ││                                     ││                 ││                 │ │
-│╰─────────────────────────────────────╯│                 ││                 │ │
-│╭───────────────Search────────────────╮│                 ││                 │ │
-││Search...                            ││                 ││                 │ │
 ││                                     ││                 ││                 │ │
-││Results:                             ││                 ││                 │ │
-││  1. Configuration                   ││                 ││                 │ │
-│╰─────────────────────────────────────╯╰─────────────────╯╰─────────────────╯ │
+││                                     ││                 ││                 │ │
+││                                     │╰─────────────────╯│                 │ │
+││                                     │╭────Password─────╮│                 │ │
+│╰─────────────────────────────────────╯│Password         ││                 │ │
+│                                       │                 ││                 │ │
+│                                       │●●●●●●●●         ││                 │ │
+│                                       │                 ││                 │ │
+│                                       ╰─────────────────╯╰─────────────────╯ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
 Forms & Input [7/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

@@ -300,7 +300,6 @@ internal static class ShowcaseSurface
                                 : string.Concat(keyLabel, ": ", screen.ShortLabel, " ");
             var segment = prefix + label;
             lineWidth += segment.Length;
-            if (lineWidth > 80) break;
             items.Add(segment);
         }
         return new ParagraphWidget(string.Concat(items));

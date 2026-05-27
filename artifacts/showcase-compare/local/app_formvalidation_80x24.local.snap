@@ -1,24 +1,24 @@
-﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
+﻿1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 ╭───────────────────────────────Form Validation────────────────────────────────╮
-│╭────────────────────────────────────────────────────────────────────────────╮│
-││Mode: Real-time [M to toggle]  |  Errors: 0  |  Warnings: 0                 ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
+│Mode: Real-time [M to toggle]                                                 │
+│╭─────────────────────────────Registration Form──────────────────────────────╮│
+││Username:         Enter username (required)                                 ││
+││Email:            user@example.com                                          ││
+││Password:         Min 8 characters                                          ││
+││Confirm Password: Re-enter password                                         ││
+││Age:                25                                                      ││
+││Bio:              Max 100 characters                                        ││
+││Website:          https://example.com                                       ││
+││Role:               (Select a role)                                         ││
+││Accept Terms:     [ ]                                                       ││
 ││                                                                            ││
 ││                                                                            ││
 ││                                                                            ││
 ││                                                                            ││
 │╰────────────────────────────────────────────────────────────────────────────╯│
-│╭──────────────Registration Form───────────────╮╭─────────Validation─────────╮│
-││Username:         Enter username (required)   ││No validation errors yet.   ││
-││Email:            user@example.com            ││                            ││
-││Password:         Min 8 characters            ││All fields pass initial     ││
-││Confirm Password: Re-enter password           ││checks.                     ││
-│╰──────────────────────────────────────────────╯╰────────────────────────────╯│
+│╭─────────────────────────────────Validation─────────────────────────────────╮│
+││No validation errors yet.                                                   ││
+││                                                                            ││
+│╰────────────────────────────────────────────────────────────────────────────╯│
 ╰──────────────────────────────────────────────────────────────────────────────╯
 Form Validation [27/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

@@ -2,76 +2,76 @@
 Upstream snapshot: app_formsinput_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 602
-Local nonblank chars: 927
-Local/upstream char ratio: 1.540
+Local nonblank chars: 819
+Local/upstream char ratio: 1.360
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   :  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: [Forms]
+local   : 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: [Forms] │
 @@ row 02
 upstream: ╭────────────────────────────────────────────────────Forms & Input──────────────
 local   : ╭────────────────────────────────Forms & Input─────────────────────────────────╮
 @@ row 03
 upstream: │╭────────────────────Registration Form────────────────────╮╭───────────────────
-local   : │Forms & Input  |  focus=Form  |  fields=3/6  |  mode=edit                     │
+local   : │╭──────────Registration Form──────────╮╭─────Search──────╮╭───Text Editor───╮ │
 @@ row 04
 upstream: ││ DRAFT   REQ 0/3   ERR 0   FIELDS 3/6                    ││ Search   Search...
-local   : │╭──────────Registration Form──────────╮╭────Password─────╮╭───Text Editor───╮ │
+local   : ││ DRAFT   REQ 0/3   ERR 0   FIELDS 3/6││Search...        ││1  Hello, world! │ │
 @@ row 05
 upstream: ││Name *:         Enter your name...                       ││ Password Password
-local   : ││Name *:         Enter your name...   ││Password         ││1 │ Hello, world!│ │
+local   : ││                                     ││                 ││2                │ │
 @@ row 06
 upstream: ││Email *:        user@example.com                         ││
-local   : ││Email *:        user@example.com     ││                 ││ 2 │             │ │
+local   : ││Name *:         Enter your name...   ││                 ││3  This is a     │ │
 @@ row 07
 upstream: ││Role:             Developer                              │╰───────────────────
-local   : ││Role:             Developer          ││Strength: Medium ││3 │ This is a    │ │
+local   : ││Email *:        user@example.com     ││                 ││multi-line       │ │
 @@ row 08
 upstream: ││Theme:          (1) Light                                │╭───────────────────
-local   : ││Theme:          (1) Light            ││8 characters     ││multi-line       │ │
+local   : ││Role:             Developer          ││                 ││4  text area with│ │
 @@ row 09
 upstream: ││Age:              25                                     ││1  Hello, world!
-local   : ││Age:              25                 ││                 ││4 │ text area    │ │
+local   : ││Theme:          (1) Light            ││                 ││5  line numbers. │ │
 @@ row 10
 upstream: ││Accept Terms *: [ ]                                      ││2
-local   : ││Accept Terms *: [ ]                  ││                 ││with             │ │
+local   : ││Age:              25                 ││                 ││6                │ │
 @@ row 11
 upstream: ││                                                         ││3  This is a multi-
-local   : ││                                     ││                 ││5 │ line numbers.│ │
+local   : ││Accept Terms *: [ ]                  ││                 ││7  Use Ctrl+S to │ │
 @@ row 12
 upstream: ││                                                         ││4  You can type, se
-local   : ││                                     ││                 ││ 6 │             │ │
+local   : ││                                     ││                 ││save.            │ │
 @@ row 13
 upstream: ││                                                         ││5
-local   : ││                                     ││                 ││7 │ Use Ctrl+S to│ │
+local   : ││                                     ││                 ││                 │ │
 @@ row 14
 upstream: ││                                                         ││6  Try Shift+Arrow
-local   : ││                                     ││                 ││save.            │ │
+local   : ││                                     ││                 ││                 │ │
 @@ row 15
 upstream: ││                                                         ││7  Ctrl+A selects a
 local   : ││                                     ││                 ││                 │ │
 @@ row 16
 upstream: ││                                                         ││8  Ctrl+Z to undo,
-local   : │╰─────────────────────────────────────╯│                 ││                 │ │
+local   : ││                                     │╰─────────────────╯│                 │ │
 @@ row 17
 upstream: ││                                                         ││
-local   : │╭───────────────Search────────────────╮│                 ││                 │ │
+local   : ││                                     │╭────Password─────╮│                 │ │
 @@ row 18
 upstream: ││                                                         ││
-local   : ││Search...                            ││                 ││                 │ │
+local   : │╰─────────────────────────────────────╯│Password         ││                 │ │
 @@ row 19
 upstream: ││                                                         ││
-local   : ││                                     ││                 ││                 │ │
+local   : │                                       │                 ││                 │ │
 @@ row 20
 upstream: ││                                                         ││
-local   : ││Results:                             ││                 ││                 │ │
+local   : │                                       │●●●●●●●●         ││                 │ │
 @@ row 21
 upstream: ││                                                         ││
-local   : ││  1. Configuration                   ││                 ││                 │ │
+local   : │                                       │                 ││                 │ │
 @@ row 22
 upstream: ││                                                         ││
-local   : │╰─────────────────────────────────────╯╰─────────────────╯╰─────────────────╯ │
+local   : │                                       ╰─────────────────╯╰─────────────────╯ │
 @@ row 23
 upstream: ││                                                         ││
 local   : ╰──────────────────────────────────────────────────────────────────────────────╯

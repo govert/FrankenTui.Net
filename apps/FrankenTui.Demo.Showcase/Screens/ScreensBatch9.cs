@@ -104,30 +104,6 @@ internal static class Screen10Advanced { public static IWidget Build(ShowcaseDem
     ]);
 }}
 
-internal static class Screen07FormsInput { public static IWidget Build(ShowcaseDemoState s) {
-    // view(): Flex::vertical([Fixed(1), Min(1)]) → Flex::horizontal with 3 columns
-    var header = new ParagraphWidget("Forms & Input  |  focus=Form  |  fields=3/6  |  mode=edit");
-    var form = ShowcaseSurface.Panel("Registration Form", string.Join("\n",
-        "Name *:         Enter your name...",
-        "Email *:        user@example.com",
-        "Role:             Developer",
-        "Theme:          (1) Light",
-        "Age:              25",
-        "Accept Terms *: [ ]"));
-    var search = ShowcaseSurface.Panel("Search", "Search...\n\nResults:\n  1. Configuration\n  2. Settings\n  3. Preferences");
-    var editor = ShowcaseSurface.Panel("Text Editor", " 1 │ Hello, world!\n 2 │\n 3 │ This is a multi-line\n 4 │ text area with\n 5 │ line numbers.\n 6 │\n 7 │ Use Ctrl+S to save.");
-    return new StackWidget(LayoutDirection.Vertical, [
-        (LayoutConstraint.Fixed(1), header),
-        (LayoutConstraint.Fill(), new StackWidget(LayoutDirection.Horizontal, [
-            (LayoutConstraint.Percentage(50), new StackWidget(LayoutDirection.Vertical, [
-                (LayoutConstraint.Fill(), form),
-                (LayoutConstraint.Fixed(6), search)
-            ])),
-            (LayoutConstraint.Percentage(25), ShowcaseSurface.Panel("Password", "Password\n\nStrength: Medium\n8 characters")),
-            (LayoutConstraint.Percentage(25), editor)
-        ]))
-    ]);
-}}
 
 internal static class Screen19Responsive { public static IWidget Build(ShowcaseDemoState s) {
     // view(): Flex::vertical([Fixed(1), Min(1)]) with breakpoint detection

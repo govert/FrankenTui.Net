@@ -46,37 +46,7 @@ internal static class Screen22ActionTimeline
 }
 
 /// <summary>Screen 27: Form Validation. Ported from form_validation.rs.</summary>
-internal static class Screen27FormValidation
-{
-    public static IWidget Build(ShowcaseDemoState state)
-    {
-        // view(): Flex::vertical([Min(2), Fixed(1)]) → Flex::horizontal([Min(1), Fixed(30)])
-        var modeBar = ShowcaseSurface.Panel(null, "Mode: Real-time [M to toggle]  |  Errors: 0  |  Warnings: 0");
 
-        var form = ShowcaseSurface.Panel("Registration Form", string.Join("\n",
-            "Username:         Enter username (required)",
-            "Email:            user@example.com",
-            "Password:         Min 8 characters",
-            "Confirm Password: Re-enter password",
-            "Age:                25",
-            "Bio:              Max 100 characters",
-            "Website:          https://example.com",
-            "Role:               (Select a role)",
-            "Accept Terms:     [ ]"));
-
-        var errors = ShowcaseSurface.Panel("Validation", "No validation errors yet.\n\nAll fields pass initial checks.");
-
-        return new StackWidget(LayoutDirection.Vertical, [
-            (LayoutConstraint.Minimum(2), modeBar),
-            (LayoutConstraint.Fill(), new StackWidget(LayoutDirection.Horizontal, [
-                (LayoutConstraint.Fill(), form),
-                (LayoutConstraint.Fixed(30), errors)
-            ]))
-        ]);
-    }
-}
-
-/// <summary>Screen 25: Advanced Text Editor. Ported from advanced_text_editor.rs.</summary>
 internal static class Screen25AdvTextEditor
 {
     public static IWidget Build(ShowcaseDemoState state)
