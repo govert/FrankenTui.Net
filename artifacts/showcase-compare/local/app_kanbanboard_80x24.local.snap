@@ -3,11 +3,11 @@
 │╭─────────To Do─────────╮╭──────In Progress──────╮╭──────────Done──────────╮  │
 ││Task 1: Setup project  ││Task 4: Port widgets   ││Task 6: Release v1.0    │  │
 ││Task 2: Add CI/CD      ││Task 5: Add docs       ││                        │  │
-││Task 3: Write tests    ││                       ││                        │  │
-││                       ││                       ││                        │  │
-││                       ││                       ││                        │  │
-││                       ││                       ││                        │  │
-││                       ││                       ││                        │  │
+││Task 3: Write tests    ││                       ││Keyboard: Tab columns   │  │
+││                       ││Selected: none         ││Arrows move cards       │  │
+││Drag cards between     ││                       ││                        │  │
+││columns.               ││                       ││                        │  │
+││Click to select.       ││                       ││                        │  │
 ││                       ││                       ││                        │  │
 ││                       ││                       ││                        │  │
 ││                       ││                       ││                        │  │

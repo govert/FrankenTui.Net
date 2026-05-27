@@ -1,24 +1,24 @@
 ﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
 ╭────────────────────────────Performance Challenge─────────────────────────────╮
-│╭──────────────────────────────Performance HUD───────────────────────────────╮│
-││Frame: 0                                                                    ││
-││FPS: 60.0                                                                   ││
-││Frame Time: 16.7ms                                                          ││
-││                                                                            ││
-││Diff: 250µs                                                                 ││
-││Render: 500µs                                                               ││
-││Present: 250µs                                                              ││
-││Total: 1.0ms                                                                ││
-││                                                                            ││
-││Budget: 16.7ms                                                              ││
-││Used: 1.0ms (6.0%)                                                          ││
-││Headroom: 15.7ms                                                            ││
-││                                                                            ││
-││Degradation: None                                                           ││
-││Strategy: Full                                                              ││
-││Dirty Rows: 0                                                               ││
-││Buffer Size: 1920 cells                                                     ││
-││                                                                            ││
-│╰────────────────────────────────────────────────────────────────────────────╯│
+│PERFORMANCE CHALLENGE MODE — DEGRADATION TIERS                                │
+│╭─────────────Real-Time Metrics──────────────╮╭─────Tick Intervals (µs)─────╮ │
+││  Sim FPS:         9.0 (Minimum viable)     ││█  █  █  █  ▅  █ ▆█▇  ▄  █   │ │
+││  Obs FPS:         9.0                      ││███ ▄ █ ▆ ▅  █ ████ ██ █ █   │ │
+││  Frame time:      110.99ms avg             ││█▇▇ █  ██  █ ████ ██████▅████│ │
+││  Tick rate:        9.0 tps                 ││█ ███  █▆████ ███████████▅█▅ │ │
+││  Diff:             0.992ms (+0.0ms)        ││███  ██████ ██████████████   │ │
+││  Render:          1.667ms (+0.0ms)         ││████                         │ │
+││  Present:          0.672ms                 ││                             │ │
+││  Budget Usage:     16.7%                   ││                             │ │
+││                                            ││                             │ │
+││avg:    110.99   p50:    110.87   p95:      ││                             │ │
+││113.04   p99:    115.47                     ││                             │ │
+││  min:    109.68   max:    115.47           ││                             │ │
+││                                            ││                             │ │
+││                                            ││                             │ │
+││                                            ││                             │ │
+││                                            ││                             │ │
+│╰────────────────────────────────────────────╯╰─────────────────────────────╯ │
+│0/120 budget:17ms | samples:2/120                                             │
 ╰──────────────────────────────────────────────────────────────────────────────╯
 Performance Challenge [32/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

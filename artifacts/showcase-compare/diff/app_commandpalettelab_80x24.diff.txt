@@ -2,8 +2,8 @@
 Upstream snapshot: app_commandpalettelab_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 595
-Local nonblank chars: 1019
-Local/upstream char ratio: 1.713
+Local nonblank chars: 853
+Local/upstream char ratio: 1.434
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -14,64 +14,64 @@ upstream: ╭──────────────────────�
 local   : ╭─────────────────────────Command Palette Evidence Lab─────────────────────────╮
 @@ row 03
 upstream: │Match Mode: 0 All  1 Exact  2 Prefix  3 WordStart  4 Substring  5 Fuzzy
-local   : │Match Mode: 0 All  1 Exact  2 Prefix  3 WordStart  4 Substring  5 Fuzzy       │
+local   : │╭────────────────────────────────────────────────────────────────────────────╮│
 @@ row 04
 upstream: │Type to filter · ↑/↓ navigate · Enter execute · b bench · m cycle
-local   : │Type to filter · ↑/↓ navigate · Enter execute · b bench · m cycle             │
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 05
 upstream: │                                                                  ╭────────────
-local   : │╭─────Command Palette──────╮╭────────────────────────────────────────────────╮│
+local   : │╭────────────Command Palette─────────────╮╭─────────────Evidence─────────────╮│
 @@ row 06
 upstream: │                                                                  │Selected: Go
-local   : ││>log                      ││Selected: Go to Log Search                      ││
+local   : ││>log                                    ││Selected: Go to Log Search        ││
 @@ row 07
 upstream: │                                                                  │Match: Subst
-local   : ││> [Navigation] Go to Log  ││Match: Substring                                ││
+local   : ││> [Navigation] Go to Log Search         ││Match: Substring on "log"         ││
 @@ row 08
 upstream: │                                                                  │Why this won
-local   : ││Search                    ││Why this won: substring match on "log"          ││
+local   : ││> log_search  screen                    ││MatchType: BestFirst              ││
 @@ row 09
 upstream: │             ╭───────── Command Palette ──────────╮               │substring
-local   : ││                          ││MatchType: BestFirst                            ││
+local   : ││                                        ││Position: 6                       ││
 @@ row 10
 upstream: │             │>log                                │               │
-local   : ││                          ││substring scoring                               ││
+local   : ││                                        ││WordBoundary: false               ││
 @@ row 11
 upstream: │             │> [Navigation] Go to Log Search     │               │MatchType: B
-local   : ││                          ││Position: BestFirst position 6                  ││
+local   : ││                                        ││TitleLength: 22                   ││
 @@ row 12
 upstream: │             │                                    │               │substring
-local   : ││                          ││WordBoundary: false                             ││
+local   : ││                                        ││Score: 0.87                       ││
 @@ row 13
 upstream: │             ╰────────────────────────────────────╯               │Position: BF
-local   : ││                          ││Full matches not found                          ││
+local   : ││                                        ││                                  ││
 @@ row 14
 upstream: │                                                                  │position 6
-local   : ││                          ││TitleLength: 22 chars, score based on length of ││
+local   : ││                                        ││                                  ││
 @@ row 15
 upstream: │                                                                  │WordBoundary
-local   : ││                          ││title                                           ││
+local   : ││                                        ││                                  ││
 @@ row 16
 upstream: │                                                                  │matches
-local   : ││                          │╰────────────────────────────────────────────────╯│
+local   : ││                                        ││                                  ││
 @@ row 17
 upstream: │                                                                  │TitleLength:
-local   : ││                          │╭─────────────Bench (deterministic)──────────────╮│
+local   : ││                                        ││                                  ││
 @@ row 18
 upstream: │                                                                  │of title
-local   : ││                          ││Status: OFF                                     ││
+local   : ││                                        ││                                  ││
 @@ row 19
 upstream: │                                                                  │
-local   : ││                          ││Processed: 0 queries                            ││
+local   : ││                                        ││                                  ││
 @@ row 20
 upstream: │                                                                  │
-local   : ││                          ││Latency: 0us avg                                ││
+local   : ││                                        ││                                  ││
 @@ row 21
 upstream: │                                                                  │╭─Bench (det
-local   : ││                          ││                                                ││
+local   : ││                                        ││                                  ││
 @@ row 22
 upstream: │                                                                  ││Status: OFF
-local   : │╰──────────────────────────╯╰────────────────────────────────────────────────╯│
+local   : │╰────────────────────────────────────────╯╰──────────────────────────────────╯│
 @@ row 23
 upstream: │                                                                  ││Processed:
 local   : ╰──────────────────────────────────────────────────────────────────────────────╯

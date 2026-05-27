@@ -2,8 +2,8 @@
 Upstream snapshot: app_explainabilitycockpit_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 698
-Local nonblank chars: 801
-Local/upstream char ratio: 1.148
+Local nonblank chars: 786
+Local/upstream char ratio: 1.126
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -17,58 +17,58 @@ upstream: │Explainability Cockpit · source: (disabled)
 local   : │╭───────────────────────────Explainability Cockpit───────────────────────────╮│
 @@ row 04
 upstream: │Evidence source disabled
-local   : ││Diff Decision Evidence:                                                     ││
+local   : ││Diff Decision Evidence  |  Frame: 42  |  Mode: Full                         ││
 @@ row 05
 upstream: │╭───────────────────────────────────────────────Explainability Cockpit─────────
 local   : ││                                                                            ││
 @@ row 06
 upstream: ││Evidence source disabled
-local   : ││Frame: 42                                                                   ││
+local   : ││Strategy: Dirty Rows (3 rows, 15 cells)                                     ││
 @@ row 07
 upstream: ││Enable evidence logging to populate this cockpit.
-local   : ││Strategy: Dirty Rows (3 rows, 15 cells)                                     ││
+local   : ││Cost: 250µs (vs 500µs full redraw)                                          ││
 @@ row 08
 upstream: ││Set FTUI_DEMO_EVIDENCE_JSONL to a writable path.
-local   : ││Cost: 250µs (vs 500µs full redraw)                                          ││
+local   : ││                                                                            ││
 @@ row 09
 upstream: ││Example: FTUI_DEMO_EVIDENCE_JSONL=/tmp/ftui_evidence.jsonl cargo run -p ftui-d
-local   : ││                                                                            ││
+local   : ││Why dirty rows?                                                             ││
 @@ row 10
 upstream: ││
-local   : ││Why dirty rows?                                                             ││
+local   : ││  Posterior mean: 0.87  Risk tolerance: 0.10                                ││
 @@ row 11
 upstream: ││
-local   : ││  - Posterior mean: 0.87                                                    ││
+local   : ││  Budget pressure: low (12.6%)                                              ││
 @@ row 12
 upstream: ││
-local   : ││  - Risk tolerance: 0.10                                                    ││
+local   : ││  Hysteresis: not triggered  Cooldown: 0 frames                             ││
 @@ row 13
 upstream: ││
-local   : ││  - Budget pressure: low (12.6%)                                            ││
+local   : ││                                                                            ││
 @@ row 14
 upstream: ││
-local   : ││  - Hysteresis: not triggered                                               ││
+local   : ││Budget: Used 2.1ms/16.7ms (12.6%)                                           ││
 @@ row 15
 upstream: ││
-local   : ││  - Cooldown: 0 frames remaining                                            ││
+local   : ││Degradation: None  Recovery: N/A                                            ││
 @@ row 16
 upstream: │╰──────────────────────────────────────────────────────────────────────────────
 local   : ││                                                                            ││
 @@ row 17
 upstream: │╔═════════════════════════════════════════════════Decision Timeline════════════
-local   : ││Budget:                                                                     ││
+local   : ││                                                                            ││
 @@ row 18
 upstream: │║No recent decisions.
-local   : ││  Used:  2.1ms / 16.7ms (12.6%)                                             ││
+local   : ││                                                                            ││
 @@ row 19
 upstream: │║
-local   : ││  Diff:  0.25ms                                                             ││
+local   : ││                                                                            ││
 @@ row 20
 upstream: │║
-local   : ││  Render: 0.50ms                                                            ││
+local   : ││                                                                            ││
 @@ row 21
 upstream: │║
-local   : ││  Present: 0.25ms                                                           ││
+local   : ││                                                                            ││
 @@ row 22
 upstream: │║
 local   : │╰────────────────────────────────────────────────────────────────────────────╯│

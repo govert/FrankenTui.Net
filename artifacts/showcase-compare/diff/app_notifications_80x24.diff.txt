@@ -2,8 +2,8 @@
 Upstream snapshot: app_notifications_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 491
-Local nonblank chars: 721
-Local/upstream char ratio: 1.468
+Local nonblank chars: 776
+Local/upstream char ratio: 1.580
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -14,64 +14,64 @@ upstream: ╭──────────────────────�
 local   : ╭────────────────────────────────Notifications─────────────────────────────────╮
 @@ row 03
 upstream: │╭──────────────Notification Demo──────────────╮
-local   : │╭─────────────────────────────Notification Demo──────────────────────────────╮│
+local   : │╭──────Notification Demo──────╮╭─────────────Notification Stack──────────────╮│
 @@ row 04
 upstream: ││Press keys to trigger notifications:         │
-local   : ││Press keys to trigger notifications:                                        ││
+local   : ││Press keys to trigger        ││No active notifications.                     ││
 @@ row 05
 upstream: ││                                             │
-local   : ││                                                                            ││
+local   : ││notifications:               ││                                             ││
 @@ row 06
 upstream: ││  s  Success notification                    │
-local   : ││  s  Success notification                                                   ││
+local   : ││                             ││Notifications appear here with               ││
 @@ row 07
 upstream: ││  e  Error with Retry action                 │
-local   : ││  e  Error with Retry action                                                ││
+local   : ││  s  Success                 ││swipe-to-dismiss and action buttons.         ││
 @@ row 08
 upstream: ││  w  Warning notification                    │
-local   : ││  w  Warning notification                                                   ││
+local   : ││  e  Error with Retry        ││                                             ││
 @@ row 09
 upstream: ││  i  Info notification                       │
-local   : ││  i  Info notification                                                      ││
+local   : ││  w  Warning                 ││                                             ││
 @@ row 10
 upstream: ││  u  Urgent with Ack/Snooze actions          │
-local   : ││  u  Urgent with Ack/Snooze actions                                         ││
+local   : ││  i  Info                    ││                                             ││
 @@ row 11
 upstream: ││  d  Dismiss all notifications               │
-local   : ││  d  Dismiss all notifications                                              ││
+local   : ││  u  Urgent with Ack/Snooze  ││                                             ││
 @@ row 12
 upstream: ││                                             │
-local   : ││                                                                            ││
+local   : ││  d  Dismiss all             ││                                             ││
 @@ row 13
 upstream: ││Queue: 0 visible, 0 pending                  │
-local   : ││Queue: 0 visible, 0 pending                                                 ││
+local   : ││                             ││                                             ││
 @@ row 14
 upstream: ││Total shown: 0                               │
-local   : ││Total shown: 0                                                              ││
+local   : ││Queue: 0 visible, 0 pending  ││                                             ││
 @@ row 15
 upstream: ││Last action: (none)                          │
-local   : ││Last action: (none)                                                         ││
+local   : ││Total shown: 0               ││                                             ││
 @@ row 16
 upstream: ││                                             │
-local   : ││                                                                            ││
+local   : ││Last action: (none)          ││                                             ││
 @@ row 17
 upstream: ││                                             │
-local   : ││                                                                            ││
+local   : ││                             ││                                             ││
 @@ row 18
 upstream: ││                                             │
-local   : ││                                                                            ││
+local   : ││                             ││                                             ││
 @@ row 19
 upstream: ││                                             │
-local   : ││                                                                            ││
+local   : ││                             ││                                             ││
 @@ row 20
 upstream: ││                                             │
-local   : ││                                                                            ││
+local   : ││                             ││                                             ││
 @@ row 21
 upstream: ││                                             │
-local   : ││                                                                            ││
+local   : ││                             ││                                             ││
 @@ row 22
 upstream: ││                                             │
-local   : │╰────────────────────────────────────────────────────────────────────────────╯│
+local   : │╰─────────────────────────────╯╰─────────────────────────────────────────────╯│
 @@ row 23
 upstream: ││                                             │
 local   : ╰──────────────────────────────────────────────────────────────────────────────╯

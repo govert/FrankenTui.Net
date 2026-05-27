@@ -2,8 +2,8 @@
 Upstream snapshot: app_snapshotplayer_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 667
-Local nonblank chars: 741
-Local/upstream char ratio: 1.111
+Local nonblank chars: 668
+Local/upstream char ratio: 1.001
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -14,61 +14,61 @@ upstream: ╭──────────────────────�
 local   : ╭──────────────────────────────Time-Travel Studio──────────────────────────────╮
 @@ row 03
 upstream: │╭───────────────────────────Timeline (1/50)───────────────────────────╮╭───────
-local   : │╭─────────────────────────────Time-Travel Studio─────────────────────────────╮│
+local   : │Time-Travel Studio  |  Snapshots: 42  |  Frame: 24/42  |  ▶ Playing (1.0x)    │
 @@ row 04
 upstream: ││░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░││Status:
-local   : ││Snapshots: 42 captured                                                      ││
+local   : │╭──────────────────────────────────Timeline──────────────────────────────────╮│
 @@ row 05
 upstream: │╰─────────────────────────────────────────────────────────────────────╯│
-local   : ││Current: frame 24/42                                                        ││
+local   : ││[0]──[10]──[20]──▶[24]──[30]──[40]                                          ││
 @@ row 06
 upstream: │╭────────────────────────────Frame Preview────────────────────────────╮│Frame:
 local   : ││                                                                            ││
 @@ row 07
 upstream: ││Frame 1/50                                                           ││Size: 4
-local   : ││Playback: ▶ Playing (1.0x)                                                  ││
+local   : ││Controls:                                                                   ││
 @@ row 08
 upstream: ││                                                                     ││Changes
-local   : ││                                                                            ││
+local   : ││  Space play/pause  ←→ step  Home/End first/last                            ││
 @@ row 09
 upstream: ││                                                                     ││Memory:
-local   : ││Controls:                                                                   ││
+local   : ││  r record  c clear  e export                                               ││
 @@ row 10
 upstream: ││Hello, World!                                                        ││Checksu
-local   : ││  Space  play/pause                                                         ││
+local   : ││                                                                            ││
 @@ row 11
 upstream: ││                                                                     ││Render:
-local   : ││  ←/→    step frame                                                         ││
+local   : ││                                                                            ││
 @@ row 12
 upstream: ││                                                                     ││
-local   : ││  Home   first frame                                                        ││
+local   : ││                                                                            ││
 @@ row 13
 upstream: ││                                                                     ││Chain h
-local   : ││  End    last frame                                                         ││
+local   : ││                                                                            ││
 @@ row 14
 upstream: ││                                                                     ││Markers
-local   : ││  r      record new snapshot                                                ││
+local   : ││                                                                            ││
 @@ row 15
 upstream: ││                                                                     ││Marked:
-local   : ││  c      clear all                                                          ││
+local   : ││                                                                            ││
 @@ row 16
 upstream: ││                                                                     ││
 local   : ││                                                                            ││
 @@ row 17
 upstream: ││                                                                     ││── Comp
-local   : ││Timeline:                                                                   ││
+local   : ││                                                                            ││
 @@ row 18
 upstream: ││                                                                     ││View: S
-local   : ││  [0]──[10]──[20]──▶[24]──[30]──[40]                                        ││
+local   : ││                                                                            ││
 @@ row 19
 upstream: ││                                                                     ││Heatmap
 local   : ││                                                                            ││
 @@ row 20
 upstream: ││█                                                                    ││A: #1
-local   : ││Snapshot size: 1920 cells                                                   ││
+local   : ││                                                                            ││
 @@ row 21
 upstream: ││                                                                     ││B: #2
-local   : ││Compression: none                                                           ││
+local   : ││                                                                            ││
 @@ row 22
 upstream: ││                                                                     ││Diff: n
 local   : │╰────────────────────────────────────────────────────────────────────────────╯│

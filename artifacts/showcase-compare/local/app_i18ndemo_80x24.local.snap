@@ -1,24 +1,24 @@
 ﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
 ╭───────────────────────────────i18n Stress Lab────────────────────────────────╮
-│╭──────────────────────────────i18n Stress Lab───────────────────────────────╮│
-││Language: en-US                                                             ││
-││                                                                            ││
-││Greetings:                                                                  ││
-││  English:    Hello, World!                                                 ││
-││  Spanish:    ¡Hola, Mundo!                                                 ││
-││  French:     Bonjour le monde!                                             ││
-││  German:     Hallo, Welt!                                                  ││
-││  Japanese:   こんにちは世界                                                ││
-││  Korean:     안녕하세요 세계                                               ││
-││  Arabic:     مرحبا بالعالم                                                 ││
-││  Hebrew:     שלום עולם                                                     ││
-││  Russian:    Привет, мир!                                                  ││
-││  Chinese:    你好，世界                                                    ││
-││                                                                            ││
-││RTL Test:                                                                   ││
-││  مرحبا بالعالم — هذا نص تجريبي                                             ││
-││                                                                            ││
-││Width Test:                                                                 ││
+│╭────────────────────────────────────────────────────────────────────────────╮│
+││Language: en-US  |  Panel: Overview  |  Flow: LTR  |  Tab: cycle panels  |  ││
 │╰────────────────────────────────────────────────────────────────────────────╯│
+│╭──────────────────────────────────Overview──────────────────────────────────╮│
+││English:    Hello, World!                                                   ││
+││Spanish:    ¡Hola, Mundo!                                                   ││
+││French:     Bonjour le monde!                                               ││
+││German:     Hallo, Welt!                                                    ││
+││Japanese:   こんにちは世界                                                  ││
+││Korean:     안녕하세요 세계                                                 ││
+││Arabic:     مرحبا بالعالم                                                   ││
+││Hebrew:     שלום עולם                                                       ││
+││Russian:    Привет, мир!                                                    ││
+││Chinese:    你好，世界                                                      ││
+││                                                                            ││
+││RTL:  مرحبا بالعالم — هذا نص تجريبي                                         ││
+││Emoji: 🎉🚀💻🎨🔧📊                                                         ││
+││                                                                            ││
+│╰────────────────────────────────────────────────────────────────────────────╯│
+│Width test: ＡＢＣＤＥ vs ABCDE  |  Emoji width: 🎉=2  |  Grapheme clusters:  │
 ╰──────────────────────────────────────────────────────────────────────────────╯
 i18n Stress Lab [34/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

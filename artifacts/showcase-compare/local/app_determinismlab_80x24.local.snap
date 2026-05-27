@@ -1,24 +1,24 @@
 ﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
 ╭───────────────────────────────Determinism Lab────────────────────────────────╮
-│╭──────────────────────────────Determinism Lab───────────────────────────────╮│
-││Seed: 42                                                                    ││
-││Checksum: 0xDEADBEEF                                                        ││
-││Frames: 1000                                                                ││
-││Hash: SHA-256                                                               ││
-││                                                                            ││
-││Deterministic: YES                                                          ││
-││All frames match reference checksums.                                       ││
-││                                                                            ││
-││Run with --seed=42 for reproducibility.                                     ││
-││                                                                            ││
-││Checksums verified:                                                         ││
-││  Frame 0: ✓ 0xDEADBEEF                                                     ││
-││  Frame 1: ✓ 0xCAFEBABE                                                     ││
-││  Frame 2: ✓ 0x8BADF00D                                                     ││
-││                                                                            ││
-││Test: ftui_determinism_checksum_equivalence                                 ││
-││Status: PASS                                                                ││
-││                                                                            ││
+│╭────────────────────────────────────────────────────────────────────────────╮│
 │╰────────────────────────────────────────────────────────────────────────────╯│
+│╭────────────────Equivalence─────────────────╮╭────────────Trace────────────╮ │
+││Checksum: 0xDEADBEEF                        ││Test:                        │ │
+││Frames verified: 1000/1000                  ││ftui_determinism_checksum_equ│ │
+││                                            ││ivalence                     │ │
+││Frame 0: ✓ 0xDEADBEEF                       ││Status: PASS                 │ │
+││Frame 1: ✓ 0xCAFEBABE                       ││Duration: 1.2s               │ │
+││Frame 2: ✓ 0x8BADF00D                       ││                             │ │
+││...                                         ││Reproducibility:             │ │
+││Frame 999: ✓ 0xFEEDFACE                     ││  --seed=42  deterministic   │ │
+││                                            ││  --seed=0   random          │ │
+││All frames match reference.                 ││                             │ │
+││                                            ││Evidence: checksums matched  │ │
+││                                            ││                             │ │
+││                                            ││                             │ │
+││                                            ││                             │ │
+││                                            ││                             │ │
+││                                            ││                             │ │
+│╰────────────────────────────────────────────╯╰─────────────────────────────╯ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
 Determinism Lab [40/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

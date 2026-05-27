@@ -2,8 +2,8 @@
 Upstream snapshot: app_voioverlay_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 805
-Local nonblank chars: 743
-Local/upstream char ratio: 0.923
+Local nonblank chars: 815
+Local/upstream char ratio: 1.012
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -17,58 +17,58 @@ upstream: │ src: inline-auto|fallback  focus: —  Tab:section v:detail n/p:le
 local   : │╭────────────────────────────────VOI Overlay─────────────────────────────────╮│
 @@ row 04
 upstream: │
-local   : ││Value of Information Analysis                                               ││
+local   : ││Value of Information Analysis  |  focus: Decision  |  Tab:section  v:detail ││
 @@ row 05
 upstream: │                         ╭───────────────────────────VOI Overlay───────────────
-local   : ││                                                                            ││
+local   : ││n/p:ledger                                                                  ││
 @@ row 06
 upstream: │                         │VOI Overlay (tick 27) [demo:fallback]
-local   : ││Current Decision: Render strategy                                           ││
+local   : ││                                                                            ││
 @@ row 07
 upstream: │                         │-----------------------------------------------------
-local   : ││Alternatives:                                                               ││
+local   : ││Decision: Render strategy                                                   ││
 @@ row 08
 upstream: │                         │Decision: SKIP    reason: voi_lt_cost
-local   : ││  1. Full redraw (cost: 500µs)                                              ││
+local   : ││  Alternatives: Full redraw (500µs) | Dirty rows (250µs) | Skip (0µs)       ││
 @@ row 09
 upstream: │                         │log10 BF: -1.883  score/cost
-local   : ││  2. Dirty rows (cost: 250µs)                                               ││
+local   : ││  Expected Value: Full=0.85  Dirty=0.92  Skip=0.45                          ││
 @@ row 10
 upstream: │                         │E: 1.438 / 20.00  boundary: 0.275
-local   : ││  3. Skip frame (cost: 0µs)                                                 ││
+local   : ││  Selected: Dirty rows  Confidence: 0.92                                    ││
 @@ row 11
 upstream: │                         │
 local   : ││                                                                            ││
 @@ row 12
 upstream:                           │Posterior Core
-local   : ││Expected Value:                                                             ││
+local   : ││Posterior: Beta(α=42, β=8)  Mean: 0.84  Variance: 0.003                     ││
 @@ row 13
 upstream: │                         │-----------------------------------------------------
-local   : ││  Full:    0.85                                                             ││
+local   : ││  Evidence: 50 observations  |  Prior: Beta(1,1)                            ││
 @@ row 14
 upstream: -----------               │p ~ Beta(a,b)  a=2.00  b=10.00
-local   : ││  Dirty:   0.92                                                             ││
+local   : ││                                                                            ││
 @@ row 15
 upstream: │                         │mu=0.1667  Var=0.010684
-local   : ││  Skip:    0.45                                                             ││
+local   : ││                                                                            ││
 @@ row 16
 upstream: │                         │VOI = Var[p] - E[Var|1]
 local   : ││                                                                            ││
 @@ row 17
 upstream: │                         │VOI = 0.010684 - 0.009862 = 0.000822
-local   : ││Decision: Dirty rows                                                        ││
+local   : ││                                                                            ││
 @@ row 18
 upstream: │                         │
-local   : ││Confidence: 0.92                                                            ││
+local   : ││                                                                            ││
 @@ row 19
 upstream: │                         │Decision Equation
 local   : ││                                                                            ││
 @@ row 20
 upstream: │                         │-----------------------------------------------------
-local   : ││Evidence:                                                                   ││
+local   : ││                                                                            ││
 @@ row 21
 upstream: -----------               │score=0.001048  cost=0.080000
-local   : ││  - Posterior mean: 0.87                                                    ││
+local   : ││                                                                            ││
 @@ row 22
 upstream: │                         │log10 BF = log10(0.001048/0.080000) = -1.883
 local   : │╰────────────────────────────────────────────────────────────────────────────╯│

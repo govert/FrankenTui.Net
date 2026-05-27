@@ -2,8 +2,8 @@
 Upstream snapshot: app_widgetbuilder_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 1036
-Local nonblank chars: 621
-Local/upstream char ratio: 0.599
+Local nonblank chars: 1051
+Local/upstream char ratio: 1.014
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -14,52 +14,52 @@ upstream: ╭──────────────────────�
 local   : ╭────────────────────────────────Widget Builder────────────────────────────────╮
 @@ row 03
 upstream: │Preset: Starter Kit  |  Widgets: 4  |  [P] cycle  [S] save  [X] export
-local   : │╭───────────────────────────────Widget Builder───────────────────────────────╮│
+local   : │╭────────────────────────────────────────────────────────────────────────────╮│
 @@ row 04
 upstream: │
-local   : ││Widget Type: Paragraph                                                      ││
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 05
 upstream: │╭Presets───────────────────╮╭Intro Paragraph───────────────────────────────────
-local   : ││                                                                            ││
+local   : │╭────────Properties────────╮╭────────────────────Preview─────────────────────╮│
 @@ row 06
 upstream: ││>  Starter Kit            ││Compose widgets, tweak props, and observe layout c
-local   : ││Properties:                                                                 ││
+local   : ││Type: Paragraph           ││Hello, FrankenTUI!                              ││
 @@ row 07
 upstream: ││Status Wall               ││
-local   : ││  text: "Hello, FrankenTUI!"                                                ││
+local   : ││Text: "Hello, FrankenTUI!"││                                                ││
 @@ row 08
 upstream: ││Minimal                   │╰──────────────────────────────────────────────────
-local   : ││  alignment: Left                                                           ││
+local   : ││Alignment: Left           ││This is a live preview of the                   ││
 @@ row 09
 upstream: ││                          │╭Checklist─────────────────────────────────────────
-local   : ││  wrap: Word                                                                ││
+local   : ││Wrap: Word                ││widget with the current properties.             ││
 @@ row 10
 upstream: ││                          ││Wireframe
-local   : ││  style: Default                                                            ││
+local   : ││Style: Default            ││                                                ││
 @@ row 11
 upstream: ││                          ││* Implement
-local   : ││                                                                            ││
+local   : ││                          ││Output updates in real-time.                    ││
 @@ row 12
 upstream: ││                          │╰──────────────────────────────────────────────────
-local   : ││Output:                                                                     ││
+local   : ││                          ││                                                ││
 @@ row 13
 upstream: │╰──────────────────────────╯╭Build Progress────────────────────────────────────
-local   : ││Hello, FrankenTUI!                                                          ││
+local   : ││                          ││                                                ││
 @@ row 14
 upstream: │╭Widget Tree───────────────╮│
-local   : ││                                                                            ││
+local   : ││                          ││                                                ││
 @@ row 15
 upstream: ││>  01. Paragraph [on]     ││                                          65%
-local   : ││                                                                            ││
+local   : ││                          ││                                                ││
 @@ row 16
 upstream: ││02. List [on]             │╰──────────────────────────────────────────────────
-local   : ││                                                                            ││
+local   : │╰──────────────────────────╯╰────────────────────────────────────────────────╯│
 @@ row 17
 upstream: ││03. Progress [on]         │╭Throughput────────────────────────────────────────
-local   : ││                                                                            ││
+local   : │╭────────────────────────────────Diagnostics─────────────────────────────────╮│
 @@ row 18
 upstream: ││04. Sparkline [on]        ││▁▄ ▅▇▃█▅▄▇▁▅
-local   : ││                                                                            ││
+local   : ││Render time: 0.3ms  |  Cells: 120  |  Graphemes: 18  |  Cache: warm         ││
 @@ row 19
 upstream: ││                          ││
 local   : ││                                                                            ││

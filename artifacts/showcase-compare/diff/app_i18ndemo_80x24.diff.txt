@@ -2,8 +2,8 @@
 Upstream snapshot: app_i18ndemo_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 653
-Local nonblank chars: 746
-Local/upstream char ratio: 1.142
+Local nonblank chars: 989
+Local/upstream char ratio: 1.515
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -14,64 +14,64 @@ upstream: ╭──────────────────────�
 local   : ╭───────────────────────────────i18n Stress Lab────────────────────────────────╮
 @@ row 03
 upstream: │                                [English]  Español  Français  Русский  العربية
-local   : │╭──────────────────────────────i18n Stress Lab───────────────────────────────╮│
+local   : │╭────────────────────────────────────────────────────────────────────────────╮│
 @@ row 04
 upstream: │
-local   : ││Language: en-US                                                             ││
+local   : ││Language: en-US  |  Panel: Overview  |  Flow: LTR  |  Tab: cycle panels  |  ││
 @@ row 05
 upstream: │───────────────────────────────────────────────────────────────────────────────
-local   : ││                                                                            ││
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 06
 upstream: │╭String Lookup────────────────────────────────────────────╮ ╭Coverage Report───
-local   : ││Greetings:                                                                  ││
+local   : │╭──────────────────────────────────Overview──────────────────────────────────╮│
 @@ row 07
 upstream: ││--- Internationalization ---                             │ │--- Coverage Repor
-local   : ││  English:    Hello, World!                                                 ││
+local   : ││English:    Hello, World!                                                   ││
 @@ row 08
 upstream: ││                                                         │ │
-local   : ││  Spanish:    ¡Hola, Mundo!                                                 ││
+local   : ││Spanish:    ¡Hola, Mundo!                                                   ││
 @@ row 09
 upstream: ││  Hello!                                                 │ │  Total keys: 6
-local   : ││  French:     Bonjour le monde!                                             ││
+local   : ││French:     Bonjour le monde!                                               ││
 @@ row 10
 upstream: ││  Welcome, Alice!                                        │ │  Locales: 6
-local   : ││  German:     Hallo, Welt!                                                  ││
+local   : ││German:     Hallo, Welt!                                                    ││
 @@ row 11
 upstream: ││                                                         │ │
-local   : ││  Japanese:   こんにちは世界                                                ││
+local   : ││Japanese:   こんにちは世界                                                  ││
 @@ row 12
 upstream: ││  Locale: English (English)                              │ │  ar 100% (6/6)
-local   : ││  Korean:     안녕하세요 세계                                               ││
+local   : ││Korean:     안녕하세요 세계                                                 ││
 @@ row 13
 upstream: ││  Direction: Left-to-Right                               │ │  en 100% (6/6) <-
-local   : ││  Arabic:     مرحبا بالعالم                                                 ││
+local   : ││Arabic:     مرحبا بالعالم                                                   ││
 @@ row 14
 upstream: ││  Flow: Ltr                                              │ │  es 100% (6/6)
-local   : ││  Hebrew:     שלום עולם                                                     ││
+local   : ││Hebrew:     שלום עולם                                                       ││
 @@ row 15
 upstream: ││                                                         │ │  fr 100% (6/6)
-local   : ││  Russian:    Привет, мир!                                                  ││
+local   : ││Russian:    Привет, мир!                                                    ││
 @@ row 16
 upstream: ││                                                         │ │  ja 100% (6/6)
-local   : ││  Chinese:    你好，世界                                                    ││
+local   : ││Chinese:    你好，世界                                                      ││
 @@ row 17
 upstream: ││                                                         │ │  ru 100% (6/6)
 local   : ││                                                                            ││
 @@ row 18
 upstream: ││                                                         │ │
-local   : ││RTL Test:                                                                   ││
+local   : ││RTL:  مرحبا بالعالم — هذا نص تجريبي                                         ││
 @@ row 19
 upstream: ││                                                         │ │  Fallback chain:
-local   : ││  مرحبا بالعالم — هذا نص تجريبي                                             ││
+local   : ││Emoji: 🎉🚀💻🎨🔧📊                                                         ││
 @@ row 20
 upstream: ││                                                         │ │
 local   : ││                                                                            ││
 @@ row 21
 upstream: ││                                                         │ │
-local   : ││Width Test:                                                                 ││
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 22
 upstream: ││                                                         │ │
-local   : │╰────────────────────────────────────────────────────────────────────────────╯│
+local   : │Width test: ＡＢＣＤＥ vs ABCDE  |  Emoji width: 🎉=2  |  Grapheme clusters:  │
 @@ row 23
 upstream: ││                                                         │ │
 local   : ╰──────────────────────────────────────────────────────────────────────────────╯

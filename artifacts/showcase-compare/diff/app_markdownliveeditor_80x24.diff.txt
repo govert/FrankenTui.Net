@@ -2,8 +2,8 @@
 Upstream snapshot: app_markdownliveeditor_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 888
-Local nonblank chars: 708
-Local/upstream char ratio: 0.797
+Local nonblank chars: 881
+Local/upstream char ratio: 0.992
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -14,52 +14,52 @@ upstream: ╭──────────────────────�
 local   : ╭─────────────────────────────Live Markdown Editor─────────────────────────────╮
 @@ row 03
 upstream: │╭───────────────────────────────────────────────────────Search─────────────────
-local   : │╭───────────────Editor────────────────╮╭───────────────Preview───────────────╮│
+local   : │╭───────────────────────────────────Search───────────────────────────────────╮│
 @@ row 04
 upstream: ││Query:    Search in editor (Ctrl+F)
-local   : ││# Hello World                        ││Hello World                          ││
+local   : ││Find: []  Replace: []  |  Mode: Edit  |  Sync: ON                           ││
 @@ row 05
 upstream: │╰──────────────────────────────────────────────────────────────────────────────
-local   : ││                                     ││                                     ││
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 06
 upstream: │
-local   : ││This is **bold** and *italic* text.  ││This is bold and italic text.        ││
+local   : │╭───────────────Editor────────────────╮╭───────────────Preview───────────────╮│
 @@ row 07
 upstream: │╭─────────────────────────Editor──────────────────────────╮ ╭──────────────────
-local   : ││                                     ││                                     ││
+local   : ││# Hello World                        ││Hello World                          ││
 @@ row 08
 upstream: ││ 1  # Live Markdown Editor                               │ │Live Markdown Edit
-local   : ││- List item 1                        ││• List item 1                        ││
+local   : ││                                     ││                                     ││
 @@ row 09
 upstream: ││ 2                                                       │ │
-local   : ││- List item 2                        ││• List item 2                        ││
+local   : ││This is **bold** and *italic*.       ││This is bold and italic.             ││
 @@ row 10
 upstream: ││ 3  Write Markdown on the left, preview on the right.    │ │Write Markdown on
 local   : ││                                     ││                                     ││
 @@ row 11
 upstream: ││ 4                                                       │ │
-local   : ││`inline code`                        ││inline code                          ││
+local   : ││- List item 1                        ││• List item 1                        ││
 @@ row 12
 upstream: ││ 5  ## Goals                                             │ │Goals
-local   : ││                                     ││                                     ││
+local   : ││- List item 2                        ││• List item 2                        ││
 @@ row 13
 upstream: ││ 6                                                       │ │• Split view edito
-local   : ││```                                  ││code block                           ││
+local   : ││                                     ││                                     ││
 @@ row 14
 upstream: ││ 7  - Split view editor + preview                        │ │• Live updates wit
-local   : ││code block                           ││                                     ││
+local   : ││`inline code`                        ││inline code                          ││
 @@ row 15
 upstream: ││ 8  - Live updates without flicker                       │ │• Search with high
-local   : ││```                                  ││                                     ││
+local   : ││                                     ││                                     ││
 @@ row 16
 upstream: ││ 9  - Search with highlighted matches                    │ │• Diff mode: raw v
-local   : ││                                     ││                                     ││
+local   : ││```                                  ││code block                           ││
 @@ row 17
 upstream: ││10  - Diff mode: raw vs rendered width                   │ │
-local   : ││                                     ││                                     ││
+local   : ││code block                           ││                                     ││
 @@ row 18
 upstream: ││11                                                       │ │Notes
-local   : ││                                     ││                                     ││
+local   : ││```                                  ││                                     ││
 @@ row 19
 upstream: ││12  ## Notes                                             │ │
 local   : ││                                     ││                                     ││

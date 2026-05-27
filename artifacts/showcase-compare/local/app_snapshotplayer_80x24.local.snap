@@ -1,24 +1,24 @@
 ﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
 ╭──────────────────────────────Time-Travel Studio──────────────────────────────╮
-│╭─────────────────────────────Time-Travel Studio─────────────────────────────╮│
-││Snapshots: 42 captured                                                      ││
-││Current: frame 24/42                                                        ││
-││                                                                            ││
-││Playback: ▶ Playing (1.0x)                                                  ││
+│Time-Travel Studio  |  Snapshots: 42  |  Frame: 24/42  |  ▶ Playing (1.0x)    │
+│╭──────────────────────────────────Timeline──────────────────────────────────╮│
+││[0]──[10]──[20]──▶[24]──[30]──[40]                                          ││
 ││                                                                            ││
 ││Controls:                                                                   ││
-││  Space  play/pause                                                         ││
-││  ←/→    step frame                                                         ││
-││  Home   first frame                                                        ││
-││  End    last frame                                                         ││
-││  r      record new snapshot                                                ││
-││  c      clear all                                                          ││
+││  Space play/pause  ←→ step  Home/End first/last                            ││
+││  r record  c clear  e export                                               ││
 ││                                                                            ││
-││Timeline:                                                                   ││
-││  [0]──[10]──[20]──▶[24]──[30]──[40]                                        ││
 ││                                                                            ││
-││Snapshot size: 1920 cells                                                   ││
-││Compression: none                                                           ││
+││                                                                            ││
+││                                                                            ││
+││                                                                            ││
+││                                                                            ││
+││                                                                            ││
+││                                                                            ││
+││                                                                            ││
+││                                                                            ││
+││                                                                            ││
+││                                                                            ││
 │╰────────────────────────────────────────────────────────────────────────────╯│
 ╰──────────────────────────────────────────────────────────────────────────────╯
 Time-Travel Studio [31/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

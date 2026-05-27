@@ -2,8 +2,8 @@
 Upstream snapshot: app_kanbanboard_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 498
-Local nonblank chars: 666
-Local/upstream char ratio: 1.337
+Local nonblank chars: 751
+Local/upstream char ratio: 1.508
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -23,19 +23,19 @@ upstream: │┃  [UI]                               ┃│  [UI]               
 local   : ││Task 2: Add CI/CD      ││Task 5: Add docs       ││                        │  │
 @@ row 06
 upstream: │┃                                     ┃│                                     ││
-local   : ││Task 3: Write tests    ││                       ││                        │  │
+local   : ││Task 3: Write tests    ││                       ││Keyboard: Tab columns   │  │
 @@ row 07
 upstream: │┃  Add input validation               ┃│  Implement auth flow                ││
-local   : ││                       ││                       ││                        │  │
+local   : ││                       ││Selected: none         ││Arrows move cards       │  │
 @@ row 08
 upstream: │┃  [Logic]                            ┃│  [Logic]                            ││
-local   : ││                       ││                       ││                        │  │
+local   : ││Drag cards between     ││                       ││                        │  │
 @@ row 09
 upstream: │┃                                     ┃│                                     ││
-local   : ││                       ││                       ││                        │  │
+local   : ││columns.               ││                       ││                        │  │
 @@ row 10
 upstream: │┃  Write unit tests                   ┃│                                     ││
-local   : ││                       ││                       ││                        │  │
+local   : ││Click to select.       ││                       ││                        │  │
 @@ row 11
 upstream: │┃  [QA]                               ┃│                                     ││
 local   : ││                       ││                       ││                        │  │

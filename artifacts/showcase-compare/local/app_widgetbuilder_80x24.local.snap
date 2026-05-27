@@ -1,21 +1,21 @@
 ﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
 ╭────────────────────────────────Widget Builder────────────────────────────────╮
-│╭───────────────────────────────Widget Builder───────────────────────────────╮│
-││Widget Type: Paragraph                                                      ││
-││                                                                            ││
-││Properties:                                                                 ││
-││  text: "Hello, FrankenTUI!"                                                ││
-││  alignment: Left                                                           ││
-││  wrap: Word                                                                ││
-││  style: Default                                                            ││
-││                                                                            ││
-││Output:                                                                     ││
-││Hello, FrankenTUI!                                                          ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
+│╭────────────────────────────────────────────────────────────────────────────╮│
+│╰────────────────────────────────────────────────────────────────────────────╯│
+│╭────────Properties────────╮╭────────────────────Preview─────────────────────╮│
+││Type: Paragraph           ││Hello, FrankenTUI!                              ││
+││Text: "Hello, FrankenTUI!"││                                                ││
+││Alignment: Left           ││This is a live preview of the                   ││
+││Wrap: Word                ││widget with the current properties.             ││
+││Style: Default            ││                                                ││
+││                          ││Output updates in real-time.                    ││
+││                          ││                                                ││
+││                          ││                                                ││
+││                          ││                                                ││
+││                          ││                                                ││
+│╰──────────────────────────╯╰────────────────────────────────────────────────╯│
+│╭────────────────────────────────Diagnostics─────────────────────────────────╮│
+││Render time: 0.3ms  |  Cells: 120  |  Graphemes: 18  |  Cache: warm         ││
 ││                                                                            ││
 ││                                                                            ││
 ││                                                                            ││

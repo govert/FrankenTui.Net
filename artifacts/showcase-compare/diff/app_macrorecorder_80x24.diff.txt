@@ -2,8 +2,8 @@
 Upstream snapshot: app_macrorecorder_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 804
-Local nonblank chars: 638
-Local/upstream char ratio: 0.794
+Local nonblank chars: 808
+Local/upstream char ratio: 1.005
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -14,7 +14,7 @@ upstream: ╭──────────────────────�
 local   : ╭────────────────────────────────Macro Recorder────────────────────────────────╮
 @@ row 03
 upstream: │╭───────────────────────────────────────────────────Macro Recorder─────────────
-local   : │╭───────────────────────────────Macro Recorder───────────────────────────────╮│
+local   : │╭───────────────────────────────Macro Controls───────────────────────────────╮│
 @@ row 04
 upstream: ││State: ○ Idle   Events: 0   Duration: 0ms
 local   : ││Status: Idle                                                                ││
@@ -29,49 +29,49 @@ upstream: ││Quick Start: Enter load scenario  Space record  ↑/↓ scrub ti
 local   : ││                                                                            ││
 @@ row 08
 upstream: ││Space/r record/stop  Enter/p play/pause  Esc stop  L loop  +/- speed
-local   : ││Controls:                                                                   ││
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 09
 upstream: │╰──────────────────────────────────────────────────────────────────────────────
-local   : ││  r  Record                                                                 ││
+local   : │╭────────────────Macro Editor────────────────╮╭───────────History───────────╮ │
 @@ row 10
 upstream: │╭──────────────────────────────Timeline───────────────────────────────╮╭───────
-local   : ││  p  Play                                                                   ││
+local   : ││No macro recorded yet.                      ││(empty)                      │ │
 @@ row 11
 upstream: ││No macro loaded.                                                     ││Select
-local   : ││  s  Stop                                                                   ││
+local   : ││                                            ││                             │ │
 @@ row 12
 upstream: ││Space to record, or select a scenario and press Enter.               ││
-local   : ││  e  Export                                                                 ││
+local   : ││Events will appear here as key/mouse/tick.  ││Export path: macros/         │ │
 @@ row 13
 upstream: ││                                                                     ││
-local   : ││  l  Load                                                                   ││
+local   : ││                                            ││                             │ │
 @@ row 14
 upstream: ││                                                                     ││
-local   : ││  c  Clear                                                                  ││
+local   : ││Format: JSONL                               ││                             │ │
 @@ row 15
 upstream: ││                                                                     ││
-local   : ││                                                                            ││
+local   : ││                                            ││                             │ │
 @@ row 16
 upstream: ││                                                                     ││
-local   : ││Macro format: JSON                                                          ││
+local   : ││                                            ││                             │ │
 @@ row 17
 upstream: ││                                                                     ││
-local   : ││Events: key, mouse, tick                                                    ││
+local   : ││                                            ││                             │ │
 @@ row 18
 upstream: ││                                                                     ││
-local   : ││                                                                            ││
+local   : ││                                            ││                             │ │
 @@ row 19
 upstream: ││                                                                     ││
-local   : ││History: (empty)                                                            ││
+local   : ││                                            ││                             │ │
 @@ row 20
 upstream: ││                                                                     ││
-local   : ││                                                                            ││
+local   : ││                                            ││                             │ │
 @@ row 21
 upstream: ││                                                                     │╰───────
-local   : ││                                                                            ││
+local   : ││                                            ││                             │ │
 @@ row 22
 upstream: ││                                                                     │╭───────
-local   : │╰────────────────────────────────────────────────────────────────────────────╯│
+local   : │╰────────────────────────────────────────────╯╰─────────────────────────────╯ │
 @@ row 23
 upstream: ││                                                                     ││Preset
 local   : ╰──────────────────────────────────────────────────────────────────────────────╯

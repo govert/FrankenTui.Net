@@ -2,8 +2,8 @@
 Upstream snapshot: app_dragdrop_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 369
-Local nonblank chars: 680
-Local/upstream char ratio: 1.843
+Local nonblank chars: 823
+Local/upstream char ratio: 2.230
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -14,40 +14,40 @@ upstream: ╭──────────────────────�
 local   : ╭───────────────────────────────Drag & Drop Lab────────────────────────────────╮
 @@ row 03
 upstream: │[Sortable List] |  Cross-Container  |  Keyboard Drag
-local   : │╭─────────Sortable List─────────╮╭────Cross-Container────╮╭─────Keyboard─────╮│
+local   : │Drag & Drop Lab  |  [Sortable List]  cross-container  keyboard drag  |        │
 @@ row 04
 upstream: │╭───────────────────────────────────────────────────Sortable List──────────────
-local   : ││> Item 1                       ││Drop here              ││Tab: focus        ││
+local   : │╭─────────Sortable List─────────╮╭────Cross-Container────╮╭──Keyboard Drag───╮│
 @@ row 05
 upstream: ││> Item 1
-local   : ││  Item 2                       ││                       ││Space: pick up    ││
+local   : ││> Item 1                       ││Drop here              ││Tab: focus        ││
 @@ row 06
 upstream: ││  Item 2
-local   : ││  Item 3                       ││target A               ││Arrows: move      ││
+local   : ││  Item 2                       ││                       ││Space: pick up    ││
 @@ row 07
 upstream: ││  Item 3
-local   : ││  Item 4                       ││target B               ││Enter: drop       ││
+local   : ││  Item 3                       ││target A               ││Arrows: move      ││
 @@ row 08
 upstream: ││  Item 4
-local   : ││  Item 5                       ││                       ││                  ││
+local   : ││  Item 4                       ││target B               ││Enter: drop       ││
 @@ row 09
 upstream: ││  Item 5
-local   : ││  Item 6                       ││                       ││                  ││
+local   : ││  Item 5                       ││                       ││                  ││
 @@ row 10
 upstream: ││  Item 6
-local   : ││  Item 7                       ││                       ││                  ││
+local   : ││  Item 6                       ││Drag items between     ││                  ││
 @@ row 11
 upstream: ││  Item 7
-local   : ││  Item 8                       ││                       ││                  ││
+local   : ││  Item 7                       ││lists.                 ││                  ││
 @@ row 12
 upstream: ││  Item 8
-local   : ││                               ││                       ││                  ││
+local   : ││  Item 8                       ││                       ││                  ││
 @@ row 13
 upstream: ││
 local   : ││                               ││                       ││                  ││
 @@ row 14
 upstream: ││
-local   : ││                               ││                       ││                  ││
+local   : ││LIST_SIZE=8 deterministic      ││                       ││                  ││
 @@ row 15
 upstream: ││
 local   : ││                               ││                       ││                  ││
@@ -65,13 +65,13 @@ upstream: ││
 local   : ││                               ││                       ││                  ││
 @@ row 20
 upstream: ││
-local   : ││                               ││                       ││                  ││
+local   : │╰───────────────────────────────╯╰───────────────────────╯╰──────────────────╯│
 @@ row 21
 upstream: ││
-local   : ││                               ││                       ││                  ││
+local   : │Tab / Shift+Tab cycles DemoMode  |  mouse down on layout_tabs selects mode    │
 @@ row 22
 upstream: ││
-local   : │╰───────────────────────────────╯╰───────────────────────╯╰──────────────────╯│
+local   : │                                                                              │
 @@ row 23
 upstream: ││
 local   : ╰──────────────────────────────────────────────────────────────────────────────╯

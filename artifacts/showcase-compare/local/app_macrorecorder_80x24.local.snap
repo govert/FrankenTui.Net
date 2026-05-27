@@ -1,24 +1,24 @@
 ﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
 ╭────────────────────────────────Macro Recorder────────────────────────────────╮
-│╭───────────────────────────────Macro Recorder───────────────────────────────╮│
+│╭───────────────────────────────Macro Controls───────────────────────────────╮│
 ││Status: Idle                                                                ││
 ││Mode: Record                                                                ││
 ││Buffer: 0 events                                                            ││
 ││                                                                            ││
-││Controls:                                                                   ││
-││  r  Record                                                                 ││
-││  p  Play                                                                   ││
-││  s  Stop                                                                   ││
-││  e  Export                                                                 ││
-││  l  Load                                                                   ││
-││  c  Clear                                                                  ││
-││                                                                            ││
-││Macro format: JSON                                                          ││
-││Events: key, mouse, tick                                                    ││
-││                                                                            ││
-││History: (empty)                                                            ││
-││                                                                            ││
-││                                                                            ││
 │╰────────────────────────────────────────────────────────────────────────────╯│
+│╭────────────────Macro Editor────────────────╮╭───────────History───────────╮ │
+││No macro recorded yet.                      ││(empty)                      │ │
+││                                            ││                             │ │
+││Events will appear here as key/mouse/tick.  ││Export path: macros/         │ │
+││                                            ││                             │ │
+││Format: JSONL                               ││                             │ │
+││                                            ││                             │ │
+││                                            ││                             │ │
+││                                            ││                             │ │
+││                                            ││                             │ │
+││                                            ││                             │ │
+││                                            ││                             │ │
+││                                            ││                             │ │
+│╰────────────────────────────────────────────╯╰─────────────────────────────╯ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
 Macro Recorder [13/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

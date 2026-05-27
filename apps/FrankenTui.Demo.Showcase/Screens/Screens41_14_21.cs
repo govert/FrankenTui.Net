@@ -145,23 +145,3 @@ internal static class Screen14Performance
 }
 
 /// <summary>Screen 21: Notifications. Ported from notifications.rs.</summary>
-internal static class Screen21Notifications
-{
-    public static IWidget Build(ShowcaseDemoState state)
-    {
-        var lines = string.Join("\n",
-            "Press keys to trigger notifications:",
-            "",
-            "  s  Success notification",
-            "  e  Error with Retry action",
-            "  w  Warning notification",
-            "  i  Info notification",
-            "  u  Urgent with Ack/Snooze actions",
-            "  d  Dismiss all notifications",
-            "",
-            "Queue: 0 visible, 0 pending",
-            "Total shown: 0",
-            "Last action: (none)");
-        return ShowcaseSurface.Panel("Notification Demo", lines);
-    }
-}

@@ -1,24 +1,24 @@
 ﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
 ╭───────────────────────────────Drag & Drop Lab────────────────────────────────╮
-│╭─────────Sortable List─────────╮╭────Cross-Container────╮╭─────Keyboard─────╮│
+│Drag & Drop Lab  |  [Sortable List]  cross-container  keyboard drag  |        │
+│╭─────────Sortable List─────────╮╭────Cross-Container────╮╭──Keyboard Drag───╮│
 ││> Item 1                       ││Drop here              ││Tab: focus        ││
 ││  Item 2                       ││                       ││Space: pick up    ││
 ││  Item 3                       ││target A               ││Arrows: move      ││
 ││  Item 4                       ││target B               ││Enter: drop       ││
 ││  Item 5                       ││                       ││                  ││
-││  Item 6                       ││                       ││                  ││
-││  Item 7                       ││                       ││                  ││
+││  Item 6                       ││Drag items between     ││                  ││
+││  Item 7                       ││lists.                 ││                  ││
 ││  Item 8                       ││                       ││                  ││
 ││                               ││                       ││                  ││
-││                               ││                       ││                  ││
-││                               ││                       ││                  ││
-││                               ││                       ││                  ││
-││                               ││                       ││                  ││
+││LIST_SIZE=8 deterministic      ││                       ││                  ││
 ││                               ││                       ││                  ││
 ││                               ││                       ││                  ││
 ││                               ││                       ││                  ││
 ││                               ││                       ││                  ││
 ││                               ││                       ││                  ││
 │╰───────────────────────────────╯╰───────────────────────╯╰──────────────────╯│
+│Tab / Shift+Tab cycles DemoMode  |  mouse down on layout_tabs selects mode    │
+│                                                                              │
 ╰──────────────────────────────────────────────────────────────────────────────╯
 Drag & Drop Lab [44/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)
