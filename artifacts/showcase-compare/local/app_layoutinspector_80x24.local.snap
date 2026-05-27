@@ -1,14 +1,13 @@
 ﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
 ╭───────────────────────────────Layout Inspector───────────────────────────────╮
 │╭──────────────Inspector───────────────╮╭───────────────Layout───────────────╮│
-││Scenario: Flex Trio                   ││Fixed 44x3 [0..∞ x 3..3]            ││
+││Scenario: Flex Trio                   ││.Fixed 44x3 [0..∞ x 3..3]           ││
 ││Details: Vertical flex: Fixed + Min + ││                                    ││
-││Max                                   ││Min 44x4→44x7 [0..∞ x 4..∞]         ││
+││Max                                   ││.Min 44x4→44x7 [0..∞ x 4..∞]        ││
 ││Step: Constraints - Inspect min/max   ││                                    ││
-││bounds                                ││Max 44x6→44x3 [0..∞ x 0..6]         ││
+││bounds                                ││.Max 44x6→44x3 [0..∞ x 0..6]        ││
 ││                                      ││                                    ││
 ││Overlay: on   Tree: on                ││                                    ││
-││                                      ││                                    ││
 ││Keys: n/p scenario  [/ ] step  o      ││                                    ││
 ││overlay                               ││                                    ││
 ││                                      ││                                    ││
@@ -19,6 +18,7 @@
 ││Min  req 44x4  got 44x7  min 0x4  max ││                                    ││
 ││∞x∞                                   ││                                    ││
 ││Max  req 44x6  got 44x3  min 0x0  max ││                                    ││
+││∞x6                                   ││                                    ││
 │╰──────────────────────────────────────╯╰────────────────────────────────────╯│
 ╰──────────────────────────────────────────────────────────────────────────────╯
 Layout Inspector [24/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

@@ -2,8 +2,8 @@
 Upstream snapshot: app_responsivedemo_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 662
-Local nonblank chars: 844
-Local/upstream char ratio: 1.275
+Local nonblank chars: 876
+Local/upstream char ratio: 1.323
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -17,37 +17,37 @@ upstream: │ Breakpoint: SM (60-89) │ Width: 80 │ Thresholds: sm≥60 md≥
 local   : │Breakpoint: SM (60-89) | Width: 80 | Thresholds: sm≥60 md≥90 lg≥120 xl≥160    │
 @@ row 04
 upstream: │╭Sidebar───────────────────╮╭Content───────────────────────────────────────────
-local   : │                                                                              │
+local   : │╭──────────Sidebar───────────╮╭───────────────────Content────────────────────╮│
 @@ row 05
 upstream: ││Breakpoint: SM (60-89)    ││Columns: 1 │ Breakpoint: SM (60-89) │ 80×24
-local   : │╭──────────Sidebar───────────╮╭───────────────────Content────────────────────╮│
+local   : ││Breakpoint: SM (60-89)      ││Columns: 1 | Breakpoint: SM (60-89) | 80×24   ││
 @@ row 06
 upstream: ││Layout: stacked           ││
-local   : ││Breakpoint: SM (60-89)      ││Columns: 1                                    ││
+local   : ││Layout: stacked             ││                                              ││
 @@ row 07
 upstream: ││                          ││Padding: 2 │ Style: normal
-local   : ││Layout: stacked             ││                                              ││
+local   : ││                            ││Padding: 2 | Style: normal                    ││
 @@ row 08
 upstream: ││Sidebar: hidden (md+)     ││
-local   : ││                            ││Padding: 2                                    ││
+local   : ││Sidebar: hidden (md+)       ││                                              ││
 @@ row 09
 upstream: ││Aside:   hidden (lg+)     ││The layout adapts to the terminal width.
-local   : ││Sidebar: hidden (md+)       ││Style: normal                                 ││
+local   : ││Aside:   hidden (lg+)       ││The layout adapts to the terminal width.      ││
 @@ row 10
 upstream: ││                          ││Resize your terminal to see the layout switch
-local   : ││Aside:   hidden (lg+)       ││                                              ││
+local   : ││                            ││Resize your terminal to see the layout switch ││
 @@ row 11
 upstream: ││[b] Toggle BPs            ││between 1-column, 2-column, and 3-column modes.
-local   : ││                            ││The layout adapts to the terminal width.      ││
+local   : ││[b] Toggle BPs              ││between 1-column, 2-column, and 3-column      ││
 @@ row 12
 upstream: ││[Current: default]        ││
-local   : ││[b] Toggle BPs              ││Resize your terminal to see the layout switch ││
+local   : ││[Current: default]          ││modes.                                        ││
 @@ row 13
 upstream: ││                          ││
-local   : ││[Current: default]          ││between 1-column, 2-column, and 3-column      ││
+local   : ││                            ││                                              ││
 @@ row 14
 upstream: ││                          ││
-local   : ││                            ││modes.                                        ││
+local   : ││                            ││                                              ││
 @@ row 15
 upstream: ││                          ││
 local   : ││                            ││                                              ││

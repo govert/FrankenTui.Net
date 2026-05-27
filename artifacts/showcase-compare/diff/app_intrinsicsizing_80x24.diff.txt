@@ -2,8 +2,8 @@
 Upstream snapshot: app_intrinsicsizing_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 653
-Local nonblank chars: 857
-Local/upstream char ratio: 1.312
+Local nonblank chars: 832
+Local/upstream char ratio: 1.274
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -20,13 +20,13 @@ upstream: │╭Menu──────────────╮╭Content─�
 local   : │╭────────Menu────────╮╭───────────────────Content────────────────────╮╭──────╮│
 @@ row 05
 upstream: ││📊 Dashboard      ││Current width: 72                                 │  │mode:
-local   : ││📊 Dashboard        ││Current width: 72                             ││mode: ││
+local   : ││📊 Dashboard        ││Current width: 72                             ││21px  ││
 @@ row 06
 upstream: ││⚙️ Settings        ││Sidebar mode: Full sidebar mode (width >= 60)     │  │┃
-local   : ││⚙️ Settings          ││Sidebar mode: Full sidebar mode (width >= 60) ││┃     ││
+local   : ││⚙️ Settings          ││Sidebar mode: Full sidebar mode (width >= 60) ││      ││
 @@ row 07
 upstream: ││❓ Help           ││                                                  │  │┃ 21x
-local   : ││❓ Help              ││                                              ││┃ 21x ││
+local   : ││❓ Help              ││                                              ││┃     ││
 @@ row 08
 upstream: ││🔔 Notifications  ││The sidebar adapts to terminal width:             │  │┃
 local   : ││🔔 Notifications    ││The sidebar adapts to terminal width:         ││┃     ││
@@ -38,37 +38,37 @@ upstream: ││                  ││• Wide: full labels (20 cols)         
 local   : ││                    ││• Wide: full labels (20 cols)                 ││┃     ││
 @@ row 11
 upstream: ││                  ││                                                  │  │┃
-local   : ││                    ││                                              ││────  ││
+local   : ││                    ││                                              ││──    ││
 @@ row 12
 upstream: ││                  ││Try resizing your terminal!                       │  │┃
-local   : ││                    ││Try resizing your terminal!                   ││╭───  ││
+local   : ││                    ││Try resizing your terminal!                   ││      ││
 @@ row 13
 upstream: ││                  ││                                                  │  │────
-local   : ││                    ││                                              │││     ││
+local   : ││                    ││                                              ││      ││
 @@ row 14
 upstream: ││                  ││                                                  │  │╭───
-local   : ││                    ││                                              │││ 21  ││
+local   : ││                    ││                                              ││      ││
 @@ row 15
 upstream: ││                  ││                                                  │  ││
-local   : ││                    ││                                              │││     ││
+local   : ││                    ││                                              ││      ││
 @@ row 16
 upstream: ││                  ││                                                  │  ││ 21
-local   : ││                    ││                                              │││     ││
+local   : ││                    ││                                              ││      ││
 @@ row 17
 upstream: ││                  ││                                                  │  ││
-local   : ││                    ││                                              │││     ││
+local   : ││                    ││                                              ││      ││
 @@ row 18
 upstream: ││                  ││                                                  │  ││
-local   : ││                    ││                                              │││     ││
+local   : ││                    ││                                              ││      ││
 @@ row 19
 upstream: ││                  ││                                                  │  ││
-local   : ││                    ││                                              │││     ││
+local   : ││                    ││                                              ││      ││
 @@ row 20
 upstream: ││                  ││                                                  │  ││
-local   : ││                    ││                                              │││     ││
+local   : ││                    ││                                              ││      ││
 @@ row 21
 upstream: ││                  ││                                                  │  ││
-local   : ││                    ││                                              ││╰───  ││
+local   : ││                    ││                                              ││      ││
 @@ row 22
 upstream: ││                  ││                                                  │  ││
 local   : │╰────────────────────╯╰──────────────────────────────────────────────╯╰──────╯│

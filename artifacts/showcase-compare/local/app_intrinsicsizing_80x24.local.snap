@@ -2,23 +2,23 @@
 ╭───────────────────────────────Intrinsic Sizing───────────────────────────────╮
 │ Intrinsic Sizing Demo • Adaptive Sidebar (1/4)                               │
 │╭────────Menu────────╮╭───────────────────Content────────────────────╮╭──────╮│
-││📊 Dashboard        ││Current width: 72                             ││mode: ││
-││⚙️ Settings          ││Sidebar mode: Full sidebar mode (width >= 60) ││┃     ││
-││❓ Help              ││                                              ││┃ 21x ││
+││📊 Dashboard        ││Current width: 72                             ││21px  ││
+││⚙️ Settings          ││Sidebar mode: Full sidebar mode (width >= 60) ││      ││
+││❓ Help              ││                                              ││┃     ││
 ││🔔 Notifications    ││The sidebar adapts to terminal width:         ││┃     ││
 ││👤 Profile          ││• Narrow: icon-only (4 cols)                  ││┃     ││
 ││                    ││• Wide: full labels (20 cols)                 ││┃     ││
-││                    ││                                              ││────  ││
-││                    ││Try resizing your terminal!                   ││╭───  ││
-││                    ││                                              │││     ││
-││                    ││                                              │││ 21  ││
-││                    ││                                              │││     ││
-││                    ││                                              │││     ││
-││                    ││                                              │││     ││
-││                    ││                                              │││     ││
-││                    ││                                              │││     ││
-││                    ││                                              │││     ││
-││                    ││                                              ││╰───  ││
+││                    ││                                              ││──    ││
+││                    ││Try resizing your terminal!                   ││      ││
+││                    ││                                              ││      ││
+││                    ││                                              ││      ││
+││                    ││                                              ││      ││
+││                    ││                                              ││      ││
+││                    ││                                              ││      ││
+││                    ││                                              ││      ││
+││                    ││                                              ││      ││
+││                    ││                                              ││      ││
+││                    ││                                              ││      ││
 │╰────────────────────╯╰──────────────────────────────────────────────╯╰──────╯│
 ╰──────────────────────────────────────────────────────────────────────────────╯
 Intrinsic Sizing [23/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

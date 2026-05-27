@@ -1,24 +1,24 @@
 ﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms
 ╭───────────────────────────────────Markdown───────────────────────────────────╮
-│╭─────────────────────────────Markdown Rich Text─────────────────────────────╮│
+│╭──────────────────────────────────Markdown──────────────────────────────────╮│
 ││# Markdown Rendering                                                        ││
-││                                                                            ││
 ││## Headers                                                                  ││
-││                                                                            ││
 ││### H3: Smaller header                                                      ││
 ││                                                                            ││
 ││**Bold text** and *italic text* and `code`.                                 ││
-││                                                                            ││
 ││> Blockquote: This is a quoted section.                                     ││
 ││                                                                            ││
 ││---                                                                         ││
-││                                                                            ││
 ││- Unordered list item 1                                                     ││
 ││- Unordered list item 2                                                     ││
 ││                                                                            ││
 ││1. Ordered item one                                                         ││
 ││2. Ordered item two                                                         ││
 ││                                                                            ││
+││| Col A | Col B |                                                           ││
+││|-------|-------|                                                           ││
+││|  a1   |  b1   |                                                           ││
+││|  a2   |  b2   |                                                           ││
 │╰────────────────────────────────────────────────────────────────────────────╯│
 ╰──────────────────────────────────────────────────────────────────────────────╯
 Markdown [15/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

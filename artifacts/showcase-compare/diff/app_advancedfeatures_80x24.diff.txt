@@ -2,8 +2,8 @@
 Upstream snapshot: app_advancedfeatures_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 1061
-Local nonblank chars: 1190
-Local/upstream char ratio: 1.122
+Local nonblank chars: 1052
+Local/upstream char ratio: 0.992
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -14,64 +14,64 @@ upstream: ╭──────────────────────�
 local   : ╭───────────────────────────────────Advanced───────────────────────────────────╮
 @@ row 03
 upstream: │╭─────────────────────Error Traceback─────────────────────╮╭───────────────────
-local   : │╭───────────────────Error Traceback────────────────────╮╭───────Timers───────╮│
+local   : │╭──────────────────Error Traceback───────────────────╮╭───────Timers────────╮ │
 @@ row 04
 upstream: ││── Application Error ──                                  ││Compact timer: 4m57
-local   : ││── Application Error ──                               ││Compact timer:      ││
+local   : ││"src/main.rs", line 42, in main                     ││Compact timer:       │ │
 @@ row 05
 upstream: .9s (0%) "src/main.rs", line 42, in main                   ││Clock timer:   01:5
-local   : ││"src/main.rs", line 42, in main                       ││4m57.9s (0%)        ││
+local   : ││   40 │ fn main() -> Result<()> {                   ││4m57.9s (0%)         │ │
 @@ row 06
 upstream: 9│   40 │ fn main() -> Result<()> {                        ││
-local   : ││   40 | fn main() -> Result<()> {                     ││Clock timer:   01:59││
+local   : ││   41 │     let config = Config::load()?;           ││Clock timer:   01:59 │ │
 @@ row 07
 upstream: ││   41 │     let config = Config::load()?;                ││Spinners:
-local   : ││   41 |     let config = Config::load()?;             ││                    ││
+local   : ││ ❱ 42 │     app::run(config)?;                      ││                     │ │
 @@ row 08
 upstream: ││ ❱ 42 │     app::run(config)?;                           ││dots        ⠧
-local   : ││ ❱ 42 |     app::run(config)?;                        ││Spinners:           ││
+local   : ││   43 │     Ok(())                                  ││Spinners:            │ │
 @@ row 09
 upstream: ││   43 │     Ok(())                                       ││line        \
-local   : ││   43 |     Ok(())                                    ││dots        ⠧       ││
+local   : ││   44 │ }                                           ││dots        ⠧        │ │
 @@ row 10
 upstream: ││   44 │ }                                                ││braille     ⠧
-local   : ││   44 | }                                             ││line        \       ││
+local   : ││  File "src/app.rs", line 128, in run               ││line        \        │ │
 @@ row 11
 upstream: ││  File "src/app.rs", line 128, in run                    ││Progress: ░░░░░░░░░
-local   : ││  File "src/app.rs", line 128, in run                 ││braille     ⠧       ││
+local   : ││   125 │ pub fn run(config: Config) -> Result<()> { ││braille     ⠧        │ │
 @@ row 12
 upstream: ││   125 │ pub fn run(config: Config) -> Result<()> {      │╰───────────────────
-local   : ││   125 | pub fn run(config: Config) -> Result<()> {   │╰────────────────────╯│
+local   : ││126 │     let db =                                  │╰─────────────────────╯ │
 @@ row 13
 upstream: ││   126 │     let db = Database::connect(&config.db_url)?;│╭───────────────────
-local   : ││126 |     let db = Database::connect(&config.db_url)?;│╭───────State────────╮│
+local   : ││Database::connect(&config.db_url)?;                 │╭────────State────────╮ │
 @@ row 14
 upstream: ││   127 │     let server = Server::new(db);               ││State: Idle
-local   : ││   127 |     let server = Server::new(db);            ││State: Idle         ││
+local   : ││   127 │     let server = Server::new(db);          ││State: Idle          │ │
 @@ row 15
 upstream: ││ ❱ 128 │     server.listen(config.port)?;                ││Macro: none
-local   : ││ ❱ 128 |     server.listen(config.port)?;             ││Macro: none         ││
+local   : ││ ❱ 128 │     server.listen(config.port)?;           ││Macro: none          │ │
 @@ row 16
 upstream: ││   129 │     Ok(())                                      ││Events: 0
-local   : ││   129 |     Ok(())                                   ││Events: 0           ││
+local   : ││   129 │     Ok(())                                 ││Events: 0            │ │
 @@ row 17
 upstream: ││   130 │ }                                               ││Duration: -
-local   : ││   130 | }                                            ││Duration: -         ││
+local   : ││   130 │ }                                          ││Duration: -          │ │
 @@ row 18
 upstream: ││  File "src/database.rs", line 56, in connect            ││Speed: 1.00x
-local   : ││  File "src/database.rs", line 56, in connect         ││Speed: 1.00x        ││
+local   : ││                                                    ││Speed: 1.00x         │ │
 @@ row 19
 upstream: ││   53 │ pub fn connect(url: &str) -> Result<Self> {      ││Loop: Off
-local   : ││   53 | pub fn connect(url: &str) -> Result<Self> {   ││Loop: Off           ││
+local   : ││                                                    ││Loop: Off            │ │
 @@ row 20
 upstream: ││   54 │     let pool = Pool::builder()                   │╰───────────────────
-local   : ││   54 |     let pool = Pool::builder()                │╰────────────────────╯│
+local   : ││                                                    │╰─────────────────────╯ │
 @@ row 21
 upstream: ││   55 │         .max_size(10)                            │╭───────────────────
-local   : ││   55 |         .max_size(10)                         │╭────────────────────╮│
+local   : ││                                                    │╭─────────────────────╮ │
 @@ row 22
 upstream: ││ ❱ 56 │         .build(url)?;                            ││FrankenTUI Demo Sho
-local   : │╰──────────────────────────────────────────────────────╯╰────────────────────╯│
+local   : │╰────────────────────────────────────────────────────╯╰─────────────────────╯ │
 @@ row 23
 upstream: ││   57 │     Ok(Self { pool })                            ││
 local   : ╰──────────────────────────────────────────────────────────────────────────────╯

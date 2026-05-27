@@ -2,8 +2,8 @@
 Upstream snapshot: app_markdownrichtext_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 856
-Local nonblank chars: 690
-Local/upstream char ratio: 0.806
+Local nonblank chars: 734
+Local/upstream char ratio: 0.857
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -14,61 +14,61 @@ upstream: ╭──────────────────────�
 local   : ╭───────────────────────────────────Markdown───────────────────────────────────╮
 @@ row 03
 upstream: │╭───────────Markdown Renderer───────────╮ ╭──LLM Streaming Simulation | Complet
-local   : │╭─────────────────────────────Markdown Rich Text─────────────────────────────╮│
+local   : │╭──────────────────────────────────Markdown──────────────────────────────────╮│
 @@ row 04
 upstream: e─GitHub-Flavored Markdown (Rich Demo)   │ │FrankenTUI Streaming Report — "Galax
 local   : ││# Markdown Rendering                                                        ││
 @@ row 05
 upstream: y│                                       │ │Brain" Edition
-local   : ││                                                                            ││
+local   : ││## Headers                                                                  ││
 @@ row 06
 upstream: ││LaTeX + Symbols                        │ │
-local   : ││## Headers                                                                  ││
+local   : ││### H3: Smaller header                                                      ││
 @@ row 07
 upstream: ││                                       │ │ℹ  NOTE
 local   : ││                                                                            ││
 @@ row 08
 upstream: ││Inline math: E = mc², α + β = γ, Δ x ≈ │ │┃ This stream simulates an LLM respo
-local   : ││### H3: Smaller header                                                      ││
+local   : ││**Bold text** and *italic text* and `code`.                                 ││
 @@ row 09
 upstream: n│0.001.                                 │ │┃ rendered incrementally with full G
-local   : ││                                                                            ││
+local   : ││> Blockquote: This is a quoted section.                                     ││
 @@ row 10
 upstream: F│                                       │ │┃ support.
-local   : ││**Bold text** and *italic text* and `code`.                                 ││
+local   : ││                                                                            ││
 @@ row 11
 upstream: ││Block math:                            │ │
-local   : ││                                                                            ││
+local   : ││---                                                                         ││
 @@ row 12
 upstream: ││                                       │ │💡 TIP
-local   : ││> Blockquote: This is a quoted section.                                     ││
+local   : ││- Unordered list item 1                                                     ││
 @@ row 13
 upstream: ││  ∑ᵢ₌₁ⁿ xᵢ = n(n+1)/2                  │ │┃ Inline-first output keeps logs
-local   : ││                                                                            ││
+local   : ││- Unordered list item 2                                                     ││
 @@ row 14
 upstream: ││                                       │ │┃ scrolling while the UI stays stabH
-local   : ││---                                                                         ││
+local   : ││                                                                            ││
 @@ row 15
 upstream: ello      ^{∞} eI       │5     }         │ │
-local   : ││                                                                            ││
+local   : ││1. Ordered item one                                                         ││
 @@ row 16
 upstream: ││                                       │ │⚠  WARNING
-local   : ││- Unordered list item 1                                                     ││
+local   : ││2. Ordered item two                                                         ││
 @@ row 17
 upstream: ││Admonitions                            │ │┃ Rendering is deterministic. If you
-local   : ││- Unordered list item 2                                                     ││
+local   : ││                                                                            ││
 @@ row 18
 upstream: ││                                       │ │┃ see flicker, it is a bug.
-local   : ││                                                                            ││
+local   : ││| Col A | Col B |                                                           ││
 @@ row 19
 upstream: ││ℹ  NOTE                                │ │
-local   : ││1. Ordered item one                                                         ││
+local   : ││|-------|-------|                                                           ││
 @@ row 20
 upstream: ││┃ Information note with rich emphasis. │ │TL;DR
-local   : ││2. Ordered item two                                                         ││
+local   : ││|  a1   |  b1   |                                                           ││
 @@ row 21
 upstream: ││                                       │ │• ✅ Zero-flicker rendering via Buffe
-local   : ││                                                                            ││
+local   : ││|  a2   |  b2   |                                                           ││
 @@ row 22
 upstream: r│💡 TIPP                                 ││→ Diff → Presenter
 local   : │╰────────────────────────────────────────────────────────────────────────────╯│

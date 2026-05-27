@@ -15,11 +15,5 @@ internal static class Screen18VisualEffects { public static IWidget Build(Showca
 
 
 
-internal static class Screen26MousePlayground { public static IWidget Build(ShowcaseDemoState s) { return ShowcaseSurface.Panel("Mouse Playground", "Mouse Position: (40, 12)\nLast Event: Move\nButton: None\n\nClick targets:\n\n┌─ Button 1 ─┐  ┌─ Button 2 ─┐\n│   Click!   │  │   Click!   │\n└────────────┘  └────────────┘\n\n┌─ Toggle ───┐\n│  [ ] OFF   │\n└────────────┘\n\nScroll: 0\nDrag: idle\nHit-test: active"); } }
-
-
-
-
-
 
 internal static class Screen45Quake { public static IWidget Build(ShowcaseDemoState s) { return ShowcaseSurface.Panel("Quake E1M1 (Easter Egg)", "WASD move · Arrows look · Space jump · F fire · V quality [Reduced] · R reset\n\n                    ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\n                    ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\n                    ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\n   Retro FPS renderer using braille and box-drawing characters.\n   Runs at ~30 FPS in terminal. Use V to toggle quality.\n\n   \"The slipgate complex is the largest installation of its kind...\""); } }

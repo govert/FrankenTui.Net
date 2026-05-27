@@ -2,8 +2,8 @@
 Upstream snapshot: app_mouseplayground_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 841
-Local nonblank chars: 698
-Local/upstream char ratio: 0.830
+Local nonblank chars: 784
+Local/upstream char ratio: 0.932
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -14,58 +14,58 @@ upstream: ╭──────────────────────�
 local   : ╭───────────────────────────────Mouse Playground───────────────────────────────╮
 @@ row 03
 upstream: │┏ ► Hit-Test Targets ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓╭   Even
-local   : │╭──────────────────────────────Mouse Playground──────────────────────────────╮│
+local   : │╭────────────────────────────────────────────────────────────────────────────╮│
 @@ row 04
 upstream: │┃ ┏━━━━━━━━━━━━━┓  ╭─────────────╮  ╭─────────────╮  ╭─────────────╮  ┃│No even
-local   : ││Mouse Position: (40, 12)                                                    ││
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 05
 upstream: │┃ ┃   T1 (0)    ┃  │   T2 (0)    │  │   T3 (0)    │  │   T4 (0)    │  ┃│
-local   : ││Last Event: Move                                                            ││
+local   : │╭────────────────────────────────Hit Targets─────────────────────────────────╮│
 @@ row 06
 upstream: │┃ ┃             ┃  │             │  │             │  │             │  ┃│
-local   : ││Button: None                                                                ││
+local   : ││┌─ Button 1 ─┐  ┌─ Button 2 ─┐                                              ││
 @@ row 07
 upstream: │┃ ┃             ┃  │             │  │             │  │             │  ┃│
-local   : ││                                                                            ││
+local   : │││   Click!   │  │   Click!   │                                              ││
 @@ row 08
 upstream: │┃ ┃             ┃  │             │  │             │  │             │  ┃│
-local   : ││Click targets:                                                              ││
+local   : ││└────────────┘  └────────────┘                                              ││
 @@ row 09
 upstream: │┃ ┃             ┃  │             │  │             │  │             │  ┃│
 local   : ││                                                                            ││
 @@ row 10
 upstream: │┃ ┃             ┃  │             │  │             │  │             │  ┃│
-local   : ││┌─ Button 1 ─┐  ┌─ Button 2 ─┐                                              ││
+local   : ││┌─ Toggle ───┐                                                              ││
 @@ row 11
 upstream: │┃ ┗━━━━━━━━━━━━━┛  ╰─────────────╯  ╰─────────────╯  ╰─────────────╯  ┃│
-local   : │││   Click!   │  │   Click!   │                                              ││
+local   : │││  [ ] OFF   │                                                              ││
 @@ row 12
 upstream: │┃ ╭─────────────╮  ╭─────────────╮  ╭─────────────╮  ╭─────────────╮  ┃│
-local   : ││└────────────┘  └────────────┘                                              ││
+local   : ││└────────────┘                                                              ││
 @@ row 13
 upstream: │┃ │   T5 (0)    │  │   T6 (0)    │  │   T7 (0)    │  │   T8 (0)    │  ┃│
 local   : ││                                                                            ││
 @@ row 14
 upstream: │┃ │             │  │             │  │             │  │             │  ┃│
-local   : ││┌─ Toggle ───┐                                                              ││
+local   : ││Drag: idle  |  Hit-test: active                                             ││
 @@ row 15
 upstream: │┃ │             │  │             │  │             │  │             │  ┃│
-local   : │││  [ ] OFF   │                                                              ││
+local   : ││                                                                            ││
 @@ row 16
 upstream: │┃ │             │  │             │  │             │  │             │  ┃│
-local   : ││└────────────┘                                                              ││
+local   : ││                                                                            ││
 @@ row 17
 upstream: │┃ │             │  │             │  │             │  │             │  ┃│
 local   : ││                                                                            ││
 @@ row 18
 upstream: │┃ │             │  │             │  │             │  │             │  ┃│
-local   : ││Scroll: 0                                                                   ││
+local   : ││                                                                            ││
 @@ row 19
 upstream: │┃ ╰─────────────╯  ╰─────────────╯  ╰─────────────╯  ╰─────────────╯  ┃│
-local   : ││Drag: idle                                                                  ││
+local   : ││                                                                            ││
 @@ row 20
 upstream: │┃ ╭─────────────╮  ╭─────────────╮  ╭─────────────╮  ╭─────────────╮  ┃╰───────
-local   : ││Hit-test: active                                                            ││
+local   : ││                                                                            ││
 @@ row 21
 upstream: │┃ │   T9 (0)    │  │   T10 (0)   │  │   T11 (0)   │  │   T12 (0)   │  ┃╭   Stat
 local   : ││                                                                            ││

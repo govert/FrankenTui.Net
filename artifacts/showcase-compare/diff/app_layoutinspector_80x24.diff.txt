@@ -2,8 +2,8 @@
 Upstream snapshot: app_layoutinspector_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 925
-Local nonblank chars: 863
-Local/upstream char ratio: 0.933
+Local nonblank chars: 869
+Local/upstream char ratio: 0.939
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -17,19 +17,19 @@ upstream: │╭───────────────Inspector───�
 local   : │╭──────────────Inspector───────────────╮╭───────────────Layout───────────────╮│
 @@ row 04
 upstream: ││Scenario: Flex Trio                     │  │╭Fixed 44x3 [0..∞ x 3..3])────────
-local   : ││Scenario: Flex Trio                   ││Fixed 44x3 [0..∞ x 3..3]            ││
+local   : ││Scenario: Flex Trio                   ││.Fixed 44x3 [0..∞ x 3..3]           ││
 @@ row 05
 upstream: ││Details: Vertical flex: Fixed + Min + Ma│  ││
 local   : ││Details: Vertical flex: Fixed + Min + ││                                    ││
 @@ row 06
 upstream: ││Step: Constraints - Inspect min/max boun│  │╰─────────────────────────────────
-local   : ││Max                                   ││Min 44x4→44x7 [0..∞ x 4..∞]         ││
+local   : ││Max                                   ││.Min 44x4→44x7 [0..∞ x 4..∞]        ││
 @@ row 07
 upstream: ││                                        │  │
 local   : ││Step: Constraints - Inspect min/max   ││                                    ││
 @@ row 08
 upstream: ││Overlay: on   Tree: on                  │  │.Min 44x4→44x7 [0..∞ x 4..∞]──────
-local   : ││bounds                                ││Max 44x6→44x3 [0..∞ x 0..6]         ││
+local   : ││bounds                                ││.Max 44x6→44x3 [0..∞ x 0..6]        ││
 @@ row 09
 upstream: ││                                        │  ││
 local   : ││                                      ││                                    ││
@@ -38,37 +38,37 @@ upstream: ││Keys: n/p scenario  [/ ] step  o overlay│  ││
 local   : ││Overlay: on   Tree: on                ││                                    ││
 @@ row 11
 upstream: ││                                        │  │.
-local   : ││                                      ││                                    ││
+local   : ││Keys: n/p scenario  [/ ] step  o      ││                                    ││
 @@ row 12
 upstream: ││FlexRoot  req 44x15  got 44x15  min 0x0 │  ││
-local   : ││Keys: n/p scenario  [/ ] step  o      ││                                    ││
+local   : ││overlay                               ││                                    ││
 @@ row 13
 upstream: ││  Fixed  req 44x3  got 44x3  min 0x3  ma│  ││
-local   : ││overlay                               ││                                    ││
+local   : ││                                      ││                                    ││
 @@ row 14
 upstream: ││  Min  req 44x4  got 44x7  min 0x4  max │  │╰─────────────────────────────────
-local   : ││                                      ││                                    ││
+local   : ││FlexRoot  req 44x15  got 44x15  min   ││                                    ││
 @@ row 15
 upstream: ││  Max  req 44x6  got 44x3  min 0x0  max │  │
-local   : ││FlexRoot  req 44x15  got 44x15  min   ││                                    ││
+local   : ││0x0                                   ││                                    ││
 @@ row 16
 upstream: ││                                        │  │.Max 44x6→44x3 [0..∞ x 0..6]──────
-local   : ││0x0                                   ││                                    ││
+local   : ││Fixed  req 44x3  got 44x3  min 0x3    ││                                    ││
 @@ row 17
 upstream: ││                                        │  ││
-local   : ││Fixed  req 44x3  got 44x3  min 0x3    ││                                    ││
+local   : ││max ∞x3                               ││                                    ││
 @@ row 18
 upstream: ││                                        │  │.─────────────────────────────────
-local   : ││max ∞x3                               ││                                    ││
+local   : ││Min  req 44x4  got 44x7  min 0x4  max ││                                    ││
 @@ row 19
 upstream: ││                                        │  ╰──────────────────────────────────
-local   : ││Min  req 44x4  got 44x7  min 0x4  max ││                                    ││
+local   : ││∞x∞                                   ││                                    ││
 @@ row 20
 upstream: ││                                        │
-local   : ││∞x∞                                   ││                                    ││
+local   : ││Max  req 44x6  got 44x3  min 0x0  max ││                                    ││
 @@ row 21
 upstream: ││                                        │  ╭────────────────────Tree──────────
-local   : ││Max  req 44x6  got 44x3  min 0x0  max ││                                    ││
+local   : ││∞x6                                   ││                                    ││
 @@ row 22
 upstream: ││                                        │  │FlexRoot req=44x15 got=44x15 min=0
 local   : │╰──────────────────────────────────────╯╰────────────────────────────────────╯│
