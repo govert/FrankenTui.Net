@@ -44,13 +44,15 @@ public readonly struct Cell : IEquatable<Cell>
 
     public Cell WithChar(char value) => WithRune(new Rune(value));
 
-    public Cell WithContent(CellContent content) => new(content, Foreground, Background, Attributes);
-
     public Cell WithRune(Rune value) => new(CellContent.FromRune(value), Foreground, Background, Attributes);
 
+    /// <summary>Create a cell with a different foreground color, preserving all other fields.</summary>
     public Cell WithForeground(PackedRgba foreground) => new(Content, foreground, Background, Attributes);
 
+    /// <summary>Create a cell with a different background color, preserving all other fields.</summary>
     public Cell WithBackground(PackedRgba background) => new(Content, Foreground, background, Attributes);
+
+    public Cell WithContent(CellContent content) => new(content, Foreground, Background, Attributes);
 
     public Cell WithAttributes(CellAttributes attributes) => new(Content, Foreground, Background, attributes);
 

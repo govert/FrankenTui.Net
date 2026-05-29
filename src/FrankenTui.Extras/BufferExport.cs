@@ -52,4 +52,21 @@ public static class BufferExport
         ArgumentNullException.ThrowIfNull(buffer);
         return WebHost.Render(buffer, options).DocumentHtml;
     }
+
+    /// <summary>Export buffer cells as JSONL (one cell per line).</summary>
+    public static string ToJsonl(RenderBuffer buffer)
+    {
+        ArgumentNullException.ThrowIfNull(buffer);
+        var sb = new System.Text.StringBuilder();
+        for (ushort y = 0; y < buffer.Height; y++)
+        {
+            for (ushort x = 0; x < buffer.Width; x++)
+            {
+                var cell = buffer.Get(x, y);
+                if (cell is null) continue;
+                sb.AppendLine($"{{\"x\":{x},\"y\":{y},\"c\":{cell.Value.Content.Raw},\"fg\":{cell.Value.Foreground.Raw},\"bg\":{cell.Value.Background.Raw}}}");
+            }
+        }
+        return sb.ToString();
+    }
 }

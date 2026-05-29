@@ -2,14 +2,17 @@ using FrankenTui.Core;
 
 namespace FrankenTui.Render;
 
-/// <summary>Border corner and edge characters for a border set.</summary>
-public readonly record struct BorderSet(
+/// <summary>Border corner and edge characters for drawing a rectangle.
+/// Matches upstream ftui-render/src/drawing.rs BorderChars.
+/// This is the render-level type (6 basic chars).
+/// Higher-level presets (with tees, cross) live in FrankenTui.Widgets.BorderSet.</summary>
+public readonly record struct BorderChars(
     char Vertical, char Horizontal,
     char TopLeft, char TopRight, char BottomLeft, char BottomRight)
 {
-    public static readonly BorderSet Rounded = new('│', '─', '╭', '╮', '╰', '╯');
-    public static readonly BorderSet Square = new('│', '─', '┌', '┐', '└', '┘');
-    public static readonly BorderSet Double = new('║', '═', '╔', '╗', '╚', '╝');
+    public static readonly BorderChars Rounded = new('│', '─', '╭', '╮', '╰', '╯');
+    public static readonly BorderChars Square = new('│', '─', '┌', '┐', '└', '┘');
+    public static readonly BorderChars Double = new('║', '═', '╔', '╗', '╚', '╝');
 }
 
 public static class BufferPainter
@@ -73,7 +76,7 @@ public static class BufferPainter
         }
     }
 
-    public static void DrawBorder(Buffer buffer, Rect rect, Cell template, BorderSet border)
+    public static void DrawBorder(Buffer buffer, Rect rect, Cell template, BorderChars border)
     {
         ArgumentNullException.ThrowIfNull(buffer);
 
@@ -98,5 +101,5 @@ public static class BufferPainter
     }
 
     public static void DrawBorder(Buffer buffer, Rect rect, Cell template) =>
-        DrawBorder(buffer, rect, template, BorderSet.Square);
+        DrawBorder(buffer, rect, template, BorderChars.Square);
 }
