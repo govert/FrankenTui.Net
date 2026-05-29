@@ -27,6 +27,9 @@ internal sealed class RawTextBlock(string text) : IWidget, IMeasurableWidget
         }
     }
 
+    public SizeConstraints MeasureConstraints(Size available) =>
+        SizeConstraints.AtLeast(Size.Zero, Measure(available));
+
     public Size Measure(Size available)
     {
         var lines = text.Split('\n');
