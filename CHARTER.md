@@ -224,6 +224,31 @@ Acceptable reasons include:
 - Platform-specific terminal behavior that cannot be reconciled cleanly
 - Clear correctness or maintainability problems in a direct transliteration
 
+### Property-Based Tests (proptest)
+
+Upstream uses the Rust `proptest` crate for parameterized property-based tests.
+When encountering a proptest case during porting:
+
+1. **Evaluate whether the random parameter space adds meaningful coverage**
+   beyond what a small set of explicit values would provide. Many proptest
+   cases enumerate trivially small spaces (2–256 values) or test simple
+   data-holder behavior (setter/getter, `List<T>.Add()`). These are adequately
+   covered by one or two `[Fact]` methods.
+
+2. **If the random space is genuinely large and the behavior non-trivial**
+   (e.g., complex layout algorithms, collision behavior), implement either
+   an explicit test loop over a representative sample or investigate
+   adding FsCheck (the .NET proptest equivalent) to the test project.
+
+3. **Document the decision** with a `// DIVERGENCE:` comment listing each
+   skipped test by name, explaining why the randomness adds no value, and
+   pointing to the upstream proptests module for reference.
+
+4. **Do not add proptest infrastructure as a knee-jerk reaction** to any
+   proptest case. Most upstream proptest tests reduce to a few fixed
+   assertions because the implementation under test is trivially correct
+   (modulo arithmetic, property store, etc.).
+
 Every meaningful divergence should be:
 
 - Intentional
