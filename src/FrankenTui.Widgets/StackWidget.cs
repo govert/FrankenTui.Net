@@ -49,6 +49,9 @@ public sealed class StackWidget : IWidget, IMeasurableWidget
         }
     }
 
+    public SizeConstraints MeasureConstraints(Size available) =>
+        SizeConstraints.AtLeast(Size.Zero, Measure(available));
+
     public Size Measure(Size available)
     {
         // Sum of children along direction, max across
@@ -56,7 +59,7 @@ public sealed class StackWidget : IWidget, IMeasurableWidget
         ushort maxCross = 0;
         foreach (var (constraint, widget) in Children)
         {
-            var childSize = (widget as IMeasurableWidget)?.Measure(available) ?? available;
+            var childSize = (widget as IMeasurableWidget)?.MeasureConstraints(available).Preferred ?? available;
             if (Direction == LayoutDirection.Vertical)
             {
                 totalMain = (ushort)Math.Min(totalMain + childSize.Height, ushort.MaxValue);

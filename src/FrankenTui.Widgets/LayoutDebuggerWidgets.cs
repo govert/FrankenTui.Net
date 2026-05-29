@@ -44,7 +44,7 @@ public sealed class ConstraintOverlayStyle
     public PackedRgba RequestedColor { get; init; } = PackedRgba.Rgb(80, 150, 240);
     public bool ShowBorders { get; init; } = true;
     public bool ShowLabels { get; init; } = true;
-    public BorderChars BorderChars { get; init; } = BorderChars.Ascii;
+    public BorderType BorderType { get; init; } = BorderType.Ascii;
 }
 
 /// <summary>Constraint overlay widget. Matches upstream ConstraintOverlay.</summary>

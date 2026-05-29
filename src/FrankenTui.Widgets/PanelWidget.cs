@@ -16,9 +16,12 @@ public sealed class PanelWidget : IWidget, IMeasurableWidget
             Child = Child
         }.Render(context);
 
+    public SizeConstraints MeasureConstraints(Size available) =>
+        SizeConstraints.AtLeast(Size.Zero, Measure(available));
+
     public Size Measure(Size available)
     {
-        var childSize = (Child as IMeasurableWidget)?.Measure(available) ?? available;
+        var childSize = (Child as IMeasurableWidget)?.MeasureConstraints(available).Preferred ?? available;
         var border = (ushort)2;
         return new Size(
             (ushort)Math.Min(childSize.Width + border, available.Width),

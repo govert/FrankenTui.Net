@@ -4,29 +4,17 @@ using FrankenTui.Render;
 namespace FrankenTui.Widgets;
 
 /// <summary>
-/// Border character set for drawing rectangles. Matches upstream BorderChars.
-/// </summary>
-public readonly record struct BorderChars(char TopLeft, char TopRight, char BottomLeft, char BottomRight, char Horizontal, char Vertical)
-{
-    public static readonly BorderChars Square = new('┌', '┐', '└', '┘', '─', '│');
-    public static readonly BorderChars Rounded = new('╭', '╮', '╰', '╯', '─', '│');
-    public static readonly BorderChars Double = new('╔', '╗', '╚', '╝', '═', '║');
-    public static readonly BorderChars Heavy = new('┏', '┓', '┗', '┛', '━', '┃');
-    public static readonly BorderChars Ascii = new('+', '+', '+', '+', '-', '|');
-
-    public char Top(char fallback = ' ') => TopLeft == '\0' ? fallback : TopLeft;
-}
-
-/// <summary>
 /// Drawing primitives on a Buffer. Matches upstream Draw trait.
 /// </summary>
 public static class BufferDrawExtensions
 {
-    public static void DrawBorder(this FrankenTui.Render.Buffer buffer, Rect area, BorderChars chars, Cell template)
+    /// <summary>
+    /// Draw a rectangle border on the buffer using the given BorderSet character set.
+    /// </summary>
+    public static void DrawBorder(this FrankenTui.Render.Buffer buffer, Rect area, BorderSet chars, Cell template)
     {
         if (area.IsEmpty) return;
         var r = (ushort)(area.Bottom - 1);
-        var b = area.Bottom;
         for (ushort x = (ushort)area.X; x < (ushort)area.Right; x++)
         {
             buffer.Set(x, (ushort)area.Y, template.WithChar(chars.Horizontal));

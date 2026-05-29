@@ -40,7 +40,7 @@ public sealed class BlockWidget : IWidget
         }
         else
         {
-            BufferPainter.DrawBorder(context.Buffer, context.Bounds, style.ToCell(), BorderSet.Rounded);
+            BufferPainter.DrawBorder(context.Buffer, context.Bounds, style.ToCell(), BorderSet.Rounded.ToBorderChars());
         }
 
         if (!string.IsNullOrWhiteSpace(Title) && context.Bounds.Width > 4)
