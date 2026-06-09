@@ -100,7 +100,20 @@ public interface IWidget : IRuntimeView
     /// should render.  Widgets should respect the area bounds and not draw outside them.
     /// </para>
     /// </summary>
-    void Render(Rect area, Frame frame);
+    // DIVERGENCE: Render has a default interface implementation that bridges to the
+    // IRuntimeView.Render(RuntimeRenderContext) path. New-generation widgets implement
+    // Render(Rect, Frame) directly; legacy widgets implement IRuntimeView.Render(context)
+    // and inherit this bridge. A concrete widget must implement exactly one of the two
+    // (implementing neither would recurse between the two default bridges).
+    void Render(Rect area, Frame frame)
+    {
+        var context = new RuntimeRenderContext(
+            frame.Buffer,
+            area,
+            Style.Theme.DefaultTheme,
+            (RuntimeDegradationLevel)(int)frame.Degradation);
+        ((IRuntimeView)this).Render(context);
+    }
 
     // DIVERGENCE: IWidget extends IRuntimeView for backward compatibility with the
     // runtime view interface, but the upstream Rust Widget trait renders only into a
@@ -113,7 +126,7 @@ public interface IWidget : IRuntimeView
         {
             BufferOverride = context.Buffer,
         };
-        frame.SetDegradation(context.DegradationLevel);
+        frame.SetDegradation((DegradationLevel)(int)context.DegradationLevel);
         Render(context.Bounds, frame);
     }
 

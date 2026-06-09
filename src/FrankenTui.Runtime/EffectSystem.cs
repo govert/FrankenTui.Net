@@ -183,6 +183,22 @@ public static class EffectSystem
         Interlocked.Add(ref _subscriptionStops, count);
     }
 
+    // ── Subscription lifecycle hooks (from subscription.rs SubscriptionManager) ──
+    internal static void RecordSubscriptionStart(string kind, ulong subId) =>
+        Interlocked.Increment(ref _subscriptionStarts);
+
+    internal static void RecordSubscriptionStop(string kind, ulong subId, ulong elapsedUs) =>
+        Interlocked.Increment(ref _subscriptionStops);
+
+    internal static void RecordDynamicsSubStart() => Interlocked.Increment(ref _subscriptionStarts);
+
+    internal static void RecordDynamicsSubStop() => Interlocked.Increment(ref _subscriptionStops);
+
+    internal static void RecordDynamicsSubPanic() => Interlocked.Increment(ref _subscriptionFailures);
+
+    internal static void ErrorEffectPanic(string kind, string detail) =>
+        Interlocked.Increment(ref _subscriptionFailures);
+
     private static void UpdateHighWater(int currentDepth)
     {
         long observed;

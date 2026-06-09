@@ -9,7 +9,7 @@ using FrankenTui.Text;
 using FrankenTui.Widgets;
 using RenderBuffer = FrankenTui.Render.Buffer;
 using HelpEntry = FrankenTui.Widgets.HelpEntry;
-using ResizeRegime = FrankenTui.Runtime.Regime;
+using ResizeRegime = FrankenTui.Runtime.ResizeRegime;
 
 namespace FrankenTui.Tests.Headless;
 

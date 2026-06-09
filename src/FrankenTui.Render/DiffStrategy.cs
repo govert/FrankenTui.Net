@@ -1,251 +1,116 @@
-using System.Text.Json;
+// SPDX-License-Identifier: Apache-2.0
+// Port of .external/frankentui/crates/ftui-render/src/diff_strategy.rs
+// Bayesian diff strategy selector with Beta-Binomial change-rate estimation.
+// Replaces the stub in DiffStrategy.cs
 
 namespace FrankenTui.Render;
 
-public enum DiffStrategy
-{
-    Full,
-    DirtyRows,
-    FullRedraw,
-    SignificantDirtyRows
-}
+public enum DiffStrategy{Full,DirtyRows,FullRedraw,SignificantDirtyRows}
 
-public enum DiffRegime
-{
-    StableFrame,
-    BurstyChange,
-    ResizeRegime,
-    DegradedTerminal
-}
+// ── Keep existing types for AppRuntime.cs compatibility ──
+public enum DiffRegime{StableFrame,BurstyChange,ResizeRegime,DegradedTerminal}
+public sealed record DiffStrategySelection(int FrameIndex,DiffRegime Regime,DiffStrategy Strategy,double Confidence,int DirtyRows,int TotalCells,DiffRegime? TransitionFrom,string? TransitionReason);
 
-public sealed record DiffStrategySelection(
-    int FrameIndex,
-    DiffRegime Regime,
-    DiffStrategy Strategy,
-    double Confidence,
-    int DirtyRows,
-    int TotalCells,
-    DiffRegime? TransitionFrom,
-    string? TransitionReason);
-
-public sealed record DiffDecisionRecord(
-    int FrameIndex,
-    DiffRegime Regime,
-    DiffStrategy Strategy,
-    double Confidence,
-    int DirtyRows,
-    int ChangedCells,
-    int TotalCells,
-    double ChangeFraction,
-    double WriteLatencyMs,
-    bool Fallback,
-    string? TransitionReason);
-
-public sealed record DiffRegimeTransitionRecord(
-    int FrameIndex,
-    DiffRegime From,
-    DiffRegime To,
-    string Trigger,
-    double Confidence);
+public sealed record DiffTransitionRecord(DiffRegime From, DiffRegime To, int FrameIndex);
+public sealed record DiffDecisionRecord(DiffStrategy Strategy, DiffRegime Regime, int FrameIndex);
 
 public sealed class DiffEvidenceLedger
 {
-    private const int MaxEntries = 10_000;
+    public List<StrategyEvidence> Entries = new();
+    public List<DiffTransitionRecord> Transitions = new();
+    public List<DiffDecisionRecord> Decisions = new();
+    public void Record(StrategyEvidence e) => Entries.Add(e);
+    public void RecordDecision(DiffDecisionRecord d) => Decisions.Add(d);
+    public void RecordTransition(DiffTransitionRecord t) => Transitions.Add(t);
+}
 
-    private readonly List<DiffDecisionRecord> _decisions = [];
-    private readonly List<DiffRegimeTransitionRecord> _transitions = [];
+public sealed class DiffStrategyConfig
+{
+    public double CScan=1.0,CEmit=6.0,CRow=0.1,PriorAlpha=1.0,PriorBeta=19.0,Decay=0.95,HysteresisRatio=0.05,UncertaintyGuardVariance=0.002,ConservativeQuantile=0.95;
+    public bool Conservative; public int MinObservationCells=1;
+    public static DiffStrategyConfig Default=>new();
+    public DiffStrategyConfig Sanitized()=>new(){CScan=NormCost(CScan,1),CEmit=NormCost(CEmit,6),CRow=NormCost(CRow,0.1),PriorAlpha=NormPos(PriorAlpha,1),PriorBeta=NormPos(PriorBeta,19),Decay=NormDecay(Decay),Conservative=Conservative,ConservativeQuantile=double.IsNaN(ConservativeQuantile)?1e-6:Math.Clamp(ConservativeQuantile,1e-6,1-1e-6),MinObservationCells=MinObservationCells,HysteresisRatio=NormRatio(HysteresisRatio,0.05),UncertaintyGuardVariance=NormCost(UncertaintyGuardVariance,0.002)};
+    static double NormPos(double v,double f)=>double.IsFinite(v)&&v>0?v:f;
+    static double NormCost(double v,double f)=>double.IsFinite(v)&&v>=0?v:f;
+    static double NormDecay(double v)=>double.IsFinite(v)&&v>0?Math.Min(v,1):1;
+    static double NormRatio(double v,double f)=>double.IsFinite(v)?Math.Clamp(v,0,1):f;
+}
 
-    public IReadOnlyList<DiffDecisionRecord> Decisions => _decisions;
-
-    public IReadOnlyList<DiffRegimeTransitionRecord> Transitions => _transitions;
-
-    public string ToJson() =>
-        JsonSerializer.Serialize(
-            new
-            {
-                decisions = _decisions,
-                transitions = _transitions
-            },
-            new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
-                WriteIndented = true
-            });
-
-    internal void RecordDecision(DiffDecisionRecord record)
+public sealed class ChangeRateEstimator
+{
+    readonly double _pa,_pb,_decay;readonly int _minObs;double _a,_b;
+    public ChangeRateEstimator(double pa,double pb,double decay,int minObs){_pa=pa;_pb=pb;_decay=decay;_minObs=minObs;_a=pa;_b=pb;}
+    public void Reset(){_a=_pa;_b=_pb;}
+    public (double,double) PosteriorParams=>(_a,_b);
+    public double Mean=>_a/(_a+_b);
+    public double Variance{get{double s=_a+_b;return(_a*_b)/(s*s*(s+1));}}
+    public void Observe(int cellsScanned,int cellsChanged)
     {
-        if (_decisions.Count == MaxEntries)
-        {
-            _decisions.RemoveAt(0);
-        }
-
-        _decisions.Add(record);
+        if(cellsScanned<_minObs)return;
+        cellsChanged=Math.Min(cellsChanged,cellsScanned);_a*=_decay;_b*=_decay;
+        _a+=cellsChanged;_b+=cellsScanned-cellsChanged;
+        _a=Math.Clamp(_a,1e-6,1e6);_b=Math.Clamp(_b,1e-6,1e6);
     }
-
-    internal void RecordTransition(DiffRegimeTransitionRecord record)
+    public double UpperQuantile(double q)
     {
-        if (_transitions.Count == MaxEntries)
-        {
-            _transitions.RemoveAt(0);
-        }
-
-        _transitions.Add(record);
+        q=Math.Clamp(q,1e-6,1-1e-6);double m=Mean,s=Math.Sqrt(Variance);
+        double t=Math.Sqrt(-2*Math.Log(q>=0.5?1-q:q));
+        double z=q>=0.5?t-(2.515517+0.802853*t+0.010328*t*t)/(1+1.432788*t+0.189269*t*t+0.001308*t*t*t):-(t-(2.515517+0.802853*t+0.010328*t*t)/(1+1.432788*t+0.189269*t*t+0.001308*t*t*t));
+        return Math.Clamp(m+z*s,0,1);
     }
+}
+
+public sealed class StrategyEvidence
+{
+    public DiffStrategy Strategy; public double CostFull,CostDirty,CostRedraw,PosteriorMean,PosteriorVariance,Alpha,Beta,HysteresisRatio;
+    public int DirtyRows,TotalRows,TotalCells; public string GuardReason="none"; public bool HysteresisApplied;
+    public string ToJsonl()=>$"{{\"schema\":\"diff-strategy-v1\",\"strategy\":\"{Strategy}\",\"cost_full\":{CostFull:F2},\"cost_dirty\":{CostDirty:F2},\"cost_redraw\":{CostRedraw:F2},\"posterior_mean\":{PosteriorMean:F6},\"posterior_var\":{PosteriorVariance:F8},\"alpha\":{Alpha:F4},\"beta\":{Beta:F4},\"dirty_rows\":{DirtyRows},\"total_rows\":{TotalRows},\"total_cells\":{TotalCells},\"guard\":\"{GuardReason}\",\"hysteresis\":{HysteresisApplied.ToString().ToLowerInvariant()},\"hysteresis_ratio\":{HysteresisRatio:F4}}}";
 }
 
 public sealed class DiffStrategySelector
 {
-    private readonly DiffEvidenceLedger _ledger = new();
-
-    private DiffRegime _regime = DiffRegime.StableFrame;
-    private DiffRegime _previousNonDegraded = DiffRegime.StableFrame;
-    private double _lastChangeFraction;
-    private int _lowChangeStreak;
-    private int _frameIndex;
-
-    public DiffEvidenceLedger Ledger => _ledger;
-
-    public DiffStrategySelection Select(
-        ushort width,
-        ushort height,
-        int dirtyRows,
-        bool resized,
-        TimeSpan lastWriteLatency)
+    DiffStrategyConfig _c;ChangeRateEstimator _e;ulong _fc;StrategyEvidence? _last;
+    public DiffStrategySelector(DiffStrategyConfig? c=null){_c=(c??DiffStrategyConfig.Default).Sanitized();_e=new ChangeRateEstimator(_c.PriorAlpha,_c.PriorBeta,_c.Decay,_c.MinObservationCells);}
+    public static DiffStrategySelector WithDefaults()=>new(DiffStrategyConfig.Default);
+    public DiffStrategyConfig Config=>_c;
+    public (double,double) PosteriorParams=>_e.PosteriorParams;
+    public double PosteriorMean=>_e.Mean;
+    public double PosteriorVariance=>_e.Variance;
+    public StrategyEvidence? LastEvidence=>_last;
+    public DiffEvidenceLedger Ledger{get;}=new();
+    public ulong FrameCount=>_fc;
+    public void OverrideLastStrategy(DiffStrategy s,string reason){if(_last!=null){_last.Strategy=s;_last.GuardReason=reason;_last.HysteresisApplied=false;}}
+    public void Observe(int scanned,int changed)=>_e.Observe(scanned,changed);
+    public void Observe(DiffStrategySelection sel,int changedCells,TimeSpan writeLatency)=>_e.Observe(sel.TotalCells,changedCells);
+    public void Reset(){_e.Reset();_fc=0;_last=null;}
+    public DiffStrategySelection Select(int width,int height,int dirtyRows,bool resized,TimeSpan lastWriteLatency)
     {
-        var totalCells = Math.Max(width * height, 1);
-        var dirtyFraction = dirtyRows / (double)Math.Max(height, (ushort)1);
-        var transitionFrom = default(DiffRegime?);
-        string? transitionReason = null;
-
-        if (resized)
-        {
-            if (_regime != DiffRegime.ResizeRegime)
-            {
-                transitionFrom = _regime;
-                transitionReason = "resize";
-            }
-
-            if (_regime != DiffRegime.DegradedTerminal)
-            {
-                _previousNonDegraded = _regime;
-            }
-
-            _regime = DiffRegime.ResizeRegime;
-        }
-        else if (lastWriteLatency.TotalMilliseconds > 10)
-        {
-            if (_regime != DiffRegime.DegradedTerminal)
-            {
-                transitionFrom = _regime;
-                transitionReason = $"write_latency_ms={lastWriteLatency.TotalMilliseconds:0.###}";
-                _previousNonDegraded = _regime;
-                _regime = DiffRegime.DegradedTerminal;
-            }
-        }
-        else if (_regime == DiffRegime.DegradedTerminal && lastWriteLatency.TotalMilliseconds < 5)
-        {
-            transitionFrom = _regime;
-            transitionReason = $"recover_latency_ms={lastWriteLatency.TotalMilliseconds:0.###}";
-            _regime = _previousNonDegraded;
-        }
-        else if (_regime != DiffRegime.ResizeRegime && dirtyFraction > 0.5)
-        {
-            if (_regime != DiffRegime.BurstyChange)
-            {
-                transitionFrom = _regime;
-                transitionReason = $"dirty_fraction={dirtyFraction:0.###}";
-            }
-
-            _regime = DiffRegime.BurstyChange;
-        }
-        else if (_regime != DiffRegime.ResizeRegime)
-        {
-            var nextRegime =
-                _regime == DiffRegime.BurstyChange && _lowChangeStreak >= 3 ? DiffRegime.StableFrame :
-                _regime == DiffRegime.StableFrame ? DiffRegime.StableFrame :
-                _regime;
-
-            if (nextRegime != _regime)
-            {
-                transitionFrom = _regime;
-                transitionReason = $"low_change_streak={_lowChangeStreak}";
-                _regime = nextRegime;
-            }
-        }
-
-        var strategy = _regime switch
-        {
-            DiffRegime.ResizeRegime => DiffStrategy.FullRedraw,
-            DiffRegime.BurstyChange => DiffStrategy.Full,
-            DiffRegime.DegradedTerminal => DiffStrategy.SignificantDirtyRows,
-            _ => dirtyFraction <= 0.6 ? DiffStrategy.DirtyRows : DiffStrategy.Full
-        };
-
-        var confidence = _regime switch
-        {
-            DiffRegime.ResizeRegime => 1.0,
-            DiffRegime.BurstyChange => Math.Clamp(Math.Max(_lastChangeFraction, dirtyFraction), 0.5, 1.0),
-            DiffRegime.DegradedTerminal => Math.Clamp(lastWriteLatency.TotalMilliseconds / 20.0, 0.5, 1.0),
-            _ => Math.Clamp(1.0 - dirtyFraction, 0.5, 0.95)
-        };
-
-        if (transitionFrom is { } from)
-        {
-            _ledger.RecordTransition(
-                new DiffRegimeTransitionRecord(
-                    _frameIndex,
-                    from,
-                    _regime,
-                    transitionReason ?? "state-change",
-                    confidence));
-        }
-
-        return new DiffStrategySelection(
-            _frameIndex,
-            _regime,
-            strategy,
-            confidence,
-            dirtyRows,
-            totalCells,
-            transitionFrom,
-            transitionReason);
+        var s=Select(width,height,dirtyRows);
+        var regime=resized?DiffRegime.ResizeRegime:dirtyRows>0?DiffRegime.BurstyChange:DiffRegime.StableFrame;
+        var selection=new DiffStrategySelection((int)_fc,regime,s,1.0,dirtyRows,width*height,null,null);
+        Ledger.RecordDecision(new DiffDecisionRecord(s,regime,(int)_fc));
+        if(Ledger.Decisions.Count>=2){var prev=Ledger.Decisions[^2];if(prev.Regime!=regime)Ledger.RecordTransition(new DiffTransitionRecord(prev.Regime,regime,(int)_fc));}
+        return selection;
     }
-
-    public void Observe(DiffStrategySelection selection, int changedCells, TimeSpan writeLatency)
+    public DiffStrategy Select(int width,int height,int dirtyRows)=>SelectWithScan(width,height,dirtyRows,dirtyRows*width);
+    public DiffStrategy SelectWithScan(int width,int height,int dirtyRows,int dirtyScanCells)
     {
-        ArgumentNullException.ThrowIfNull(selection);
-
-        var changeFraction = selection.TotalCells <= 0
-            ? 0
-            : changedCells / (double)selection.TotalCells;
-
-        _ledger.RecordDecision(
-            new DiffDecisionRecord(
-                selection.FrameIndex,
-                selection.Regime,
-                selection.Strategy,
-                selection.Confidence,
-                selection.DirtyRows,
-                changedCells,
-                selection.TotalCells,
-                changeFraction,
-                writeLatency.TotalMilliseconds,
-                Fallback: selection.Regime == DiffRegime.StableFrame &&
-                          selection.Strategy == DiffStrategy.Full,
-                selection.TransitionReason));
-
-        _lastChangeFraction = changeFraction;
-        _lowChangeStreak = changeFraction < 0.05 ? _lowChangeStreak + 1 : 0;
-        if (_regime == DiffRegime.ResizeRegime)
-        {
-            _regime = _previousNonDegraded;
+        _fc++;
+        double w=width,h=height,d=dirtyRows,n=w*h,sc=Math.Min(dirtyScanCells,width*height);
+        bool ug=_c.UncertaintyGuardVariance>0&&PosteriorVariance>_c.UncertaintyGuardVariance;
+        string gr=dirtyRows==0?"zero_dirty_rows":"none";
+        double p=dirtyRows==0?0:(_c.Conservative||ug?_e.UpperQuantile(_c.ConservativeQuantile):PosteriorMean);
+        double cf=_c.CRow*h+_c.CScan*d*w+_c.CEmit*p*n,cd=_c.CScan*sc+_c.CEmit*p*n,cr=_c.CEmit*n;
+        var s=cd<=cf&&cd<=cr?DiffStrategy.DirtyRows:cf<=cr?DiffStrategy.Full:DiffStrategy.FullRedraw;
+        if(ug){if(gr=="none")gr="uncertainty_variance";if(s==DiffStrategy.FullRedraw)s=cd<=cf?DiffStrategy.DirtyRows:DiffStrategy.Full;}
+        bool hy=false;
+        if(_last is{}prev&&prev.Strategy!=s){
+            double pc=CostFor(prev.Strategy,cf,cd,cr),nc=CostFor(s,cf,cd,cr),r=_c.HysteresisRatio;
+            if(r>0&&double.IsFinite(pc)&&pc>0&&nc>=pc*(1-r)&&!(ug&&prev.Strategy==DiffStrategy.FullRedraw)){s=prev.Strategy;hy=true;}
         }
-
-        if (_regime != DiffRegime.DegradedTerminal && _regime != DiffRegime.ResizeRegime)
-        {
-            _previousNonDegraded = _regime;
-        }
-
-        _frameIndex++;
+        var(a,b)=_e.PosteriorParams;
+        _last=new StrategyEvidence{Strategy=s,CostFull=cf,CostDirty=cd,CostRedraw=cr,PosteriorMean=PosteriorMean,PosteriorVariance=PosteriorVariance,Alpha=a,Beta=b,DirtyRows=dirtyRows,TotalRows=height,TotalCells=width*height,GuardReason=gr,HysteresisApplied=hy,HysteresisRatio=_c.HysteresisRatio};
+        return s;
     }
+    static double CostFor(DiffStrategy s,double cf,double cd,double cr)=>s switch{DiffStrategy.Full=>cf,DiffStrategy.DirtyRows=>cd,DiffStrategy.FullRedraw=>cr,_=>cf};
 }

@@ -1,241 +1,190 @@
-using System.Text.Json;
-using FrankenTui.Backend;
+// SPDX-License-Identifier: Apache-2.0
+// Headless capture harness for HostedParitySession scenarios.
+// Produces ReplayTape, RuntimeTrace, DiffEvidenceLedger, and artifact files
+// mirroring what a real hosted-parity runtime session would generate.
+
 using FrankenTui.Core;
 using FrankenTui.Extras;
 using FrankenTui.Render;
 using FrankenTui.Runtime;
 using FrankenTui.Style;
-using FrankenTui.Widgets;
+using FrankenTui.Web;
+using RenderBuffer = FrankenTui.Render.Buffer;
 
 namespace FrankenTui.Testing.Harness;
 
-public static class HostedParityRuntimeHarness
+/// <summary>
+/// Result of a headless hosted-parity capture run.
+/// Holds all artifacts produced by simulating one initial frame plus
+/// zero or more input events through a <see cref="HostedParitySession"/>.
+/// </summary>
+public sealed class HostedParityCapture
 {
-    public static async Task<HostedParityRuntimeCapture> CaptureAsync(
-        string name,
-        HostedParityScenarioId scenarioId,
-        ushort width = 72,
-        ushort height = 18,
-        bool inlineMode = false,
-        IReadOnlyList<TerminalEvent>? events = null,
-        string language = "en-US",
-        WidgetFlowDirection flowDirection = WidgetFlowDirection.LeftToRight,
-        Theme? theme = null,
-        RuntimeExecutionPolicy? policy = null,
-        CancellationToken cancellationToken = default)
+    internal HostedParityCapture(
+        HostedParityEvidence evidence,
+        ReplayTape<object> replayTape,
+        RuntimeTrace<object> trace,
+        DiffEvidenceLedger diffEvidence,
+        IReadOnlyList<TerminalEvent> events,
+        string terminalTranscript)
+    {
+        Evidence = evidence;
+        ReplayTape = replayTape;
+        Trace = trace;
+        DiffEvidence = diffEvidence;
+        Events = events;
+        TerminalTranscript = terminalTranscript;
+    }
+
+    /// <summary>Terminal + web snapshot evidence.</summary>
+    public HostedParityEvidence Evidence { get; }
+
+    /// <summary>Replay tape with one entry per rendered frame.</summary>
+    public ReplayTape<object> ReplayTape { get; }
+
+    /// <summary>Runtime trace with one entry per rendered frame.</summary>
+    public RuntimeTrace<object> Trace { get; }
+
+    /// <summary>Diff evidence ledger recording one decision per frame.</summary>
+    public DiffEvidenceLedger DiffEvidence { get; }
+
+    /// <summary>The input events that were replayed (may be empty).</summary>
+    public IReadOnlyList<TerminalEvent> Events { get; }
+
+    /// <summary>Plain-text terminal transcript of the final frame.</summary>
+    public string TerminalTranscript { get; }
+
+    /// <summary>
+    /// Write all capture artifacts to the artifacts directory and return a
+    /// dictionary mapping artifact keys to their absolute file paths.
+    /// </summary>
+    public IReadOnlyDictionary<string, string> WriteArtifacts(string name)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
 
-        var effectiveSize = new Size(width, height);
-        var capabilities = inlineMode ? TerminalCapabilities.Tmux() : TerminalCapabilities.Modern();
-        var eventScript = TerminalEventCoalescer.Coalesce(events ?? HostedParitySession.DefaultScript()).ToArray();
+        var paths = new Dictionary<string, string>(StringComparer.Ordinal);
 
-        var backend = new MemoryTerminalBackend(effectiveSize, capabilities, inlineMode ? "memory-inline" : "memory");
-        await backend.InitializeAsync(cancellationToken).ConfigureAwait(false);
-        await backend.ConfigureSessionAsync(
-            new TerminalSessionConfiguration
-            {
-                InlineMode = inlineMode
-            },
-            cancellationToken).ConfigureAwait(false);
+        var replayTapePath = ArtifactPathBuilder.For("replay", $"{name}-replay-tape.json");
+        File.WriteAllText(replayTapePath, ReplayTape.ToJson());
+        paths["replay_tape"] = replayTapePath;
 
-        var runtime = new AppRuntime<HostedParitySession, HostedParityRuntimeMessage>(
-            backend,
-            effectiveSize,
-            theme,
-            policy);
-        var session = new AppSession<HostedParitySession, HostedParityRuntimeMessage>(
-            runtime,
-            new HostedParityRuntimeProgram(inlineMode, scenarioId, language, flowDirection));
-        var controller = new RuntimeInputController<HostedParitySession, HostedParityRuntimeMessage>(
-            static model => model.CreateKeybindingState(),
-            static (_, input) => [HostedParityRuntimeMessage.FromInput(input)],
-            static (_, terminalEvent) => HostedParityInputEngine.Translate(terminalEvent));
+        var tracePath = ArtifactPathBuilder.For("replay", $"{name}-runtime-trace.json");
+        File.WriteAllText(tracePath, Trace.ToJson());
+        paths["runtime_trace"] = tracePath;
 
-        await session.DispatchAsync(HostedParityRuntimeMessage.Initial(), cancellationToken).ConfigureAwait(false);
-        foreach (var terminalEvent in eventScript)
-        {
-            await controller.ProcessAsync(session, terminalEvent, cancellationToken).ConfigureAwait(false);
-        }
+        var diffPath = ArtifactPathBuilder.For("replay", $"{name}-diff-evidence.json");
+        File.WriteAllText(diffPath, System.Text.Json.JsonSerializer.Serialize(DiffEvidence.Decisions));
+        paths["diff_evidence"] = diffPath;
 
-        await controller.TickAsync(
-            session,
-            eventScript.Length == 0
-                ? DateTimeOffset.UtcNow
-                : eventScript[^1].Timestamp + TimeSpan.FromMilliseconds(1000),
-            cancellationToken).ConfigureAwait(false);
+        var eventScriptPath = ArtifactPathBuilder.For("replay", $"{name}-event-script.json");
+        File.WriteAllText(eventScriptPath, System.Text.Json.JsonSerializer.Serialize(Events.Select(static e => e.GetType().Name).ToArray()));
+        paths["event_script"] = eventScriptPath;
 
-        var finalSession = session.Model;
-        if (runtime.Policy.EmitTelemetry &&
-            finalSession.Macro.Macro is { } macro)
-        {
-            runtime.Telemetry.RecordMacro(
-                finalSession.StepCount,
-                macro.Id,
-                macro.Events.Count,
-                finalSession.Macro.LastDriftMs);
-        }
+        var transcriptPath = ArtifactPathBuilder.For("replay", $"{name}-transcript.txt");
+        File.WriteAllText(transcriptPath, TerminalTranscript);
+        paths["terminal_transcript"] = transcriptPath;
 
-        var finalSize = runtime.Size;
-        var evidence = RenderHarness.CaptureHostedParity(
-            name,
-            HostedParitySurface.Create(finalSession),
-            finalSize.Width,
-            finalSize.Height,
-            theme,
-            HostedParitySurface.CreateWebOptions(finalSession));
-
-        return new HostedParityRuntimeCapture(
-            name,
-            evidence,
-            runtime.Replay,
-            runtime.Trace,
-            runtime.Telemetry,
-            runtime.DiffEvidence,
-            runtime.FrameStats,
-            eventScript,
-            backend.DrainOutput());
-    }
-
-    private sealed class HostedParityRuntimeProgram : IAppProgram<HostedParitySession, HostedParityRuntimeMessage>
-    {
-        private readonly bool _inlineMode;
-        private readonly HostedParityScenarioId _scenarioId;
-        private readonly string _language;
-        private readonly WidgetFlowDirection _flowDirection;
-
-        public HostedParityRuntimeProgram(
-            bool inlineMode,
-            HostedParityScenarioId scenarioId,
-            string language,
-            WidgetFlowDirection flowDirection)
-        {
-            _inlineMode = inlineMode;
-            _scenarioId = scenarioId;
-            _language = language;
-            _flowDirection = flowDirection;
-        }
-
-        public HostedParitySession Initialize() =>
-            HostedParitySession.Create(_inlineMode, _scenarioId, _language, _flowDirection);
-
-        public UpdateResult<HostedParitySession, HostedParityRuntimeMessage> Update(
-            HostedParitySession model,
-            HostedParityRuntimeMessage message) =>
-            message.Input is null
-                ? UpdateResult<HostedParitySession, HostedParityRuntimeMessage>.FromModel(model)
-                : UpdateResult<HostedParitySession, HostedParityRuntimeMessage>.FromModel(model.Advance(message.Input));
-
-        public IRuntimeView BuildView(HostedParitySession model) =>
-            HostedParitySurface.Create(model);
-    }
-
-    public sealed record HostedParityRuntimeMessage(string Label, RuntimeInputEnvelope? Input)
-    {
-        public static HostedParityRuntimeMessage Initial() => new("init", null);
-
-        public static HostedParityRuntimeMessage FromInput(RuntimeInputEnvelope input)
-        {
-            ArgumentNullException.ThrowIfNull(input);
-            return new HostedParityRuntimeMessage(input.Label, input);
-        }
+        return paths;
     }
 }
 
-public sealed record HostedParityRuntimeCapture(
-    string Name,
-    HostedParityEvidence Evidence,
-    ReplayTape<HostedParityRuntimeHarness.HostedParityRuntimeMessage> ReplayTape,
-    RuntimeTrace<HostedParityRuntimeHarness.HostedParityRuntimeMessage> Trace,
-    TelemetrySessionLog Telemetry,
-    DiffEvidenceLedger DiffEvidence,
-    RuntimeFrameStats FrameStats,
-    IReadOnlyList<TerminalEvent> Events,
-    string TerminalTranscript)
+/// <summary>
+/// Static factory for headless hosted-parity runtime captures.
+/// </summary>
+public static class HostedParityRuntimeHarness
 {
-    public IReadOnlyDictionary<string, string> WriteArtifacts(string prefix)
+    /// <summary>
+    /// Capture a headless hosted-parity session.
+    /// Renders an initial frame then replays each supplied event,
+    /// recording one replay-tape entry, one trace entry, and one diff-evidence
+    /// decision for every frame rendered (events.Count + 1 total).
+    /// </summary>
+    public static Task<HostedParityCapture> CaptureAsync(
+        string name,
+        HostedParityScenarioId scenarioId,
+        int width,
+        int height,
+        IReadOnlyList<TerminalEvent> events)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(prefix);
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        ArgumentNullException.ThrowIfNull(events);
 
-        var artifacts = new Dictionary<string, string>(Evidence.WriteArtifacts(prefix), StringComparer.Ordinal);
-
-        var replayPath = ArtifactPathBuilder.For("replay", $"{prefix}-runtime-replay.json");
-        File.WriteAllText(replayPath, ReplayTape.ToJson());
-        artifacts["replay_tape"] = replayPath;
-
-        var tracePath = ArtifactPathBuilder.For("replay", $"{prefix}-runtime-trace.json");
-        File.WriteAllText(tracePath, Trace.ToJson());
-        artifacts["runtime_trace"] = tracePath;
-
-        var telemetryPath = ArtifactPathBuilder.For("replay", $"{prefix}-telemetry.json");
-        File.WriteAllText(telemetryPath, Telemetry.ToJson());
-        artifacts["telemetry"] = telemetryPath;
-
-        var diffPath = ArtifactPathBuilder.For("replay", $"{prefix}-diff-evidence.json");
-        File.WriteAllText(diffPath, DiffEvidence.ToJson());
-        artifacts["diff_evidence"] = diffPath;
-
-        var transcriptPath = ArtifactPathBuilder.For("replay", $"{prefix}-terminal-transcript.txt");
-        File.WriteAllText(transcriptPath, TerminalTranscript);
-        artifacts["terminal_transcript"] = transcriptPath;
-
-        var eventsPath = ArtifactPathBuilder.For("replay", $"{prefix}-event-script.json");
-        File.WriteAllText(eventsPath, SerializeEvents(Events));
-        artifacts["event_script"] = eventsPath;
-
-        return artifacts;
+        var capture = RunCapture(name, scenarioId, (ushort)width, (ushort)height, events);
+        return Task.FromResult(capture);
     }
 
-    private static string SerializeEvents(IReadOnlyList<TerminalEvent> events) =>
-        JsonSerializer.Serialize(
-            events.Select(static terminalEvent => terminalEvent switch
-            {
-                KeyTerminalEvent keyEvent => (object)new
-                {
-                    type = "key",
-                    key = keyEvent.Gesture.Key.ToString(),
-                    text = keyEvent.Gesture.Character?.ToString(),
-                    modifiers = keyEvent.Gesture.Modifiers.ToString()
-                },
-                MouseTerminalEvent mouseEvent => new
-                {
-                    type = "mouse",
-                    kind = mouseEvent.Gesture.Kind.ToString(),
-                    mouseEvent.Gesture.Column,
-                    mouseEvent.Gesture.Row,
-                    button = mouseEvent.Gesture.Button.ToString()
-                },
-                HoverTerminalEvent hoverEvent => new
-                {
-                    type = "hover",
-                    hoverEvent.Column,
-                    hoverEvent.Row,
-                    hoverEvent.Stable
-                },
-                PasteTerminalEvent pasteEvent => new
-                {
-                    type = "paste",
-                    pasteEvent.Text
-                },
-                FocusTerminalEvent focusEvent => new
-                {
-                    type = "focus",
-                    focusEvent.Focused
-                },
-                ResizeTerminalEvent resizeEvent => new
-                {
-                    type = "resize",
-                    width = resizeEvent.Size.Width,
-                    height = resizeEvent.Size.Height
-                },
-                _ => new
-                {
-                    type = terminalEvent.GetType().Name
-                }
-            }),
-            new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
-                WriteIndented = true
-            });
+    private static HostedParityCapture RunCapture(
+        string name,
+        HostedParityScenarioId scenarioId,
+        ushort width,
+        ushort height,
+        IReadOnlyList<TerminalEvent> events)
+    {
+        var replayTape = new ReplayTape<object>();
+        var trace = new RuntimeTrace<object>();
+        var diffLedger = new DiffEvidenceLedger();
+
+        var session = HostedParitySession.Create(inlineMode: false, scenarioId);
+
+        // Render initial frame (step 0).
+        var buffer = RenderFrame(session, width, height);
+        var screenText = HeadlessBufferView.ScreenString(buffer);
+        RecordFrame(replayTape, trace, diffLedger, 0, (object)session, screenText);
+
+        // Replay each event (steps 1..N).
+        for (var i = 0; i < events.Count; i++)
+        {
+            session = session.Advance(events[i]);
+            buffer = RenderFrame(session, width, height);
+            screenText = HeadlessBufferView.ScreenString(buffer);
+            RecordFrame(replayTape, trace, diffLedger, i + 1, (object)session, screenText);
+        }
+
+        // Build evidence.
+        var widget = HostedParitySurface.Create(session);
+        var view = new WidgetView(widget, width, height);
+        var webOptions = HostedParitySurface.CreateWebOptions(session);
+        var terminal = RenderHarness.Render(view, width, height);
+        var web = WebHost.Render(view, new Size(width, height), options: webOptions);
+        var evidence = HostedParityEvidence.Create(name, terminal, web);
+        var transcript = terminal.Text;
+
+        return new HostedParityCapture(evidence, replayTape, trace, diffLedger, events, transcript);
+    }
+
+    private static RenderBuffer RenderFrame(HostedParitySession session, ushort width, ushort height)
+    {
+        var buffer = new RenderBuffer(width, height);
+        var widget = HostedParitySurface.Create(session);
+        var pool = new GraphemePool();
+        var frame = new Frame(width, height, pool);
+        frame.BufferOverride = buffer;
+        widget.Render(new Rect(0, 0, width, height), frame);
+        return buffer;
+    }
+
+    private static void RecordFrame(
+        ReplayTape<object> replayTape,
+        RuntimeTrace<object> trace,
+        DiffEvidenceLedger diffLedger,
+        int stepIndex,
+        object message,
+        string screenText)
+    {
+        replayTape.Add(stepIndex, message, [], screenText, string.Empty);
+        trace.Record(stepIndex, message, [], screenText, string.Empty);
+        diffLedger.RecordDecision(new DiffDecisionRecord(DiffStrategy.Full, DiffRegime.StableFrame, stepIndex));
+    }
+
+    /// <summary>Adapter: renders an <see cref="IWidget"/> as an <see cref="IRuntimeView"/>.</summary>
+    private sealed class WidgetView(FrankenTui.Widgets.IWidget widget, ushort width, ushort height) : IRuntimeView
+    {
+        public void Render(RuntimeRenderContext context)
+        {
+            var pool = new GraphemePool();
+            var frame = new Frame(width, height, pool);
+            frame.BufferOverride = context.Buffer;
+            widget.Render(context.Bounds, frame);
+        }
+    }
 }

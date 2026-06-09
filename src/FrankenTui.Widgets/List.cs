@@ -335,7 +335,7 @@ public sealed class ListState : IStateful<ListPersistState>, IUndoSupport, IList
     /// <summary>Get the undo widget ID. Matches Rust <c>ListState::undo_id()</c>.</summary>
     public UndoWidgetId UndoId() => _undoId;
 
-    UndoWidgetId IUndoSupport.UndoWidgetId() => _undoId;
+    UndoWidgetId IUndoSupport.UndoWidgetId => _undoId;
 
     object IUndoSupport.CreateSnapshot() => new ListStateSnapshot
     {
@@ -361,7 +361,7 @@ public sealed class ListState : IStateful<ListPersistState>, IUndoSupport, IList
 
     // ── IListUndoExt ─────────────────────────────────────────────────────────
 
-    int? IListUndoExt.SelectedIndex() => Selected;
+    int? IListUndoExt.SelectedIndex => Selected;
 
     void IListUndoExt.SetSelectedIndex(int? index)
     {

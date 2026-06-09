@@ -9,6 +9,7 @@ using FrankenTui.Render;
 using FrankenTui.Runtime;
 using FrankenTui.Widgets;
 using RenderBuffer = FrankenTui.Render.Buffer;
+using MacroRecorder = FrankenTui.Extras.MacroRecorder;
 
 namespace FrankenTui.Testing.Harness;
 

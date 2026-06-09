@@ -49,36 +49,6 @@ public sealed class EventTrace
     }
 }
 
-/// <summary>Schedule trace for task scheduling. Matches upstream schedule_trace.</summary>
-public sealed class ScheduleTrace
-{
-    private readonly List<(DateTimeOffset Time, string Task, string Action)> _entries = [];
-
-    public void Record(string task, string action) =>
-        _entries.Add((DateTimeOffset.UtcNow, task, action));
-
-    public IReadOnlyList<(DateTimeOffset, string, string)> Entries => _entries;
-    public void Clear() => _entries.Clear();
-}
-
-/// <summary>Timeline aggregator for bucketed event counting. Matches upstream timeline_aggregator.</summary>
-public sealed class TimelineAggregator
-{
-    private readonly Dictionary<long, int> _buckets = [];
-    private readonly long _bucketSizeTicks;
-
-    public TimelineAggregator(TimeSpan bucketSize) => _bucketSizeTicks = bucketSize.Ticks;
-
-    public void Add(DateTimeOffset time)
-    {
-        var bucket = time.UtcTicks / _bucketSizeTicks;
-        _buckets.TryGetValue(bucket, out var count);
-        _buckets[bucket] = count + 1;
-    }
-
-    public IReadOnlyDictionary<long, int> Buckets => _buckets;
-}
-
 /// <summary>Evidence bridges for connecting telemetry to evidence pipeline. Matches upstream evidence_bridges.</summary>
 public sealed class EvidenceBridge
 {
@@ -91,19 +61,4 @@ public sealed class EvidenceBridge
 
     public IReadOnlyList<string> Records => _records;
     public void Clear() => _records.Clear();
-}
-
-/// <summary>Evidence telemetry collector. Matches upstream evidence_telemetry.</summary>
-public sealed class EvidenceTelemetry
-{
-    private int _frameCount;
-    private int _diffCount;
-    private int _skipCount;
-
-    public void RecordFrame() => _frameCount++;
-    public void RecordDiff(int cells) => _diffCount += cells;
-    public void RecordSkip() => _skipCount++;
-
-    public (int Frames, int DiffCells, int Skips) Snapshot() => (_frameCount, _diffCount, _skipCount);
-    public void Reset() { _frameCount = _diffCount = _skipCount = 0; }
 }

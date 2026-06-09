@@ -59,7 +59,7 @@ public sealed class Program<M> where M : class
     {
         _model=model;_writer=writer;_config=config??ProgramConfig.Default;
         _locale=_config.LocaleContext;_interceptSignals=_config.InterceptSignals;
-        _resize=new ResizeCoalescer(_config.ResizeCoalescer,_width,_height);
+        _resize=new ResizeCoalescer(_config.ResizeCoalescer);
         _immediateDrain=_config.ImmediateDrain;_persistence=_config.Persistence;
         _widgetRefreshCfg=_config.WidgetRefresh;_guardrails=_config.Guardrails;
         _effectQueueCfg=_config.EffectQueue;_pollTimeout=_config.PollTimeout;
@@ -166,9 +166,9 @@ public sealed class Program<M> where M : class
     void ReapFinishedTasks(){/* DIVERGENCE: task executor reaping deferred */}
 
     // ── Resize ─────────────────────────────────────────────────────────────
-    void ProcessResizeCoalescer(){var ready=_resize.ConsumeReadySize();if(ready.HasValue){ApplyResize(ready.Value.Item1,ready.Value.Item2);}}
+    void ProcessResizeCoalescer(){var decision=_resize.Evaluate(DateTimeOffset.UtcNow);if(decision is null)return;var ready=_resize.ConsumeReadySize(decision.Action);if(ready.HasValue){ApplyResize(ready.Value.Width,ready.Value.Height);}}
     void ApplyResize(ushort w,ushort h){if(_forcedSize.HasValue)return;_width=w;_height=h;_writer.SetSize(_width,_height);_dirty=true;}
-    public void NotifyResize(ushort w,ushort h)=>_resize.Observe(w,h);
+    public void NotifyResize(ushort w,ushort h){var decision=_resize.Observe(new FrankenTui.Core.Size(w,h),DateTimeOffset.UtcNow);var ready=_resize.ConsumeReadySize(decision.Action);if(ready.HasValue){ApplyResize(ready.Value.Width,ready.Value.Height);}}
 
     // ── Tick ───────────────────────────────────────────────────────────────
     bool ShouldTick(){if(!_tickRate.HasValue)return false;long now=Stopwatch.GetTimestamp();return(now-_lastTickTicks)/(double)Stopwatch.Frequency>=_tickRate.Value.TotalSeconds;}

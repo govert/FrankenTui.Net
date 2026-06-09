@@ -128,7 +128,7 @@ public static class PerformanceBenchmarkRunner
         return new BenchmarkSuiteResult(measurements);
     }
 
-    private static BenchmarkMeasurement Measure(BenchmarkBudget budget, Action action)
+    private static BenchmarkMeasurement Measure(BenchmarkBudget budget, System.Action action)
     {
         for (var warmup = 0; warmup < 5; warmup++)
         {

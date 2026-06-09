@@ -573,7 +573,7 @@ public sealed class ModalStack
 
         // Filter hit: only pass through if it belongs to the top modal's owner.
         (HitId, HitRegionKind, HitData)? filteredHit = null;
-        if (hit.HasValue && hit.Value.Owner == topOwner)
+        if (hit.HasValue && hit.Value.Owner?.Value == topOwner)
             filteredHit = hit.Value.IntoTuple();
 
         var data = _modals[topIndex].Modal.HandleEvent(@event, filteredHit, hitId);

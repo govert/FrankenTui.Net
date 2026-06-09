@@ -80,9 +80,14 @@ public sealed class ValidationSummaryWidget : IWidget
             .Take(context.Bounds.Height)
             .Select(message => $"{message.FieldId}: {message.Message}")
             .ToArray();
-        new ListWidget
+        for (var row = 0; row < Math.Min(items.Length, context.Bounds.Height); row++)
         {
-            Items = items
-        }.Render(context);
+            BufferPainter.WriteText(
+                context.Buffer,
+                context.Bounds.X,
+                (ushort)(context.Bounds.Y + row),
+                $"• {items[row]}",
+                context.Theme.Default.ToCell());
+        }
     }
 }

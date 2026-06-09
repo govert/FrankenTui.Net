@@ -1216,7 +1216,7 @@ public sealed class TextInput : IWidget, IAccessible, ITextInputUndoExt
 
     // ── IUndoSupport (snapshot + restore) ─────────────────────────────────
 
-    UndoWidgetId IUndoSupport.UndoWidgetId() => _undoId;
+    UndoWidgetId IUndoSupport.UndoWidgetId => _undoId;
 
     /// <summary>Create a snapshot of the current state for undo.</summary>
     public object CreateSnapshot() =>
@@ -1238,7 +1238,7 @@ public sealed class TextInput : IWidget, IAccessible, ITextInputUndoExt
 
     // ── ITextInputUndoExt ─────────────────────────────────────────────────
 
-    string ITextInputUndoExt.TextValue() => _value;
+    string ITextInputUndoExt.TextValue => _value;
 
     void ITextInputUndoExt.SetTextValue(string value)
     {
@@ -1248,7 +1248,7 @@ public sealed class TextInput : IWidget, IAccessible, ITextInputUndoExt
         _selectionAnchor = null;
     }
 
-    int ITextInputUndoExt.CursorPosition() => _cursor;
+    int ITextInputUndoExt.CursorPosition => _cursor;
 
     void ITextInputUndoExt.SetCursorPosition(int pos)
     {

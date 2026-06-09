@@ -36,6 +36,11 @@ public enum HitRegionKind
     Button,
     Link,
     Custom, // carries u8 upstream; simplified here
+    // DIVERGENCE: upstream models these as HitRegion::Custom(n). Modeled as named
+    // variants here so the modal/dialog widgets can reference them by name.
+    DialogInput,
+    ModalBackdrop,
+    ModalContent,
 }
 
 /// <summary>Full hit-test metadata, including optional ownership provenance.</summary>

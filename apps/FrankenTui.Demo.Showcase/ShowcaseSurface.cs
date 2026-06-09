@@ -5,6 +5,9 @@ using FrankenTui.Runtime;
 using FrankenTui.Text;
 using FrankenTui.Widgets;
 using System.Globalization;
+using MacroRecorder = FrankenTui.Extras.MacroRecorder;
+using HintRanker = FrankenTui.Extras.HintRanker;
+using HintContext = FrankenTui.Extras.HintContext;
 
 namespace FrankenTui.Demo.Showcase;
 

@@ -47,7 +47,7 @@ public sealed class BufferDiff
     public static IBufferDiffAccelerator? Accelerator { get; set; }
 
     public IReadOnlyList<CellPosition> Changes => _changes;
-
+    public ScanStatsData? ScanStats{get;set;}
     public int Count => _changes.Count;
 
     public bool IsEmpty => _changes.Count == 0;
@@ -438,3 +438,22 @@ public sealed class BufferDiff
             string.Equals(oldBuffer.ResolveText(oldCell), newBuffer.ResolveText(newCell), StringComparison.Ordinal);
     }
 }
+
+public sealed class TileDiffConfig
+{
+    public bool Enabled=true; public ushort TileW=16,TileH=8; public bool SkipCleanRows=true; public int MinCellsForTiles=12000; public double DenseCellRatio=0.25,DenseTileRatio=0.60; public int MaxTiles=4096;
+    public static TileDiffConfig Default=>new();
+    public TileDiffConfig WithEnabled(bool e){Enabled=e;return this;}
+    public TileDiffConfig WithTileSize(ushort w,ushort h){TileW=w;TileH=h;return this;}
+    public TileDiffConfig WithMinCellsForTiles(int m){MinCellsForTiles=m;return this;}
+    public TileDiffConfig WithSkipCleanRows(bool s){SkipCleanRows=s;return this;}
+    public TileDiffConfig WithDenseCellRatio(double r){DenseCellRatio=r;return this;}
+    public TileDiffConfig WithDenseTileRatio(double r){DenseTileRatio=r;return this;}
+    public TileDiffConfig WithMaxTiles(int m){MaxTiles=m;return this;}
+}
+
+public enum TileDiffFallback{FullDiff,DirtyRows,FullRedraw}
+
+public sealed class TileDiffStats{public int TotalTiles,TilesSkipped,CellsScanned;public double SkipRate,DenseRatio;public TileDiffFallback FallbackReason=TileDiffFallback.FullDiff;public bool FallbackTriggered;}
+
+public sealed class ScanStatsData{public int CellsScanned;public int CellsChanged;public int Runs;}

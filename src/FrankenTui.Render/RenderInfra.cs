@@ -13,16 +13,8 @@ public static class HeadlessRenderer
     }
 }
 
-/// <summary>OSC-8 hyperlink registry. Matches upstream link_registry.</summary>
-public sealed class LinkRegistry
-{
-    private readonly Dictionary<string, string> _links = [];
-    private int _nextId = 1;
-
-    public int Register(string url, string? label = null) { var id = _nextId++; _links[$"link_{id}"] = url; return id; }
-    public string? GetUrl(int id) => _links.TryGetValue($"link_{id}", out var url) ? url : null;
-    public void Clear() { _links.Clear(); _nextId = 1; }
-}
+// LinkRegistry is the full 1-to-1 port in LinkRegistry.cs; the earlier stub here
+// was a stash-restore artifact and has been removed to avoid a duplicate definition.
 
 /// <summary>Output sanitization for terminal safety. Matches upstream sanitize.</summary>
 public static class OutputSanitizer

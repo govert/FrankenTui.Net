@@ -352,7 +352,7 @@ public sealed class TableState : IStateful<TablePersistState>, IUndoSupport, ITa
     /// This can be used to associate undo commands with this state instance.</summary>
     public UndoWidgetId UndoId() => _undoId;
 
-    UndoWidgetId IUndoSupport.UndoWidgetId() => _undoId;
+    UndoWidgetId IUndoSupport.UndoWidgetId => _undoId;
 
     public object CreateSnapshot() => new TableStateSnapshot
     {
@@ -377,7 +377,7 @@ public sealed class TableState : IStateful<TablePersistState>, IUndoSupport, ITa
 
     // ── ITableUndoExt ───────────────────────────────────────────────────
 
-    public (int? column, bool ascending) SortState() => (SortColumn, SortAscending);
+    public (int? Column, bool Ascending) SortState => (SortColumn, SortAscending);
 
     public void SetSortState(int? column, bool ascending)
     {
@@ -385,7 +385,7 @@ public sealed class TableState : IStateful<TablePersistState>, IUndoSupport, ITa
         SortAscending = ascending;
     }
 
-    public string FilterText() => Filter;
+    public string FilterText => Filter;
 
     public void SetFilterText(string filter) => Filter = filter;
 

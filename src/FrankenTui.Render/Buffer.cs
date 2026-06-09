@@ -2,6 +2,18 @@ using FrankenTui.Core;
 
 namespace FrankenTui.Render;
 
+public sealed class DirtySpanConfig
+{
+    public bool Enabled=true; public int MaxSpansPerRow=8; public ushort MergeGap=2; public ushort GuardBand=1;
+    public static DirtySpanConfig Default=>new();
+    public DirtySpanConfig WithEnabled(bool e){Enabled=e;return this;}
+    public DirtySpanConfig WithMaxSpansPerRow(int m){MaxSpansPerRow=m;return this;}
+    public DirtySpanConfig WithMergeGap(ushort g){MergeGap=g;return this;}
+    public DirtySpanConfig WithGuardBand(ushort gb){GuardBand=gb;return this;}
+}
+
+public sealed class DirtySpanStats{public int TotalSpans,RowsWithSpans,MaxSpansInRow;public double AvgSpanWidth,AvgSpansPerRow;}
+
 public sealed class Buffer
 {
     private readonly Cell[] _cells;
@@ -39,6 +51,12 @@ public sealed class Buffer
     public GraphemeRegistry Graphemes => _graphemes;
 
     public int DirtyRowCount => _dirtyRows.Count(static row => row);
+    public bool[] DirtyRowsArray => _dirtyRows;
+    public DirtySpanConfig DirtySpanCfg=new();
+    public DirtySpanConfig GetDirtySpanConfig()=>DirtySpanCfg;
+    public void SetDirtySpanConfig(DirtySpanConfig c){DirtySpanCfg=c;}
+    public DirtySpanStats GetDirtySpanStats()=>new DirtySpanStats{TotalSpans=0,RowsWithSpans=DirtyRowCount,MaxSpansInRow=1,AvgSpanWidth=Width,AvgSpansPerRow=1};
+    public ushort ContentHeight{get{ushort maxY=0;for(ushort y=0;y<Height;y++)if(IsRowDirty(y))maxY=y;return (ushort)Math.Clamp(maxY+1,1,Height);}}
 
     public ReadOnlySpan<Cell> GetRow(ushort y)
     {
@@ -292,6 +310,31 @@ public sealed class Buffer
         }
 
         return CurrentOpacity;
+    }
+
+    public void SetFast(ushort x, ushort y, Cell cell)
+    {
+        // Match upstream Rust set_fast(): bail to full Set() path for wide or
+        // continuation cells so that wide-char continuation cells are written.
+        if (cell.Content.Width() > 1 || cell.IsContinuation)
+        {
+            Set(x, y, cell);
+            return;
+        }
+
+        if (x < Width && y < Height)
+        {
+            // Fast path: check that existing cell doesn't need overlap cleanup.
+            var idx = y * Width + x;
+            var existing = _cells[idx];
+            if (existing.Content.Width() > 1 || existing.IsContinuation)
+            {
+                Set(x, y, cell);
+                return;
+            }
+            _cells[idx] = cell;
+            _dirtyRows[y] = true;
+        }
     }
 
     private void MarkDirtySpan(ushort y, ushort start, ushort end)

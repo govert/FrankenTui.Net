@@ -314,7 +314,7 @@ public sealed class Tree : IWidget, IStateful<TreePersistState>, ITreeUndoExt
     /// <summary>Get the undo widget ID for this tree.</summary>
     public UndoWidgetId UndoId() => _undoId;
 
-    UndoWidgetId IUndoSupport.UndoWidgetId() => _undoId;
+    UndoWidgetId IUndoSupport.UndoWidgetId => _undoId;
 
     /// <summary>Create a snapshot of the current state for undo purposes.</summary>
     public object CreateSnapshot() => SaveState();

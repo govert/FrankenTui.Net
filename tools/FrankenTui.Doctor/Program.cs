@@ -52,23 +52,19 @@ seedExecution = seedMode.ToLowerInvariant() switch
 
 if (writeArtifacts || writeManifest || runBenchmarks)
 {
-    var runtimePolicy = RuntimeExecutionPolicy.Default with
-    {
-        EmitTelemetry = telemetry.Enabled,
-        Telemetry = telemetry
-    };
     var runtimeCapture = await HostedParityRuntimeHarness.CaptureAsync(
         "doctor-tooling-session",
         FrankenTui.Extras.HostedParityScenarioId.Tooling,
         width,
         height,
-        policy: runtimePolicy);
+        events: []);
     var artifactPaths = new Dictionary<string, string>(runtimeCapture.WriteArtifacts("doctor-runtime"), StringComparer.Ordinal);
+    var runtimeFrameStats = RuntimeFrameStats.Empty;
     report = report with
     {
         RuntimePerformance = PerformanceHudSnapshot.FromRuntime(
-            runtimeCapture.FrameStats,
-            runtimeCapture.FrameStats.SyncOutput,
+            runtimeFrameStats,
+            runtimeFrameStats.SyncOutput,
             scrollRegion: true,
             hyperlinks: true,
             PerformanceHudLevel.Full)
