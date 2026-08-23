@@ -363,6 +363,13 @@ public sealed class ModalStack
             FocusGroupId = focusGroupId,
         });
 
+        ModalTelemetry.WriteEvent(
+            "modal opened",
+            ("modal_id", id.Id()),
+            ("modal_type", modal.ModalType()),
+            ("focus_trapped", focusGroupId.HasValue && modal.AriaModal()),
+            ("depth", _modals.Count));
+
         return id;
     }
 
@@ -411,7 +418,13 @@ public sealed class ModalStack
         if (_modals.Count == 0) return null;
         var modal = _modals[^1];
         _modals.RemoveAt(_modals.Count - 1);
-        return new ModalResult { Id = modal.Id, Data = null, FocusGroupId = modal.FocusGroupId };
+        var result = new ModalResult { Id = modal.Id, Data = null, FocusGroupId = modal.FocusGroupId };
+        ModalTelemetry.WriteEvent(
+            "modal closed",
+            ("modal_id", result.Id.Id()),
+            ("modal_type", modal.Modal.ModalType()),
+            ("depth", _modals.Count));
+        return result;
     }
 
     /// <summary>
@@ -447,7 +460,13 @@ public sealed class ModalStack
             }
         }
 
-        return new ModalResult { Id = modal.Id, Data = null, FocusGroupId = modal.FocusGroupId };
+        var result = new ModalResult { Id = modal.Id, Data = null, FocusGroupId = modal.FocusGroupId };
+        ModalTelemetry.WriteEvent(
+            "modal closed (pop_id)",
+            ("modal_id", result.Id.Id()),
+            ("modal_type", modal.Modal.ModalType()),
+            ("depth", _modals.Count));
+        return result;
     }
 
     /// <summary>
@@ -570,6 +589,7 @@ public sealed class ModalStack
         var hitId     = _modals[topIndex].HitId;
         var id        = _modals[topIndex].Id;
         var focusGroupId = _modals[topIndex].FocusGroupId;
+        var modalType = _modals[topIndex].Modal.ModalType();
 
         // Filter hit: only pass through if it belongs to the top modal's owner.
         (HitId, HitRegionKind, HitData)? filteredHit = null;
@@ -581,7 +601,14 @@ public sealed class ModalStack
         {
             // Modal wants to close.
             _modals.RemoveAt(topIndex);
-            return new ModalResult { Id = id, Data = data, FocusGroupId = focusGroupId };
+            var result = new ModalResult { Id = id, Data = data, FocusGroupId = focusGroupId };
+            ModalTelemetry.WriteEvent(
+                "modal closed (event)",
+                ("modal_id", result.Id.Id()),
+                ("modal_type", modalType),
+                ("result_data", result.Data),
+                ("depth", _modals.Count));
+            return result;
         }
 
         return null;
@@ -610,6 +637,12 @@ public sealed class ModalStack
             // Calculate backdrop opacity with depth dimming.
             float baseOpacity = modal.Modal.BackdropConfig().Opacity;
             float opacity     = isTop ? baseOpacity : baseOpacity * 0.5f;
+
+            using var renderActivity = ModalTelemetry.StartRender(
+                modal.Modal.ModalType(),
+                modal.FocusGroupId.HasValue && modal.Modal.AriaModal(),
+                opacity > 0.0f,
+                out long renderStartTimestamp);
 
             // Render backdrop.
             if (opacity > 0.0f)
@@ -647,6 +680,8 @@ public sealed class ModalStack
                 // Render modal content.
                 modal.Modal.RenderContent(contentArea, innerFrame);
             });
+
+            ModalTelemetry.CompleteRender(renderActivity, renderStartTimestamp);
         }
     }
 
@@ -1161,12 +1196,36 @@ public sealed class ModalFocusIntegration
         var activationBaseFocus       = _focus.HostFocused() ? _focus.Current() : _focus.DeferredFocusTarget();
         _focus.ClearTraps();
 
+        // Track the return_focus of the first (topmost) trap whose group has no
+        // focusable members. This serves as the trailing-failed-restore target:
+        // if the trap above the last live trap failed, we restore to its return
+        // focus (the focus that was current before that modal was pushed).
+        ulong? trailingFailedRestore = null;
+        bool trailingFailedRestoreSet = false;
+
         bool hasActiveTrap = false;
         if (!_focus.HostFocused())
         {
             if (_focus.Current().HasValue) _focus.Blur();
             foreach (var (groupId, returnFocus) in specs)
-                hasActiveTrap |= _focus.PushTrapWithReturnFocus(groupId, returnFocus);
+            {
+                bool trapOk = _focus.PushTrapWithReturnFocus(groupId, returnFocus);
+                if (trapOk)
+                {
+                    hasActiveTrap = true;
+                }
+                else
+                {
+                    // This trap's group has no focusable members. Track its return
+                    // focus as the trailing-failed-restore target — when the
+                    // innermost trap fails, focus should fall back to its return
+                    // focus (which is the focus that was current before that modal
+                    // was pushed). Overwrite on each failure so the innermost
+                    // (last, topmost) failed trap wins.
+                    trailingFailedRestoreSet = true;
+                    trailingFailedRestore = returnFocus;
+                }
+            }
 
             if (hasActiveTrap && !hadActiveTrapBefore && !_baseFocusSet)
             {
@@ -1176,16 +1235,31 @@ public sealed class ModalFocusIntegration
 
             if (!hasActiveTrap)
             {
-                var (restoreSet, restoreTarget) = GetRestoreTarget(!hadActiveTrapBefore, preservedLogicalTarget, false, null);
+                var (restoreSet, restoreTarget) = GetRestoreTarget(!hadActiveTrapBefore, preservedLogicalTarget, trailingFailedRestoreSet, trailingFailedRestore);
                 if (restoreSet)
                     _focus.ReplaceDeferredFocusTarget(restoreTarget);
+            }
+            else if (_focus.LogicalFocusTarget() == null && trailingFailedRestoreSet)
+            {
+                _focus.ReplaceDeferredFocusTarget(trailingFailedRestore);
             }
             return;
         }
 
         // Host is focused.
         foreach (var (groupId, returnFocus) in specs)
-            hasActiveTrap |= _focus.PushTrapWithReturnFocus(groupId, returnFocus);
+        {
+            bool trapOk = _focus.PushTrapWithReturnFocus(groupId, returnFocus);
+            if (trapOk)
+            {
+                hasActiveTrap = true;
+            }
+            else
+            {
+                trailingFailedRestoreSet = true;
+                trailingFailedRestore = returnFocus;
+            }
+        }
 
         if (hasActiveTrap && !hadActiveTrapBefore && !_baseFocusSet)
         {
@@ -1195,7 +1269,7 @@ public sealed class ModalFocusIntegration
 
         if (!hasActiveTrap)
         {
-            var (restoreSet, restoreTarget) = GetRestoreTarget(!hadActiveTrapBefore, preservedLogicalTarget, false, null);
+            var (restoreSet, restoreTarget) = GetRestoreTarget(!hadActiveTrapBefore, preservedLogicalTarget, trailingFailedRestoreSet, trailingFailedRestore);
             if (restoreSet && restoreTarget.HasValue)
                 _focus.FocusWithoutHistory(restoreTarget.Value);
             else if (restoreSet && !restoreTarget.HasValue && _focus.Current().HasValue)
@@ -1210,16 +1284,25 @@ public sealed class ModalFocusIntegration
             return;
         }
 
+        // Some traps are active. If the logical focus target is null (because
+        // the topmost trap failed and the one below has no active member either),
+        // use the trailing failed restore target.
+        if (_focus.LogicalFocusTarget() == null && trailingFailedRestoreSet && trailingFailedRestore.HasValue)
+            _focus.FocusWithoutHistory(trailingFailedRestore.Value);
+
         _focus.ApplyHostFocus(true);
     }
 
     // Returns collapsed active-group (groupId, returnFocus) pairs.
+    // Does NOT filter out groups with no focusable members — the caller's
+    // RebuildFocusTraps loop handles that via PushTrapWithReturnFocus, and
+    // the restore logic needs the failed traps' return_focus for the
+    // trailing-failed-restore fallback.
     private List<(uint groupId, ulong? returnFocus)> FocusModalSpecsInOrder()
     {
         var result = new List<(uint, ulong?)>();
         foreach (var (_, spec) in _stack.FocusModalSpecsInOrder())
-            if (GroupHasFocusableMember(spec.GroupId))
-                result.Add((spec.GroupId, spec.ReturnFocus));
+            result.Add((spec.GroupId, spec.ReturnFocus));
         return result;
     }
 

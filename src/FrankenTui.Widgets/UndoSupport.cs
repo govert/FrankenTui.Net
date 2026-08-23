@@ -351,21 +351,21 @@ public interface ITreeUndoExt : IUndoSupport
 /// <summary>Extension interface for list widgets with undo support.</summary>
 public interface IListUndoExt : IUndoSupport
 {
-    /// <summary>Get the current selection.</summary>
-    int? SelectedIndex { get; }
-    /// <summary>Set the selection.</summary>
+    /// <summary>Get the current selection. Upstream <c>fn selected_index</c>.</summary>
+    int? SelectedIndex();
+    /// <summary>Set the selection. Upstream <c>fn set_selected_index</c>.</summary>
     void SetSelectedIndex(int? index);
 }
 
 /// <summary>Extension interface for table widgets with undo support.</summary>
 public interface ITableUndoExt : IUndoSupport
 {
-    /// <summary>Get the current sort state (column, ascending).</summary>
-    (int? Column, bool Ascending) SortState { get; }
-    /// <summary>Set the sort state.</summary>
+    /// <summary>Get the current sort state (column, ascending). Upstream <c>fn sort_state</c>.</summary>
+    (int? Column, bool Ascending) SortState();
+    /// <summary>Set the sort state. Upstream <c>fn set_sort_state</c>.</summary>
     void SetSortState(int? column, bool ascending);
-    /// <summary>Get the current filter text.</summary>
-    string FilterText { get; }
-    /// <summary>Set the filter text.</summary>
+    /// <summary>Get the current filter text. Upstream <c>fn filter_text</c>.</summary>
+    string FilterText();
+    /// <summary>Set the filter text. Upstream <c>fn set_filter_text</c>.</summary>
     void SetFilterText(string filter);
 }

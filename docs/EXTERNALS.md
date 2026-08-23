@@ -23,7 +23,7 @@ is expected to exist there and how to recreate it.
 - Type: Git repository clone
 - Upstream: `https://github.com/Dicklesworthstone/frankentui.git`
 - Branch: `main`
-- Current local reference commit: `f958e59e1406a90fdb92512103e3591911a9d68c`
+- Current local reference commit: `15cc6543f76b814394c590f9e7719dedd6684e4c`
 - Purpose: canonical upstream basis for FrankenTui.Net porting and provenance
   checks
 
@@ -34,7 +34,7 @@ From the repository root:
 ```bash
 mkdir -p .external
 git clone https://github.com/Dicklesworthstone/frankentui.git .external/frankentui
-git -C .external/frankentui checkout f958e59e1406a90fdb92512103e3591911a9d68c
+git -C .external/frankentui checkout 15cc6543f76b814394c590f9e7719dedd6684e4c
 ```
 
 If you want the latest upstream tracking state instead of the recorded

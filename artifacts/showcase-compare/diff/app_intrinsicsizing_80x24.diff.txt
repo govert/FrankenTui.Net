@@ -2,8 +2,8 @@
 Upstream snapshot: app_intrinsicsizing_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 653
-Local nonblank chars: 835
-Local/upstream char ratio: 1.279
+Local nonblank chars: 1179
+Local/upstream char ratio: 1.806
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -14,64 +14,64 @@ upstream: ╭──────────────────────�
 local   : ╭───────────────────────────────Intrinsic Sizing───────────────────────────────╮
 @@ row 03
 upstream: │ Intrinsic Sizing Demo • Adaptive Sidebar (1/4)
-local   : │ Intrinsic Sizing Demo • Adaptive Sidebar (1/4)                               │
+local   : │╭───────────────────────Intrinsic Sizing Demo [focus]────────────────────────╮│
 @@ row 04
 upstream: │╭Menu──────────────╮╭Content───────────────────────────────────────────╮  ┌────
-local   : │╭────────Menu────────╮╭───────────────────Content────────────────────╮╭──────╮│
+local   : ││Scenario: Adaptive Sidebar (1/4) | Effective width: 120 | Width preset: 2 | ││
 @@ row 05
 upstream: ││📊 Dashboard      ││Current width: 72                                 │  │mode:
-local   : ││📊 Dashboard        ││Current width: 72                             ││21px  ││
+local   : ││Terminal: 80x24                                                             ││
 @@ row 06
 upstream: ││⚙️ Settings        ││Sidebar mode: Full sidebar mode (width >= 60)     │  │┃
-local   : ││⚙️ Settings          ││Sidebar mode: Full sidebar mode (width >= 60) ││      ││
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 07
 upstream: ││❓ Help           ││                                                  │  │┃ 21x
-local   : ││❓ Help              ││                                              ││┃     ││
+local   : │╭─────────Scenarios─────────╮╭────Adaptive Sidebar────╮╭Controls + Pane Studio│
 @@ row 08
 upstream: ││🔔 Notifications  ││The sidebar adapts to terminal width:             │  │┃
-local   : ││🔔 Notifications    ││The sidebar adapts to terminal width:         ││┃     ││
+local   : ││#        Scenario Intrinsic │Adaptive Sidebar        ││Intrinsic Sizing Demo││
 @@ row 09
 upstream: ││👤 Profile        ││• Narrow: icon-only (4 cols)                      │  │┃
-local   : ││👤 Profile          ││• Narrow: icon-only (4 cols)                  ││┃     ││
+local   : ││1        Adaptive icon-only │Effective width: 120    ││1-4 switch scenario |││
 @@ row 10
 upstream: ││                  ││• Wide: full labels (20 cols)                     │  │┃
-local   : ││                    ││• Wide: full labels (20 cols)                 ││┃     ││
+local   : ││2        Flexible stacked <6│Sidebar: full labels 20 ││Left/Right or n/p    ││
 @@ row 11
 upstream: ││                  ││                                                  │  │┃
-local   : ││                    ││                                              ││──    ││
+local   : ││3        Auto-SiziID/status/│cols                    ││cycle                ││
 @@ row 12
 upstream: ││                  ││Try resizing your terminal!                       │  │┃
-local   : ││                    ││Try resizing your terminal!                   ││      ││
+local   : ││4        Responsivone column│                        ││w cycle width preset:││
 @@ row 13
 upstream: ││                  ││                                                  │  │────
-local   : ││                    ││                                              ││      ││
+local   : ││                           ││Menu                    ││50 -> 80 -> 120 ->   ││
 @@ row 14
 upstream: ││                  ││                                                  │  │╭───
-local   : ││                    ││                                              ││      ││
+local   : ││                           ││  Dashboard             ││auto                 ││
 @@ row 15
 upstream: ││                  ││                                                  │  ││
-local   : ││                    ││                                              ││      ││
+local   : ││                           ││  Settings              ││+/- adjust simulated ││
 @@ row 16
 upstream: ││                  ││                                                  │  ││ 21
-local   : ││                    ││                                              ││      ││
+local   : ││                           ││  Help                  ││width by 10 | r reset││
 @@ row 17
 upstream: ││                  ││                                                  │  ││
-local   : ││                    ││                                              ││      ││
+local   : ││                           ││  Notifications         ││Click/Scroll content ││
 @@ row 18
 upstream: ││                  ││                                                  │  ││
-local   : ││                    ││                                              ││      ││
+local   : ││                           ││  Profile               ││cycles scenario      ││
 @@ row 19
 upstream: ││                  ││                                                  │  ││
-local   : ││                    ││                                              ││      ││
+local   : ││                           ││                        ││Width preset: 2 |    ││
 @@ row 20
 upstream: ││                  ││                                                  │  ││
-local   : ││                    ││                                              ││      ││
+local   : ││                           ││                        ││Detail scroll: 0     ││
 @@ row 21
 upstream: ││                  ││                                                  │  ││
-local   : ││                    ││                                              ││      ││
+local   : ││                           ││                        ││Focus: 0 focus       ││
 @@ row 22
 upstream: ││                  ││                                                  │  ││
-local   : │╰────────────────────╯╰──────────────────────────────────────────────╯╰──────╯│
+local   : │╰───────────────────────────╯╰────────────────────────╯╰─────────────────────╯│
 @@ row 23
 upstream: ││                  ││                                                  │  │╰───
 local   : ╰──────────────────────────────────────────────────────────────────────────────╯

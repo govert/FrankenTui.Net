@@ -1,3 +1,9 @@
+// Upstream source: crates/ftui-extras/src/pty_capture.rs
+// Upstream basis: 15cc6543f76b814394c590f9e7719dedd6684e4c
+// DIVERGENCE: Windows uses ConPTY plus a monitor-protected buffer in place of
+// portable_pty's reader channel; data/EOF wakeups preserve the upstream
+// wait-for-first-chunk contract.
+//
 // Windows ConPTY implementation using CreatePseudoConsole API.
 //
 // Reader strategy: a background thread does a *blocking* ReadFile on the output
@@ -12,6 +18,7 @@
 // output and closes the write end, unblocking the reader's ReadFile with a broken
 // pipe so _eof can be raised.
 
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -173,9 +180,17 @@ internal sealed class WindowsPtySession : IPtySession
                 }
             }
             if (n <= 0) break; // 0 bytes => write end closed.
-            lock (_readLock) _readBuffer.Write(buf, 0, n);
+            lock (_readLock)
+            {
+                _readBuffer.Write(buf, 0, n);
+                Monitor.PulseAll(_readLock);
+            }
         }
-        lock (_readLock) _eof = true;
+        lock (_readLock)
+        {
+            _eof = true;
+            Monitor.PulseAll(_readLock);
+        }
     }
 
     private void MonitorLoop()
@@ -195,16 +210,37 @@ internal sealed class WindowsPtySession : IPtySession
     public byte[] ReadAvailable()
     {
         lock (_readLock)
-        {
-            if (_readBuffer.Length == 0) return [];
-            var d = _readBuffer.ToArray(); _readBuffer.SetLength(0); return d;
-        }
+            return DrainReadBufferLocked();
     }
 
     public byte[] ReadAvailableWithTimeout(TimeSpan timeout)
     {
-        if (timeout > TimeSpan.Zero) Thread.Sleep(timeout);
-        return ReadAvailable();
+        lock (_readLock)
+        {
+            if (_readBuffer.Length == 0 && !_eof && timeout > TimeSpan.Zero)
+            {
+                var elapsed = Stopwatch.StartNew();
+                var remaining = timeout;
+
+                while (_readBuffer.Length == 0 && !_eof && remaining > TimeSpan.Zero)
+                {
+                    if (!Monitor.Wait(_readLock, remaining))
+                        break;
+
+                    remaining = timeout - elapsed.Elapsed;
+                }
+            }
+
+            return DrainReadBufferLocked();
+        }
+    }
+
+    private byte[] DrainReadBufferLocked()
+    {
+        if (_readBuffer.Length == 0) return [];
+        var data = _readBuffer.ToArray();
+        _readBuffer.SetLength(0);
+        return data;
     }
 
     public void SendInput(byte[] data)

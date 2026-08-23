@@ -1,0 +1,13 @@
+{
+  "id": "terminal-host-parity",
+  "version": "1",
+  "description": "Terminal lifecycle, byte-stream, input, resize, inline/alt-screen, one-writer, sanitization, and teardown parity across supported hosts.",
+  "dimensions": ["effects", "failure", "determinism", "realization", "operational"],
+  "warrantMethods": ["differential", "property-adversarial", "reviewed", "operationally-observed"],
+  "comparisonMethod": "terminal-transcript-and-host-evidence-v1",
+  "settings": {
+    "sequence": "Compare cursor movement, modes, clears, routed output, sanitization, resize, and teardown as ordered effects.",
+    "hostContext": "OS, terminal, mux/remoting, capability overrides, and backend route are mandatory labels.",
+    "negativeClaims": "Unsupported host behavior requires a closed applicable host inventory; otherwise report unknown or not observed."
+  }
+}

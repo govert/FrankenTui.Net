@@ -1,0 +1,24 @@
+{
+  "id": "showcase-static-frames",
+  "version": "1",
+  "unit": "showcase-hosts",
+  "criterion": "showcase-frame-parity",
+  "casesPath": "fixtures/kodeporter/showcase-static-frames.jsonl",
+  "sourceCommand": "dotnet run --no-build --project C:\\Work\\FrankenTui.Net\\tools\\FrankenTui.ShowcaseCompare\\FrankenTui.ShowcaseCompare.csproj -- --kodeporter-adapter source",
+  "targetCommand": "dotnet run --no-build --project C:\\Work\\FrankenTui.Net\\tools\\FrankenTui.ShowcaseCompare\\FrankenTui.ShowcaseCompare.csproj -- --kodeporter-adapter target",
+  "sourceBasis": "upstream-15cc6543-local-helper",
+  "targetBasis": "target-current-worktree",
+  "independence": "independently-derived",
+  "coverage": {
+    "state": "closed",
+    "basis": "All 45 entries in the upstream ftui-demo-showcase screen registry, at the canonical 80x24 frame-0 deterministic capture context. This closes only the static-screen registry denominator, not interactive behavior or other viewports."
+  },
+  "environment": {
+    "protocol": "jsonl-request-result-v1",
+    "viewport": "80x24",
+    "frame": "0",
+    "seed": "0",
+    "screenMode": "alt",
+    "normalization": "lf-trim-trailing-space-final-lf-v1"
+  }
+}

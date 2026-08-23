@@ -1,3 +1,9 @@
+// SPDX-License-Identifier: Apache-2.0
+// Port of .external/frankentui/crates/ftui-render/src/buffer.rs.
+// Upstream basis: 15cc6543f76b814394c590f9e7719dedd6684e4c.
+// Wide-fill and continuation-tail fixes: upstream 49e55c750dd29654eab7357be1e3ad5c59225b4a
+// and 81673632d38ccb64bf2f4107c9dd62573d0976f6.
+
 using FrankenTui.Core;
 
 namespace FrankenTui.Render;
@@ -22,13 +28,13 @@ public sealed class Buffer
     private readonly List<float> _opacityStack;
     private readonly bool[] _dirtyRows;
 
-    public Buffer(ushort width, ushort height)
+    public Buffer(ushort width, ushort height, GraphemePool? sharedPool = null)
     {
         Width = Math.Max(width, (ushort)1);
         Height = Math.Max(height, (ushort)1);
         _cells = new Cell[Width * Height];
         Array.Fill(_cells, Cell.Empty);
-        _graphemes = new GraphemeRegistry();
+        _graphemes = sharedPool is null ? new GraphemeRegistry() : new GraphemeRegistry(sharedPool);
         _scissorStack = [Rect.FromSize(Width, Height)];
         _opacityStack = [1f];
         _dirtyRows = Enumerable.Repeat(true, Height).ToArray();
@@ -38,7 +44,11 @@ public sealed class Buffer
 
     public ushort Height { get; }
 
+    public DegradationLevel Degradation { get; set; } = DegradationLevel.Full;
+
     public int Length => _cells.Length;
+
+    public ReadOnlySpan<Cell> Cells => _cells;
 
     public bool IsEmpty => _cells.Length == 0;
 
@@ -122,6 +132,34 @@ public sealed class Buffer
         return copy;
     }
 
+    internal void AttachGraphemePool(GraphemePool pool)
+    {
+        ArgumentNullException.ThrowIfNull(pool);
+        if (_graphemes.Uses(pool)) return;
+
+        var replacements = new (int Index, string Text, byte Width)[_cells.Count(
+            static cell => cell.Content.IsGrapheme)];
+        var next = 0;
+        for (var i = 0; i < _cells.Length; i++)
+        {
+            var cell = _cells[i];
+            if (cell.Content.GraphemeId is not { } id) continue;
+            var text = _graphemes.Resolve(id);
+            if (text is not null)
+                replacements[next++] = (i, text, (byte)Math.Clamp(cell.Content.Width(), 0, GraphemeId.MaxWidth));
+        }
+
+        foreach (var cell in _cells) ReleaseCellIfNeeded(cell);
+        _graphemes.Clear();
+        _graphemes.Attach(pool);
+        for (var i = 0; i < next; i++)
+        {
+            var replacement = replacements[i];
+            var id = _graphemes.Intern(replacement.Text, replacement.Width);
+            _cells[replacement.Index] = _cells[replacement.Index].WithContent(CellContent.FromGrapheme(id));
+        }
+    }
+
     public void CopyFrom(Buffer other)
     {
         ArgumentNullException.ThrowIfNull(other);
@@ -131,6 +169,9 @@ public sealed class Buffer
             throw new ArgumentException("Buffers must have identical dimensions.", nameof(other));
         }
 
+        Degradation = other.Degradation;
+
+        foreach (var cell in _cells) ReleaseCellIfNeeded(cell);
         _graphemes.Clear();
 
         for (ushort y = 0; y < Height; y++)
@@ -244,7 +285,13 @@ public sealed class Buffer
         MarkDirtySpan(y, spanStart, spanEnd);
         if (!rawWideHead)
         {
-            CleanupOrphanedTails(SaturatingAdd(x, 1), y);
+            // A continuation written at x may be owned by a head to its left.
+            // Sweeping from x + 1 would erase the owner's remaining legitimate
+            // tails for width-3+ graphemes. Sweep only beyond that owner.
+            var sweepFrom = cell.IsContinuation
+                ? ContinuationOwnerExtent(x, y) ?? SaturatingAdd(x, 1)
+                : SaturatingAdd(x, 1);
+            CleanupOrphanedTails(sweepFrom, y);
         }
     }
 
@@ -256,17 +303,113 @@ public sealed class Buffer
             return;
         }
 
+        var cellWidth = Math.Max(cell.Content.Width(), 1);
+        if (cellWidth <= 1)
+        {
+            for (var y = clipped.Y; y < clipped.Bottom; y++)
+            {
+                for (var x = clipped.X; x < clipped.Right; x++)
+                {
+                    Set(x, y, cell);
+                }
+            }
+
+            return;
+        }
+
+        // Enforce the fill rectangle as a strict clip for wide glyphs. Clear
+        // first because Set atomically rejects a wide head whose tail would
+        // cross the right edge; without the clear, the final partial slot kept
+        // stale content from the preceding frame.
+        PushScissor(clipped);
+        try
+        {
+            for (var y = clipped.Y; y < clipped.Bottom; y++)
+            {
+                for (var x = clipped.X; x < clipped.Right; x++)
+                {
+                    Set(x, y, Cell.Empty);
+                }
+
+                var writeX = clipped.X;
+                while (writeX < clipped.Right)
+                {
+                    Set(writeX, y, cell);
+                    writeX = SaturatingAdd(writeX, (ushort)cellWidth);
+                }
+            }
+        }
+        finally
+        {
+            PopScissor();
+        }
+    }
+
+    internal void PaintAreaColors(
+        Rect rect,
+        PackedRgba? foreground,
+        PackedRgba? background,
+        CellStyleFlags? attributes = null,
+        bool compositeBackground = false)
+    {
+        var clipped = CurrentScissor.Intersection(rect);
+        if (clipped.IsEmpty)
+        {
+            return;
+        }
+
+        var opacity = CurrentOpacity;
         for (var y = clipped.Y; y < clipped.Bottom; y++)
         {
+            MarkDirtySpan(y, clipped.X, clipped.Right);
             for (var x = clipped.X; x < clipped.Right; x++)
             {
-                Set(x, y, cell);
+                var index = IndexUnchecked(x, y);
+                var cell = _cells[index];
+                if (foreground is { } foregroundColor)
+                {
+                    cell = cell.WithForeground(opacity < 1f
+                        ? foregroundColor.WithOpacity(opacity)
+                        : foregroundColor);
+                }
+
+                if (background is { } backgroundColor)
+                {
+                    var adjustedBackground = opacity < 1f
+                        ? backgroundColor.WithOpacity(opacity)
+                        : backgroundColor;
+                    if (compositeBackground)
+                    {
+                        if (adjustedBackground.A == byte.MaxValue)
+                        {
+                            cell = cell.WithBackground(adjustedBackground);
+                        }
+                        else if (adjustedBackground.A != 0)
+                        {
+                            cell = cell.WithBackground(adjustedBackground.Over(cell.Background));
+                        }
+                    }
+                    else
+                    {
+                        cell = cell.WithBackground(opacity < 1f
+                            ? adjustedBackground.Over(cell.Background)
+                            : adjustedBackground);
+                    }
+                }
+
+                if (attributes is { } extraAttributes)
+                {
+                    cell = cell.WithAttributes(cell.Attributes.MergedFlags(extraAttributes));
+                }
+
+                _cells[index] = cell;
             }
         }
     }
 
     public void Clear()
     {
+        foreach (var cell in _cells) ReleaseCellIfNeeded(cell);
         Array.Fill(_cells, Cell.Empty);
         _graphemes.Clear();
         MarkAllDirty();
@@ -314,27 +457,38 @@ public sealed class Buffer
 
     public void SetFast(ushort x, ushort y, Cell cell)
     {
-        // Match upstream Rust set_fast(): bail to full Set() path for wide or
-        // continuation cells so that wide-char continuation cells are written.
-        if (cell.Content.Width() > 1 || cell.IsContinuation)
+        // The direct path is observable-equivalent to Set only for a
+        // single-width cell, trivial background alpha, and base stacks.
+        var backgroundAlpha = cell.Background.A;
+        if (cell.Content.Width() > 1 ||
+            cell.IsContinuation ||
+            (backgroundAlpha != byte.MaxValue && backgroundAlpha != 0) ||
+            _scissorStack.Count != 1 ||
+            _opacityStack.Count != 1)
         {
             Set(x, y, cell);
             return;
         }
 
-        if (x < Width && y < Height)
+        if (!TryIndex(x, y, out var index))
         {
-            // Fast path: check that existing cell doesn't need overlap cleanup.
-            var idx = y * Width + x;
-            var existing = _cells[idx];
-            if (existing.Content.Width() > 1 || existing.IsContinuation)
-            {
-                Set(x, y, cell);
-                return;
-            }
-            _cells[idx] = cell;
-            _dirtyRows[y] = true;
+            return;
         }
+
+        var existing = _cells[index];
+        if (existing.Content.Width() > 1 || existing.IsContinuation)
+        {
+            Set(x, y, cell);
+            return;
+        }
+
+        var finalCell = backgroundAlpha == 0
+            ? cell.WithBackground(existing.Background)
+            : cell;
+        ReleaseCellIfNeeded(existing);
+        _cells[index] = finalCell;
+        MarkDirtySpan(y, x, SaturatingAdd(x, 1));
+        CleanupOrphanedTails(SaturatingAdd(x, 1), y);
     }
 
     private void MarkDirtySpan(ushort y, ushort start, ushort end)
@@ -454,6 +608,33 @@ public sealed class Buffer
         }
 
         MarkDirtySpan(y, startX, SaturatingAdd(maxX, 1));
+    }
+
+    private ushort? ContinuationOwnerExtent(ushort x, ushort y)
+    {
+        var limit = x > GraphemeId.MaxWidth
+            ? (ushort)(x - GraphemeId.MaxWidth)
+            : (ushort)0;
+        var backX = x;
+        while (backX > limit)
+        {
+            backX--;
+            if (!TryIndex(backX, y, out var index))
+            {
+                return null;
+            }
+
+            var candidate = _cells[index];
+            if (candidate.IsContinuation)
+            {
+                continue;
+            }
+
+            var end = SaturatingAdd(backX, (ushort)candidate.Content.Width());
+            return end > x ? end : null;
+        }
+
+        return null;
     }
 
     private bool TryIndex(ushort x, ushort y, out int index)

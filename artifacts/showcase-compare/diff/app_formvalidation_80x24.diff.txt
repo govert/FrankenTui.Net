@@ -2,8 +2,8 @@
 Upstream snapshot: app_formvalidation_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 553
-Local nonblank chars: 901
-Local/upstream char ratio: 1.629
+Local nonblank chars: 1360
+Local/upstream char ratio: 2.459
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -14,64 +14,64 @@ upstream: ╭──────────────────────�
 local   : ╭───────────────────────────────Form Validation────────────────────────────────╮
 @@ row 03
 upstream: │Mode: Real-time [M to toggle]                                          ╭───────
-local   : │Mode: Real-time [M to toggle]                                                 │
+local   : │╭─────────Mode [focus]─────────╮╭─────Error Summary──────╮╭─────Controls─────╮│
 @@ row 04
 upstream: │╭──────────────────────────Registration Form──────────────────────────╮│No vali
-local   : │╭─────────────────────────────Registration Form──────────────────────────────╮│
+local   : ││Mode: Real-time [M to toggle] ││Field       Message     ││Tab/S-Tab:        ││
 @@ row 05
 upstream: ││Username:         Enter username (required)                          ││
-local   : ││Username:         Enter username (required)                                 ││
+local   : │╰──────────────────────────────╯│Username    Username must│navigate fields   │c
 @@ row 06
 upstream: ││Email:            user@example.com                                   ││
-local   : ││Email:            user@example.com                                          ││
+local   : │╭─Registration Form [Username]─╮│Password    Password must│Up/Down: change   │c
 @@ row 07
 upstream: ││Password:         Min 8 characters                                   ││
-local   : ││Password:         Min 8 characters                                          ││
+local   : ││       Field  Value  State    ││Bio         Bio must be 1│value / navigate  │s
 @@ row 08
 upstream: ││Confirm Password: Re-enter password                                  ││
-local   : ││Confirm Password: Re-enter password                                         ││
+local   : ││>      Usernamab     error    ││                        ││Space: toggle     ││
 @@ row 09
 upstream: ││Age:                25                                               ││
-local   : ││Age:                25                                                      ││
+local   : ││       Email  not-an-okail    ││                        ││checkbox          ││
 @@ row 10
 upstream: ││Bio:              Max 100 characters                                 ││
-local   : ││Bio:              Max 100 characters                                        ││
+local   : ││       Passworshort  error    ││                        ││Enter: submit form││
 @@ row 11
 upstream: ││Website:          https://example.com                                ││
-local   : ││Website:          https://example.com                                       ││
+local   : ││       Confirmdiffereok       ││                        │╰──────────────────╯│
 @@ row 12
 upstream: ││Role:               (Select a role)                                  ││
-local   : ││Role:               (Select a role)                                         ││
+local   : ││       Age    25     ok       ││                        │╭──Notifications───╮│
 @@ row 13
 upstream: ││Accept Terms:     [ ]                                                ││
-local   : ││Accept Terms:     [ ]                                                       ││
+local   : ││       Bio    xxxxxxxerrorxxxxx╰────────────────────────╯│QueueConfig:      ││
 @@ row 14
 upstream: ││                                                                     ││
-local   : ││                                                                            ││
+local   : ││       Websitenot-a-uok       │╭────Validation Rules────╮│max_visible=3     ││
 @@ row 15
 upstream: ││                                                                     ││
-local   : ││                                                                            ││
+local   : ││       Role   (Selectok role) ││Selected error: 0       ││max_queued=10     ││
 @@ row 16
 upstream: ││                                                                     ││
-local   : ││                                                                            ││
+local   : ││       Accept false  ok       ││Username: required, min ││Position: TopRight││
 @@ row 17
 upstream: ││                                                                     ││
-local   : ││                                                                            ││
+local   : ││                              ││3                       ││Latest toast:     ││
 @@ row 18
 upstream: ││                                                                     ││
-local   : │╰────────────────────────────────────────────────────────────────────────────╯│
+local   : │╰──────────────────────────────╯│Email: required,        │╰──────────────────╯│
 @@ row 19
 upstream: ││                                                                     ││
-local   : │╭─────────────────────────────────Validation─────────────────────────────────╮│
+local   : │╭───────Touched / Dirty────────╮│contains @ and .        │╭Mouse + Diagnostics│
 @@ row 20
 upstream: ││                                                                     ││
-local   : ││No validation errors yet.                                                   ││
+local   : ││Touched: 1/9 | Dirty: 8/9     ││Password: required, min ││Diagnostics       ││
 @@ row 21
 upstream: ││                                                                     ││
-local   : ││                                                                            ││
+local   : ││Submitted: false | Focused:   ││8                       ││scroll: 0         ││
 @@ row 22
 upstream: ││                                                                     ││
-local   : │╰────────────────────────────────────────────────────────────────────────────╯│
+local   : │╰──────────────────────────────╯╰────────────────────────╯╰──────────────────╯│
 @@ row 23
 upstream: ││                                                                     ││
 local   : ╰──────────────────────────────────────────────────────────────────────────────╯

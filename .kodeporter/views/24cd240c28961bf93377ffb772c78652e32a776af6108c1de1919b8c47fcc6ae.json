@@ -1,0 +1,81 @@
+{
+  "envelope": {
+    "contextName": "kp-current",
+    "contextHash": "9bcdaf5f25f3d31390e97967e655c88cb0e7729c2b8f04a56a3ad1c0d358d56e",
+    "dataCut": 9,
+    "definitionCut": 9,
+    "consumedCount": 9,
+    "consumedSetHash": "844d0928d6371b05d807a0ce6b517ad4b2787eb750aae41f87741772053e1098",
+    "resultHash": "be26fa2425e7b794d64bbd17c9e8ece36ed754717741bacc23ca457b99d882a4",
+    "receiptId": "24cd240c28961bf93377ffb772c78652e32a776af6108c1de1919b8c47fcc6ae",
+    "standing": "current",
+    "survivalGrade": "ungraded",
+    "generatedAt": "2026-07-15T23:09:25.8127127\u002B00:00",
+    "replay": "gneiss:24cd240c28961bf93377ffb772c78652e32a776af6108c1de1919b8c47fcc6ae"
+  },
+  "conclusions": [
+    {
+      "aid": "25ac896bcc1a56898b5a8cdd8c08d4bc21ebcdbd1cc5f1b60091192a31df4dab",
+      "subject": "kp-current",
+      "predicate": "gneiss.context",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "0ca64a0b5a44052fb4a41e23a1202f1dce9282bbd113c9d1e1eddd3d2c2819e4",
+      "subject": "kp.behavior",
+      "predicate": "gneiss.predicate",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "37e50818dd014128ddf749b637457cf5274576fa1f3e28df7be214f89b22a561",
+      "subject": "kp.correspondence",
+      "predicate": "gneiss.predicate",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "6fa4d69b28fc5b3ee995798a97504d4fedf646d13e870d190d9a979c256639fc",
+      "subject": "kp.evidence.anchor",
+      "predicate": "gneiss.predicate",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "00e6a9d20fbcd0bdd771dd1228b958446c8f807e1c1c787e6b810e7d9045f037",
+      "subject": "kp.policy",
+      "predicate": "gneiss.predicate",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "ecbdce449c039e96da0a813c34c8dcf14a1142eca881e781332c852a73cb08fd",
+      "subject": "kp.preservation",
+      "predicate": "gneiss.predicate",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "2187873d6f138876155a30e4d26822468e43d9e27be1bd867618b3a6c56d7174",
+      "subject": "kp.run.observation",
+      "predicate": "gneiss.predicate",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "ecd9a5e8a75e4d6e6b5c51b461ca1ef2f7a1df1bd5f3c6b33fb99b8a7b8a41a6",
+      "subject": "kp.stale",
+      "predicate": "gneiss.predicate",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "d61fd887e44e349634db6f1476b898fd7587d29e91389f18209ba885aa3b6905",
+      "subject": "kp.verification",
+      "predicate": "gneiss.predicate",
+      "status": "accepted",
+      "staleViaJustification": false
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "envelope": {
+    "contextName": "kp-current",
+    "contextHash": "9e194737d2052959f6b50a078c7adcf2a4b5cddc6fad7a8b4d03540500a4dc47",
+    "dataCut": 50,
+    "definitionCut": 50,
+    "consumedCount": 50,
+    "consumedSetHash": "ff9d44737bd0d2ddbc1c53babc0cdacc1bb9bdcf5ccdf05c8a4a9c41c2cc8641",
+    "resultHash": "e324dabe2a6c7a8d423d9f2f163f13e086be8f0a998544b7cf9a8ccf23a81bb2",
+    "receiptId": "49e15598a985ade808a730d027a2d6fa361935424aa91deccb9cb969de3ef1ae",
+    "standing": "current",
+    "survivalGrade": "ungraded",
+    "generatedAt": "2026-07-16T00:21:49.1799782\u002B00:00",
+    "replay": "gneiss:49e15598a985ade808a730d027a2d6fa361935424aa91deccb9cb969de3ef1ae"
+  },
+  "item": "verification-tooling",
+  "unit": "verification-tooling",
+  "intent": "Verification output is observation testimony, not automatic preservation truth. Every artifact identifies basis, method, context, denominator, and replay coordinates. Cached snapshots and hard-coded basis labels cannot support a current conclusion. Generated status, health, gates, and reports remain reproducible views.",
+  "whatFor": "Port and maintain the doctor, harness, fixtures, benchmarks, replay, comparison, evidence-manifest, and maintainer-facing diagnostic surfaces.",
+  "sourceAnchors": [
+    "doctor_frankentui@upstream-15cc6543-local-helper#846ae7dc74052584152108a3a02c96543401d67b55d56ade8169912674508c95",
+    "ftui-harness@upstream-15cc6543-local-helper#5298dbd0dce444d41902938dd08271936da2757cf873da8164db8fff1d9b1daa",
+    "ftui-pty@upstream-15cc6543-local-helper#a7773673acdab619f957064f9f5355089e2ab02cb4fe08e1bbde320291e5228d"
+  ],
+  "targetAnchors": [
+    "FrankenTui.Doctor@target-current-worktree#637167138e2db109f5f77939e169fe682603e4be16789105e621b3213c65dbb2",
+    "FrankenTui.Testing.Harness@target-current-worktree#6418e4b3e251f0da51df9f0a06f33303a25185b5c452871fc845d490270426de",
+    "FrankenTui.Testing.Pty@target-current-worktree#be9d88d77f546153f48308a4c5218939c42b2493893e19e3c83c8907221fa078"
+  ],
+  "criteria": [
+    "frankentui-systems-parity@1 [interface,result,effects,failure,determinism,realization,operational]",
+    "showcase-frame-parity@1 [result,effects,determinism,realization]",
+    "terminal-host-parity@1 [effects,failure,determinism,realization,operational]"
+  ],
+  "verificationPlans": [],
+  "policy": "frankentui-systems-port@1",
+  "policyHash": "02545d7dd0797a2b6d25efc3b3f2984164dd5a516d2f19691610f0891c40a066",
+  "authority": "policy:frankentui-systems-port@1",
+  "expectedEvidence": [
+    "differential",
+    "operationally-observed",
+    "property-adversarial",
+    "reviewed",
+    "structural"
+  ],
+  "stopOrEscalateWhen": [
+    "The requested change exceeds the named migration unit or scoped authority.",
+    "Applicable evidence is unavailable, implementation-coupled where independence is required, or contradicts current testimony.",
+    "A compatibility dimension, divergence, closure claim, or policy exception needs an accountable decision."
+  ],
+  "evidenceReceipt": "49e15598a985ade808a730d027a2d6fa361935424aa91deccb9cb969de3ef1ae"
+}

@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: Apache-2.0
 // Port of .external/frankentui/crates/ftui-widgets/src/scrollbar.rs (1086L)
+// Upstream commit: 15cc6543f76b814394c590f9e7719dedd6684e4c
 // Scrollbar widget with orientation, thumb/track rendering.
 
 using FrankenTui.Core;
 using FrankenTui.Render;
+using CanonicalA11y = FrankenTui.A11y;
 
 namespace FrankenTui.Widgets;
 
@@ -24,7 +26,7 @@ public sealed class ScrollbarState
     public void ScrollDown(int lines = 1) => Position = Math.Min(Math.Max(0, ContentLength - ViewportLength), Position + lines);
 }
 
-public sealed class Scrollbar : IStatefulWidget<ScrollbarState>
+public sealed class Scrollbar : IStatefulWidget<ScrollbarState>, IAccessible, CanonicalA11y.IAccessible
 {
     ScrollbarOrientation _orient; WidgetStyle _thumbStyle, _trackStyle; string? _beginSym, _endSym;
 
@@ -86,5 +88,26 @@ public sealed class Scrollbar : IStatefulWidget<ScrollbarState>
             else
                 WidgetDrawing.DrawTextSpan(frame, (ushort)(area.Right - 1), area.Y, _endSym, _thumbStyle, area.Right);
         }
+    }
+
+    // ── Accessibility ─────────────────────────────────────────────────────────
+
+    /// <summary>Get the legacy compatibility projection of this scrollbar's accessibility node.</summary>
+    public List<A11yNodeInfo> AccessibilityNodes(Rect area) =>
+        LegacyAccessibilityAdapter.FromCanonical(CanonicalAccessibilityNodes(area));
+
+    List<CanonicalA11y.A11yNodeInfo> CanonicalA11y.IAccessible.AccessibilityNodes(Rect area) =>
+        CanonicalAccessibilityNodes(area);
+
+    private List<CanonicalA11y.A11yNodeInfo> CanonicalAccessibilityNodes(Rect area)
+    {
+        string orientation = _orient is ScrollbarOrientation.VerticalRight or ScrollbarOrientation.VerticalLeft
+            ? "vertical"
+            : "horizontal";
+        CanonicalA11y.A11yNodeInfo node = CanonicalA11y.A11yNodeInfo
+            .New(WidgetDrawing.A11yNodeId(area), CanonicalA11y.A11yRole.ScrollBar, area)
+            .WithName($"{orientation} scrollbar")
+            .WithState(new CanonicalA11y.A11yState());
+        return [node];
     }
 }

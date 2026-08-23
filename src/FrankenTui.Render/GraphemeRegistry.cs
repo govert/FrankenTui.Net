@@ -2,14 +2,32 @@ namespace FrankenTui.Render;
 
 public sealed class GraphemeRegistry
 {
+    private GraphemePool? _sharedPool;
     private readonly List<GraphemeEntry?> _entries = [];
     private readonly List<ushort> _generations = [];
     private readonly Dictionary<string, GraphemeId> _lookup = new(StringComparer.Ordinal);
     private readonly List<int> _freeList = [];
 
+    public GraphemeRegistry() { }
+
+    internal GraphemeRegistry(GraphemePool sharedPool) => _sharedPool = sharedPool;
+
+    internal bool Uses(GraphemePool pool) => ReferenceEquals(_sharedPool, pool);
+
+    internal void Attach(GraphemePool sharedPool)
+    {
+        ArgumentNullException.ThrowIfNull(sharedPool);
+        if (_entries.Any(static entry => entry is not null))
+            throw new InvalidOperationException("local grapheme entries must be migrated before attaching a shared pool");
+        _sharedPool = sharedPool;
+    }
+
     public GraphemeId Intern(string text, byte width)
     {
         ArgumentNullException.ThrowIfNull(text);
+
+        if (_sharedPool is not null)
+            return _sharedPool.Intern(text, width);
 
         if (width > GraphemeId.MaxWidth)
         {
@@ -52,6 +70,9 @@ public sealed class GraphemeRegistry
 
     public string? Resolve(GraphemeId id)
     {
+        if (_sharedPool is not null)
+            return _sharedPool.Get(id);
+
         if (!IsGenerationMatch(id))
         {
             return null;
@@ -62,6 +83,12 @@ public sealed class GraphemeRegistry
 
     public void Retain(GraphemeId id)
     {
+        if (_sharedPool is not null)
+        {
+            _sharedPool.Retain(id);
+            return;
+        }
+
         if (!IsGenerationMatch(id))
         {
             return;
@@ -78,6 +105,12 @@ public sealed class GraphemeRegistry
 
     public void Release(GraphemeId id)
     {
+        if (_sharedPool is not null)
+        {
+            _sharedPool.Release(id);
+            return;
+        }
+
         if (!IsGenerationMatch(id))
         {
             return;
@@ -102,10 +135,18 @@ public sealed class GraphemeRegistry
 
     public void Clear()
     {
-        _entries.Clear();
-        _generations.Clear();
+        // A shared pool can outlive this buffer and is swept from the complete
+        // front/back-buffer set; clearing one registry must not invalidate it.
+        if (_sharedPool is not null) return;
+
         _lookup.Clear();
         _freeList.Clear();
+        for (var i = 0; i < _entries.Count; i++)
+        {
+            _entries[i] = null;
+            _generations[i] = (ushort)((_generations[i] + 1) & GraphemeId.MaxGeneration);
+        }
+        for (var i = _entries.Count - 1; i >= 0; i--) _freeList.Add(i);
     }
 
     private int AllocateSlot()

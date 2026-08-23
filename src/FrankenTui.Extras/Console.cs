@@ -70,6 +70,26 @@ public sealed class FxConsole
 
     public void PrintLine(string line) { Print(line + Environment.NewLine); }
 
+    /// <summary>
+    /// Write plain text without a trailing newline. Mirrors upstream
+    /// <c>Console::print_text</c>.
+    /// </summary>
+    public void PrintText(string text) => Print(text);
+
+    /// <summary>
+    /// Write plain text followed by a newline. Mirrors upstream
+    /// <c>Console::println_text</c>.
+    /// </summary>
+    public void PrintlnText(string text) => PrintLine(text);
+
+    /// <summary>
+    /// No-op flush for the in-memory capture console. Upstream
+    /// <c>Console::flush</c> flushes the underlying <c>io::Write</c> sink; the
+    /// .NET capture <see cref="ConsoleSink"/> is in-memory, so flushing is a
+    /// no-op and the <see cref="Live"/> writer path performs the real flush.
+    /// </summary>
+    public void Flush() { }
+
     public void NewLine() { _sink.Write(Environment.NewLine); _lineCount++; }
 
     public static bool IsOutputRedirected => System.Console.IsOutputRedirected;

@@ -1,3 +1,6 @@
+// Ported regression coverage for .external/frankentui/crates/ftui-render/src/buffer.rs.
+// Upstream basis: 15cc6543f76b814394c590f9e7719dedd6684e4c; fixes 49e55c75 and 81673632.
+
 using System.Runtime.CompilerServices;
 using System.Text;
 using FrankenTui.Render;
@@ -89,6 +92,40 @@ public sealed class RenderPrimitivesTests
 
         Assert.Equal("😀", HeadlessBufferView.RowText(buffer, 0));
         Assert.True(buffer.Get(1, 0)!.Value.IsContinuation);
+    }
+
+    [Fact]
+    public void BufferFillWithWideCellsClearsTrailingPartialSlot()
+    {
+        var buffer = new RenderBuffer(5, 1);
+        for (ushort x = 0; x < buffer.Width; x++)
+        {
+            buffer.Set(x, 0, Cell.FromChar('X'));
+        }
+
+        var wide = Cell.FromRune(new Rune(0x4E16));
+        buffer.Fill(new FrankenTui.Core.Rect(0, 0, 5, 1), wide);
+
+        Assert.Equal(wide, buffer.Get(0, 0));
+        Assert.True(buffer.Get(1, 0)!.Value.IsContinuation);
+        Assert.Equal(wide, buffer.Get(2, 0));
+        Assert.True(buffer.Get(3, 0)!.Value.IsContinuation);
+        Assert.Equal(Cell.Empty, buffer.Get(4, 0));
+    }
+
+    [Fact]
+    public void BufferSetRawContinuationRewritePreservesOwningGlyphTails()
+    {
+        var buffer = new RenderBuffer(8, 1);
+        var widthThree = Cell.Empty.WithContent(
+            CellContent.FromGrapheme(new GraphemeId(0, 0, 3)));
+
+        buffer.SetRaw(2, 0, widthThree);
+        buffer.SetRaw(3, 0, Cell.Continuation);
+        buffer.SetRaw(4, 0, Cell.Continuation);
+        buffer.SetRaw(3, 0, Cell.Continuation);
+
+        Assert.True(buffer.Get(4, 0)!.Value.IsContinuation);
     }
 
     [Fact]

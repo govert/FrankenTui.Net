@@ -2,8 +2,8 @@
 Upstream snapshot: app_mermaidmegashowcase_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 833
-Local nonblank chars: 776
-Local/upstream char ratio: 0.932
+Local nonblank chars: 1173
+Local/upstream char ratio: 1.408
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -14,64 +14,64 @@ upstream: ╭──────────────────────�
 local   : ╭────────────────────────────Mermaid Mega Showcase─────────────────────────────╮
 @@ row 03
 upstream: │┌──────────────────────────────────────────────────────────────────────────────
-local   : │╭───────────────────────────Mermaid Mega Showcase────────────────────────────╮│
+local   : │mega mouse focus=0 sample_idx=0 zoom_step=0 detail_scroll=0 panel_scroll=0    │
 @@ row 04
 upstream: ││ Tier:auto Glyph:unicode Render:braille Wrap:wordchar Layout:auto Dir:auto Pal
-local   : ││Diagram Types: flowchart  sequence  class  state  er  gantt  pie  git       ││
+local   : │Mermaid Showcase  Sample: Flow-01  Layout:   ╭──────Mega Sample Library──────╮│
 @@ row 05
 upstream: ││
-local   : ││                                                                            ││
+local   : │╭Library─╮╭─────Viewport─────╮╭──Controls───╮│      SampleFamilyTier  N/E    ││
 @@ row 06
 upstream: ││
-local   : ││Controls: ↑↓ select  ←→ zoom  r reset  e export  d debug                    ││
+local   : ││› Flow-0││Plan ──▶ Audit    ││Sample:      ││>     Flow-0Flow  M     5/4    ││
 @@ row 07
 upstream: ││
-local   : ││                                                                            ││
+local   : ││Sequence││Audit ──▶ Port    ││Flow-01      ││      SequenSequenSe    3/3    ││
 @@ row 08
 upstream: │└──────────────────────────────────────────────────────────────────────────────
-local   : ││Current: flowchart  |  Nodes: 12  Edges: 15                                 ││
+local   : ││State-01││Port ──▶ Test     ││Glyph:       ││      State-State L     7/8    ││
 @@ row 09
 upstream: │┌ Flow Basic [default] ────────────────────────────────────────────────────────
-local   : ││Render time: 2.3ms  |  Cache: warm (12 diagrams)                            ││
+local   : ││        ││Test ──▶ Ship     ││unicode      ││                               ││
 @@ row 10
 upstream: ││
-local   : ││                                                                            ││
+local   : ││        ││                  ││Render:      ││                               ││
 @@ row 11
 upstream: ││                                   ⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇
-local   : ││Performance knobs:                                                          ││
+local   : ││        ││                  ││adaptive     ││                               ││
 @@ row 12
 upstream: ││                                   ⢸⣿⣿⣿⣿⣿Start ⣿⣿⣿⣿⣿⡇
-local   : ││  Complexity: auto  Nodes: 12-500  Edges: 15-1200                           ││
+local   : ││        ││                  ││Palette:     ││                               ││
 @@ row 13
 upstream: ││                                   ⠘⠛⠛⠛⠛⠛⠛⠛⣛⣟⡛⠛⠛⠛⠛⠛⠛⠃
-local   : ││  Render budget: 5ms  Degrade: simplify labels                              ││
+local   : ││        ││                  ││default      │╰───────────────────────────────╯│
 @@ row 14
 upstream: ││                                           ⢘⣟
-local   : ││                                                                            ││
+local   : ││        ││                  ││Guard:       │╭─────────Mega Controls─────────╮│
 @@ row 15
 upstream: ││                                    ⢀⣀⣠⣤⣶⣾⣿⣿⣿⣿⣷⣶⣤⣤⣀⡀
-local   : ││                                                                            ││
+local   : ││        ││                  ││default      ││Mode: normal | Render: adaptive││
 @@ row 16
 upstream: ││                                   ⠈⠉⠛⠛⠿⠿⣿⣿⣿⣿⣿⣿⡿⠿⠟⠛⠋⠁
-local   : ││                                                                            ││
+local   : ││        ││                  │╰─────────────╯│| Palette: default             ││
 @@ row 17
 upstream: ││                                        ⣀⣀⠤⠝⠛⠥⢄⣀⡀
-local   : ││                                                                            ││
+local   : ││        ││                  │╭───Metrics───╮│Sample filter: all (3 samples) ││
 @@ row 18
 upstream: ││                          ⣀⣀⣀⣀⣀⣀⣀⣀⣠⣾⣤⣒⣊⣉⣀⣀⡀  ⢀⣀⣀⣈⣉⣒⣢⣼⣦⣀⣀⣀⣀⣀⣀⣀⣀
-local   : ││                                                                            ││
+local   : ││        ││                  ││Parse: 2.96  ││Categories: Flow:1, Sequence:1,││
 @@ row 19
 upstream: arse: 0.0ms                 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇  ⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-local   : ││                                                                            ││
+local   : ││        ││                  ││ms           ││State:1                        ││
 @@ row 20
-upstream: ayout: 0.1ms                ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇  ⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-local   : ││                                                                            ││
+upstream: ayout: 0.0ms                ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇  ⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+local   : ││        ││                  ││Layout: 1.11 ││Selected: Flow-01              ││
 @@ row 21
 upstream: ender: 0.1ms                ⠉⠉⠉⠉⠉⠉⠉⠉⠛⠭⠭⣉⣉⠉⠉⠉⢁  ⢈⠉⠉⠉⢉⣉⡩⠭⠝⠋⠉⠉⠉⠉⠉⠉⠉
-local   : ││                                                                            ││
+local   : ││        ││                  ││ms           ││Node navigation: h/j/k/l or    ││
 @@ row 22
 upstream: otal: 0.2ms                          ⢠⣤⣤⣤⣭⣭⣶⣾⣷⣴⣿⣶⣮⣭⣥⣤⣤⡄
-local   : │╰────────────────────────────────────────────────────────────────────────────╯│
+local   : │╰────────╯╰──────────────────╯╰─────────────╯╰───────────────────────────────╯│
 @@ row 23
 upstream: odes: 5 Edges: 5                     ⢸⣿⣿⣿⣿⣿ End  ⣿⣿⣿⣿⣿⡇
 local   : ╰──────────────────────────────────────────────────────────────────────────────╯

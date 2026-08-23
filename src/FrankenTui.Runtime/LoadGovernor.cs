@@ -14,6 +14,14 @@ public enum RuntimeDegradationLevel
 
 public static class RuntimeDegradationLevelExtensions
 {
+    /// <summary>
+    /// Convert a <see cref="RuntimeDegradationLevel"/> to the render-layer
+    /// <see cref="FrankenTui.Render.DegradationLevel"/>. The two enums carry
+    /// identical members and ordering; this maps by value so render paths and
+    /// test compat shims can translate between the runtime and render surfaces.
+    /// </summary>
+    public static Render.DegradationLevel ToRenderDegradation(this RuntimeDegradationLevel level)
+        => (Render.DegradationLevel)(int)level;
     public static RuntimeDegradationLevel Next(this RuntimeDegradationLevel level) =>
         level switch
         {

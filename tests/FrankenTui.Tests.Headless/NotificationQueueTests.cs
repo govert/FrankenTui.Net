@@ -4,6 +4,8 @@
 using FrankenTui.Core;
 using FrankenTui.Render;
 using FrankenTui.Widgets;
+using QueueAction = FrankenTui.Widgets.QueueAction;
+using QueueConfig = FrankenTui.Widgets.QueueConfig;
 
 namespace FrankenTui.Tests.Headless;
 

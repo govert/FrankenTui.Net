@@ -2,8 +2,8 @@
 Upstream snapshot: app_snapshotplayer_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 667
-Local nonblank chars: 671
-Local/upstream char ratio: 1.006
+Local nonblank chars: 1262
+Local/upstream char ratio: 1.892
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -14,64 +14,64 @@ upstream: ╭──────────────────────�
 local   : ╭──────────────────────────────Time-Travel Studio──────────────────────────────╮
 @@ row 03
 upstream: │╭───────────────────────────Timeline (1/50)───────────────────────────╮╭───────
-local   : │Time-Travel Studio  |  Snapshots: 42  |  Frame: 24/42  |  ▶ Playing (1.0x)    │
+local   : │╭──────────Timeline (1/50) [focus]───────────╮╭──────────Frame Info──────────╮│
 @@ row 04
 upstream: ││░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░││Status:
-local   : │╭──────────────────────────────────Timeline──────────────────────────────────╮│
+local   : ││=........................                   ││Status: Paused                ││
 @@ row 05
 upstream: │╰─────────────────────────────────────────────────────────────────────╯│
-local   : ││[0]──[10]──[20]──▶[24]──[30]──[40]                                          ││
+local   : ││Markers: frame 1, 8, 16 | Click timeline /  ││Frame: 1/50                   ││
 @@ row 06
 upstream: │╭────────────────────────────Frame Preview────────────────────────────╮│Frame:
-local   : ││                                                                            ││
+local   : │╰────────────────────────────────────────────╯│Size: 40x15                   ││
 @@ row 07
 upstream: ││Frame 1/50                                                           ││Size: 4
-local   : ││Controls:                                                                   ││
+local   : │╭────Frame Preview────╮╭──Frame A/B Compare──╮│Changes: 42 cells             ││
 @@ row 08
 upstream: ││                                                                     ││Changes
-local   : ││  Space play/pause  ←→ step  Home/End first/last                            ││
+local   : ││MetriValueFieldData  ││Slot FrameFieldValue ││Memory: 28800 bytes           ││
 @@ row 09
 upstream: ││                                                                     ││Memory:
-local   : ││  r record  c clear  e export                                               ││
+local   : ││Frame1/50 PatteTime Tr│> A  framecheck0x8F34A│Checksum: 8F34AB1200000000    ││
 @@ row 10
 upstream: ││Hello, World!                                                        ││Checksu
-local   : ││                                                                            ││
+local   : ││Delta42 ceRende100us ││B    framecheck0x8F34A│Chain hash: 0x0F0E0D0C0B0A0908││
 @@ row 11
 upstream: ││                                                                     ││Render:
-local   : ││                                                                            ││
+local   : ││Check0x8F3Chainverifie│Diff 37 ceconte24    │╰──────────────────────────────╯│
 @@ row 12
 upstream: ││                                                                     ││
-local   : ││                                                                            ││
+local   : ││Markeyes  StatePaused││Style13   HeatmOverlay╭───────────Controls───────────╮│
 @@ row 13
 upstream: ││                                                                     ││Chain h
-local   : ││                                                                            ││
+local   : ││                     ││                     ││State: Paused                 ││
 @@ row 14
 upstream: ││                                                                     ││Markers
-local   : ││                                                                            ││
+local   : ││                     ││                     ││Space: Play/Pause             ││
 @@ row 15
 upstream: ││                                                                     ││Marked:
-local   : ││                                                                            ││
+local   : ││                     ││                     ││Left/Right or h/l: Step frame ││
 @@ row 16
 upstream: ││                                                                     ││
-local   : ││                                                                            ││
+local   : ││                     ││                     │╰──────────────────────────────╯│
 @@ row 17
 upstream: ││                                                                     ││── Comp
-local   : ││                                                                            ││
+local   : ││                     ││                     │╭─────Diagnostics + Export─────╮│
 @@ row 18
 upstream: ││                                                                     ││View: S
-local   : ││                                                                            ││
+local   : ││                     ││                     ││Diagnostics scroll: 0         ││
 @@ row 19
 upstream: ││                                                                     ││Heatmap
-local   : ││                                                                            ││
+local   : ││                     ││                     ││Events: nav, playback, record,││
 @@ row 20
 upstream: ││█                                                                    ││A: #1
-local   : ││                                                                            ││
+local   : ││                     ││                     ││marker, clear                 ││
 @@ row 21
 upstream: ││                                                                     ││B: #2
-local   : ││                                                                            ││
+local   : ││                     ││                     ││JSONL report:                 ││
 @@ row 22
 upstream: ││                                                                     ││Diff: n
-local   : │╰────────────────────────────────────────────────────────────────────────────╯│
+local   : │╰─────────────────────╯╰─────────────────────╯╰──────────────────────────────╯│
 @@ row 23
 upstream: ││                                                                     ││
 local   : ╰──────────────────────────────────────────────────────────────────────────────╯

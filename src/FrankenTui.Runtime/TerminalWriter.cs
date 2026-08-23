@@ -64,7 +64,7 @@ public sealed class TerminalWriter : IDisposable
     public FrankenTui.Render.Buffer TakeRenderBuffer(ushort w,ushort h)
     {
         if(_spareBuffer is{}b&&b.Width==w&&b.Height==h){_spareBuffer=null;return b;}
-        return new FrankenTui.Render.Buffer(w,h);
+        return new FrankenTui.Render.Buffer(w,h,_pool);
     }
 
     public ushort RenderHeightHint=>_screenMode switch{ScreenMode.Inline i=>Math.Min(i.UiHeight,_termHeight),ScreenMode.AltScreen=>_termHeight,_=>_termHeight};

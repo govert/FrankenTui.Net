@@ -1,24 +1,24 @@
 ﻿1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 ╭───────────────────────────Quake E1M1 (Easter Egg)────────────────────────────╮
-│WASD move · Arrows look · Space jump · F fire · V quality [Reduced] · R reset │
-│                                                                              │
-│    ⡏⠉⠉⠉⠉⠉⠉⠉⠉⠉⡏⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⡏⠉⠉⠉⠉⠉⠉⠉⠉⠉⡇                                 │
-│    ⡇         ⡇                ⢰  ⡇         ⡇                                 │
-│    ⡇         ⡇         ⡄      ⢸  ⡇         ⡇                                 │
-│    ⡇         ⡇      ⢀⣀⣀⣇⣀⣀    ⢸  ⡇         ⡇                                 │
-│    ⡇         ⡇      ⢸  ⡇ ⢸    ⢸  ⡇         ⡇                                 │
-│    ⡏⠉⠉⠉⠉⠉⠉⠉⠉⠉⠁      ⢸⠉⠁⡇⠉⢹    ⢸  ⡇         ⡇                                 │
-│    ⡇ ⢰⠒⠒⠒⠒⢲         ⠘⠒⠒⡗⠒⠚    ⠘  ⡇         ⡇                                 │
-│    ⡇ ⢸    ⢸            ⠇         ⡇     ⢀⢠⢰⢸⡇                                 │
-│    ⡇ ⢸⣀⣀⣀⣀⣸                      ⡇ ⢀⢠⢰⢸⢸⢸⢸⢸⡇                                 │
-│    ⡇                             ⡇ ⢸⢸⢸⢸⢸⢸⢸⢸⡇                                 │
-│    ⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠁                                 │
-│                                                                              │
-│                                                                              │
-│                                                                              │
-│                                                                              │
-│                                                                              │
-│                                                                              │
-│                                                                              │
+│Quake E1M1 (Easter Egg) | WASD move | Arrows look | Space jump | F fire | V   │
+│quality [Full] | R reset                                                      │
+│Real upstream screen renders QUAKE_E1M1 mesh with physics, collision, depth,  │
+│╭───────Quake E1M1 [focus flash=0]───────╮╭────────Player + Physics─────────╮ │
+││ ⠻⢿⣿⣿⣿⣿⡿⠃          ⠘⠿⣿⣿⣿⣿⣿⠟           ⠻⢿││pos=(0.54,0.51,0.18) yaw=0.00    │ │
+││   ⠈⠉⠉     ⢀⣀⣠⣤⣀⡀     ⠉⠉⠁     ⣀⣀⣤⣄⣀     ││pitch=0.00 quality=Full flash=0  │ │
+││          ⢴⣿⣿⣿⣿⣿⣿⣷          ⠠⣾⣿⣿⣿⣿⣿⣿⡆   ││reset=0 scroll=0                 │ │
+││          ⠈⠙⠻⠿⠿⠟⠛⠁           ⠉⠛⠿⠿⠿⠛⠉    │╰─────────────────────────────────╯ │
+││ ⣠⣴⣶⣶⣶⣶⣤⡀          ⢀⣤⣶⣶⣶⣶⣦⣄           ⣠⣴│╭─Mesh Raster Evidence [scroll 0]─╮ │
+││ ⠻⣿⣿⣿⣿⣿⡿⠇          ⠘⢿⣿⣿⣿⣿⣿⠿           ⠻⣿││Renderer:                        │ │
+││   ⠉⠉⠉⠁     ⣀⣀⣀⣀     ⠈⠉⠉⠉     ⢀⣀⣀⣀⡀     ││local-fps-braille-canvas         │ │
+││          ⢰⣿⣿⣿⣿⣿⣿⣦          ⠠⣾⣿⣿⣿⣿⣿⣷⡄   ││Mode: braille | Frame: 0 |       │ │
+││          ⠈⠛⠻⠿⠿⠿⠛⠁           ⠙⠻⠿⠿⠿⠟⠋    │╰─────────────────────────────────╯ │
+││ ⢀⣤⣶⣶⣶⣶⣤⡀           ⣠⣴⣶⣶⣶⣦⣄           ⢀⣤│╭──────Harness + Divergence───────╮ │
+││ ⠻⣿⣿⣿⣿⣿⣿⠇          ⠘⢿⣿⣿⣿⣿⣿⡿           ⠻⣿││FPS-style Quake slipgate raster  │ │
+││   ⠉⠉⠉⠉     ⢀⣀⣀⣀     ⠈⠉⠉⠉⠁     ⣀⣀⣀⡀     ││approximation.                   │ │
+││          ⣰⣾⣿⣿⣿⣿⣿⣦          ⢀⣶⣿⣿⣿⣿⣿⣷⡄   ││Canvas.ensure_for_area(mode=Brail│ │
+││          ⠈⠛⠿⠿⠿⠿⠟⠁           ⠙⠻⠿⠿⠿⠿⠋    │╰─────────────────────────────────╯ │
+││ ⢀⣤⣴⣶⣶⣦⣄⡀           ⣠⣤⣶⣶⣶⣤⣀           ⢀⣤│                                    │
+│╰────────────────────────────────────────╯                                    │
 ╰──────────────────────────────────────────────────────────────────────────────╯
 Quake E1M1 (Easter Egg) [45/45]  default [h] [cmd] [p] [d]  Mouse: AUTO

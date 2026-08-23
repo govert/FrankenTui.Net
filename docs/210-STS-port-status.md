@@ -23,12 +23,18 @@ and [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.m
 
 ## Current Basis
 
-- Current status basis commit:
-  working tree after first `f612df2b` upstream-sync wave
+- Current status evidence cutoff:
+  2026-07-16 KodePorter baseline over target `afd20f0` plus the labeled dirty
+  worktree; see `400-KPT-kodeporter-porting-report.md`
 - Current upstream workspace basis:
-  `f958e59e1406a90fdb92512103e3591911a9d68c`
+  `15cc6543f76b814394c590f9e7719dedd6684e4c`
 - Last full verification pass at status update time:
-  `dotnet test FrankenTui.Net.sln --no-restore`
+  `dotnet test FrankenTui.Net.sln --no-restore --no-build`: 3,836 passed,
+  1 failed, and 2 skipped. This is a failing observation, not a completed gate.
+
+The tables below retain the historical plan-item status vocabulary. They are
+not a current preservation view. The labeled current conclusion, structural
+denominators, and run receipts are maintained in `400-KPT` and `.kodeporter/`.
 
 ## Story So Far
 

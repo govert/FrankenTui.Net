@@ -53,10 +53,12 @@ adopts them explicitly later:
 ## Active Remaining Gaps
 
 The managed upstream workspace is currently refreshed to
-`40c98246f27f9d174b3923c8df841ba325247dd4`. The earlier post-`f612df2b`
-contract rows remain closed, but the `2d25a03d..40c98246` upstream range
-introduces fresh in-scope gaps that are now tracked explicitly instead of being
-hidden behind the existing shell-level showcase parity.
+`15cc6543f76b814394c590f9e7719dedd6684e4c`. The earlier rows remain useful
+historical testimony, but none is considered closed against this basis until
+the 2026-07-16 KodePorter inventory and differential gates are reconciled. The
+current closed file denominator is 614 tracked upstream production Rust files;
+440 presently have neither an exact provenance citation nor a same-stem target
+owner. This is typed unexplained coverage, not proof that all 440 are absent.
 
 | Code | Status | Upstream basis | Local state | Required closure |
 | --- | --- | --- | --- | --- |

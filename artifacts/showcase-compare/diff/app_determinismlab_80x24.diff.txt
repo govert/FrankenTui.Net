@@ -2,8 +2,8 @@
 Upstream snapshot: app_determinismlab_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 959
-Local nonblank chars: 980
-Local/upstream char ratio: 1.022
+Local nonblank chars: 1286
+Local/upstream char ratio: 1.341
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -14,64 +14,64 @@ upstream: ╭──────────────────────�
 local   : ╭───────────────────────────────Determinism Lab────────────────────────────────╮
 @@ row 03
 upstream: │Determinism Lab  Seed: 7  Frame: 27  Status: Live  Fault: off
-local   : │╭────────────────────────────────────────────────────────────────────────────╮│
+local   : │Determinism Lab | seed=7 | frame=0 | active=DirtyRows | fault=ON | paused=no |│
 @@ row 04
 upstream: │
-local   : │╰────────────────────────────────────────────────────────────────────────────╯│
+local   : │focus=0                                                                       │
 @@ row 05
 upstream: │┌Equivalence──────────────────────────────────────────────────────────┐┌Scene P
-local   : │╭────────────────Equivalence─────────────────╮╭────────────Trace────────────╮ │
+local   : │╭────────────────Equivalence────────────────╮╭────────Scene Preview─────────╮ │
 @@ row 06
 upstream: ││Strategy  Changes   Checksum             Status                      ││OTYFKRX
-local   : ││Checksum: 0xDEADBEEF                        ││Test:                        │ │
+local   : ││Strategy    Changes   Checksum             ││A..F....Q.....T..O....M....X..│ │
 @@ row 07
 upstream: OLFMLY  NKV X.NMI.52  E0D977b9ee8257bc8ba   OK                         ││.PED.TO
-local   : ││Frames verified: 1000/1000                  ││ftui_determinism_checksum_equ│ │
+local   : ││Status                                     ││..C....P....Z....             │ │
 @@ row 08
 upstream: LEDiFWERowsCPDDIFB52LKXEL977b9ee8257bc8ba   OK                         ││.FQP..W
-local   : ││                                            ││ivalence                     │ │
+local   : ││Full           118   0x000000008a2f3d9c    ││..B....L....R....D....H....N..│ │
 @@ row 09
 upstream: T.RullZQJ.ZK.Q  Q0V0 B IJ977b9ee8257bc8ba   OK                         ││AJYH.OU
-local   : ││Frame 0: ✓ 0xDEADBEEF                       ││Status: PASS                 │ │
+local   : ││OK                                         ││..V....E....K....             │ │
 @@ row 10
 upstream: XMAABAFS ON.DSVRWMJG  D ALZKTF ORQP  Y                                 ││WJQXYPU
-local   : ││Frame 1: ✓ 0xCAFEBABE                       ││Duration: 1.2s               │ │
+local   : ││> DirtyRows       42   0x000000008a2f3d63  ││....O....cursor..Y....S....I..│ │
 @@ row 11
 upstream: FURULRWVTe: d2b782 cbc6d1 00f37d 0e44b9 2d3750 347b12 ef8dd7 89442b 33c││QPW.QRM
-local   : ││Frame 2: ✓ 0x8BADF00D                       ││                             │ │
+local   : ││MISMATCH                                   ││..W....G....U....             │ │
 @@ row 12
 upstream: XM  FYJKB.X.FAJKX HQNUB T.Z UM.Q   A                                   ││...Z.DP
-local   : ││...                                         ││Reproducibility:             │ │
+local   : ││FullRedraw    1080   0x000000008a2f3d9c    │╰──────────────────────────────╯ │
 @@ row 13
 upstream: ││NceGarH.DYBaselNMLV(G.KU D.XCLQX                                     ││GNCHQHA
-local   : ││Frame 999: ✓ 0xFEEDFACE                     ││  --seed=42  deterministic   │ │
+local   : │╰───────────────────────────────────────────╯╭────────────Checks────────────╮ │
 @@ row 14
 upstream: PEZITSJOJSA 1SEQJJUVLOC.GSJH.XAPFQRQLYSpace pause  F fault  E export  E││KRKPMZK
-local   : ││                                            ││  --seed=0   random          │ │
+local   : │╭─────────Report + Determinism Env──────────╮│Scenarios (click/Enter):      │ │
 @@ row 15
 upstream: SJRSZWAnSNCPOKFFSYOCTaMFKSODBRW.YDEGress Enter.                        ││YNAPEXW
-local   : ││All frames match reference.                 ││                             │ │
+local   : ││Report scroll: 0 | export=idle             ││> Baseline (10f)              │ │
 @@ row 16
 upstream: .AKeLO: EOSeHODRrunIR.FCRted OA ruB all  C log checksum                ││YTQVWTG
-local   : ││                                            ││Evidence: checksums matched  │ │
+local   : ││JSONL export path:                         ││  Drift (30f)                 │ │
 @@ row 17
 upstream: OX GY.OTPEVMBNAUJEGWBMLQ ARKJ WX MHKQ                                  │└───────
-local   : ││                                            ││                             │ │
+local   : ││FTUI_DETERMINISM_LAB_REPORT or             ││  Fault Injection (1f)        │ │
 @@ row 18
 upstream: ││                                                                     │┌Checks─
-local   : ││                                            ││                             │ │
+local   : ││determinism_lab_report.jsonl               ││                              │ │
 @@ row 19
 upstream: ││                                                                     ││Scenari
-local   : ││                                            ││                             │ │
+local   : ││Manual checksum log: idle                  ││Runs (click row to inspect):  │ │
 @@ row 20
 upstream: ││                                                                     ││> Basel
-local   : ││                                            ││                             │ │
+local   : │╰───────────────────────────────────────────╯╰──────────────────────────────╯ │
 @@ row 21
 upstream: ││                                                                     ││  Drift
-local   : ││                                            ││                             │ │
+local   : │                                                                              │
 @@ row 22
 upstream: ││                                                                     ││  Fault
-local   : │╰────────────────────────────────────────────╯╰─────────────────────────────╯ │
+local   : │1/2/3 strategy(DirtyRows) | [/] seed(7) | Space pause(live) | F fault(on) | E │
 @@ row 23
 upstream: ││                                                                     ││Runs  (
 local   : ╰──────────────────────────────────────────────────────────────────────────────╯

@@ -5,6 +5,7 @@ using FrankenTui.Core;
 using FrankenTui.Render;
 using FrankenTui.Style;
 using FrankenTui.Text;
+using System.Text;
 
 namespace FrankenTui.Widgets;
 
@@ -20,19 +21,34 @@ public sealed class TabsWidget : IWidget
 
     public void Render(Rect area, Frame frame)
     {
-        if (area.IsEmpty || Tabs.Count == 0) return;
+        if (area.IsEmpty) return;
 
+        var deg = frame.Degradation;
         var buffer = frame.Buffer;
-        bool applyStyling = frame.Degradation.ApplyStyling();
+
+        // Always clear the owned row first so shorter rerenders do not leave
+        // stale trailing labels (WidgetClearContract).
+        WidgetDrawing.ClearTextRow(frame, area, WidgetStyle.Default);
+
+        // Skeleton+: content not rendered.
+        if (!deg.RenderContent() || Tabs.Count == 0)
+            return;
+
+        bool applyStyling = deg.ApplyStyling();
         ushort x = area.X;
         for (var i = 0; i < Tabs.Count && x < area.Right; i++)
         {
-            if (i > 0 && x < area.Right)
-                buffer.SetFast(x++, area.Y, Cell.FromChar('│'));
+            // Two-space separator between tabs (matches the upstream compact
+            // tab strip contract: active `[label]`, inactive `label`).
+            if (i > 0)
+            {
+                for (var s = 0; s < 2 && x < area.Right; s++)
+                    buffer.SetFast(x++, area.Y, Cell.FromChar(' '));
+            }
+
             var tab = Tabs[i];
-            var prefix = i == SelectedIndex ? "[ " : "  ";
-            var suffix = i == SelectedIndex ? " ]" : "  ";
-            var label = prefix + tab + suffix;
+            // Compact bracket form: `[One]` for the active tab, bare `One` otherwise.
+            var label = i == SelectedIndex ? $"[{tab}]" : tab;
 
             // Focus/hover/selection styling (faithful to the legacy TabsWidget).
             var style = applyStyling
@@ -64,21 +80,40 @@ public sealed class TreeWidget : IWidget
 
     public void Render(Rect area, Frame frame)
     {
-        if (area.IsEmpty || Nodes is null) return;
+        if (area.IsEmpty) return;
+
+        var deg = frame.Degradation;
+
+        // Always clear the owned area so shorter/stale renders do not leak.
+        WidgetDrawing.ClearTextArea(frame, area, WidgetStyle.Default);
+
+        // Skeleton+: content not rendered.
+        if (!deg.RenderContent() || Nodes is null)
+            return;
+
+        // Branch glyph: Unicode triangle at Full, ASCII `+` at SimpleBorders/NoStyling,
+        // none at EssentialOnly (decorative chrome stripped).
+        string branch = deg.RenderDecorative()
+            ? (deg.UseUnicodeBorders() ? "▸ " : "+ ")
+            : "";
+        bool indent = deg.RenderDecorative();
+
         var buffer = frame.Buffer;
         ushort row = area.Y;
         foreach (var node in Nodes)
         {
             if (row >= area.Bottom) return;
-            RenderNode(buffer, node, area, ref row, 0);
+            RenderNode(buffer, node, area, ref row, 0, branch, indent);
         }
     }
 
-    private static void RenderNode(FrankenTui.Render.Buffer buffer, TreeNode node, Rect area, ref ushort row, int depth)
+    private static void RenderNode(
+        FrankenTui.Render.Buffer buffer, TreeNode node, Rect area, ref ushort row,
+        int depth, string branch, bool indent)
     {
         if (row >= area.Bottom) return;
-        var prefix = new string(' ', depth * 2);
-        var line = prefix + "▸ " + node.Label;
+        var prefix = indent ? new string(' ', depth * 2) : "";
+        var line = prefix + branch + node.Label;
         ushort x = area.X;
         foreach (var c in line)
         {
@@ -89,7 +124,7 @@ public sealed class TreeWidget : IWidget
         foreach (var child in node.Children())
         {
             if (row >= area.Bottom) return;
-            RenderNode(buffer, child, area, ref row, depth + 1);
+            RenderNode(buffer, child, area, ref row, depth + 1, branch, indent);
         }
     }
 }
@@ -196,12 +231,54 @@ public sealed class TextAreaWidget : IWidget
 
 // ── ProgressWidget ────────────────────────────────────────────────────────────
 
-/// <summary>Legacy compatibility wrapper for the showcase.</summary>
+/// <summary>Legacy compatibility wrapper for the showcase.
+/// Renders the tiered progress fallbacks: bracket-bar `[#####     ]` while
+/// styling is stripped, percentage text `50%` at EssentialOnly, and nothing
+/// at Skeleton+.</summary>
 public sealed class ProgressWidget : IWidget
 {
     public double Value { get; init; }
     public string? Label { get; init; }
 
-    public void Render(Rect area, Frame frame) =>
+    public void Render(Rect area, Frame frame)
+    {
+        if (area.IsEmpty) return;
+
+        var deg = frame.Degradation;
+
+        // Skeleton+: clear and skip.
+        if (!deg.RenderContent())
+        {
+            WidgetDrawing.ClearTextArea(frame, area, WidgetStyle.Default);
+            return;
+        }
+
+        // EssentialOnly: percentage text only.
+        if (!deg.RenderDecorative())
+        {
+            WidgetDrawing.ClearTextArea(frame, area, WidgetStyle.Default);
+            var pct = $"{(byte)(Math.Clamp(Value, 0.0, 1.0) * 100.0)}%";
+            WidgetDrawing.DrawTextSpan(frame, area.X, area.Y, pct, WidgetStyle.Default, area.Right);
+            return;
+        }
+
+        // NoStyling (and below): ASCII bracket bar with `#` fill.
+        if (!deg.ApplyStyling())
+        {
+            WidgetDrawing.ClearTextArea(frame, area, WidgetStyle.Default);
+            int inner = Math.Max(0, area.Width - 2);
+            int filled = (int)Math.Round(Math.Clamp(Value, 0.0, 1.0) * inner);
+            if (filled > inner) filled = inner;
+            var sb = new StringBuilder(area.Width);
+            sb.Append('[');
+            sb.Append('#', filled);
+            sb.Append(' ', inner - filled);
+            sb.Append(']');
+            WidgetDrawing.DrawTextSpan(frame, area.X, area.Y, sb.ToString(), WidgetStyle.Default, area.Right);
+            return;
+        }
+
+        // Full styling: delegate to the real ProgressBar.
         new ProgressBar().Ratio(Value).Label(Label).Render(area, frame);
+    }
 }

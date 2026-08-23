@@ -2,76 +2,76 @@
 Upstream snapshot: app_layoutlab_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 1352
-Local nonblank chars: 554
-Local/upstream char ratio: 0.410
+Local nonblank chars: 1039
+Local/upstream char ratio: 0.768
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   : 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: [Layout] │ 7: Forms │
+local   : 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 @@ row 02
 upstream: ╭──────────────────────────────────────────────────────Layout Lab───────────────
 local   : ╭──────────────────────────────────Layout Lab──────────────────────────────────╮
 @@ row 03
 upstream: │╭─────────────────────────────────────────────── Layout + Pane Studio ─────────
-local   : │Layout + Pane Studio  |  Preset: Flex Vertical  |  n/p: cycle presets  |  [/]:
+local   : │╭────Pane Workspace [focus zoom=0]─────╮╭────Workspace Metrics [scroll=0]────╮│
 @@ row 04
 upstream: ││┌───────────────── Preset 1: Flex Vertical ──────────────────┐ ┌──────────────
-local   : │                                                                              │
+local   : ││selected_pane_index=0 context=idle    ││Selected: editor local_index=0      ││
 @@ row 05
 upstream: │││┌─────────────────────────Fixed(5)─────────────────────────┐│ │mode:Focus sel
-local   : │ ⢸⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⢽ ⣏⣉⣉⣉⣉⣉⡇                                      │
+local   : ││mouse=layout_lab:workspace            ││Mode: Compare focus=0 zoom=0        ││
 @@ row 06
 upstream: ││││60x5 @(3,4)                                               ││ │┃
-local   : │ ⢸⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⢺ ⡧⠤⠤⠤⠤⠤⡇                                      │
+local   : ││╭──────Files──────╮╭──────Logs───────╮││Hash: D5B520171B43                  ││
 @@ row 07
 upstream: ││││                                                          ││ │┃ 25x5  @66,4
-local   : │ ⢸⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣹ ⡗⠒⠒⠒⠒⠒⡇                                      │
+local   : │││                 ││                 │││Timeline: 0 actions scroll=0        ││
 @@ row 08
 upstream: ││││                                                          ││ │┃
-local   : │                                 ⣏⣉⣉⣉⣉⣉⡇                                      │
+local   : │││ files           ││ logs            │││Load: default workspace             ││
 @@ row 09
 upstream: │││└──────────────────────────────────────────────────────────┘│ │──────────■■■■
-local   : │                                                                              │
+local   : │││                 ││                 │││Context: idle                       ││
 @@ row 10
 upstream: │││┌─────────────────────────Pct(30%)─────────────────────────┐│ │╭───────5 pane
-local   : │                                                                              │
+local   : │││                 ││                 │││Mouse: workspace click cycles pane, ││
 @@ row 11
 upstream: ││││60x3 @(3,9)                                               ││ ││
-local   : │                                                                              │
+local   : │││                 ││                 │││wheel zooms; metrics wheel scrolls  ││
 @@ row 12
 upstream: │││└──────────────────────────────────────────────────────────┘│ ││ 25x6  @66,9
-local   : │                                                                              │
+local   : │││                 ││                 │││                                    ││
 @@ row 13
 upstream: │││┌──────────────────────────Min(3)──────────────────────────┐│ ││
-local   : │                                                                              │
+local   : ││╰─────────────────╯╰─────────────────╯││                                    ││
 @@ row 14
 upstream: ││││60x3 @(3,12)                                              ││ ││
-local   : │                                                                              │
+local   : ││╭────Editor *─────╮╭───────HUD───────╮││                                    ││
 @@ row 15
 upstream: │││└──────────────────────────────────────────────────────────┘│ │╰─────────────
-local   : │                                                                              │
+local   : │││                 ││                 │││                                    ││
 @@ row 16
 upstream: ││└────────────────────────────────────────────────────────────┘ └──────────────
-local   : │                                                                              │
+local   : │││ selected=editor ││ hud             │││                                    ││
 @@ row 17
 upstream: │╰──────────────────────────────────────────────────────────────────────────────
-local   : │                                                                              │
+local   : │││ mode=Compare    ││                 │││                                    ││
 @@ row 18
 upstream: │───────────────────────────────────────────────────────────────────────────────
-local   : │                                                                              │
+local   : │││ hash=D5B520171B ││                 │││                                    ││
 @@ row 19
 upstream: │╭───────────────── Controls ──────────────────╮╭─────────────────────────── Wid
-local   : │                                                                              │
+local   : │││ 43              ││                 │││                                    ││
 @@ row 20
 upstream: ││Preset: [1] Flex Vertical                    ││┌Padding───────────────────────
-local   : │                                                                              │
+local   : │││                 ││                 │││                                    ││
 @@ row 21
 upstream: ││Direction: Vertical (d)                      │││
-local   : │                                                                              │
+local   : ││╰─────────────────╯╰─────────────────╯││                                    ││
 @@ row 22
 upstream: ││Alignment: Start (a)                         │││
-local   : │FlexRoot req=44x15 got=44x15 min=0x0 | Fixed=44x3 | Min=44x4 | Max=44x6       │
+local   : │╰──────────────────────────────────────╯╰────────────────────────────────────╯│
 @@ row 23
 upstream: ││Gap: 0 (+/-)                                 ││└──────────────────────────────
 local   : ╰──────────────────────────────────────────────────────────────────────────────╯

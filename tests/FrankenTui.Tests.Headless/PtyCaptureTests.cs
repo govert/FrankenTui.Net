@@ -1,4 +1,5 @@
 // Upstream source: crates/ftui-extras/src/pty_capture.rs
+// Upstream basis: 15cc6543f76b814394c590f9e7719dedd6684e4c
 // 13 config tests + 14 integration tests (cross-platform: Windows ConPTY + Unix PTY).
 
 using FrankenTui.Extras;
@@ -60,24 +61,71 @@ public class PtyCaptureTests
         Assert.Contains("hello-pty", System.Text.Encoding.UTF8.GetString(out_));
     }
 
-    [Fact] public void PtyTimeoutBoundaryReturnsEmptyUntilOutput()
+    [Fact] public void PtyTimeoutBoundaryAllowsSubsequentDelayedOutput()
     {
         using var cap = PtyCapture.Spawn(new PtyCaptureConfig(), Shell, OperatingSystem.IsWindows() ? "/c ping -n 2 127.0.0.1 >nul & echo late-output" : "-c \"sleep 0.15; printf late-output\"");
         var early = cap.ReadAvailableWithTimeout(TimeSpan.FromMilliseconds(20));
-        var later = cap.ReadAvailableWithTimeout(TimeSpan.FromSeconds(3));
-        Assert.Contains("late-output", System.Text.Encoding.UTF8.GetString(later));
+        var output = new System.Collections.Generic.List<byte>(early);
+        var timeout = TimeSpan.FromSeconds(3);
+        var wait = System.Diagnostics.Stopwatch.StartNew();
+        while (wait.Elapsed < timeout)
+        {
+            var text = System.Text.Encoding.UTF8.GetString([.. output]);
+            if (text.Contains("late-output", StringComparison.Ordinal)) break;
+
+            var remaining = timeout - wait.Elapsed;
+            var next = cap.ReadAvailableWithTimeout(remaining);
+            if (next.Length > 0) output.AddRange(next);
+            else if (cap.IsEof) break;
+        }
+
+        Assert.Contains("late-output", System.Text.Encoding.UTF8.GetString([.. output]));
     }
 
     [Fact] public void PtyPartialReadsAcrossCalls()
     {
-        using var cap = PtyCapture.Spawn(new PtyCaptureConfig(), Shell, OperatingSystem.IsWindows() ? "/c echo part-1 & ping -n 2 127.0.0.1 >nul & echo part-2" : "-c \"printf part-1; sleep 0.2; printf part-2\"");
-        var first = cap.ReadAvailableWithTimeout(TimeSpan.FromMilliseconds(50));
-        Assert.NotEmpty(first);
-        Thread.Sleep(500);
-        var second = cap.ReadAvailableWithTimeout(TimeSpan.FromMilliseconds(500));
-        Assert.NotEmpty(second);
-        var combined = System.Text.Encoding.UTF8.GetString(first) + System.Text.Encoding.UTF8.GetString(second);
-        Assert.Contains("part-1", combined) ; Assert.Contains("part-2", combined);
+        var command = OperatingSystem.IsWindows()
+            ? "/d /q /c \"echo part-1 & set /p value= & echo part-2\""
+            : "-c \"printf part-1; read value; printf part-2\"";
+        using var cap = PtyCapture.Spawn(new PtyCaptureConfig(), Shell, command);
+
+        var timeout = TimeSpan.FromSeconds(5);
+        var firstPhase = new System.Collections.Generic.List<byte>();
+        var firstWait = System.Diagnostics.Stopwatch.StartNew();
+        while (firstWait.Elapsed < timeout)
+        {
+            var text = System.Text.Encoding.UTF8.GetString([.. firstPhase]);
+            if (text.Contains("part-1", StringComparison.Ordinal)) break;
+
+            var remaining = timeout - firstWait.Elapsed;
+            var next = cap.ReadAvailableWithTimeout(remaining);
+            if (next.Length > 0) firstPhase.AddRange(next);
+            else if (cap.IsEof) break;
+        }
+        firstWait.Stop();
+
+        Assert.Contains("part-1", System.Text.Encoding.UTF8.GetString([.. firstPhase]));
+        Assert.True(
+            firstWait.Elapsed < TimeSpan.FromSeconds(4),
+            $"Expected the first-data signal before the {timeout} timeout; elapsed {firstWait.Elapsed}.");
+
+        cap.SendInput(System.Text.Encoding.UTF8.GetBytes(OperatingSystem.IsWindows() ? "go\r\n" : "go\n"));
+        var combined = new System.Collections.Generic.List<byte>(firstPhase);
+        var secondWait = System.Diagnostics.Stopwatch.StartNew();
+        while (secondWait.Elapsed < timeout)
+        {
+            var text = System.Text.Encoding.UTF8.GetString([.. combined]);
+            if (text.Contains("part-2", StringComparison.Ordinal)) break;
+
+            var remaining = timeout - secondWait.Elapsed;
+            var next = cap.ReadAvailableWithTimeout(remaining);
+            if (next.Length > 0) combined.AddRange(next);
+            else if (cap.IsEof) break;
+        }
+
+        var output = System.Text.Encoding.UTF8.GetString([.. combined]);
+        Assert.Contains("part-1", output);
+        Assert.Contains("part-2", output);
     }
 
     [Fact] public void PtySendInput()

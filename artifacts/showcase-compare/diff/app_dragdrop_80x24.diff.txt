@@ -2,8 +2,8 @@
 Upstream snapshot: app_dragdrop_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 369
-Local nonblank chars: 660
-Local/upstream char ratio: 1.789
+Local nonblank chars: 1398
+Local/upstream char ratio: 3.789
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -14,64 +14,64 @@ upstream: ╭──────────────────────�
 local   : ╭───────────────────────────────Drag & Drop Lab────────────────────────────────╮
 @@ row 03
 upstream: │[Sortable List] |  Cross-Container  |  Keyboard Drag
-local   : │[Sortable List] |  Cross-Container  |  Keyboard Drag                          │
+local   : │Drag & Drop Lab | Sortable List | Cross-Container | Keyboard Drag             │
 @@ row 04
 upstream: │╭───────────────────────────────────────────────────Sortable List──────────────
-local   : │╭───────────────────────────────Sortable List────────────────────────────────╮│
+local   : │LIST_SIZE=8 deterministic Item/File payloads | cached layout rects feed hit   │
 @@ row 05
 upstream: ││> Item 1
-local   : ││> Item 1                                                                    ││
+local   : │testing                                                                       │
 @@ row 06
 upstream: ││  Item 2
-local   : ││  Item 2                                                                    ││
+local   : │[Sortable List]  [cross-container]  [keyboard drag]                           │
 @@ row 07
 upstream: ││  Item 3
-local   : ││  Item 3                                                                    ││
+local   : │Tab / Shift+Tab cycles DemoMode; mouse down on layout_tabs selects mode       │
 @@ row 08
 upstream: ││  Item 4
-local   : ││  Item 4                                                                    ││
+local   : │                                                                              │
 @@ row 09
 upstream: ││  Item 5
-local   : ││  Item 5                                                                    ││
+local   : │╭───────────List A [focus]────────────╮╭───────────────List B────────────────╮│
 @@ row 10
 upstream: ││  Item 6
-local   : ││  Item 6                                                                    ││
+local   : ││> Item 1 id=0 color=primary          ││  File 1 id=8 color=primary          ││
 @@ row 11
 upstream: ││  Item 7
-local   : ││  Item 7                                                                    ││
+local   : ││  Item 2 id=1 color=secondary        ││  File 2 id=9 color=secondary        ││
 @@ row 12
 upstream: ││  Item 8
-local   : ││  Item 8                                                                    ││
+local   : ││  Item 3 id=2 color=success          ││  File 3 id=10 color=success         ││
 @@ row 13
 upstream: ││
-local   : ││                                                                            ││
+local   : ││  Item 4 id=3 color=warning          ││  File 4 id=11 color=warning         ││
 @@ row 14
 upstream: ││
-local   : ││LIST_SIZE=8 deterministic Item/File payloads                                ││
+local   : │╰─────────────────────────────────────╯╰─────────────────────────────────────╯│
 @@ row 15
 upstream: ││
-local   : ││cached layout rects feed hit testing                                        ││
+local   : │╭────Keyboard Drag + Announcements────╮╭───────Modes + Mouse Evidence────────╮│
 @@ row 16
 upstream: ││
-local   : ││                                                                            ││
+local   : ││KeyboardDragManager active=False     ││mode=Sortable List selected_index=0  ││
 @@ row 17
 upstream: ││
-local   : ││                                                                            ││
+local   : ││mode=Inactive                        ││focused_list=0 context=False         ││
 @@ row 18
 upstream: ││
-local   : ││                                                                            ││
+local   : ││Space/Enter: start or drop | arrows  ││tick_count=0                         ││
 @@ row 19
 upstream: ││
-local   : ││                                                                            ││
+local   : ││navigate DropTargetInfo | Esc cancels││Sortable: j/k navigate, u/d or       ││
 @@ row 20
 upstream: ││
-local   : ││                                                                            ││
+local   : ││Drop targets: WidgetId, target name, ││Shift+K/J reorder items within list  ││
 @@ row 21
 upstream: ││
-local   : ││                                                                            ││
+local   : ││Rect from rendered list rows         ││Cross-container: h/l switches list,  ││
 @@ row 22
 upstream: ││
-local   : │╰────────────────────────────────────────────────────────────────────────────╯│
+local   : │╰─────────────────────────────────────╯╰─────────────────────────────────────╯│
 @@ row 23
 upstream: ││
 local   : ╰──────────────────────────────────────────────────────────────────────────────╯

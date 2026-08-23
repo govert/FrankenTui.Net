@@ -1,24 +1,24 @@
 ﻿1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 ╭────────────────────────────Terminal Capabilities─────────────────────────────╮
-│╭───────────────────────────Terminal Capabilities────────────────────────────╮│
-││Feature              Supported  Notes                                       ││
-││───                  ─────────  ─────                                       ││
-││True Color           ✓         24-bit color                                 ││
-││Italic               ✓         Italic text                                  ││
-││Bold                 ✓         Bold text                                    ││
-││Underline            ✓         Underlined                                   ││
-││Strikethrough        ✓         Strikethrough                                ││
-││Overline             ✓         Overline                                     ││
-││Dim                  ✓         Dimmed text                                  ││
-││Reverse              ✓         Reversed colors                              ││
-││Blink                ✓         Blinking text                                ││
-││Hidden               ✓         Hidden text                                  ││
-││Kitty Keyboard       ✓         Enhanced keys                                ││
-││Bracketed Paste      ✓         Bracketed paste                              ││
-││Synchronized Output  ✓         Sync updates                                 ││
-││OSC-8 Links          ✓         Hyperlinks                                   ││
-││Mouse Capture        ✓         Mouse events                                 ││
-││Focus Events         ✓         Focus reporting                              ││
-│╰────────────────────────────────────────────────────────────────────────────╯│
+│╭───Capability Matrix────╮╭────Evidence Ledger────╮╭───Profile Simulation────╮│
+││CapabiDetectEffectPolicy││View modes: Matrix ->  ││Profile Simulation       ││
+││true_cyesr  yes   allow ││Evidence -> Simulation ││active=detected          ││
+││sync_oprobe defer safe ou│Selected: sync_output  ││detected -> modern ->    ││
+││hyperloscs  osc8  allow ││                       ││xterm-256color           ││
+││kitty_noyboafallbakey par│Evidence Ledger        ││xterm -> vt100 -> dumb   ││
+││focus_probestrackeinput p│environment            ││tmux -> screen -> zellij ││
+││mouse_standbstandbuser to│TERM=xterm-256color    ││kitty -> windows-console ││
+││                        ││da1 primary response   ││-> linux-console         ││
+││                        ││cached                 ││                         ││
+││                        ││da2 extended response  ││profile_cycled           ││
+││                        ││cached                 ││profile_reset            ││
+││                        ││decrpm sync-output     ││simulation_activated     ││
+││                        ││probe=false            ││environment_read         ││
+││                        ││osc color and hyperlink││report_exported          ││
+││                        ││probes                 ││                         ││
+││                        ││timeout bounded        ││P cycle | R reset | 0-5  ││
+││                        ││terminal reads         ││quick profile | E export ││
+││                        ││prior                  ││JSONL                    ││
+│╰────────────────────────╯╰───────────────────────╯╰─────────────────────────╯│
 ╰──────────────────────────────────────────────────────────────────────────────╯
 Terminal Capabilities [12/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

@@ -1,0 +1,61 @@
+{
+  "envelope": {
+    "contextName": "kp-current",
+    "contextHash": "9e194737d2052959f6b50a078c7adcf2a4b5cddc6fad7a8b4d03540500a4dc47",
+    "dataCut": 50,
+    "definitionCut": 50,
+    "consumedCount": 50,
+    "consumedSetHash": "ff9d44737bd0d2ddbc1c53babc0cdacc1bb9bdcf5ccdf05c8a4a9c41c2cc8641",
+    "resultHash": "e324dabe2a6c7a8d423d9f2f163f13e086be8f0a998544b7cf9a8ccf23a81bb2",
+    "receiptId": "49e15598a985ade808a730d027a2d6fa361935424aa91deccb9cb969de3ef1ae",
+    "standing": "current",
+    "survivalGrade": "ungraded",
+    "generatedAt": "2026-07-16T00:21:03.4068151\u002B00:00",
+    "replay": "gneiss:49e15598a985ade808a730d027a2d6fa361935424aa91deccb9cb969de3ef1ae"
+  },
+  "queue": "open",
+  "items": [
+    {
+      "id": "kernel-render",
+      "kind": "migration-unit",
+      "status": "in-progress",
+      "summary": "Terminal kernel and render pipeline",
+      "unit": "kernel-render"
+    },
+    {
+      "id": "runtime-layout-text",
+      "kind": "migration-unit",
+      "status": "in-progress",
+      "summary": "Runtime, layout, and text systems",
+      "unit": "runtime-layout-text"
+    },
+    {
+      "id": "showcase-hosts",
+      "kind": "migration-unit",
+      "status": "in-progress",
+      "summary": "Showcase and host surfaces",
+      "unit": "showcase-hosts"
+    },
+    {
+      "id": "tracked-repository",
+      "kind": "migration-unit",
+      "status": "in-progress",
+      "summary": "Tracked repository port",
+      "unit": "tracked-repository"
+    },
+    {
+      "id": "verification-tooling",
+      "kind": "migration-unit",
+      "status": "in-progress",
+      "summary": "Verification and operational tooling",
+      "unit": "verification-tooling"
+    },
+    {
+      "id": "widgets-extras",
+      "kind": "migration-unit",
+      "status": "in-progress",
+      "summary": "Widgets, extras, and optional acceleration",
+      "unit": "widgets-extras"
+    }
+  ]
+}

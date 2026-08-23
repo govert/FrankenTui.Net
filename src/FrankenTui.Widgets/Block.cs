@@ -1,10 +1,12 @@
 // Port of .external/frankentui/crates/ftui-widgets/src/block.rs
+// Upstream commit: 15cc6543f76b814394c590f9e7719dedd6684e4c
 // Block widget with optional borders, title, padding, and degradation support.
 
 using System.Globalization;
 using FrankenTui.Core;
 using FrankenTui.Layout;
 using FrankenTui.Render;
+using CanonicalA11y = FrankenTui.A11y;
 using Buffer = FrankenTui.Render.Buffer;
 // Alias to avoid ambiguity between the Borders enum type and the Block.Borders() builder method.
 using BordersFlags = FrankenTui.Widgets.Borders;
@@ -23,7 +25,7 @@ public enum Alignment
 }
 
 /// <summary>A widget that draws a block with optional borders, title, and padding.</summary>
-public sealed class Block : IWidget, IMeasurableWidget
+public sealed class Block : IWidget, IMeasurableWidget, IAccessible, CanonicalA11y.IAccessible
 {
     private Borders _borders;
     private WidgetStyle _borderStyle;
@@ -382,11 +384,24 @@ public sealed class Block : IWidget, IMeasurableWidget
 
     // ── Accessibility ─────────────────────────────────────────────────────────
 
-    // DIVERGENCE: Upstream implements ftui_a11y::Accessible for Block, exposing an A11yNodeInfo
-    // vec with A11yRole::Group and optional name from title_text(). The FrankenTui.A11y project
-    // does not yet define an IAccessible interface (only AccessibleNode and AccessibilitySnapshot
-    // records exist). The accessibility impl is omitted here until IAccessible is ported; when
-    // it is, Block should implement it with role=Group and name=TitleText().
+    /// <summary>Get the legacy compatibility projection of this block's accessibility node.</summary>
+    public List<A11yNodeInfo> AccessibilityNodes(Rect area) =>
+        LegacyAccessibilityAdapter.FromCanonical(CanonicalAccessibilityNodes(area));
+
+    List<CanonicalA11y.A11yNodeInfo> CanonicalA11y.IAccessible.AccessibilityNodes(Rect area) =>
+        CanonicalAccessibilityNodes(area);
+
+    private List<CanonicalA11y.A11yNodeInfo> CanonicalAccessibilityNodes(Rect area)
+    {
+        ulong id = WidgetDrawing.A11yNodeId(area);
+        CanonicalA11y.A11yNodeInfo node = CanonicalA11y.A11yNodeInfo.New(
+            id,
+            CanonicalA11y.A11yRole.Group,
+            area);
+        if (TitleText() is { } title)
+            node = node.WithName(title);
+        return [node];
+    }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 

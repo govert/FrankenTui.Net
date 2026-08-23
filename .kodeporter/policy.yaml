@@ -1,0 +1,12 @@
+name: frankentui-systems-port
+version: 1
+autoAccept:
+  kpBehavior: false
+  kpPreservation: false
+  kpVerification: true
+requiredEvidence:
+  kpBehavior: [upstream-basis, source-anchor, target-anchor, reviewed-contract]
+  kpPreservation: [run-observation, declared-policy, structural-inventory, upstream-basis]
+  kpVerification: [verification-run]
+requiredIndependence:
+  kpPreservation: independently-derived

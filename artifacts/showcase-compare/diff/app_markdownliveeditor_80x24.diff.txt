@@ -2,8 +2,8 @@
 Upstream snapshot: app_markdownliveeditor_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 888
-Local nonblank chars: 884
-Local/upstream char ratio: 0.995
+Local nonblank chars: 1386
+Local/upstream char ratio: 1.561
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -14,64 +14,64 @@ upstream: ╭──────────────────────�
 local   : ╭─────────────────────────────Live Markdown Editor─────────────────────────────╮
 @@ row 03
 upstream: │╭───────────────────────────────────────────────────────Search─────────────────
-local   : │╭───────────────────────────────────Search───────────────────────────────────╮│
+local   : │Live Markdown | split editor + preview with search                            │
 @@ row 04
 upstream: ││Query:    Search in editor (Ctrl+F)
-local   : ││Find: []  Replace: []  |  Mode: Edit  |  Sync: ON                           ││
+local   : │TextArea rope editor | MarkdownRenderer preview | highlighted search |        │
 @@ row 05
 upstream: │╰──────────────────────────────────────────────────────────────────────────────
-local   : │╰────────────────────────────────────────────────────────────────────────────╯│
+local   : │raw-vs-rendered diff                                                          │
 @@ row 06
 upstream: │
-local   : │╭───────────────Editor────────────────╮╭───────────────Preview───────────────╮│
+local   : │╭─────────────────────────────Search [match 1/4]─────────────────────────────╮│
 @@ row 07
 upstream: │╭─────────────────────────Editor──────────────────────────╮ ╭──────────────────
-local   : ││# Hello World                        ││Hello World                          ││
+local   : ││Query: preview                                                              ││
 @@ row 08
 upstream: ││ 1  # Live Markdown Editor                               │ │Live Markdown Edit
-local   : ││                                     ││                                     ││
+local   : ││1/4 matches | search_ascii_case_insensitive                                 ││
 @@ row 09
 upstream: ││ 2                                                       │ │
-local   : ││This is **bold** and *italic*.       ││This is bold and italic.             ││
+local   : ││Ctrl+F focus search | Ctrl+N/P next/prev match                              ││
 @@ row 10
 upstream: ││ 3  Write Markdown on the left, preview on the right.    │ │Write Markdown on
-local   : ││                                     ││                                     ││
+local   : ││Selection maps byte range through grapheme CursorPosition                   ││
 @@ row 11
 upstream: ││ 4                                                       │ │
-local   : ││- List item 1                        ││• List item 1                        ││
+local   : ││TextInput placeholder: Search in editor (Ctrl+F)                            ││
 @@ row 12
 upstream: ││ 5  ## Goals                                             │ │Goals
-local   : ││- List item 2                        ││• List item 2                        ││
+local   : ││layout_search Rect cached for mouse focus                                   ││
 @@ row 13
 upstream: ││ 6                                                       │ │• Split view edito
-local   : ││                                     ││                                     ││
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 14
 upstream: ││ 7  - Split view editor + preview                        │ │• Live updates wit
-local   : ││`inline code`                        ││inline code                          ││
+local   : │╰───────────Editor [focus]────────────╯╰───────────────Preview───────────────╯│
 @@ row 15
 upstream: ││ 8  - Live updates without flicker                       │ │• Search with high
-local   : ││                                     ││                                     ││
+local   : │╭──────Raw vs Rendered Width──────╮╭────────────Focus + Evidence────────────╮ │
 @@ row 16
 upstream: ││ 9  - Search with highlighted matches                    │ │• Diff mode: raw v
-local   : ││```                                  ││code block                           ││
+local   : ││01 raw  22 md  20 delta -2       ││MarkdownRenderer + SyntaxHighlighter +  │ │
 @@ row 17
 upstream: ││10  - Diff mode: raw vs rendered width                   │ │
-local   : ││code block                           ││                                     ││
+local   : ││02 raw   0 md   0 delta +0       ││table_effect_phase                      │ │
 @@ row 18
 upstream: ││11                                                       │ │Notes
-local   : ││```                                  ││                                     ││
+local   : ││03 raw  48 md  45 delta -3       ││JSONL fields: run_id, tick, focus,      │ │
 @@ row 19
 upstream: ││12  ## Notes                                             │ │
-local   : ││                                     ││                                     ││
+local   : ││04 raw   0 md   0 delta +0       ││query, diff_mode, preview_scroll, action│ │
 @@ row 20
 upstream: ││13                                                       │ │Inline math: E = m
-local   : ││                                     ││                                     ││
+local   : ││05 raw   8 md   5 delta -3       ││focus=Editor focus_idx=0 match=1/4      │ │
 @@ row 21
 upstream: ││14  Inline math: $E = mc^2$                              │ │
-local   : ││                                     ││                                     ││
+local   : ││diff_mode=False preview_scroll=0 ││tick_count=0 consumes_text_input=True   │ │
 @@ row 22
 upstream: ││15                                                       │ │─── rust ───
-local   : │╰─────────────────────────────────────╯╰─────────────────────────────────────╯│
+local   : │╰─────────────────────────────────╯╰────────────────────────────────────────╯ │
 @@ row 23
 upstream: ││16  ```rust                                              │ │  fn render(frame:
 local   : ╰──────────────────────────────────────────────────────────────────────────────╯

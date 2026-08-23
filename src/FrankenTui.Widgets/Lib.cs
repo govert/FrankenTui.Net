@@ -386,35 +386,14 @@ public static class WidgetDrawing
     /// </summary>
     public static void SetStyleArea(Buffer buf, Rect area, WidgetStyle style)
     {
-        if (style.IsEmpty) return;
-        var clipped = area.Intersection(buf.CurrentScissor);
-        if (clipped.IsEmpty) return;
-
-        float opacity = buf.CurrentOpacity;
-        PackedRgba? fg = style.Fg?.WithOpacity(opacity);
-        PackedRgba? bg = style.Bg?.WithOpacity(opacity);
-        CellStyleFlags? attrs = style.Attrs;
-
-        for (ushort y = clipped.Y; y < clipped.Bottom; y++)
+        if (style.IsEmpty)
         {
-            for (ushort x = clipped.X; x < clipped.Right; x++)
-            {
-                var maybeCell = buf.Get(x, y);
-                if (maybeCell is null) continue;
-                var cell = maybeCell.Value;
-                if (fg is { } f)
-                    cell = cell.WithForeground(f);
-                if (bg is { } b)
-                {
-                    if      (b.A == 0)   { /* Fully transparent: no-op */ }
-                    else if (b.A == 255) { cell = cell.WithBackground(b); }
-                    else                 { cell = cell.WithBackground(b.Over(cell.Background)); }
-                }
-                if (attrs is { } a)
-                    cell = cell.WithAttributes(cell.Attributes.MergedFlags(a));
-                buf.Set(x, y, cell);
-            }
+            return;
         }
+
+        // Route through the render primitive so clipping, opacity, background
+        // composition, content preservation, and dirty marking have one owner.
+        buf.PaintArea(area, style.Fg, style.Bg, style.Attrs);
     }
 
     // ── clear_text_area ───────────────────────────────────────────────────────

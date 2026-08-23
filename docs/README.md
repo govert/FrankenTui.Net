@@ -70,6 +70,9 @@ repository root documents.
   `ftui-demo-showcase`
 - [391-DOC-dotnet-implementation-notes.md](./391-DOC-dotnet-implementation-notes.md):
   .NET-specific implementation, verification, and maintainer-orientation notes
+- [400-KPT-kodeporter-porting-report.md](./400-KPT-kodeporter-porting-report.md):
+  Gneiss-aligned port characterization, labeled current view, evidence journal,
+  and KodePorter-guided completion narrative
 - [EXTERNALS.md](./EXTERNALS.md): inventory of local external repositories and
   libraries managed under `.external/`, plus rebuild instructions
 - [2026-03-09-hosted-parity-blockers.md](./2026-03-09-hosted-parity-blockers.md):

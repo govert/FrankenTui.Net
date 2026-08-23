@@ -1,11 +1,14 @@
 // Port of .external/frankentui/crates/ftui-widgets/src/paragraph.rs
+// Upstream commit: 15cc6543f76b814394c590f9e7719dedd6684e4c
 // Paragraph widget renders multi-line styled text with wrapping, scrolling, alignment, and accessibility.
 // Wrap helpers ported from .external/frankentui/crates/ftui-text/src/text.rs (lines 719-1049).
 
 using System.Globalization;
+using System.Text;
 using FrankenTui.Core;
 using FrankenTui.Layout;
 using FrankenTui.Render;
+using CanonicalA11y = FrankenTui.A11y;
 // Alias to avoid ambiguity between the Alignment enum type and the Paragraph.Alignment() builder method.
 using AlignmentValue = FrankenTui.Widgets.Alignment;
 
@@ -144,7 +147,7 @@ internal sealed class ParagraphCacheState
 /// A widget that renders multi-line styled text.
 /// Port of ftui_widgets::Paragraph (paragraph.rs:104-607).
 /// </summary>
-public sealed class Paragraph : IWidget, IMeasurableWidget, IAccessible
+public sealed class Paragraph : IWidget, IMeasurableWidget, IAccessible, CanonicalA11y.IAccessible
 {
     // ── Constants ─────────────────────────────────────────────────────────
 
@@ -435,12 +438,18 @@ public sealed class Paragraph : IWidget, IMeasurableWidget, IAccessible
     // ── IAccessible ───────────────────────────────────────────────────────
 
     /// <summary>
-    /// Get accessibility nodes for this widget.
+    /// Get the legacy compatibility projection of this widget's accessibility nodes.
     /// Port of ftui_a11y::Accessible impl for Paragraph (paragraph.rs:571-607).
     /// </summary>
-    public List<A11yNodeInfo> AccessibilityNodes(Rect area)
+    public List<A11yNodeInfo> AccessibilityNodes(Rect area) =>
+        LegacyAccessibilityAdapter.FromCanonical(CanonicalAccessibilityNodes(area));
+
+    List<CanonicalA11y.A11yNodeInfo> CanonicalA11y.IAccessible.AccessibilityNodes(Rect area) =>
+        CanonicalAccessibilityNodes(area);
+
+    private List<CanonicalA11y.A11yNodeInfo> CanonicalAccessibilityNodes(Rect area)
     {
-        ulong id = A11yNodeId(area);
+        ulong id = WidgetDrawing.A11yNodeId(area);
 
         // Extract the plain-text content for the accessible name.
         var name = string.Join(" ",
@@ -450,7 +459,10 @@ public sealed class Paragraph : IWidget, IMeasurableWidget, IAccessible
         string? blockTitle = _block?.TitleText();
         string truncatedName = TruncateAccessibleText(name);
 
-        var node = A11yNodeInfo.New(id, A11yRole.Label, area);
+        CanonicalA11y.A11yNodeInfo node = CanonicalA11y.A11yNodeInfo.New(
+            id,
+            CanonicalA11y.A11yRole.Label,
+            area);
         if (blockTitle != null)
         {
             node = node.WithName(blockTitle);
@@ -1144,17 +1156,15 @@ public sealed class Paragraph : IWidget, IMeasurableWidget, IAccessible
     /// <summary>
     /// Truncate accessible text to at most 200 characters, breaking on grapheme boundaries.
     /// Port of truncate_accessible_text (paragraph.rs:544-565).
-    /// DIVERGENCE: Upstream counts chars() (Unicode scalar values). C# counts UTF-16 code
-    /// units via string.Length; for the BMP range (realistic accessible text) this is equivalent.
     /// </summary>
     private static string TruncateAccessibleText(string text)
     {
         if (text.Length == 0) return text;
 
-        int charCount = 0;
-        foreach (char _ in text) charCount++;
+        int scalarCount = 0;
+        foreach (Rune _ in text.EnumerateRunes()) scalarCount++;
 
-        if (charCount <= AccessibleTextLimit)
+        if (scalarCount <= AccessibleTextLimit)
             return text;
 
         var prefix = new System.Text.StringBuilder();
@@ -1164,7 +1174,8 @@ public sealed class Paragraph : IWidget, IMeasurableWidget, IAccessible
         while (te.MoveNext())
         {
             string grapheme = te.GetTextElement();
-            int graphemeChars = grapheme.Length;
+            int graphemeChars = 0;
+            foreach (Rune _ in grapheme.EnumerateRunes()) graphemeChars++;
             if (prefixChars + graphemeChars > AccessibleTextPrefixLimit)
                 break;
             prefix.Append(grapheme);
@@ -1203,9 +1214,4 @@ public sealed class Paragraph : IWidget, IMeasurableWidget, IAccessible
         }
         return hash;
     }
-
-    /// <summary>Pack area coordinates into a stable node id. Port of crate::a11y_node_id.</summary>
-    private static ulong A11yNodeId(Rect area)
-        => (ulong)area.X << 48 | (ulong)area.Y << 32 |
-           (ulong)area.Width << 16 | area.Height;
 }

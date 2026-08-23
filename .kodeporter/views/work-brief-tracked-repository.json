@@ -1,0 +1,48 @@
+{
+  "envelope": {
+    "contextName": "kp-current",
+    "contextHash": "9e194737d2052959f6b50a078c7adcf2a4b5cddc6fad7a8b4d03540500a4dc47",
+    "dataCut": 50,
+    "definitionCut": 50,
+    "consumedCount": 50,
+    "consumedSetHash": "ff9d44737bd0d2ddbc1c53babc0cdacc1bb9bdcf5ccdf05c8a4a9c41c2cc8641",
+    "resultHash": "e324dabe2a6c7a8d423d9f2f163f13e086be8f0a998544b7cf9a8ccf23a81bb2",
+    "receiptId": "49e15598a985ade808a730d027a2d6fa361935424aa91deccb9cb969de3ef1ae",
+    "standing": "current",
+    "survivalGrade": "ungraded",
+    "generatedAt": "2026-07-16T00:21:47.5628476\u002B00:00",
+    "replay": "gneiss:49e15598a985ade808a730d027a2d6fa361935424aa91deccb9cb969de3ef1ae"
+  },
+  "item": "tracked-repository",
+  "unit": "tracked-repository",
+  "intent": "Use \u0060frankentui-systems-parity@1\u0060. Preserve every in-scope crate, module, screen, host, tool, and verification contract through an explicit correspondence or a narrow declared divergence. Rust API identity is not required; observable and operational fidelity is. A current completion conclusion requires a pinned upstream basis, a closed applicable inventory, all required gates, and review of surviving divergences.",
+  "whatFor": "Keep FrankenTui.Net traceable, updateable, and reconciled with upstream \u0060main\u0060 as a direct Rust-to-C# systems port.",
+  "sourceAnchors": [
+    "ftui@upstream-15cc6543-local-helper#af02308626b51cafdd7605a55658aff92e46a376083d9ed3da8712d5f5eb6a60"
+  ],
+  "targetAnchors": [
+    "FrankenTui@target-current-worktree#a07a8e8c8a16178706821b289235fd4ddc9aa9d5c34610ec68843e56325e4479"
+  ],
+  "criteria": [
+    "frankentui-systems-parity@1 [interface,result,effects,failure,determinism,realization,operational]",
+    "showcase-frame-parity@1 [result,effects,determinism,realization]",
+    "terminal-host-parity@1 [effects,failure,determinism,realization,operational]"
+  ],
+  "verificationPlans": [],
+  "policy": "frankentui-systems-port@1",
+  "policyHash": "02545d7dd0797a2b6d25efc3b3f2984164dd5a516d2f19691610f0891c40a066",
+  "authority": "policy:frankentui-systems-port@1",
+  "expectedEvidence": [
+    "differential",
+    "operationally-observed",
+    "property-adversarial",
+    "reviewed",
+    "structural"
+  ],
+  "stopOrEscalateWhen": [
+    "The requested change exceeds the named migration unit or scoped authority.",
+    "Applicable evidence is unavailable, implementation-coupled where independence is required, or contradicts current testimony.",
+    "A compatibility dimension, divergence, closure claim, or policy exception needs an accountable decision."
+  ],
+  "evidenceReceipt": "49e15598a985ade808a730d027a2d6fa361935424aa91deccb9cb969de3ef1ae"
+}

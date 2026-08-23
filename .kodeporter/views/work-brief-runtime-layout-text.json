@@ -1,0 +1,56 @@
+{
+  "envelope": {
+    "contextName": "kp-current",
+    "contextHash": "9e194737d2052959f6b50a078c7adcf2a4b5cddc6fad7a8b4d03540500a4dc47",
+    "dataCut": 50,
+    "definitionCut": 50,
+    "consumedCount": 50,
+    "consumedSetHash": "ff9d44737bd0d2ddbc1c53babc0cdacc1bb9bdcf5ccdf05c8a4a9c41c2cc8641",
+    "resultHash": "e324dabe2a6c7a8d423d9f2f163f13e086be8f0a998544b7cf9a8ccf23a81bb2",
+    "receiptId": "49e15598a985ade808a730d027a2d6fa361935424aa91deccb9cb969de3ef1ae",
+    "standing": "current",
+    "survivalGrade": "ungraded",
+    "generatedAt": "2026-07-16T00:21:48.1792801\u002B00:00",
+    "replay": "gneiss:49e15598a985ade808a730d027a2d6fa361935424aa91deccb9cb969de3ef1ae"
+  },
+  "item": "runtime-layout-text",
+  "unit": "runtime-layout-text",
+  "intent": "Preserve state transitions, effect ordering, cancellation and lifecycle completion, deterministic replay, policy decisions, layout results, text width/wrapping/editing, and declared degradation behavior. Runtime implementation shape may differ only when its observable consequences are evidenced and the divergence is explicit.",
+  "whatFor": "Port the Elm-style runtime, commands/subscriptions, scheduling and load governance, replay/evidence, layout and pane systems, and Unicode/text/markdown behavior.",
+  "sourceAnchors": [
+    "ftui-runtime@upstream-15cc6543-local-helper#69cd859e560e7a5f15c6eb955f9067466b7e67bf800d1339ca961aab2288a799",
+    "ftui-layout@upstream-15cc6543-local-helper#93f36344cba9c96317a56392b76c2280d4e33f44d241482113b6682f84007497",
+    "ftui-text@upstream-15cc6543-local-helper#f73ecf1216fb870c53b29294af63f60fadf0fd4874507543b21f07731a24ba6a",
+    "ftui-style@upstream-15cc6543-local-helper#13fca5efc29c7f4bd58c51c20262e73fdad58f681b1bc9e93b7782c1d5b5bfda",
+    "ftui-i18n@upstream-15cc6543-local-helper#e2263da13d74465c4922d054379eee4429283a13e32127e02a2acbc6229175d9"
+  ],
+  "targetAnchors": [
+    "FrankenTui.Runtime@target-current-worktree#e781abf4087a39d837a8b96c1f273b8068d14ed6f9e0481194456865cf247160",
+    "FrankenTui.Layout@target-current-worktree#afbc2d63a2308652fb4b0e3fe7fa1d191f3a62d2f7bd63ee150bfa0f5b022625",
+    "FrankenTui.Text@target-current-worktree#b39fffaebcb248e2ca2b979c01bc3c742ab0336796e8948a35eb4396b11f3a2a",
+    "FrankenTui.Style@target-current-worktree#e773b38847645e237d9242ad1f455b516b6249c97bb962014247f5aba30d4c27",
+    "FrankenTui.I18n@target-current-worktree#53545be6bcfbfa87d52c5863c00a8fd03aef658ed594e56483030b5c64090a73"
+  ],
+  "criteria": [
+    "frankentui-systems-parity@1 [interface,result,effects,failure,determinism,realization,operational]",
+    "showcase-frame-parity@1 [result,effects,determinism,realization]",
+    "terminal-host-parity@1 [effects,failure,determinism,realization,operational]"
+  ],
+  "verificationPlans": [],
+  "policy": "frankentui-systems-port@1",
+  "policyHash": "02545d7dd0797a2b6d25efc3b3f2984164dd5a516d2f19691610f0891c40a066",
+  "authority": "policy:frankentui-systems-port@1",
+  "expectedEvidence": [
+    "differential",
+    "operationally-observed",
+    "property-adversarial",
+    "reviewed",
+    "structural"
+  ],
+  "stopOrEscalateWhen": [
+    "The requested change exceeds the named migration unit or scoped authority.",
+    "Applicable evidence is unavailable, implementation-coupled where independence is required, or contradicts current testimony.",
+    "A compatibility dimension, divergence, closure claim, or policy exception needs an accountable decision."
+  ],
+  "evidenceReceipt": "49e15598a985ade808a730d027a2d6fa361935424aa91deccb9cb969de3ef1ae"
+}

@@ -1,3 +1,6 @@
+// Ported regression coverage for .external/frankentui/crates/ftui-render/src/presenter.rs.
+// Upstream basis: 15cc6543f76b814394c590f9e7719dedd6684e4c; fix 49e55c75.
+
 using System.Text;
 using FrankenTui.Core;
 using FrankenTui.Render;
@@ -7,6 +10,25 @@ namespace FrankenTui.Tests.Headless;
 
 public sealed class PresenterTests
 {
+    [Fact]
+    public void MoveAfterLastColumnWriteUsesAbsolutePositioning()
+    {
+        var presenter = new Presenter(TerminalCapabilities.Basic());
+        var first = new FrankenTui.Render.Buffer(10, 1);
+        first.Set(9, 0, Cell.FromChar('X'));
+
+        var firstDiff = BufferDiff.Full(10, 1);
+        presenter.Present(first, firstDiff, wrapSyncOutput: false);
+
+        var second = first.Clone();
+        second.Set(9, 0, Cell.FromChar('Y'));
+        var secondDiff = BufferDiff.Compute(first, second);
+        var result = presenter.Present(second, secondDiff, wrapSyncOutput: false);
+
+        Assert.Contains("\u001b[1;10H", result.Output, StringComparison.Ordinal);
+        Assert.DoesNotContain("\u001b[D", result.Output, StringComparison.Ordinal);
+    }
+
     [Fact]
     public void PresenterOutputRoundTripsThroughTerminalModel()
     {
@@ -46,8 +68,8 @@ public sealed class PresenterTests
         var model = new TerminalModel(2, 1);
         model.Process(result.Output);
 
-        Assert.Contains("\u001b]8;;https://example.test\u001b\\", result.Output);
-        Assert.Contains("\u001b]8;;\u001b\\", result.Output);
+        Assert.Contains("\u001b]8;;https://example.test\u0007", result.Output);
+        Assert.Contains("\u001b]8;;\u0007", result.Output);
         Assert.Equal("AB", model.ScreenString());
         Assert.Equal("https://example.test", model.LinkUrl(model.Cell(0, 0)!.Value.Attributes.LinkId));
     }

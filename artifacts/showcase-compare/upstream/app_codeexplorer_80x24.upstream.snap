@@ -1,24 +1,24 @@
- 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
+﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
 ╭────────────────────────────────────────────────────Code Explorer──────────────
 │╔═════════════════════════════════════sqlite3.c════════════════════════════════
 │║      1 /*********************************************************************
 │║      2 ** This file is an amalgamation of many separate C source files from S
-│║      3 ** version 3.48.0.  By combining all the individual C code files into 
+│║      3 ** version 3.48.0.  By combining all the individual C code files into
 │║      4 ** single large file, the entire code can be compiled as a single tran
 │║      5 ** unit.  This allows many compilers to do optimizations that would no
 │║      6 ** possible if the files were compiled separately.  Performance improv
 │║      7 ** of 5% or more are commonly seen when SQLite is compiled as a single
-│║      8 ** translation unit.                                                  
-│║      9 **                                                                    
+│║      8 ** translation unit.
+│║      9 **
 │║     10 ** This file is all you need to compile SQLite.  To use SQLite in othe
 │║     11 ** programs, you need this file and the "sqlite3.h" header file that d
 │║     12 ** the programming interface to the SQLite library.  (If you do not ha
-│║     13 ** the "sqlite3.h" header file at hand, you will find a copy embedded 
+│║     13 ** the "sqlite3.h" header file at hand, you will find a copy embedded
 │║     14 ** the text of this file.  Search for "Begin file sqlite3.h" to find t
 │║     15 ** of the embedded sqlite3.h header file.) Additional code files may b
 │║     16 ** if you want a wrapper to interface SQLite with your choice of progr
 │╚══════════════════════════════════════════════════════════════════════════════
 │╭──────────────────────────────────Telemetry Deck──────────────────────────────
-││IO Lane                      Cache Hit                   Lock + TX            
+││IO Lane                      Cache Hit                   Lock + TX
 ││                                                         LCK██████░░░░░░░░░░░░
-ne-writer rule · deterministic0x0 00:00                                         
+ne-writer rule · deterministic0x0 00:00

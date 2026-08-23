@@ -1,0 +1,5 @@
+name: FrankenTui.Net
+direction: rust->csharp
+sourceRoot: C:\Work\FrankenTui.Net\.external\frankentui
+targetRoot: C:\Work\FrankenTui.Net
+policyVersion: frankentui-systems-port@1

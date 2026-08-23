@@ -118,6 +118,14 @@ public interface IMeasurableWidget
     SizeConstraints MeasureConstraints(Size available);
 
     /// <summary>
+ /// Convenience alias mirroring the upstream Rust <c>measure</c> method name.
+ /// Returns the same <see cref="SizeConstraints"/> as
+ /// <see cref="MeasureConstraints"/>. Tests and upstream-shaped callers use
+ /// this name.
+    /// </summary>
+    SizeConstraints Measure(Size available) => MeasureConstraints(available);
+
+    /// <summary>
     /// Quick check: does this widget have content-dependent sizing?
     /// </summary>
     bool HasIntrinsicSize() => false;

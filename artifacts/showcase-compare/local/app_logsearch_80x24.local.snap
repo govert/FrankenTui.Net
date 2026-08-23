@@ -1,24 +1,24 @@
 ﻿1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 ╭──────────────────────────────────Log Search──────────────────────────────────╮
-│╭───────────────────────────────────Search───────────────────────────────────╮│
-│╰────────────────────────────────────────────────────────────────────────────╯│
-│╭──────────────────────────────────Controls──────────────────────────────────╮│
-│╰────────────────────────────────────────────────────────────────────────────╯│
-│╭────────────────────────────────Log Entries─────────────────────────────────╮│
-││[0001] DEBUG db::pool           Event #00001: log entry with payload data   ││
-││[0002]  WARN auth::jwt          Event #00002: log entry with payload data   ││
-││[0003] ERROR cache::redis       Event #00003: log entry with payload data   ││
-││[0004] TRACE queue::worker      Event #00004: log entry with payload data   ││
-││[0005]  INFO server::http       Event #00005: log entry with payload data   ││
-││[0006] DEBUG db::pool           Event #00006: log entry with payload data   ││
-││[0007]  WARN auth::jwt          Event #00007: log entry with payload data   ││
-││[0008] ERROR cache::redis       Event #00008: log entry with payload data   ││
-││[0009] TRACE queue::worker      Event #00009: log entry with payload data   ││
-││[0010]  INFO server::http       Event #00010: log entry with payload data   ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-│╰────────────────────────────────────────────────────────────────────────────╯│
+│log focus=0 result=0 diag=0 rscroll=0     ╭───────────Live Stream────────────╮│
+│╭───────────────Log Search───────────────╮│Focus: 0 | selected_result=0 |    ││
+││                                        ││selected_diagnostic=0             ││
+││ / info                                 ││Max lines: 5000                   ││
+││ mode=literal case=insensitive          ││Burst: every 3 ticks / 2 lines    ││
+││ context=0 matches=4                    ││Follow mode: on                   ││
+││ 08:00 «info»  showcase booted          ││Paused: false result_scroll=0     ││
+││ 08:03 «info»  command palette ranked   │╰──────────────────────────────────╯│
+││ 11 results                             │╭─────Search Controls f0 r0 d0─────╮│
+││ 08:04 «info»  macro replay loop        ││focus=0 selected_result=0         ││
+││ stabilized                             ││selected_diagnostic=0             ││
+││ 08:06 «info»  windows terminal         ││/ open search | Enter submit | Esc││
+││ viewport detected                      ││close                             ││
+││                                        ││n/N next/prev match | f filter    ││
+││                                        ││Ctrl+C case sensitivity           ││
+││                                        │╰──────────────────────────────────╯│
+││                                        │╭───────────Diagnostics────────────╮│
+││                                        ││FTUI_LOGSEARCH_DIAGNOSTICS=true   ││
+││                                        ││JSONL fields: seq timestamp_us    ││
+│╰────────────────────────────────────────╯╰──────────────────────────────────╯│
 ╰──────────────────────────────────────────────────────────────────────────────╯
 Log Search [20/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

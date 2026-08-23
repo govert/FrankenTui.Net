@@ -1,24 +1,24 @@
 ﻿1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 ╭─────────────────────────────────Async Tasks──────────────────────────────────╮
-│╭─────────────────────────────────Job Queue──────────────────────────────────╮│
-││● Task 1: Port widgets      [████████░░] 80% ACTIVE                         ││
-││● Task 2: Add test suite    [██████░░░░] 60% ACTIVE                         ││
-││● Task 3: Fix layout bug    [██████████] 100% DONE                          ││
-││○ Task 4: Deploy to staging [░░░░░░░░░░] 0% PENDING                         ││
-││○ Task 5: Run benchmarks    [░░░░░░░░░░] 0% PENDING                         ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
+│╭─────────────────────────────Scheduler [focus]──────────────────────────────╮│
+││Q:3 R:2 D:1 F:1 | SRPT[Shortest Remaining Time] | Aging:on |                ││
+││max_concurrent=3                                                            ││
 │╰────────────────────────────────────────────────────────────────────────────╯│
-│╭────────────────────────────────────────────────────────────────────────────╮│
-│╰────────────────────────────────────────────────────────────────────────────╯│
+│╭─────────────────Task Queue─────────────────╮╭─────────Task Details─────────╮│
+││      State Pr    Task  Prog  Est   Elap    ││ID: 1                         ││
+││>     RunninM     Initia64%etu30    19      ││Name: Initial Setup           ││
+││      RunninL     Data S38%   50    19      ││State: Running                ││
+││      QueuedH     Cache 0%rm  20    0       │╰──────────────────────────────╯│
+││      QueuedH     Async 0%ild 27    0       │╭───────────Activity───────────╮│
+││      Done  M     Quick 100% #34    34      ││Spawned: Initial Setup        ││
+││      FailedL     Full D100%y 69    69      │╰──────────────────────────────╯│
+││      CancelMd    Batch 42%kup768   32      │╭──────Policy + Evidence───────╮│
+││      QueuedH     Parall0% Ind23 #9 0       │╰──────────────────────────────╯│
+││                                            │╭─────Hazard + Diagnostics─────╮│
+││                                            ││Hazard scroll: 0              ││
+││                                            ││Hazard: base=0.001 factor=0.1 ││
+││                                            ││exponent=2.0 threshold=1.0    ││
+│╰────────────────────────────────────────────╯╰──────────────────────────────╯│
+│n:spawn c:cancel s:scheduler a:aging | focused=0 aging=on |                   │
 ╰──────────────────────────────────────────────────────────────────────────────╯
 Async Tasks [29/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

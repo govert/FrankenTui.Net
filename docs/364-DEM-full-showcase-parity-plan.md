@@ -89,10 +89,10 @@ Basis:
 - upstream workspace commit for the original `364-DEM-A` inventory:
   `40c98246f27f9d174b3923c8df841ba325247dd4`
 - managed upstream workspace currently refreshed to:
-  `f958e59e1406a90fdb92512103e3591911a9d68c`
-- focused `crates/ftui-demo-showcase` drift from `40c98246` to `f958e59e` is
-  doc-comment-only in `screens/async_tasks.rs` and `test_logging.rs`; app,
-  chrome, and dashboard files are unchanged across that range.
+  `15cc6543f76b814394c590f9e7719dedd6684e4c`
+- the former `40c98246..f958e59e` doc-comment-only finding is historical. The
+  current `f958e59e..15cc6543` range changes 11 showcase production files and
+  must be reconciled before current showcase parity can be claimed.
 - upstream screen registry:
   `.external/frankentui/crates/ftui-demo-showcase/src/screens/mod.rs`
 - upstream app model/chrome/control-plane sources:

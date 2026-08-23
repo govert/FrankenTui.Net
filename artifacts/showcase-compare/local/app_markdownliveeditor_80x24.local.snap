@@ -1,24 +1,24 @@
 ﻿1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 ╭─────────────────────────────Live Markdown Editor─────────────────────────────╮
-│╭───────────────────────────────────Search───────────────────────────────────╮│
-││Find: []  Replace: []  |  Mode: Edit  |  Sync: ON                           ││
+│Live Markdown | split editor + preview with search                            │
+│TextArea rope editor | MarkdownRenderer preview | highlighted search |        │
+│raw-vs-rendered diff                                                          │
+│╭─────────────────────────────Search [match 1/4]─────────────────────────────╮│
+││Query: preview                                                              ││
+││1/4 matches | search_ascii_case_insensitive                                 ││
+││Ctrl+F focus search | Ctrl+N/P next/prev match                              ││
+││Selection maps byte range through grapheme CursorPosition                   ││
+││TextInput placeholder: Search in editor (Ctrl+F)                            ││
+││layout_search Rect cached for mouse focus                                   ││
 │╰────────────────────────────────────────────────────────────────────────────╯│
-│╭───────────────Editor────────────────╮╭───────────────Preview───────────────╮│
-││# Hello World                        ││Hello World                          ││
-││                                     ││                                     ││
-││This is **bold** and *italic*.       ││This is bold and italic.             ││
-││                                     ││                                     ││
-││- List item 1                        ││• List item 1                        ││
-││- List item 2                        ││• List item 2                        ││
-││                                     ││                                     ││
-││`inline code`                        ││inline code                          ││
-││                                     ││                                     ││
-││```                                  ││code block                           ││
-││code block                           ││                                     ││
-││```                                  ││                                     ││
-││                                     ││                                     ││
-││                                     ││                                     ││
-││                                     ││                                     ││
-│╰─────────────────────────────────────╯╰─────────────────────────────────────╯│
+│╰───────────Editor [focus]────────────╯╰───────────────Preview───────────────╯│
+│╭──────Raw vs Rendered Width──────╮╭────────────Focus + Evidence────────────╮ │
+││01 raw  22 md  20 delta -2       ││MarkdownRenderer + SyntaxHighlighter +  │ │
+││02 raw   0 md   0 delta +0       ││table_effect_phase                      │ │
+││03 raw  48 md  45 delta -3       ││JSONL fields: run_id, tick, focus,      │ │
+││04 raw   0 md   0 delta +0       ││query, diff_mode, preview_scroll, action│ │
+││05 raw   8 md   5 delta -3       ││focus=Editor focus_idx=0 match=1/4      │ │
+││diff_mode=False preview_scroll=0 ││tick_count=0 consumes_text_input=True   │ │
+│╰─────────────────────────────────╯╰────────────────────────────────────────╯ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
 Live Markdown Editor [43/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

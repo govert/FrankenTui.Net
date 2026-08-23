@@ -1,9 +1,11 @@
 // Port of .external/frankentui/crates/ftui-widgets/src/progress.rs
+// Upstream commit: 15cc6543f76b814394c590f9e7719dedd6684e4c
 // Progress bar widget (ProgressBar) and compact dashboard indicator (MiniBar).
 
 using FrankenTui.Core;
 using FrankenTui.Layout;
 using FrankenTui.Render;
+using CanonicalA11y = FrankenTui.A11y;
 
 namespace FrankenTui.Widgets;
 
@@ -12,7 +14,7 @@ namespace FrankenTui.Widgets;
 // ---------------------------------------------------------------------------
 
 /// <summary>A widget to display a progress bar.</summary>
-public sealed class ProgressBar : IWidget, IMeasurableWidget, IAccessible
+public sealed class ProgressBar : IWidget, IMeasurableWidget, IAccessible, CanonicalA11y.IAccessible
 {
     private Block? _block;
     private double _ratio;
@@ -170,14 +172,20 @@ public sealed class ProgressBar : IWidget, IMeasurableWidget, IAccessible
 
     // ── IAccessible ───────────────────────────────────────────────────────
 
-    /// <summary>Get accessibility nodes for this widget.</summary>
-    public List<A11yNodeInfo> AccessibilityNodes(Rect area)
+    /// <summary>Get the legacy compatibility projection of this widget's accessibility node.</summary>
+    public List<A11yNodeInfo> AccessibilityNodes(Rect area) =>
+        LegacyAccessibilityAdapter.FromCanonical(CanonicalAccessibilityNodes(area));
+
+    List<CanonicalA11y.A11yNodeInfo> CanonicalA11y.IAccessible.AccessibilityNodes(Rect area) =>
+        CanonicalAccessibilityNodes(area);
+
+    private List<CanonicalA11y.A11yNodeInfo> CanonicalAccessibilityNodes(Rect area)
     {
-        ulong id = A11yNodeId(area);
-        uint pct = (uint)Math.Round(_ratio * 100.0);
+        ulong id = WidgetDrawing.A11yNodeId(area);
+        uint pct = (uint)Math.Round(_ratio * 100.0, MidpointRounding.AwayFromZero);
         string name = _label is { } l ? l : $"{pct}%";
 
-        var state = new A11yState
+        var state = new CanonicalA11y.A11yState
         {
             ValueNow = _ratio,
             ValueMin = 0.0,
@@ -187,17 +195,10 @@ public sealed class ProgressBar : IWidget, IMeasurableWidget, IAccessible
 
         return
         [
-            A11yNodeInfo.New(id, A11yRole.ProgressBar, area)
+            CanonicalA11y.A11yNodeInfo.New(id, CanonicalA11y.A11yRole.ProgressBar, area)
                 .WithName(name)
                 .WithState(state),
         ];
-    }
-
-    private static ulong A11yNodeId(Rect area)
-    {
-        // DIVERGENCE: Rust uses crate::a11y_node_id(area) which hashes the area.
-        // .NET approximates with a simple bit-pack of the area fields.
-        return ((ulong)area.X << 48) | ((ulong)area.Y << 32) | ((ulong)area.Width << 16) | area.Height;
     }
 }
 

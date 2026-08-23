@@ -1,24 +1,24 @@
 ﻿1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 ╭─────────────────────────Command Palette Evidence Lab─────────────────────────╮
-│╭────────────────────────────────────────────────────────────────────────────╮│
-│╰────────────────────────────────────────────────────────────────────────────╯│
-│╭────────────Command Palette─────────────╮╭─────────────Evidence─────────────╮│
-││>log                                    ││Selected: Go to Log Search        ││
-││> [Navigation] Go to Log Search         ││Match: Substring on "log"         ││
-││> log_search  screen                    ││MatchType: BestFirst              ││
-││                                        ││Position: 6                       ││
-││                                        ││WordBoundary: false               ││
-││                                        ││TitleLength: 22                   ││
-││                                        ││Score: 0.87                       ││
-││                                        ││                                  ││
-││                                        ││                                  ││
-││                                        ││                                  ││
-││                                        ││                                  ││
-││                                        ││                                  ││
-││                                        ││                                  ││
-││                                        ││                                  ││
-││                                        ││                                  ││
-││                                        ││                                  ││
+│Match Mode: 0 All 1 Exact 2 Prefix 3 WordStart 4 Substring 5 Fuzzy |          │
+│active=All                                                                    │
+│╭────────────Command Palette─────────────╮╭─────────Evidence Ledger──────────╮│
+││                                        ││Selected Result                   ││
+││ > log_                                 ││Go to Log Search                  ││
+││ › Go to Log Search [-]                 ││Match: Substring  P=89.7%         ││
+││                                        ││Top command: cmd:logs             ││
+││                                        ││match_type  bf=2  substring match ││
+││                                        ││position  bf=1.071  first match at││
+││                                        ││position 6                        ││
+││                                        ││word_boundary  bf=1.3  1 word     ││
+││                                        ││boundary matches                  ││
+││                                        ││╭Bench (determini╭──Hint Ranker──╮││
+││                                        │││Bench: OFF     ││1. Enter       │││
+││                                        │││frame=000      ││Execute EU=0.83│││
+││                                        │││processed=0    ││V=0.75 VOI=0.14│││
+││                                        │││step=3         ││2. Ctrl+P Open │││
+││                                        │││query='log'    ││Palette EU=0.88│││
+││                                        ││╰───────────────╯╰───────────────╯││
 │╰────────────────────────────────────────╯╰──────────────────────────────────╯│
 ╰──────────────────────────────────────────────────────────────────────────────╯
 Command Palette Evidence Lab [39/45]  default [h] [cmd] [p] [d]  Mouse: AUTO

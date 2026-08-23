@@ -112,6 +112,10 @@ public static class LayoutSolver
 
         // Pass 3: Grow loop — distribute remaining among growable constraints
         // Rust: "Iterative distribution to flexible constraints"
+        // The flexible remainder is the space left for Fill/Min constraints after
+        // hard minimums and soft (Percentage/FitContent) allocations. This is the
+        // RemainingLength reported in the trace (ReservedLength = total - flexible).
+        var flexible = remaining;
         if (remaining > 0 && growIndices.Count > 0)
         {
             var totalWeight = growIndices.Sum(i => constraints[i].Value > 0 ? (int)constraints[i].Value : 1);
@@ -154,8 +158,8 @@ public static class LayoutSolver
             constraints,
             lengths,
             total,
-            0,
-            0,
+            total - flexible,
+            flexible,
             result,
             LayoutCacheKey.Create(bounds, direction, constraints).ToString(),
             false);

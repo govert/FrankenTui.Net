@@ -1,24 +1,24 @@
 ﻿1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 ╭─────────────────────────────────Kanban Board─────────────────────────────────╮
-│╭─────────To Do─────────╮╭──────In Progress──────╮╭──────────Done──────────╮  │
-││Task 1: Setup project  ││Task 4: Port widgets   ││Task 6: Release v1.0    │  │
-││Task 2: Add CI/CD      ││Task 5: Add docs       ││                        │  │
-││Task 3: Write tests    ││                       ││Keyboard: Tab columns   │  │
-││                       ││Selected: none         ││Arrows move cards       │  │
-││Drag cards between     ││                       ││                        │  │
-││columns.               ││                       ││                        │  │
-││Click to select.       ││                       ││                        │  │
-││                       ││                       ││                        │  │
-││                       ││                       ││                        │  │
-││                       ││                       ││                        │  │
-││                       ││                       ││                        │  │
-││                       ││                       ││                        │  │
-││                       ││                       ││                        │  │
-││                       ││                       ││                        │  │
-││                       ││                       ││                        │  │
-││                       ││                       ││                        │  │
-││                       ││                       ││                        │  │
-││                       ││                       ││                        │  │
-│╰───────────────────────╯╰───────────────────────╯╰────────────────────────╯  │
+│╭─────────────────────────────────Kanban                                      │
+│Board─────────────────────────────────╮                                       │
+││┏━━━━━━━━━━Todo━━━━━━━━━━┓╭──────In                                          │
+│Progress───────╮╭──────────Done──────────╮│                                   │
+││┃> Design login page     ┃│  Build nav component   ││  Project scaffolding   │
+│││                                                                            │
+││┃  [UI]                  ┃│  [UI]                  ││  [Ops]                 │
+│││                                                                            │
+││┃                        ┃│                        ││                        │
+│││                                                                            │
+││┃  Add input validation  ┃│  Implement auth flow   ││                        │
+│││                                                                            │
+││┃  [Logic]               ┃│  [Logic]               ││                        │
+│││                                                                            │
+││┃                        ┃│                        ││                        │
+│││                                                                            │
+││┃  Write unit tests      ┃│                        ││                        │
+│││                                                                            │
+││┃  [QA]                  ┃│                        ││                        │
+│││                                                                            │
 ╰──────────────────────────────────────────────────────────────────────────────╯
 Kanban Board [42/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

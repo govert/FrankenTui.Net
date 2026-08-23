@@ -1,24 +1,24 @@
- 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
+﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
 ╭────────────────────────────────────────────────────Accessibility──────────────
 │╭─────────────────────────────────────────── Accessibility Control Panel ──────
-││Active Theme: Cyberpunk Aurora                                                
-││Base Theme: Cyberpunk Aurora  Mode: Standard                                  
-││Motion: Full (1.0x)  Large Text: OFF                                          
-││Shortcuts: h = contrast, m = motion, l = large text                           
-││                                                                              
+││Active Theme: Cyberpunk Aurora
+││Base Theme: Cyberpunk Aurora  Mode: Standard
+││Motion: Full (1.0x)  Large Text: OFF
+││Shortcuts: h = contrast, m = motion, l = large text
+││
 │╰──────────────────────────────────────────────────────────────────────────────
 │╭──────────────────────── Toggles ────────────────────────╮╭───────────────────
-││ [h] High Contrast: OFF                                  ││Primary on Base    
-││ [m] Reduced Motion: OFF                                 ││Secondary on Base  
-││ [l] Large Text: OFF                                     ││Accent Primary     
-││Shift+A opens the compact overlay                        ││Accent Warning     
-││                                                         ││Accent Error       
-││                                                         ││                   
+││ [h] High Contrast: OFF                                  ││Primary on Base
+││ [m] Reduced Motion: OFF                                 ││Secondary on Base
+││ [l] Large Text: OFF                                     ││Accent Primary
+││Shift+A opens the compact overlay                        ││Accent Warning
+││                                                         ││Accent Error
+││                                                         ││
 │╰─────────────────────────────────────────────────────────╯│Minimum ratio: 4.7:
 │╭───────────────────── Live Preview ──────────────────────╮│AA >= 4.5, AAA >= 7
 ││Preview text                                             │╰───────────────────
 ││The quick brown fox jumps over the lazy dog.             │╭───────────────────
 ││Links look like this and code looks like fn main()       ││No a11y events yet.
-││Status: OK  Error                                        ││                   
-││Animations active                                        ││                   
-  Tab/Shift+Tab: next/prev    0x0 00:00                    ││                   
+││Status: OK  Error                                        ││
+││Animations active                                        ││
+  Tab/Shift+Tab: next/prev    0x0 00:00                    ││

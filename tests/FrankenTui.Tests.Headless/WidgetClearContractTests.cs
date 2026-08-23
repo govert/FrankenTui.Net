@@ -5,6 +5,7 @@ using FrankenTui.Render;
 using FrankenTui.Runtime;
 using FrankenTui.Text;
 using FrankenTui.Widgets;
+using HelpEntry = FrankenTui.Extras.HelpEntry;
 using RenderBuffer = FrankenTui.Render.Buffer;
 
 namespace FrankenTui.Tests.Headless;

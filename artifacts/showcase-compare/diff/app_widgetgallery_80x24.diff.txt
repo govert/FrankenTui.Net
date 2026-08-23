@@ -2,76 +2,76 @@
 Upstream snapshot: app_widgetgallery_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 1217
-Local nonblank chars: 801
-Local/upstream char ratio: 0.658
+Local nonblank chars: 877
+Local/upstream char ratio: 0.721
 Equal rows: 0; differing rows: 24
 
 @@ row 01
 upstream:  1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
-local   : 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: [Widgets] │ 6: Layout │ 7: Forms │
+local   : 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 @@ row 02
 upstream: ╭────────────────────────────────────────────────────Widget Gallery─────────────
 local   : ╭────────────────────────────────Widget Gallery────────────────────────────────╮
 @@ row 03
 upstream: │▸ A: Inputs │   B: Display │   C: Status │   D: Data Viz │   E: Navigation │
-local   : │▸ A: Inputs │ B: Display │ C: Status │ D: Data Viz │ E: Navigation │ F: Misc  │
+local   : │╭───────────Progress [focus]───────────╮╭──────────────Tabs [2]──────────────╮│
 @@ row 04
 upstream: │╭TextInput─────╮╭Masked Input─╮╭Command Palette─────────╮╭Log Viewer───────────
-local   : │╭─ TextInput ───────────╮  ╭─ Masked Input ─╮  ╭─ Command Palette ────────╮   │
+local   : ││                                      ││Core  Text  [Layout]  Extras        ││
 @@ row 05
 upstream: ││o@example.com ││••••••       ││                        ││INFO  boot: FrankenTU
-local   : ││ user@example.com      │  │ ●●●●●●●●       │  │ >Type to search...       │   │
+local   : ││                                      ││                                    ││
 @@ row 06
 upstream: ││              ││             ││ ╭─ Command Palette ──╮ ││demo started
-local   : ││                       │  │                │  │ > [App] Quit    Exit      │  │
+local   : ││         render completeness          ││                                    ││
 @@ row 07
 upstream: ││              ││             ││ │>Type to search...  │ ││DEBUG layout: resolve
-local   : │╰───────────────────────╯  ╰────────────────╯  │   [File] Open File       │   │
+local   : ││                                      ││                                    ││
 @@ row 08
 upstream: │╰──────────────╯╰─────────────╯│ │> [App] Quit  Exit …│ ││6 constraints
-local   : │                                               ╰──────────────────────────╯   │
+local   : │╰──────────────────────────────────────╯╰────────────────────────────────────╯│
 @@ row 09
 upstream: │╭TextArea─────────────────────╮│ │  [File] Open File  │ ││WARN  io: slow disk
-local   : │╭─ TextArea ──────────────────────────────────────────────────────────────╮   │
+local   : │╭───────────────List [4]───────────────╮╭─────────────Table [1]──────────────╮│
 @@ row 10
 upstream: ││1  FrankenTUI text area      ││ ╰────────────────────╯ ││detected, using cache
-local   : ││ 1  FrankenTUI text area                                                  │  │
+local   : ││Paragraph                             ││Widget      State       Notes       ││
 @@ row 11
 upstream: ││2  - Multi-line editing      ││                        ││INFO  render: diff
-local   : ││ 2  - Multi-line editing                                                  │  │
+local   : ││Panel                                 ││List        ready       selection + fo
 @@ row 12
 upstream: ││3  - Soft wrap enabled       │╰────────────────────────╯│cells=512 runs=18   0
-local   : ││ 3  - Soft wrap enabled                                                   │  │
+local   : ││Table                                 ││Tree        ready       hierarchy view
 @@ row 13
 upstream: ││4  - Line numbers            │╭File Picker─────────────╮╰─────────────────────
-local   : │╰──────────────────────────────────────────────────────────────────────────╯  │
+local   : ││Tabs                                  ││TextArea    ready       cursor + statu
 @@ row 14
 upstream: ││                             ││.                       │╭ProgressBar──────────
-local   : │                                                                              │
+local   : ││› Tree                                ││Mermaid     contract    extras surface
 @@ row 15
 upstream: ││                             ││> 📁 .beads             ││          0%
-local   : │                                                                              │
+local   : ││TextArea                              ││                                    ││
 @@ row 16
 upstream: ││                             ││  📁 .cargo             ││         25%
-local   : │                                                                              │
+local   : ││Progress                              ││                                    ││
 @@ row 17
 upstream: ││                             ││  📁 .git               ││         50%
-local   : │                                                                              │
+local   : ││                                      ││                                    ││
 @@ row 18
 upstream: ││                             ││  📁 .github            ││         75%
-local   : │                                                                              │
+local   : ││                                      ││                                    ││
 @@ row 19
 upstream: │╰─────────────────────────────╯│  📁 crates             │╰──────────────────────
-local   : │                                                                              │
+local   : ││                                      ││                                    ││
 @@ row 20
 upstream: │╭Checkbo╮╭Select╮╭Validation +╮╰────────────────────────╯╭Spinners─────────────
-local   : │                                                                              │
+local   : ││                                      ││                                    ││
 @@ row 21
-upstream: ││[ ] Ena││Select││! Invalid e…│╭Notifications───────────╮│⠧ Loading (DOTS)
-local   : │                                                                              │
+upstream: ││[ ] Ena││Select││! Invalid e…│╭Notifications───────────╮│⠇ Loading (DOTS)
+local   : ││                                      ││                                    ││
 @@ row 22
 upstream: ││[x] Syn││Number││ETA  00:59  ││                        │╰─────────────────────
-local   : │                                                                              │
+local   : │╰──────────────────────────────────────╯╰────────────────────────────────────╯│
 @@ row 23
 upstream: ││( ) Lig││Slider││🧭 …        ││                        │╭Toast─────────────────
 local   : ╰──────────────────────────────────────────────────────────────────────────────╯

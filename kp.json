@@ -1,0 +1,7 @@
+{
+  "name": "FrankenTui.Net",
+  "direction": "rust-\u003Ecsharp",
+  "sourceRoot": "C:\\Work\\FrankenTui.Net\\.external\\frankentui",
+  "targetRoot": "C:\\Work\\FrankenTui.Net",
+  "policyRef": "frankentui-systems-port@1"
+}

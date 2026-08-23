@@ -1043,17 +1043,38 @@ public class VirtualizedTests
 
         int iterations = 5_000;
 
-        var sw = System.Diagnostics.Stopwatch.StartNew();
+        // Managed adaptation: make both call sites hot before measuring and use
+        // the best of several identical rounds. This preserves upstream's 10x
+        // complexity bound while excluding tiered-JIT and scheduler pauses from
+        // what is intended to be an algorithmic scaling witness.
         for (int i = 0; i < iterations; i++)
+        {
             _ = smallTracker.FindItemAtOffset((uint)(i * 2));
-        sw.Stop();
-        var smallTime = sw.Elapsed;
-
-        sw.Restart();
-        for (int i = 0; i < iterations; i++)
             _ = largeTracker.FindItemAtOffset((uint)(i * 200));
-        sw.Stop();
-        var largeTime = sw.Elapsed;
+        }
+
+        static TimeSpan MeasureBest(
+            VariableHeightsFenwick tracker,
+            int offsetMultiplier,
+            int count)
+        {
+            long bestTicks = long.MaxValue;
+            ulong checksum = 0;
+            for (int round = 0; round < 5; round++)
+            {
+                long started = System.Diagnostics.Stopwatch.GetTimestamp();
+                for (int i = 0; i < count; i++)
+                    checksum += (ulong)tracker.FindItemAtOffset((uint)(i * offsetMultiplier));
+                long elapsed = System.Diagnostics.Stopwatch.GetTimestamp() - started;
+                bestTicks = Math.Min(bestTicks, elapsed);
+            }
+
+            GC.KeepAlive(checksum);
+            return TimeSpan.FromSeconds((double)bestTicks / System.Diagnostics.Stopwatch.Frequency);
+        }
+
+        TimeSpan smallTime = MeasureBest(smallTracker, 2, iterations);
+        TimeSpan largeTime = MeasureBest(largeTracker, 200, iterations);
 
         // Large should be within 10x of small (O(log n) vs O(n) would be 100x).
         Assert.True(

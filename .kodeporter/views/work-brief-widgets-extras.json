@@ -1,0 +1,52 @@
+{
+  "envelope": {
+    "contextName": "kp-current",
+    "contextHash": "9e194737d2052959f6b50a078c7adcf2a4b5cddc6fad7a8b4d03540500a4dc47",
+    "dataCut": 50,
+    "definitionCut": 50,
+    "consumedCount": 50,
+    "consumedSetHash": "ff9d44737bd0d2ddbc1c53babc0cdacc1bb9bdcf5ccdf05c8a4a9c41c2cc8641",
+    "resultHash": "e324dabe2a6c7a8d423d9f2f163f13e086be8f0a998544b7cf9a8ccf23a81bb2",
+    "receiptId": "49e15598a985ade808a730d027a2d6fa361935424aa91deccb9cb969de3ef1ae",
+    "standing": "current",
+    "survivalGrade": "ungraded",
+    "generatedAt": "2026-07-16T00:21:48.5369933\u002B00:00",
+    "replay": "gneiss:49e15598a985ade808a730d027a2d6fa361935424aa91deccb9cb969de3ef1ae"
+  },
+  "item": "widgets-extras",
+  "unit": "widgets-extras",
+  "intent": "Prefer one-to-one source/file ownership and strengthen shared layers when showcase pressure reveals missing capability. Preserve rendering, mutation, focus, hit testing, degradation, clearing, accessibility, and error behavior. Demo-only substitutes do not close a reusable upstream contract.",
+  "whatFor": "Port reusable widgets, focus/modal/input state, extras, accessibility/i18n helpers, canvas/VFX primitives, themes, Mermaid support, and optional safe acceleration.",
+  "sourceAnchors": [
+    "ftui-widgets@upstream-15cc6543-local-helper#a72b16435e64287f7d3595727ae9a390cd0ca770bab16ee693123ce9c6576399",
+    "ftui-extras@upstream-15cc6543-local-helper#c177cddd0830e279e94117d2147e5acb831490735618173022833aecc92167a0",
+    "ftui-a11y@upstream-15cc6543-local-helper#56aadcb11f49648000aecc432e9482bd282c053b6967025e112603d1fa5d9e96"
+  ],
+  "targetAnchors": [
+    "FrankenTui.Widgets@target-current-worktree#1c0aaa9c4c07865a5ea0591d5030e75b1ab3adfa510e15aa026b4128f8a10522",
+    "FrankenTui.Extras@target-current-worktree#30d0f63a02520dbbb4508f6a5f023afb1f9731744b0e7820af13c5598a077140",
+    "FrankenTui.A11y@target-current-worktree#51d4f6b971cdf6eb29536a428b01b3d8524158b683d938725f2a71a0339d9a27"
+  ],
+  "criteria": [
+    "frankentui-systems-parity@1 [interface,result,effects,failure,determinism,realization,operational]",
+    "showcase-frame-parity@1 [result,effects,determinism,realization]",
+    "terminal-host-parity@1 [effects,failure,determinism,realization,operational]"
+  ],
+  "verificationPlans": [],
+  "policy": "frankentui-systems-port@1",
+  "policyHash": "02545d7dd0797a2b6d25efc3b3f2984164dd5a516d2f19691610f0891c40a066",
+  "authority": "policy:frankentui-systems-port@1",
+  "expectedEvidence": [
+    "differential",
+    "operationally-observed",
+    "property-adversarial",
+    "reviewed",
+    "structural"
+  ],
+  "stopOrEscalateWhen": [
+    "The requested change exceeds the named migration unit or scoped authority.",
+    "Applicable evidence is unavailable, implementation-coupled where independence is required, or contradicts current testimony.",
+    "A compatibility dimension, divergence, closure claim, or policy exception needs an accountable decision."
+  ],
+  "evidenceReceipt": "49e15598a985ade808a730d027a2d6fa361935424aa91deccb9cb969de3ef1ae"
+}

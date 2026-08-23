@@ -2,8 +2,8 @@
 Upstream snapshot: app_terminalcapabilities_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 1054
-Local nonblank chars: 896
-Local/upstream char ratio: 0.850
+Local nonblank chars: 1233
+Local/upstream char ratio: 1.170
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -14,64 +14,64 @@ upstream: ╭──────────────────────�
 local   : ╭────────────────────────────Terminal Capabilities─────────────────────────────╮
 @@ row 03
 upstream: │╭─────────────────────────────────────────── Terminal Capability Explorer ─────
-local   : │╭───────────────────────────Terminal Capabilities────────────────────────────╮│
+local   : │╭───Capability Matrix────╮╭────Evidence Ledger────╮╭───Profile Simulation────╮│
 @@ row 04
 upstream: ││Profile: detected | View: Matrix
-local   : ││Feature              Supported  Notes                                       ││
+local   : ││CapabiDetectEffectPolicy││View modes: Matrix ->  ││Profile Simulation       ││
 @@ row 05
 upstream: ││Color depth: truecolor | Mux: no | Sync output: no
-local   : ││───                  ─────────  ─────                                       ││
+local   : ││true_cyesr  yes   allow ││Evidence -> Simulation ││active=detected          ││
 @@ row 06
 upstream: ││Scroll region: yes | Hyperlinks: yes | Clipboard: yes | overrides: none
-local   : ││True Color           ✓         24-bit color                                 ││
+local   : ││sync_oprobe defer safe ou│Selected: sync_output  ││detected -> modern ->    ││
 @@ row 07
 upstream: │╰──────────────────────────────────────────────────────────────────────────────
-local   : ││Italic               ✓         Italic text                                  ││
+local   : ││hyperloscs  osc8  allow ││                       ││xterm-256color           ││
 @@ row 08
 upstream: │╭ Capability Matrix ───────────────────────────────────────────────╮╭ Details ─
-local   : ││Bold                 ✓         Bold text                                    ││
+local   : ││kitty_noyboafallbakey par│Evidence Ledger        ││xterm -> vt100 -> dumb   ││
 @@ row 09
 upstream: ││Capability               │Detected │Effective│Fallback            ││Capability
-local   : ││Underline            ✓         Underlined                                   ││
+local   : ││focus_probestrackeinput p│environment            ││tmux -> screen -> zellij ││
 @@ row 10
 upstream: ││True color (24-bit)      │yes      │yes      │enabled             ││Detected:
-local   : ││Strikethrough        ✓         Strikethrough                                ││
+local   : ││mouse_standbstandbuser to│TERM=xterm-256color    ││kitty -> windows-console ││
 @@ row 11
 upstream: ││256-color palette        │yes      │yes      │enabled             ││Effective:
-local   : ││Overline             ✓         Overline                                     ││
+local   : ││                        ││da1 primary response   ││-> linux-console         ││
 @@ row 12
 upstream: ││Synchronized output      │no       │no       │unsynced repaint    ││Fallback:
-local   : ││Dim                  ✓         Dimmed text                                  ││
+local   : ││                        ││cached                 ││                         ││
 @@ row 13
 upstream: ││Scroll region (DECSTBM)  │yes      │yes      │enabled             ││Reason: De
-local   : ││Reverse              ✓         Reversed colors                              ││
+local   : ││                        ││da2 extended response  ││profile_cycled           ││
 @@ row 14
 upstream: ││OSC 8 hyperlinks         │yes      │yes      │enabled             ││
-local   : ││Blink                ✓         Blinking text                                ││
+local   : ││                        ││cached                 ││profile_reset            ││
 @@ row 15
 upstream: ││Kitty keyboard protocol  │no       │no       │legacy keys         ││
-local   : ││Hidden               ✓         Hidden text                                  ││
+local   : ││                        ││decrpm sync-output     ││simulation_activated     ││
 @@ row 16
 upstream: ││Focus events             │yes      │yes      │enabled             ││
-local   : ││Kitty Keyboard       ✓         Enhanced keys                                ││
+local   : ││                        ││probe=false            ││environment_read         ││
 @@ row 17
 upstream: ││Bracketed paste          │yes      │yes      │enabled             ││
-local   : ││Bracketed Paste      ✓         Bracketed paste                              ││
+local   : ││                        ││osc color and hyperlink││report_exported          ││
 @@ row 18
 upstream: ││SGR mouse                │yes      │yes      │enabled             ││
-local   : ││Synchronized Output  ✓         Sync updates                                 ││
+local   : ││                        ││probes                 ││                         ││
 @@ row 19
 upstream: ││OSC 52 clipboard         │yes      │yes      │enabled             │╰──────────
-local   : ││OSC-8 Links          ✓         Hyperlinks                                   ││
+local   : ││                        ││timeout bounded        ││P cycle | R reset | 0-5  ││
 @@ row 20
 upstream: ││                                                                  │╭ Fallback
-local   : ││Mouse Capture        ✓         Mouse events                                 ││
+local   : ││                        ││terminal reads         ││quick profile | E export ││
 @@ row 21
 upstream: ││                                                                  ││Sync outpu
-local   : ││Focus Events         ✓         Focus reporting                              ││
+local   : ││                        ││prior                  ││JSONL                    ││
 @@ row 22
 upstream: ││                                                                  ││Scroll reg
-local   : │╰────────────────────────────────────────────────────────────────────────────╯│
+local   : │╰────────────────────────╯╰───────────────────────╯╰─────────────────────────╯│
 @@ row 23
 upstream: ││                                                                  ││Mux safety
 local   : ╰──────────────────────────────────────────────────────────────────────────────╯

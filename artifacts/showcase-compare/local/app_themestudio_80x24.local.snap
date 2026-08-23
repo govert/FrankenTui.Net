@@ -1,24 +1,24 @@
 ﻿1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 ╭─────────────────────────────────Theme Studio─────────────────────────────────╮
-│╭──────────────Theme Presets──────────────╮╭─────────────Palette─────────────╮│
-││Current: Cyberpunk Aurora                ││Background:  #0A0E14             ││
-││                                         ││Foreground:  #C8D2DC             ││
-││  [1] Cyberpunk Aurora                   ││Primary:     #5CCFE6             ││
-││  [2] Solarized Dark                     ││Secondary:   #B8CFE6             ││
-││  [3] Dracula                            ││Accent:      #FFCC66             ││
-││  [4] Nord                               ││Success:     #A6E3A1             ││
-││  [5] Monokai                            ││Warning:     #F9E2AF             ││
-││  [6] GitHub Dark                        ││Error:       #F38BA8             ││
-││  [7] One Dark                           ││                                 ││
-││                                         ││                                 ││
-││Press 1-7 to switch themes               ││                                 ││
-││                                         ││                                 ││
-││                                         ││                                 ││
-││                                         ││                                 ││
-││                                         ││                                 ││
-││                                         ││                                 ││
-││                                         ││                                 ││
-││                                         ││                                 ││
-│╰─────────────────────────────────────────╯╰─────────────────────────────────╯│
+│╭Presets [focus Cyb╭─────────────────────Token Inspector─────────────────────╮│
+││     ThemeState  ││         Token    Category Hex      Contrast WCAG        ││
+││>    Cybercurrentr│>        fg::PRIMAForegroun#F8FAFC  13.6:1   AAA         ││
+││     Darcupreset ││         fg::SECONForegroun#CBD5E1  9.7:1    AAA         ││
+││     Solarpreset ││         fg::MUTEDForegroun#94A3B8  5.8:1    AA          ││
+││     Nord preset ││         fg::DISABForegroun#64748B  3.9:1    AA Large    ││
+││     High presetst│         bg::DEEP Backgroun#020617  1.0:1    Fail        ││
+││                 ││         bg::BASE Backgroun#0F172A  1.0:1    Fail        ││
+││                 │╰─────────────────────────────────────────────────────────╯│
+││                 │╭─────────────────────────Export──────────────────────────╮│
+││                 ││Press E to export theme                                  ││
+││                 ││Status: idle                                             ││
+││                 │╰─────────────────────────────────────────────────────────╯│
+││                 │╭─────────────────Diagnostics + Telemetry─────────────────╮│
+││                 ││Diagnostics scroll: 0                                    ││
+││                 ││FTUI_THEME_STUDIO_DIAGNOSTICS=true                       ││
+││                 ││FTUI_THEME_STUDIO_DETERMINISTIC=true                     ││
+││                 ││Events: focus_changed, preset_changed, token_changed,    ││
+│╰─────────────────╯╰─────────────────────────────────────────────────────────╯│
+│Presets: Cyberpunk Aurora, Darcula, Solar, Nord, High Contrast |              │
 ╰──────────────────────────────────────────────────────────────────────────────╯
 Theme Studio [30/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

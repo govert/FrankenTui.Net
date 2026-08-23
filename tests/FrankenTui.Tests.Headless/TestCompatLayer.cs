@@ -40,8 +40,8 @@ internal static class Ui
             var pool = new GraphemePool();
             var frame = new Frame(context.Buffer.Width, context.Buffer.Height, pool);
             frame.BufferOverride = context.Buffer;
-            frame.SetDegradation(context.DegradationLevel);
-            new PanelWidget { Title = title, Child = child }.Render(context.Bounds, frame);
+            frame.SetDegradation(context.DegradationLevel.ToRenderDegradation());
+            ((IWidget)new PanelWidget { Title = title, Child = child }).Render(context.Bounds, frame);
         }
     }
 }
@@ -54,7 +54,7 @@ internal static class WidgetRenderContextExtensions
         var pool = new GraphemePool();
         var frame = new Frame(context.Buffer.Width, context.Buffer.Height, pool);
         frame.BufferOverride = context.Buffer;
-        frame.SetDegradation(context.DegradationLevel);
+        frame.SetDegradation(context.DegradationLevel.ToRenderDegradation());
         widget.Render(context.Bounds, frame);
     }
 }

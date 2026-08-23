@@ -5,6 +5,7 @@ using FrankenTui.Layout;
 using FrankenTui.Render;
 using FrankenTui.Runtime;
 using FrankenTui.Style;
+using MacroRecorder = FrankenTui.Extras.MacroRecorder;
 using RenderBuffer = FrankenTui.Render.Buffer;
 
 namespace FrankenTui.Tests.Headless;

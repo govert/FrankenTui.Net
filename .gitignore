@@ -26,3 +26,11 @@ artifacts/**
 !artifacts/doctor/.gitkeep
 !artifacts/contracts/
 !artifacts/contracts/.gitkeep
+
+# Local scratch / generated state
+/*.db
+/build_out*.txt
+/probe_*.txt
+/nul
+/runs/
+/sandbox/

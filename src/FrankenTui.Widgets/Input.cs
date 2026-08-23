@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 // Port of .external/frankentui/crates/ftui-widgets/src/input.rs
+// Upstream commit: 15cc6543f76b814394c590f9e7719dedd6684e4c
 // Single-line text input widget with cursor management, scrolling, selection,
 // word-level operations, IME composition, and grapheme-cluster awareness.
 
@@ -7,6 +8,7 @@ using System.Globalization;
 using System.Text;
 using FrankenTui.Core;
 using FrankenTui.Render;
+using CanonicalA11y = FrankenTui.A11y;
 
 namespace FrankenTui.Widgets;
 
@@ -124,76 +126,6 @@ public abstract record InputEvent
 }
 
 // ============================================================================
-// Accessibility types needed by TextInput (ftui_a11y::node).
-// DIVERGENCE: These belong in FrankenTui.A11y (ftui-a11y/src/node.rs).
-// Minimal port included here to keep TextInput self-contained.
-// ============================================================================
-
-/// <summary>Accessibility roles for widgets. Port of ftui_a11y::node::A11yRole.</summary>
-public enum A11yRole
-{
-    TextInput,
-    Button,
-    Checkbox,
-    List,
-    ListItem,
-    Table,
-    TableRow,
-    TreeItem,
-    ProgressBar,
-    Label,
-    Generic,
-}
-
-/// <summary>Accessibility state for a widget. Port of ftui_a11y::node::A11yState.</summary>
-public sealed class A11yState
-{
-    public bool    Focused    { get; set; }
-    public bool    Disabled   { get; set; }
-    public bool    Checked    { get; set; }
-    public bool    Selected   { get; set; }
-    public bool    Expanded   { get; set; }
-    public bool    Hidden     { get; set; }
-    /// <summary>Current numeric value (e.g. for progress bars). Port of A11yState::value_now.</summary>
-    public double? ValueNow   { get; set; }
-    /// <summary>Minimum numeric value. Port of A11yState::value_min.</summary>
-    public double? ValueMin   { get; set; }
-    /// <summary>Maximum numeric value. Port of A11yState::value_max.</summary>
-    public double? ValueMax   { get; set; }
-    /// <summary>Human-readable value text. Port of A11yState::value_text.</summary>
-    public string? ValueText  { get; set; }
-}
-
-/// <summary>Accessibility node information for a widget. Port of ftui_a11y::node::A11yNodeInfo.</summary>
-public sealed class A11yNodeInfo
-{
-    public ulong     Id          { get; }
-    public A11yRole  Role        { get; }
-    public Rect      Area        { get; }
-    public string?   Name        { get; private set; }
-    public string?   Description { get; private set; }
-    public A11yState State       { get; private set; } = new();
-
-    public A11yNodeInfo(ulong id, A11yRole role, Rect area) { Id = id; Role = role; Area = area; }
-
-    public static A11yNodeInfo New(ulong id, A11yRole role, Rect area) => new(id, role, area);
-
-    public A11yNodeInfo WithName(string name)            { Name = name; return this; }
-    public A11yNodeInfo WithDescription(string desc)     { Description = desc; return this; }
-    public A11yNodeInfo WithState(A11yState state)       { State = state; return this; }
-}
-
-/// <summary>
-/// Trait for widgets that provide accessibility information.
-/// Port of ftui_a11y::Accessible.
-/// </summary>
-public interface IAccessible
-{
-    /// <summary>Get accessibility nodes for this widget.</summary>
-    List<A11yNodeInfo> AccessibilityNodes(Rect area);
-}
-
-// ============================================================================
 // Snapshot for undo support (TextInputSnapshot struct in undo_support.rs scope)
 // ============================================================================
 
@@ -221,7 +153,7 @@ public sealed class TextInputSnapshot
 /// word-level operations, and styling. Grapheme-cluster aware for correct
 /// Unicode handling.
 /// </summary>
-public sealed class TextInput : IWidget, IAccessible, ITextInputUndoExt
+public sealed class TextInput : IWidget, IAccessible, CanonicalA11y.IAccessible, ITextInputUndoExt
 {
     // ── Fields ────────────────────────────────────────────────────────────
 
@@ -1178,10 +1110,16 @@ public sealed class TextInput : IWidget, IAccessible, ITextInputUndoExt
 
     // ── Accessibility (ftui_a11y::Accessible) ─────────────────────────────
 
-    /// <summary>Get accessibility nodes for this widget.</summary>
-    public List<A11yNodeInfo> AccessibilityNodes(Rect area)
+    /// <summary>Get the legacy compatibility projection of this widget's accessibility nodes.</summary>
+    public List<A11yNodeInfo> AccessibilityNodes(Rect area) =>
+        LegacyAccessibilityAdapter.FromCanonical(CanonicalAccessibilityNodes(area));
+
+    List<CanonicalA11y.A11yNodeInfo> CanonicalA11y.IAccessible.AccessibilityNodes(Rect area) =>
+        CanonicalAccessibilityNodes(area);
+
+    private List<CanonicalA11y.A11yNodeInfo> CanonicalAccessibilityNodes(Rect area)
     {
-        ulong id = A11yNodeId(area);
+        ulong id = WidgetDrawing.A11yNodeId(area);
 
         string name;
         if (_value.Length == 0)
@@ -1191,27 +1129,21 @@ public sealed class TextInput : IWidget, IAccessible, ITextInputUndoExt
         else
             name = _value;
 
-        var state = new A11yState
+        var state = new CanonicalA11y.A11yState
         {
             Focused  = _focused,
             Disabled = _maxLength == 0,
         };
 
-        var node = A11yNodeInfo.New(id, A11yRole.TextInput, area).WithState(state);
+        CanonicalA11y.A11yNodeInfo node = CanonicalA11y.A11yNodeInfo
+            .New(id, CanonicalA11y.A11yRole.TextInput, area)
+            .WithState(state);
         if (name.Length > 0)
             node = node.WithName(name);
         if (_maskChar.HasValue)
             node = node.WithDescription("password input");
 
         return [node];
-    }
-
-    private static ulong A11yNodeId(Rect area)
-    {
-        // DIVERGENCE: Rust uses crate::a11y_node_id(area) which hashes the area.
-        // C# packs the four 16-bit fields into a ulong for a stable, unique id.
-        return (ulong)area.X << 48 | (ulong)area.Y << 32 |
-               (ulong)area.Width << 16 | area.Height;
     }
 
     // ── IUndoSupport (snapshot + restore) ─────────────────────────────────

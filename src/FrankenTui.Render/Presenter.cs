@@ -1,3 +1,8 @@
+// SPDX-License-Identifier: Apache-2.0
+// Port of .external/frankentui/crates/ftui-render/src/presenter.rs.
+// Upstream basis: 15cc6543f76b814394c590f9e7719dedd6684e4c.
+// Cursor wrap-pending discipline: upstream 49e55c750dd29654eab7357be1e3ad5c59225b4a.
+
 using System.Text;
 using FrankenTui.Core;
 
@@ -86,8 +91,10 @@ public sealed class Presenter
                     }
                 }
 
-                _cursorColumn = (ushort)Math.Min(buffer.Width, x + advance);
-                _cursorRow = run.Y;
+                var physicalColumn = (ushort)Math.Min(ushort.MaxValue, x + columnOffset);
+                var presentationWidth = (ushort)Math.Min(ushort.MaxValue, buffer.Width + columnOffset);
+                _cursorColumn = AdvanceOrInvalidate(physicalColumn, advance, presentationWidth);
+                _cursorRow = targetRow;
 
                 if (x > ushort.MaxValue - advance)
                 {
@@ -142,6 +149,26 @@ public sealed class Presenter
         _cursorColumn = targetColumn;
         _cursorRow = targetRow;
         return true;
+    }
+
+    /// <summary>
+    /// Advances the tracked terminal column unless the write reaches the
+    /// presentation edge. A DECAWM terminal parks in wrap-pending state at the
+    /// last column rather than moving to a real column just past the buffer, so
+    /// the next move must be absolute when this returns <see langword="null"/>.
+    /// </summary>
+    private static ushort? AdvanceOrInvalidate(
+        ushort currentColumn,
+        ushort cellWidth,
+        ushort presentationWidth)
+    {
+        var next = (uint)currentColumn + cellWidth;
+        if (presentationWidth > 0 && next >= presentationWidth)
+        {
+            return null;
+        }
+
+        return (ushort)Math.Min(next, ushort.MaxValue);
     }
 
     private bool TryApplyStyle(StringBuilder builder, Cell cell, ref int bytesWritten)

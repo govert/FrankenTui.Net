@@ -1,11 +1,20 @@
-using System.Text;
-
 namespace FrankenTui.Core;
+
+/// <summary>Upstream <c>KeyEventKind</c>, including Kitty report-event-types variants.</summary>
+public enum TerminalKeyEventKind
+{
+    Press,
+    Repeat,
+    Release,
+}
 
 public abstract record TerminalEvent(DateTimeOffset Timestamp)
 {
-    public static KeyTerminalEvent Key(KeyGesture gesture, DateTimeOffset? timestamp = null) =>
-        new(gesture, timestamp ?? DateTimeOffset.UtcNow);
+    public static KeyTerminalEvent Key(
+        KeyGesture gesture,
+        DateTimeOffset? timestamp = null,
+        TerminalKeyEventKind kind = TerminalKeyEventKind.Press) =>
+        new(gesture, timestamp ?? DateTimeOffset.UtcNow) { Kind = kind };
 
     public static MouseTerminalEvent Mouse(MouseGesture gesture, DateTimeOffset? timestamp = null) =>
         new(gesture, timestamp ?? DateTimeOffset.UtcNow);
@@ -23,7 +32,10 @@ public abstract record TerminalEvent(DateTimeOffset Timestamp)
         new(column, row, stable, timestamp ?? DateTimeOffset.UtcNow);
 }
 
-public sealed record KeyTerminalEvent(KeyGesture Gesture, DateTimeOffset Timestamp) : TerminalEvent(Timestamp);
+public sealed record KeyTerminalEvent(KeyGesture Gesture, DateTimeOffset Timestamp) : TerminalEvent(Timestamp)
+{
+    public TerminalKeyEventKind Kind { get; init; } = TerminalKeyEventKind.Press;
+}
 
 public sealed record MouseTerminalEvent(MouseGesture Gesture, DateTimeOffset Timestamp) : TerminalEvent(Timestamp);
 

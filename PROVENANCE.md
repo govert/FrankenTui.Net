@@ -17,6 +17,15 @@ Initial upstream tracking point for this repository bootstrap:
 - Bootstrap reference commit: `7a91089366bd4644e086d5a422cb76b052e3de17`
 - Reference date: 2026-03-09
 
+Current active reconciliation point:
+
+- Upstream branch: `main`
+- Reference commit: `15cc6543f76b814394c590f9e7719dedd6684e4c`
+- Reference date: 2026-07-12
+- Reconciliation status: open as of the 2026-07-16 KodePorter baseline; this
+  basis records the source under review and does not assert that the target is
+  already preserved
+
 ## Rights Allocation
 
 Two categories of material may appear in this repository:
@@ -37,6 +46,13 @@ including the OpenAI/Anthropic rider, as reproduced in
 Original FrankenTui.Net material is copyright 2026 FrankenTui.Net contributors
 and is licensed under the MIT License reproduced in
 [LICENSES/MIT.txt](./LICENSES/MIT.txt).
+
+Some port modules also incorporate separately attributed third-party material.
+Those coordinates and selected licenses are recorded in
+[THIRD-PARTY-NOTICES.md](./THIRD-PARTY-NOTICES.md), with the Apache License 2.0
+reproduced in [LICENSES/Apache-2.0.txt](./LICENSES/Apache-2.0.txt). This
+provenance record does not replace the per-file notices or the repository's
+FrankenTUI-derived-material rules.
 
 ## Default Interpretation Rule
 

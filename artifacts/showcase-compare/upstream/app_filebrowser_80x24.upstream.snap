@@ -1,8 +1,8 @@
- 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
+﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
 ╭─────────────────────────────────────────────────────File Browser──────────────
 │╭─────Project Tree──────╮ ╭──────────────Files (23 items)──────────────╮ ╭─────
-││📁 my-app              │ │🏠 / 📁 home → 📁 user → 📁 projects → 📁 my│ │Directory  
-││├── 📁 src             │ │   Name              Perms             Size │ │Path: 
+││📁 my-app              │ │🏠 / 📁 home → 📁 user → 📁 projects → 📁 my│ │Directory
+││├── 📁 src             │ │   Name              Perms             Size │ │Path:
 │││   ├── 🦀 main.rs     │ │📁 .git              drwxr-xr-x          -- │ │Preview
 │││   ├── 🦀 lib.rs      │ │📁 assets            drwxr-xr-x          -- │ │Directo
 │││   └── 📁 models      │ │📁 docs              drwxr-xr-x          -- │ │  📁 .gi
@@ -13,12 +13,12 @@
 │││   └── 🦀 integration.│ │🐍 app.py            -rwxr-xr-x      1.5 KB │ │  📁 tes
 ││├── 📁 docs            │ │🔧 Cargo.toml        -rw-r--r--       512 B │ │  🔗 bui
 │││   ├── 📖 README.md   │ │🔧 config.toml       -rw-r--r--       256 B │ │  🐍 app
-│││   └── 📖 API.md      │ │📷 cover.jpg         -rw-r--r--    512.0 KB │ │       
-││├── 🔧 Cargo.toml      │ │🔧 data.json         -rw-r--r--     10.2 KB │ │       
-││├── 🔧 package.json    │ │🎬 demo.mp4          -rw-r--r--     12.6 MB │ │       
-││└── 🔧 .gitignore      │ │🦀 lib.rs            -rw-r--r--      4.1 KB │ │       
-││                       │ │📷 logo.png          -rw-r--r--    424.1 KB │ │      
-││                       │ │🦀 main.rs           -rw-r--r--      2.0 KB │ │      
-││                       │ │🦀 mod.rs            -rw-r--r--       512 B │ │      
-││                       │ │🔧 package.json      -rw-r--r--       384 B │ │      
- Tab/Shift+Tab: next/prev     0x0 00:00         -rw-r--r--      3.1 KB │ │      
+│││   └── 📖 API.md      │ │📷 cover.jpg         -rw-r--r--    512.0 KB │ │
+││├── 🔧 Cargo.toml      │ │🔧 data.json         -rw-r--r--     10.2 KB │ │
+││├── 🔧 package.json    │ │🎬 demo.mp4          -rw-r--r--     12.6 MB │ │
+││└── 🔧 .gitignore      │ │🦀 lib.rs            -rw-r--r--      4.1 KB │ │
+││                       │ │📷 logo.png          -rw-r--r--    424.1 KB │ │
+││                       │ │🦀 main.rs           -rw-r--r--      2.0 KB │ │
+││                       │ │🦀 mod.rs            -rw-r--r--       512 B │ │
+││                       │ │🔧 package.json      -rw-r--r--       384 B │ │
+ Tab/Shift+Tab: next/prev     0x0 00:00         -rw-r--r--      3.1 KB │ │

@@ -7,11 +7,11 @@
 // CloseOnCollidingInnerHitModal are represented as HitRegionKind.Custom with the tag value
 // stored exclusively in HitData (tag 99 vs 100 is not round-tripped through HitTestResult.Region).
 // DIVERGENCE: Upstream ModalId(999999) literal construction uses an internal-accessible ctor.
-// DIVERGENCE: Tracing-gated tests (tracing_modal_render_span_has_required_fields and
-// tracing_focus_change_and_trap_events_emitted_for_modal_lifecycle) are skipped.
 // DIVERGENCE: Upstream tests access struct field stack.modals directly; C# tests access
 // internal _modals list via InternalsVisibleTo.
 
+using System.Collections.Concurrent;
+using System.Diagnostics;
 using FrankenTui.Core;
 using FrankenTui.Render;
 using FrankenTui.Widgets;
@@ -21,6 +21,14 @@ using Xunit;
 namespace FrankenTui.Tests.Headless;
 
 // ── Test stub types ───────────────────────────────────────────────────────────
+
+file sealed class DiagnosticEventObserver(Action<KeyValuePair<string, object?>> onNext)
+    : IObserver<KeyValuePair<string, object?>>
+{
+    public void OnCompleted() { }
+    public void OnError(Exception error) { }
+    public void OnNext(KeyValuePair<string, object?> value) => onNext(value);
+}
 
 /// <summary>
 /// Minimal widget stub. Rust: struct StubWidget; impl Widget for StubWidget.
@@ -1139,19 +1147,80 @@ public sealed class ModalStackTests
         Assert.Equal((ulong)100, integrator.Focus().Current());
     }
 
-    // ── Tracing tests (skipped — feature not ported) ──────────────────────────
+    // ── Tracing tests ─────────────────────────────────────────────────────────
 
-    [Fact(Skip = "tracing feature not ported to .NET")]
+    [Fact]
     public void TracingModalRenderSpanHasRequiredFields()
     {
         // Upstream: tracing_modal_render_span_has_required_fields
-        // DIVERGENCE: Rust cfg(feature = "tracing") with tracing_subscriber; no .NET equivalent.
+        var stopped = new ConcurrentQueue<Activity>();
+        using var listener = new ActivityListener
+        {
+            ShouldListenTo = static source => source.Name == ModalTelemetry.ActivitySourceName,
+            Sample = static (ref ActivityCreationOptions<ActivityContext> _) =>
+                ActivitySamplingResult.AllDataAndRecorded,
+            SampleUsingParentId = static (ref ActivityCreationOptions<string> _) =>
+                ActivitySamplingResult.AllDataAndRecorded,
+            ActivityStopped = stopped.Enqueue,
+        };
+        ActivitySource.AddActivityListener(listener);
+
+        var stack = new ModalStack();
+        stack.Push(new WidgetModalEntry<StubWidget>(new StubWidget()));
+        var pool = new GraphemePool();
+        var frame = new Frame(80, 24, pool);
+        stack.Render(frame, new Rect(0, 0, 80, 24));
+
+        var render = Assert.Single(
+            stopped,
+            activity => activity.OperationName == ModalTelemetry.ModalRenderActivityName);
+        var tags = render.TagObjects.ToDictionary(tag => tag.Key, tag => tag.Value);
+        Assert.True(tags.ContainsKey("modal_type"), "modal.render missing modal_type field");
+        Assert.True(tags.ContainsKey("focus_trapped"), "modal.render missing focus_trapped field");
+        Assert.True(tags.ContainsKey("backdrop_active"), "modal.render missing backdrop_active field");
+        Assert.True(tags.ContainsKey("render_duration_us"), "modal.render did not record render_duration_us");
+        Assert.IsType<string>(tags["modal_type"]);
+        Assert.IsType<bool>(tags["focus_trapped"]);
+        Assert.IsType<bool>(tags["backdrop_active"]);
+        Assert.True(Assert.IsType<long>(tags["render_duration_us"]) >= 0);
     }
 
-    [Fact(Skip = "tracing feature not ported to .NET")]
+    [Fact]
     public void TracingFocusChangeAndTrapEventsEmittedForModalLifecycle()
     {
         // Upstream: tracing_focus_change_and_trap_events_emitted_for_modal_lifecycle
-        // DIVERGENCE: Rust cfg(feature = "tracing") with tracing_subscriber; no .NET equivalent.
+        var observed = new ConcurrentQueue<KeyValuePair<string, object?>>();
+        using var subscription = ModalTelemetry.Events.Subscribe(
+            new DiagnosticEventObserver(observed.Enqueue));
+
+        var stack = new ModalStack();
+        var focus = new UpstreamFocusManager();
+        focus.GraphMut().Insert(new UpstreamFocusNode(1, new Rect(0, 0, 10, 1)));
+        focus.GraphMut().Insert(new UpstreamFocusNode(2, new Rect(0, 1, 10, 1)));
+        focus.GraphMut().Insert(new UpstreamFocusNode(100, new Rect(0, 10, 10, 1)));
+        focus.Focus(100);
+
+        var integrator = new ModalFocusIntegration(stack, focus);
+        var modal = new WidgetModalEntry<StubWidget>(new StubWidget())
+            .WithFocusableIds(new List<ulong> { 1, 2 });
+        integrator.PushWithFocus(modal);
+        _ = integrator.HandleEvent(EventFactory.EscapeKey(), null);
+
+        var snapshot = observed.ToArray();
+        Assert.True(
+            snapshot.Count(item => item.Key == ModalTelemetry.FocusChangeEventName) >= 2,
+            "expected focus.change events for trap lifecycle");
+        Assert.Contains(
+            snapshot,
+            item => item.Key == ModalTelemetry.FocusTrapPushEventName
+                && HasFields(item.Value, "group_id", "return_focus"));
+        Assert.Contains(
+            snapshot,
+            item => item.Key == ModalTelemetry.FocusTrapPopEventName
+                && HasFields(item.Value, "group_id", "return_focus"));
+
+        static bool HasFields(object? payload, params string[] names) =>
+            payload is IReadOnlyDictionary<string, object?> fields
+            && names.All(fields.ContainsKey);
     }
 }

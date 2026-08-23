@@ -1,6 +1,7 @@
 using FrankenTui.Core;
 using FrankenTui.Extras;
 using FrankenTui.Layout;
+using FrankenTui.Render;
 using FrankenTui.Runtime;
 using FrankenTui.Text;
 using FrankenTui.Widgets;
@@ -233,51 +234,51 @@ internal static class ShowcaseSurface
     private static IWidget BuildContent(ShowcaseDemoState state) =>
         state.CurrentScreen.Slug switch
         {
-            "guided_tour" => Screen01GuidedTourPort.Build(state),
-            "dashboard" => Screen02Dashboard.Build(state),
-            "shakespeare" => Screen03Shakespeare.Build(state),
-            "code_explorer" => Screen04CodeExplorerPort.Build(state),
-            "widget_gallery" => Screen05WidgetGalleryPort.Build(state),
-            "layout_lab" => Screen06LayoutLabPort.Build(state),
-            "forms_input" => Screen07FormsInput.Build(state),
-            "data_viz" => Screen08DataVizPort.Build(state),
-            "file_browser" => Screen09FileBrowser.Build(state),
-            "advanced_features" => Screen10Advanced.Build(state),
-            "table_theme_gallery" => Screen11TableTheme.Build(state),
-            "terminal_capabilities" => Screen12TerminalCaps.Build(state),
-            "macro_recorder" => Screen13MacroRecorder.Build(state),
-            "performance" => Screen14Performance.Build(state),
-            "markdown_rich_text" => Screen15Markdown.Build(state),
-            "mermaid_showcase" => Screen16MermaidEngine.Build(state),
-            "mermaid_mega_showcase" => Screen17MermaidMega.Build(state),
-            "visual_effects" => Screen18VfxPort.Build(state),
-            "responsive_demo" => Screen19Responsive.Build(state),
-            "log_search" => Screen20LogSearch.Build(state),
-            "notifications" => Screen21Notifications.Build(state),
-            "action_timeline" => Screen22ActionTimeline.Build(state),
-            "intrinsic_sizing" => Screen23Intrinsic.Build(state),
-            "layout_inspector" => Screen24LayoutInspect.Build(state),
-            "advanced_text_editor" => Screen25AdvTextEditor.Build(state),
-            "mouse_playground" => Screen26MousePlayground.Build(state),
-            "form_validation" => Screen27FormValidation.Build(state),
-            "virtualized_search" => Screen28Virtualized.Build(state),
-            "async_tasks" => Screen29AsyncTasks.Build(state),
-            "theme_studio" => Screen30ThemeStudio.Build(state),
-            "snapshot_player" => Screen31SnapshotPlayer.Build(state),
-            "performance_hud" => Screen32PerfHud.Build(state),
-            "explainability_cockpit" => Screen33Explainability.Build(state),
-            "i18n_demo" => Screen34I18n.Build(state),
-            "voi_overlay" => Screen35VoiOverlay.Build(state),
-            "inline_mode_story" => Screen36InlineMode.Build(state),
-            "accessibility_panel" => Screen37Accessibility.Build(state),
-            "widget_builder" => Screen38WidgetBuilder.Build(state),
-            "command_palette_lab" => Screen39CmdPalette.Build(state),
-            "determinism_lab" => Screen40Determinism.Build(state),
-            "hyperlink_playground" => Screen41Hyperlink.Build(state),
-            "kanban_board" => Screen42Kanban.Build(state),
-            "markdown_live_editor" => Screen43MarkdownLive.Build(state),
-            "drag_drop" => Screen44DragDrop.Build(state),
-            "quake_easter_egg" => Screen45QuakePort.Build(state),
+            "guided_tour" => BuildGuidedTour(state),
+            "dashboard" => BuildDashboard(state),
+            "shakespeare" => BuildShakespeare(state),
+            "code_explorer" => BuildCodeExplorer(state),
+            "widget_gallery" => BuildWidgetGallery(state),
+            "layout_lab" => BuildLayoutLab(state),
+            "forms_input" => BuildFormsInput(state),
+            "data_viz" => BuildDataViz(state),
+            "file_browser" => BuildFileBrowser(state),
+            "advanced_features" => BuildAdvancedFeatures(state),
+            "table_theme_gallery" => BuildTableThemeGallery(state),
+            "terminal_capabilities" => BuildTerminalCapabilities(state),
+            "macro_recorder" => BuildMacroRecorder(state),
+            "performance" => BuildPerformance(state),
+            "markdown_rich_text" => BuildMarkdown(state),
+            "mermaid_showcase" => BuildMermaid(state),
+            "mermaid_mega_showcase" => BuildMermaidMega(state),
+            "visual_effects" => BuildVisualEffects(state),
+            "responsive_demo" => BuildResponsive(state),
+            "log_search" => BuildLogSearch(state),
+            "notifications" => BuildNotifications(state),
+            "action_timeline" => BuildActionTimeline(state),
+            "intrinsic_sizing" => BuildIntrinsicSizing(state),
+            "layout_inspector" => BuildLayoutInspector(state),
+            "advanced_text_editor" => BuildAdvancedTextEditor(state),
+            "mouse_playground" => BuildMousePlayground(state),
+            "form_validation" => BuildFormValidation(state),
+            "virtualized_search" => BuildVirtualizedSearch(state),
+            "async_tasks" => BuildAsyncTasks(state),
+            "theme_studio" => BuildThemeStudio(state),
+            "snapshot_player" => BuildSnapshotPlayer(state),
+            "performance_hud" => BuildPerformanceChallenge(state),
+            "explainability_cockpit" => BuildExplainability(state),
+            "i18n_demo" => BuildI18n(state),
+            "voi_overlay" => BuildVoiOverlay(state),
+            "inline_mode_story" => BuildInlineModeStory(state),
+            "accessibility_panel" => BuildAccessibility(state),
+            "widget_builder" => BuildWidgetBuilder(state),
+            "command_palette_lab" => BuildCommandPaletteLab(state),
+            "determinism_lab" => BuildDeterminismLab(state),
+            "hyperlink_playground" => BuildHyperlinkPlayground(state),
+            "kanban_board" => BuildKanbanBoard(state),
+            "markdown_live_editor" => BuildMarkdownLiveEditor(state),
+            "drag_drop" => BuildDragDrop(state),
+            "quake_easter_egg" => BuildQuake(state),
             _ => BuildPlaceholder(state)
         };
 
@@ -299,8 +300,7 @@ internal static class ShowcaseSurface
             var keyLabel = i < 9 ? (i + 1).ToString() : i == 9 ? "0" : "-";
             var prefix = i == 0 ? " " : "│ ";
             var isActive = i + 1 == current;
-            var label = isActive ? string.Concat(keyLabel, ": [", screen.ShortLabel, "] ")
-                                : string.Concat(keyLabel, ": ", screen.ShortLabel, " ");
+            var label = string.Concat(keyLabel, ": ", screen.ShortLabel, " ");
             var segment = prefix + label;
             lineWidth += segment.Length;
             items.Add(segment);
@@ -461,41 +461,10 @@ internal static class ShowcaseSurface
 
     private static IWidget BuildDashboard(ShowcaseDemoState state)
     {
-        var focus = Math.Clamp(state.DashboardFocusIndex, 0, 1);
-        var overviewScroll = Math.Clamp(state.DashboardOverviewScroll, 0, 6);
-        var highlightIndex = Math.Clamp(state.DashboardHighlightIndex, 0, 7);
-        string[] overviewItems =
-        [
-            "45-screen showcase catalog",
-            "upstream-shaped numbering and titles",
-            "runtime-backed interactive loop",
-            "Windows Terminal viewport support"
-        ];
-        string[] highlights =
-        [
-            "Visual Effects canvas",
-            "Data Viz charts",
-            "Code Explorer panes",
-            "Performance metrics",
-            "Layout Lab workspace",
-            "Drag & Drop lab",
-            "Action Timeline",
-            "Markdown rich text"
-        ];
-
-        var overviewText =
-            $"Mode: Autorun | scroll={overviewScroll} | context={(state.DashboardContextArmed ? "armed" : "idle")}\n" +
-            string.Join('\n', overviewItems.Select((item, index) => $"{(focus == 0 && overviewScroll % overviewItems.Length == index ? "> " : "  ")}{item}")) +
-            "\nPort baseline: 60%\n## Dashboard\n- cached markdown summary\n- width-stable render path";
-
-        var highlightsText = string.Join(
-            '\n',
-            highlights.Select((item, index) => $"{(focus == 1 && highlightIndex == index ? "> " : "  ")}{item}")) +
-            $"\nselected={highlightIndex} focus={focus} mouse panel=dashboard:highlights";
-
-        return TwoColumn(
-            Panel(focus == 0 ? "Overview [focus]" : "Overview", overviewText),
-            Panel(focus == 1 ? "Highlights [focus]" : "Highlights", highlightsText));
+        var frame = state.RuntimeStats?.StepIndex ?? state.ScriptFrame;
+        var sim = new SimulatedData(seed: 0);
+        for (ulong t = 0; t < 30; t++) sim.Tick(t);
+        return new DashboardWidget(state, frame, sim);
     }
 
     private static IWidget BuildShakespeare(ShowcaseDemoState state)
@@ -3024,27 +2993,33 @@ internal static class ShowcaseSurface
 
     private static IWidget BuildAccessibility(ShowcaseDemoState state)
     {
-        // Matches upstream accessibility_panel.rs — default a11y state (all OFF, no events)
-        var highContrast = false;
-        var reducedMotion = false;
-        var largeText = false;
-        var themeName = "Cyberpunk Aurora";
-        var baseThemeName = "Cyberpunk Aurora";
+        // Matches upstream accessibility_panel.rs — state-driven toggles + telemetry
+        var hc = state.A11yHighContrast;
+        var rm = state.A11yReducedMotion;
+        var lt = state.A11yLargeText;
+        var sel = Math.Clamp(state.AccessibilitySelectedToggleIndex, 0, 2);
+        var focus = Math.Clamp(state.AccessibilityFocusIndex, 0, 4);
+        var prevScroll = Math.Max(0, state.AccessibilityPreviewScroll);
+        var telScroll = Math.Max(0, state.AccessibilityTelemetryScroll);
+        var events = state.AccessibilityTelemetryEvents;
 
         var overviewLines = new[]
         {
-            $"Active Theme: {themeName}",
-            $"Base Theme: {baseThemeName}  Mode: Standard",
-            "Motion: Full (1.0x)  Large Text: OFF",
+            "Active Theme: Cyberpunk Aurora",
+            "Base Theme: Cyberpunk Aurora  Mode: Standard",
+            $"Motion: {(rm ? "Reduced" : "Full")} (1.0x)  Large Text: {(lt ? "ON" : "OFF")}",
             "Shortcuts: h = contrast, m = motion, l = large text",
             ""
         };
 
+        string TL(int idx, string key, string label, bool on) =>
+            (idx == sel ? "> " : " ") + $"[{key}] {label}: {(on ? "ON" : "OFF")}";
+
         var toggleLines = new[]
         {
-            " [h] High Contrast: OFF",
-            " [m] Reduced Motion: OFF",
-            " [l] Large Text: OFF",
+            TL(0, "h", "High Contrast", hc),
+            TL(1, "m", "Reduced Motion", rm),
+            TL(2, "l", "Large Text", lt),
             "Shift+A opens the compact overlay"
         };
 
@@ -3069,12 +3044,23 @@ internal static class ShowcaseSurface
             "Animations active"
         };
 
-        var telemetryLines = new[] { "No a11y events yet. Toggle a mode to emit telemetry." };
+        var telemetryLines = new System.Collections.Generic.List<string>();
+        if (events is null || events.Count == 0)
+            telemetryLines.Add("No a11y events yet. Toggle a mode to emit telemetry.");
+        else
+            for (var i = events.Count - 1; i >= 0; i--)
+            {
+                var e = events[i];
+                telemetryLines.Add($"[{e.Tick,4}] {e.Kind} | HC:{(e.HighContrast ? "ON" : "OFF")} RM:{(e.ReducedMotion ? "ON" : "OFF")} LT:{(e.LargeText ? "ON" : "OFF")}");
+            }
+        telemetryLines.Add("");
+        telemetryLines.Add("layout_toggles hit rows: A11yToggleAction -> A11yEventKind");
+        telemetryLines.Add($"Telemetry scroll: {telScroll}");
 
         var overview = Panel(" Accessibility Control Panel ", string.Join("\n", overviewLines));
         var toggles = Panel(" Toggles ", string.Join("\n", toggleLines));
         var wcag = Panel(" WCAG Contrast ", string.Join("\n", wcagLines));
-        var preview = Panel(" Live Preview ", string.Join("\n", previewLines));
+        var preview = Panel($" Live Preview [scroll {prevScroll}] ", string.Join("\n", previewLines));
         var telemetry = Panel(" A11y Telemetry ", string.Join("\n", telemetryLines));
 
         return new StackWidget(
@@ -3096,7 +3082,8 @@ internal static class ShowcaseSurface
                                 (LayoutConstraint.Fixed(10), wcag),
                                 (LayoutConstraint.Fill(), telemetry)
                             ]))
-                    ]))
+                    ])),
+                (LayoutConstraint.Fixed(1), new ParagraphWidget($"selected={sel} focus={focus}"))
             ]);
     }
 

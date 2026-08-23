@@ -1,8 +1,11 @@
 // SPDX-License-Identifier: Apache-2.0
 // Port of .external/frankentui/crates/ftui-runtime/src/program.rs
-// Complete Elm-style runtime. All types, methods, and config ported.
+// Upstream commit: 15cc6543f76b814394c590f9e7719dedd6684e4c
+// DIVERGENCE: The managed runtime uses .NET tasks/channels and exceptions in
+// place of Rust threads/mpsc and io::Error while preserving lifecycle order.
 
 using System.Diagnostics;
+using System.Runtime.ExceptionServices;
 using System.Threading.Channels;
 using FrankenTui.Core;
 
@@ -31,7 +34,8 @@ public sealed class Program<M> where M : class
     // ── Core ───────────────────────────────────────────────────────────────
     readonly IModel<M> _model;
     readonly TerminalWriter _writer;
-    bool _running=true; TimeSpan? _tickRate; int _executedCmdCount; long _lastTickTicks;
+    readonly FrankenTui.Render.FrameArena _frameArena=new();
+    bool _running=true; bool _shutdownComplete; TimeSpan? _tickRate; int _executedCmdCount; long _lastTickTicks;
     bool _dirty=true; ulong _frameIdx,_tickCount; ushort _width=80,_height=24;
     (ushort,ushort)? _forcedSize; TimeSpan _pollTimeout=TimeSpan.FromMilliseconds(50);
 
@@ -40,14 +44,17 @@ public sealed class Program<M> where M : class
     readonly InputFairnessGuard _fairness=new(); readonly LocaleContext _locale;
     bool _interceptSignals; ulong _localeVersion;
     readonly ImmediateDrainConfig _immediateDrain; readonly PersistenceConfig _persistence;
+    readonly StateRegistry? _stateRegistry;
     readonly WidgetRefreshConfig _widgetRefreshCfg; readonly GuardrailsConfig _guardrails;
     readonly EffectQueueConfig _effectQueueCfg;
 
     // ── Task execution ─────────────────────────────────────────────────────
     readonly Channel<M> _taskCh=Channel.CreateUnbounded<M>();
+    readonly Channel<Exception> _taskFailureCh=Channel.CreateUnbounded<Exception>();
+    readonly List<Task> _activeTasks=new(); readonly object _activeTasksGate=new();
 
     // ── Subscriptions ──────────────────────────────────────────────────────
-    readonly List<ISubscription<M>> _activeSubs=new(); readonly HashSet<ulong> _activeSubIds=new();
+    readonly SubscriptionManager<M> _subscriptions=new();
 
     // ── Optional subsystems ────────────────────────────────────────────────
     ConformalPredictor? _conformal; EvidenceSink? _evidenceSink;
@@ -61,6 +68,7 @@ public sealed class Program<M> where M : class
         _locale=_config.LocaleContext;_interceptSignals=_config.InterceptSignals;
         _resize=new ResizeCoalescer(_config.ResizeCoalescer);
         _immediateDrain=_config.ImmediateDrain;_persistence=_config.Persistence;
+        _stateRegistry=_persistence.StateRegistry;
         _widgetRefreshCfg=_config.WidgetRefresh;_guardrails=_config.Guardrails;
         _effectQueueCfg=_config.EffectQueue;_pollTimeout=_config.PollTimeout;
         if(_config.ConformalConfig!=null)_conformal=new ConformalPredictor(_config.ConformalConfig);
@@ -79,33 +87,130 @@ public sealed class Program<M> where M : class
     public TimeSpan? TickRate=>_tickRate; public int ExecutedCmdCount=>_executedCmdCount;
     public void Quit()=>_running=false; public void Stop()=>_running=false;
     public void MarkDirty()=>_dirty=true;
-    public bool HasPersistence=>false;/* DIVERGENCE: StateRegistry not ported */
-    public bool TriggerSave(){SaveState();return true;}
-    public int TriggerLoad(){LoadState();return 0;}
+    public StateRegistry? StateRegistry=>_stateRegistry;
+    public bool HasPersistence=>_stateRegistry is not null;
+    public bool TriggerSave()=>_stateRegistry?.Flush()??false;
+    public int TriggerLoad()=>_stateRegistry?.Load()??0;
 
     // ── Run loop ───────────────────────────────────────────────────────────
     public void Run()
     {
+        if(_shutdownComplete)
+            throw new InvalidOperationException("program lifecycle has already completed");
+
+        Exception? primaryError=null;
+        try{RunEventLoop();}
+        catch(Exception ex){primaryError=ex;}
+
+        CompleteLifecycle(primaryError);
+    }
+
+    void RunEventLoop()
+    {
         var sw=Stopwatch.StartNew();_lastTickTicks=sw.ElapsedTicks;
         if(_persistence.AutoLoad){LoadState();}
-        var cmd=_model.Init();ExecuteCmd(cmd);_dirty=true;ReconcileSubscriptions();
-        if(_dirty){RenderFrame();_dirty=false;}
+        var cmd=_model.Init();ExecuteCmd(cmd);_dirty=true;
+        if(_running)
+        {
+            ReconcileSubscriptions();
+            ProcessSubscriptionFailures(duringLifecycle:false);
+            if(_running&&_dirty){RenderFrame();_dirty=false;}
+        }
         ulong loopCount=0;
         while(_running){
             loopCount++;if(loopCount%100==0)DebugTrace.Trace($"main loop heartbeat: iteration {loopCount}");
             if(CheckTerminationSignal()){Quit();break;}
-            ProcessSubscriptionMessages();if(!_running)break;
+            ProcessSubscriptionMessages();
+            ProcessSubscriptionFailures(duringLifecycle:false);if(!_running)break;
             ProcessTaskResults();ReapFinishedTasks();if(!_running)break;
             ProcessResizeCoalescer();if(!_running)break;
             if(CheckTerminationSignal()){Quit();break;}
             CheckScreenTransition();
-            if(ShouldTick()){_tickCount++;ExecuteCmd(_model.Update(default!));_dirty=true;}
+            if(ShouldTick()){
+                _tickCount++;ExecuteCmd(_model.Update(default!));_dirty=true;
+                if(_running)ReconcileSubscriptions();
+            }
             CheckLocaleChange();
             if(_dirty){RenderFrame();_dirty=false;}
             CheckCheckpointSave();
             Thread.Sleep((int)EffectiveTimeout().TotalMilliseconds);
         }
-        ExecuteCmd(_model.OnShutdown());_writer.Flush();
+    }
+
+    void CompleteLifecycle(Exception? primaryError)
+    {
+        _running=false;
+
+        Exception? hookError=null;
+        if(primaryError is not null)
+        {
+            try{InvokeErrorHook(primaryError.Message,duringLifecycle:true);}
+            catch(Exception ex){hookError=ex;}
+        }
+
+        try{ProcessSubscriptionFailures(duringLifecycle:true);}
+        catch(Exception ex){hookError??=ex;}
+
+        Exception? shutdownError=null;
+        try{ShutdownOnce();}
+        catch(Exception ex){shutdownError=ex;}
+
+        if(primaryError is not null)
+            ExceptionDispatchInfo.Capture(primaryError).Throw();
+        if(hookError is not null)
+            ExceptionDispatchInfo.Capture(hookError).Throw();
+        if(shutdownError is not null)
+        {
+            try{InvokeErrorHook(shutdownError.Message,duringLifecycle:true);}
+            catch{ /* The original shutdown error retains precedence. */ }
+            ExceptionDispatchInfo.Capture(shutdownError).Throw();
+        }
+    }
+
+    void ShutdownOnce()
+    {
+        if(_shutdownComplete)return;
+        _shutdownComplete=true;
+
+        Exception? shutdownError=null;
+        try{ExecuteLifecycleCmd(_model.OnShutdown());}
+        catch(Exception ex){shutdownError=ex;}
+
+        if(_persistence.AutoSave)
+        {
+            try{SaveState();}
+            catch(Exception ex){shutdownError??=ex;}
+        }
+
+        try{_subscriptions.StopAll();}
+        catch(Exception ex){shutdownError??=ex;}
+        try{ProcessSubscriptionFailures(duringLifecycle:true);}
+        catch(Exception ex){shutdownError??=ex;}
+
+        try{ShutdownBackgroundTasks();}
+        catch(Exception ex){shutdownError??=ex;}
+        try{DrainShutdownTaskResults();}
+        catch(Exception ex){shutdownError??=ex;}
+        try{_writer.Flush();}
+        catch(Exception ex){shutdownError??=ex;}
+
+        if(shutdownError is not null)
+            ExceptionDispatchInfo.Capture(shutdownError).Throw();
+    }
+
+    void InvokeErrorHook(string error,bool duringLifecycle)
+    {
+        var cmd=_model.OnError(error);
+        if(duringLifecycle)ExecuteLifecycleCmd(cmd);
+        else ExecuteCmd(cmd);
+    }
+
+    void ExecuteLifecycleCmd(Cmd<M> cmd)
+    {
+        var wasRunning=_running;
+        _running=true;
+        try{ExecuteCmd(cmd);}
+        finally{_running=wasRunning&&_running;}
     }
 
     // ── Timeout ────────────────────────────────────────────────────────────
@@ -122,9 +227,9 @@ public sealed class Program<M> where M : class
             case Cmd<M>.Sequence(var cmds):foreach(var c in cmds){ExecuteCmd(c);if(!_running)break;}break;
             case Cmd<M>.Tick(var d):_tickRate=d;_lastTickTicks=Stopwatch.GetTimestamp();break;
             case Cmd<M>.Log(var text):_writer.WriteLog(text);break;
-            case Cmd<M>.BackgroundTask(var spec,var work):ThreadPool.QueueUserWorkItem(_=>{var r=work();_taskCh.Writer.TryWrite(r);});break;
+            case Cmd<M>.BackgroundTask(var spec,var work):ScheduleBackgroundTask(work);break;
             case Cmd<M>.SaveState:SaveState();break; case Cmd<M>.RestoreState:LoadState();break;
-            case Cmd<M>.SetMouseCapture:break; case Cmd<M>.SaveStateAndQuit:_running=false;break;
+            case Cmd<M>.SetMouseCapture:break; case Cmd<M>.SaveStateAndQuit:SaveState();_running=false;break;
         }
     }
 
@@ -137,9 +242,12 @@ public sealed class Program<M> where M : class
         // These subsystems (RenderBudget, LoadGovernorState, FrameGuardrails,
         // InlineAutoRemeasureState) will be integrated when fully ported.
         var sw=Stopwatch.StartNew();
+        _frameArena.Reset();
         var frameHeight=_writer.RenderHeightHint; frameHeight=Math.Max(frameHeight,(ushort)1);
         var buf=_writer.TakeRenderBuffer(_width,frameHeight);buf.MarkAllDirty();
         var frame=new FrankenTui.Render.Frame(_width,frameHeight,_writer.Pool){BufferOverride=buf};
+        frame.SetLinks(_writer.Links);
+        frame.SetArena(_frameArena);
         _model.View(frame);_writer.PresentUi(buf);
         _lastFrameTimeUs=sw.Elapsed.TotalMilliseconds*1000;
     }
@@ -147,23 +255,65 @@ public sealed class Program<M> where M : class
     // ── Subscriptions ──────────────────────────────────────────────────────
     void ReconcileSubscriptions()
     {
-        var newIds=_model.Subscriptions().Select(s=>s.Id.Value).ToHashSet();
-        var remaining=new List<ISubscription<M>>();
-        foreach(var sub in _activeSubs)if(newIds.Contains(sub.Id.Value))remaining.Add(sub);
-        else DebugTrace.Trace($"stopping subscription: id={sub.Id}");
-        _activeSubs.Clear();_activeSubs.AddRange(remaining);_activeSubIds.Clear();foreach(var s in remaining)_activeSubIds.Add(s.Id.Value);
-        foreach(var sub in _model.Subscriptions())
-            if(!_activeSubIds.Contains(sub.Id.Value)){
-                DebugTrace.Trace($"starting subscription: id={sub.Id}");
-                var(sig,trig)=StopSignal.Create();var ch=Channel.CreateUnbounded<M>();var sc=sub;
-                new Thread(()=>{try{sc.Run(ch.Writer,sig);}catch{}}){IsBackground=true}.Start();
-                _activeSubs.Add(sub);_activeSubIds.Add(sub.Id.Value);
-            }
+        _subscriptions.Reconcile(_model.Subscriptions());
     }
 
-    void ProcessSubscriptionMessages(){/* DIVERGENCE: full SubscriptionManager integration deferred */}
-    void ProcessTaskResults(){while(_taskCh.Reader.TryRead(out var msg)){ExecuteCmd(new Cmd<M>.Msg(msg));if(!_running)break;}}
-    void ReapFinishedTasks(){/* DIVERGENCE: task executor reaping deferred */}
+    void ProcessSubscriptionMessages()
+    {
+        foreach(var msg in _subscriptions.DrainMessages())
+        {
+            ExecuteCmd(new Cmd<M>.Msg(msg));
+            if(!_running)break;
+            ReconcileSubscriptions();
+        }
+    }
+
+    void ProcessSubscriptionFailures(bool duringLifecycle)
+    {
+        Exception? firstError=null;
+        foreach(var failure in _subscriptions.DrainFailures())
+        {
+            var error=$"subscription {failure.Id} failed: {failure.Error}";
+            try{InvokeErrorHook(error,duringLifecycle);}
+            catch(Exception ex){firstError??=ex;}
+        }
+        if(firstError is not null)ExceptionDispatchInfo.Capture(firstError).Throw();
+    }
+
+    void ScheduleBackgroundTask(Func<M> work)
+    {
+        var task=Task.Run(()=>
+        {
+            try{_taskCh.Writer.TryWrite(work());}
+            catch(Exception ex){_taskFailureCh.Writer.TryWrite(ex);}
+        });
+        lock(_activeTasksGate)_activeTasks.Add(task);
+    }
+
+    void ProcessTaskResults()
+    {
+        if(_taskFailureCh.Reader.TryRead(out var failure))
+            throw new InvalidOperationException($"background task failed: {failure.Message}",failure);
+        while(_taskCh.Reader.TryRead(out var msg))
+        {
+            ExecuteCmd(new Cmd<M>.Msg(msg));
+            if(!_running)break;
+            ReconcileSubscriptions();
+        }
+    }
+
+    void ReapFinishedTasks()
+    {
+        lock(_activeTasksGate)_activeTasks.RemoveAll(task=>task.IsCompleted);
+    }
+
+    void ShutdownBackgroundTasks()
+    {
+        Task[] tasks;
+        lock(_activeTasksGate)tasks=_activeTasks.ToArray();
+        if(tasks.Length>0)Task.WaitAll(tasks,TimeSpan.FromMilliseconds(250));
+        ReapFinishedTasks();
+    }
 
     // ── Resize ─────────────────────────────────────────────────────────────
     void ProcessResizeCoalescer(){var decision=_resize.Evaluate(DateTimeOffset.UtcNow);if(decision is null)return;var ready=_resize.ConsumeReadySize(decision.Action);if(ready.HasValue){ApplyResize(ready.Value.Width,ready.Value.Height);}}
@@ -180,21 +330,70 @@ public sealed class Program<M> where M : class
     void CheckScreenTransition(){/* DIVERGENCE: multi-screen tick dispatch deferred */}
 
     // ── Persistence ────────────────────────────────────────────────────────
-    void LoadState(){/* DIVERGENCE: state persistence deferred */}
-    void SaveState(){/* DIVERGENCE: state persistence deferred */}
+    void LoadState()
+    {
+        if(_stateRegistry is null)return;
+        try{_stateRegistry.Load();}
+        catch(StorageException ex){DebugTrace.Trace($"failed to load widget state: {ex.Message}");}
+    }
+    void SaveState()
+    {
+        if(_stateRegistry is null)return;
+        try{_stateRegistry.Flush();}
+        catch(StorageException ex){DebugTrace.Trace($"failed to save widget state: {ex.Message}");}
+    }
     void CheckCheckpointSave(){if(!_persistence.CheckpointInterval.HasValue)return;long now=Stopwatch.GetTimestamp();double dt=(now-_lastCheckpointTicks)/(double)Stopwatch.Frequency;if(dt>=_persistence.CheckpointInterval.Value.TotalSeconds){_lastCheckpointTicks=now;SaveState();}}
 
     // ── Signal handling ────────────────────────────────────────────────────
     bool CheckTerminationSignal(){if(!_interceptSignals)return false;return false;/* DIVERGENCE: .NET signal handling via Console.CancelKeyPress */}
 
     // ── Recording ──────────────────────────────────────────────────────────
-    InputMacro? _recording;
-    public void StartRecording(string name){/* DIVERGENCE: EventRecorder deferred */}
-    public InputMacro? StopRecording(){var r=_recording;_recording=null;return r;}
-    public bool IsRecording=>_recording!=null;
+    EventRecorder? _recording;
+
+    /// <summary>Start a new input recording, discarding any active recording.</summary>
+    public void StartRecording(string name)
+    {
+        ArgumentNullException.ThrowIfNull(name);
+        _recording = new EventRecorder(name);
+        if (_width > 0 && _height > 0)
+        {
+            _recording.WithTerminalSize(_width, _height);
+        }
+
+        _recording.Start();
+    }
+
+    /// <summary>
+    /// Feed a decoded terminal event through the recording hook. The target's terminal
+    /// host calls this bridge before normal event dispatch, matching upstream ordering.
+    /// </summary>
+    public bool RecordInput(TerminalEvent terminalEvent)
+    {
+        ArgumentNullException.ThrowIfNull(terminalEvent);
+        return _recording?.Record(terminalEvent) ?? false;
+    }
+
+    public InputMacro? StopRecording()
+    {
+        var recorder = _recording;
+        _recording = null;
+        return recorder?.Finish();
+    }
+
+    public bool IsRecording => _recording?.IsRecording ?? false;
 
     // ── Drain / evidence stubs ────────────────────────────────────────────
-    void DrainShutdownTaskResults(){ProcessTaskResults();}
+    void DrainShutdownTaskResults()
+    {
+        Exception? firstError=null;
+        while(_taskFailureCh.Reader.TryRead(out var failure))firstError??=failure;
+        while(_taskCh.Reader.TryRead(out var msg))
+        {
+            try{ExecuteLifecycleCmd(new Cmd<M>.Msg(msg));}
+            catch(Exception ex){firstError??=ex;}
+        }
+        if(firstError is not null)ExceptionDispatchInfo.Capture(firstError).Throw();
+    }
     void DrainReadyEvents(){}
     void HandleEvent(string eventType){}
     void UpdateLoadGovernorSnapshot(){}

@@ -3,6 +3,8 @@
 // Full 1-1 port of Live, LiveConfig, VerticalOverflow, auto-refresh,
 // writer access protocol (Condvar-based), and ANSI escape helpers.
 
+using FrankenTui.Render;
+
 namespace FrankenTui.Extras;
 
 public enum VerticalOverflow { Crop, Ellipsis, Visible }
@@ -92,6 +94,13 @@ public sealed class Live : IDisposable
         _config = config ?? throw new ArgumentNullException(nameof(config));
     }
 
+    /// <summary>
+    /// Factory mirroring upstream <c>Live::with_config</c>: build a live region
+    /// from a writer, width, and explicit config.
+    /// </summary>
+    public static Live WithConfig(TextWriter writer, int width, LiveConfig config)
+        => new(writer, width, config);
+
 
 
     public bool Start()
@@ -127,7 +136,7 @@ public sealed class Live : IDisposable
                 for (int i = 0; i < processed.Length; i++)
                 {
                     AnsiHelper.EraseLine(w);
-                    w.Write(Sanitize(processed[i]));
+                    w.Write(OutputSanitizer.Sanitize(processed[i]));
                     if (i < processed.Length - 1) w.WriteLine();
                 }
                 if (_lastHeight > newHeight)
@@ -218,9 +227,6 @@ public sealed class Live : IDisposable
             _ => lines,
         };
     }
-
-    private static string Sanitize(string text) =>
-        System.Text.RegularExpressions.Regex.Replace(text, @"\x1b\[[0-9;]*[a-zA-Z]", "");
 
     public void Dispose() { Stop(); }
 }

@@ -1,0 +1,95 @@
+{
+  "envelope": {
+    "contextName": "kp-current",
+    "contextHash": "461a7cb08cb2510bebc96e50d113e20b28f54ee5df9f2c09aa89c6f83a7c8836",
+    "dataCut": 11,
+    "definitionCut": 11,
+    "consumedCount": 11,
+    "consumedSetHash": "5547d4eb5e315f9691b8f10f4e19740ca8d625c96b1bd58c9def2e1ff3abd62d",
+    "resultHash": "20faaf98d56d30a39abf5364a3f6c31e410f7759c52949b14f09b1c59bab1826",
+    "receiptId": "43fbc915dd218d5b60a74018b881d2a9a2655a2d819426db25ed018382f67147",
+    "standing": "current",
+    "survivalGrade": "ungraded",
+    "generatedAt": "2026-07-16T00:10:51.9584802\u002B00:00",
+    "replay": "gneiss:43fbc915dd218d5b60a74018b881d2a9a2655a2d819426db25ed018382f67147"
+  },
+  "conclusions": [
+    {
+      "aid": "25ac896bcc1a56898b5a8cdd8c08d4bc21ebcdbd1cc5f1b60091192a31df4dab",
+      "subject": "kp-current",
+      "predicate": "gneiss.context",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "0ca64a0b5a44052fb4a41e23a1202f1dce9282bbd113c9d1e1eddd3d2c2819e4",
+      "subject": "kp.behavior",
+      "predicate": "gneiss.predicate",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "37e50818dd014128ddf749b637457cf5274576fa1f3e28df7be214f89b22a561",
+      "subject": "kp.correspondence",
+      "predicate": "gneiss.predicate",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "6fa4d69b28fc5b3ee995798a97504d4fedf646d13e870d190d9a979c256639fc",
+      "subject": "kp.evidence.anchor",
+      "predicate": "gneiss.predicate",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "00e6a9d20fbcd0bdd771dd1228b958446c8f807e1c1c787e6b810e7d9045f037",
+      "subject": "kp.policy",
+      "predicate": "gneiss.predicate",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "ecbdce449c039e96da0a813c34c8dcf14a1142eca881e781332c852a73cb08fd",
+      "subject": "kp.preservation",
+      "predicate": "gneiss.predicate",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "2187873d6f138876155a30e4d26822468e43d9e27be1bd867618b3a6c56d7174",
+      "subject": "kp.run.observation",
+      "predicate": "gneiss.predicate",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "ecd9a5e8a75e4d6e6b5c51b461ca1ef2f7a1df1bd5f3c6b33fb99b8a7b8a41a6",
+      "subject": "kp.stale",
+      "predicate": "gneiss.predicate",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "d61fd887e44e349634db6f1476b898fd7587d29e91389f18209ba885aa3b6905",
+      "subject": "kp.verification",
+      "predicate": "gneiss.predicate",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "d310b159e2192267f3786937e30b77d54b906c0b8971b3f3c806135455dd4352",
+      "subject": "policy:frankentui-systems-port@1:02545d7dd0797a2b6d25efc3b3f2984164dd5a516d2f19691610f0891c40a066",
+      "predicate": "kp.policy",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "a4f724df57fab0c5af055b02af38c920929be8f55e88e14f36fd5ce743765c69",
+      "subject": "run:showcase-hosts:showcase-static-frames:8385ccca9ade9a752d6c5b2dac54fd43271eab62f1d5ea5058102ac301f16764",
+      "predicate": "kp.run.observation",
+      "status": "accepted",
+      "staleViaJustification": false
+    }
+  ]
+}

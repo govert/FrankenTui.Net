@@ -1,0 +1,33 @@
+{
+  "id": "frankentui-systems-parity",
+  "version": "1",
+  "description": "A traceable, updateable direct systems port of FrankenTUI into .NET 10. Source-language API identity is not required; observable behavior, terminal effects, failure and cleanup behavior, determinism, declared realization, host behavior, and operational constraints are.",
+  "dimensions": [
+    "interface",
+    "result",
+    "effects",
+    "failure",
+    "determinism",
+    "realization",
+    "operational"
+  ],
+  "warrantMethods": [
+    "structural",
+    "differential",
+    "property-adversarial",
+    "reviewed",
+    "operationally-observed"
+  ],
+  "comparisonMethod": "layered-frankentui-systems-v1",
+  "settings": {
+    "interface": "Every in-scope upstream crate/module/screen/tool has a traceable .NET project/file/surface; the public .NET facade may be idiomatic rather than Rust-API-identical.",
+    "result": "Use exact bytes, cells, snapshots, hashes, schemas, or values where the source defines them; otherwise require materially matching user-visible structure and behavior with a named divergence.",
+    "effects": "Preserve state transitions, mutation/ownership consequences, terminal control sequences, one-writer routing, host modes, and teardown effects.",
+    "failure": "Preserve rejection conditions, failure timing, cancellation and cleanup obligations, translating error types explicitly where runtimes differ.",
+    "determinism": "A pinned basis, seed, input tape, viewport, policy, and host context must produce replayable buffers, evidence, and decisions.",
+    "realization": "Record native, wrapper, delegated, fallback, unsupported, or unknown realization separately from public surface coverage.",
+    "operational": ".NET 10 only, dependency-light, NativeAOT-conscious, cross-platform, and performance-sensitive without weakening strict behavior.",
+    "deviationPolicy": "Every non-isomorphic or host-driven difference is local, named, justified, tested, and reviewable.",
+    "upstreamPolicy": "Track upstream main and reconcile every source-basis advance before claiming current preservation."
+  }
+}

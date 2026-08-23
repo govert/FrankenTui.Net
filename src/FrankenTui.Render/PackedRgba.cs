@@ -1,5 +1,11 @@
+using System.Runtime.InteropServices;
+
 namespace FrankenTui.Render;
 
+// Ported from crates/ftui-render/src/cell.rs.
+// Upstream basis: 15cc6543f76b814394c590f9e7719dedd6684e4c.
+// This is one managed split of the single upstream cell module.
+[StructLayout(LayoutKind.Sequential, Size = 4)]
 public readonly record struct PackedRgba(uint Raw)
 {
     public static readonly PackedRgba Transparent = new(0);
@@ -69,9 +75,16 @@ public readonly record struct PackedRgba(uint Raw)
             return this;
         }
 
-        var alpha = (byte)Math.Clamp((int)MathF.Round(A * opacity), 0, 255);
+        // Rust f32::round uses half-away-from-zero; MathF.Round defaults to
+        // banker's rounding, which differs for odd alpha values at opacity 0.5.
+        var alpha = (byte)Math.Clamp(
+            (int)MathF.Round(A * opacity, MidpointRounding.AwayFromZero),
+            0,
+            255);
         return Rgba(R, G, B, alpha);
     }
+
+    public override string ToString() => $"PackedRgba({Raw})";
 
     private static byte DivideRoundedToByte(ulong numerator, ulong denominator)
     {

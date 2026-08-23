@@ -1,24 +1,24 @@
- 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
+﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
 ╭───────────────────────────────────────────────────────Markdown────────────────
 │╭───────────Markdown Renderer───────────╮ ╭──LLM Streaming Simulation | Complet
 e─GitHub-Flavored Markdown (Rich Demo)   │ │FrankenTUI Streaming Report — "Galax
-y│                                       │ │Brain" Edition                      
-││LaTeX + Symbols                        │ │                                    
-││                                       │ │ℹ  NOTE                             
+y│                                       │ │Brain" Edition
+││LaTeX + Symbols                        │ │
+││                                       │ │ℹ  NOTE
 ││Inline math: E = mc², α + β = γ, Δ x ≈ │ │┃ This stream simulates an LLM respo
 n│0.001.                                 │ │┃ rendered incrementally with full G
-F│                                       │ │┃ support.                          
-││Block math:                            │ │                                    
-││                                       │ │💡 TIP                               
-││  ∑ᵢ₌₁ⁿ xᵢ = n(n+1)/2                  │ │┃ Inline-first output keeps logs    
+F│                                       │ │┃ support.
+││Block math:                            │ │
+││                                       │ │💡 TIP
+││  ∑ᵢ₌₁ⁿ xᵢ = n(n+1)/2                  │ │┃ Inline-first output keeps logs
 ││                                       │ │┃ scrolling while the UI stays stabH
-ello      ^{∞} eI       │5     }         │ │                                    
-││                                       │ │⚠  WARNING                          
+ello      ^{∞} eI       │5     }         │ │
+││                                       │ │⚠  WARNING
 ││Admonitions                            │ │┃ Rendering is deterministic. If you
-││                                       │ │┃ see flicker, it is a bug.         
-││ℹ  NOTE                                │ │                                    
-││┃ Information note with rich emphasis. │ │TL;DR                               
+││                                       │ │┃ see flicker, it is a bug.
+││ℹ  NOTE                                │ │
+││┃ Information note with rich emphasis. │ │TL;DR
 ││                                       │ │• ✅ Zero-flicker rendering via Buffe
-r│💡 TIPP                                 ││→ Diff → Presenter                   
+r│💡 TIPP                                 ││→ Diff → Presenter
 ││┃ Use Tab and Shift+Tab to navigate.   │ │• ✅ Eviden▌ce-ledger decisions (Baye
 █│                                       │ │  [█████████████████████████████████

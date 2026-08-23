@@ -13,7 +13,12 @@ This covers `242-MAP` and `243-MAP` from
 
 - Managed upstream workspace: `.external/frankentui`
 - Current basis commit:
+  `15cc6543f76b814394c590f9e7719dedd6684e4c`
+- Previous documented basis:
   `f958e59e1406a90fdb92512103e3591911a9d68c`
+- Current reconciliation status:
+  open; the 330-commit delta is inventoried in `400-KPT` and is being ported in
+  dependency order. Advancing the reference does not assert target parity.
 - Primary upstream reference assets currently used by local verification:
   - `tests/baseline.json`
   - `docs/spec/diff-strategy-contract.md`
@@ -71,7 +76,7 @@ sequence:
 ```bash
 mkdir -p .external
 git clone https://github.com/Dicklesworthstone/frankentui.git .external/frankentui
-git -C .external/frankentui checkout f958e59e1406a90fdb92512103e3591911a9d68c
+git -C .external/frankentui checkout 15cc6543f76b814394c590f9e7719dedd6684e4c
 ```
 
 To move to a newer basis:

@@ -4,6 +4,8 @@ using FrankenTui.Render;
 using FrankenTui.Runtime;
 using FrankenTui.Text;
 using FrankenTui.Widgets;
+using TextLine = FrankenTui.Text.TextLine;
+using TextSpan = FrankenTui.Text.TextSpan;
 using RenderBuffer = FrankenTui.Render.Buffer;
 
 namespace FrankenTui.Tests.Headless;

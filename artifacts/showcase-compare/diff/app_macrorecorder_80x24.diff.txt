@@ -2,8 +2,8 @@
 Upstream snapshot: app_macrorecorder_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 804
-Local nonblank chars: 811
-Local/upstream char ratio: 1.009
+Local nonblank chars: 1206
+Local/upstream char ratio: 1.500
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -14,64 +14,64 @@ upstream: ╭──────────────────────�
 local   : ╭────────────────────────────────Macro Recorder────────────────────────────────╮
 @@ row 03
 upstream: │╭───────────────────────────────────────────────────Macro Recorder─────────────
-local   : │╭───────────────────────────────Macro Controls───────────────────────────────╮│
+local   : │╭───────────────────────────Macro Recorder [focus]───────────────────────────╮│
 @@ row 04
 upstream: ││State: ○ Idle   Events: 0   Duration: 0ms
-local   : ││Status: Idle                                                                ││
+local   : ││State: idle   Events: 5   Duration: 1060ms                                  ││
 @@ row 05
 upstream: ││Speed: 1.00x   Loop: Off   Progress:   0%   Filtered: 0
-local   : ││Mode: Record                                                                ││
+local   : ││Speed: 1.00x   Loop: Off   Progress:  20%   Filtered: 0                     ││
 @@ row 06
 upstream: ││Focus: [Controls]  [Timeline]  [Scenarios]   Ctrl/Alt+Arrows: ↑Controls  ←Time
-local   : ││Buffer: 0 events                                                            ││
+local   : ││Focus: [Controls] Timeline Detail Scenarios   mouse=focus                   ││
 @@ row 07
 upstream: ││Quick Start: Enter load scenario  Space record  ↑/↓ scrub timeline
-local   : ││                                                                            ││
+local   : ││Quick Start: Enter load scenario | Space record | Up/Down scrub timeline    ││
 @@ row 08
 upstream: ││Space/r record/stop  Enter/p play/pause  Esc stop  L loop  +/- speed
-local   : │╰────────────────────────────────────────────────────────────────────────────╯│
+local   : ││Space/r record/stop | Enter/p play/pause | Esc stop | l loop | +/- speed    ││
 @@ row 09
 upstream: │╰──────────────────────────────────────────────────────────────────────────────
-local   : │╭────────────────Macro Editor────────────────╮╭───────────History───────────╮ │
+local   : ││Status: Idle                                                                ││
 @@ row 10
 upstream: │╭──────────────────────────────Timeline───────────────────────────────╮╭───────
-local   : ││No macro recorded yet.                      ││(empty)                      │ │
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 11
 upstream: ││No macro loaded.                                                     ││Select
-local   : ││                                            ││                             │ │
+local   : │╭────────────────Timeline [0]────────────────╮╭─────────Event Detail─────────╮│
 @@ row 12
 upstream: ││Space to record, or select a scenario and press Enter.               ││
-local   : ││Events will appear here as key/mouse/tick.  ││Export path: macros/         │ │
+local   : ││        #       Delay   At      Event       ││Selected: #000                ││
 @@ row 13
 upstream: ││                                                                     ││
-local   : ││                                            ││                             │ │
+local   : ││>       001     +0200ms @0200ms key:Tab     ││Delay: 200ms   At: 200ms      ││
 @@ row 14
 upstream: ││                                                                     ││
-local   : ││Format: JSONL                               ││                             │ │
+local   : ││        002     +0400ms @0400ms key:Tab     ││                              ││
 @@ row 15
 upstream: ││                                                                     ││
-local   : ││                                            ││                             │ │
+local   : ││        003     +0600ms @0600ms key:?       ││Event: key:Tab                ││
 @@ row 16
 upstream: ││                                                                     ││
-local   : ││                                            ││                             │ │
+local   : ││        004     +0800ms @0800ms key:BackTab ││Kind: Key                     ││
 @@ row 17
 upstream: ││                                                                     ││
-local   : ││                                            ││                             │ │
+local   : ││        005     +1100ms @1100ms key:?       │╰──────────────────────────────╯│
 @@ row 18
 upstream: ││                                                                     ││
-local   : ││                                            ││                             │ │
+local   : ││                                            │╭─────Scenario Runner [0]──────╮│
 @@ row 19
 upstream: ││                                                                     ││
-local   : ││                                            ││                             │ │
+local   : ││                                            ││Preset scenarios (Enter to    ││
 @@ row 20
 upstream: ││                                                                     ││
-local   : ││                                            ││                             │ │
+local   : ││                                            ││load)                         ││
 @@ row 21
 upstream: ││                                                                     │╰───────
-local   : ││                                            ││                             │ │
+local   : ││                                            ││                              ││
 @@ row 22
 upstream: ││                                                                     │╭───────
-local   : │╰────────────────────────────────────────────╯╰─────────────────────────────╯ │
+local   : │╰────────────────────────────────────────────╯╰──────────────────────────────╯│
 @@ row 23
 upstream: ││                                                                     ││Preset
 local   : ╰──────────────────────────────────────────────────────────────────────────────╯

@@ -1,9 +1,11 @@
 // Port of .external/frankentui/crates/ftui-widgets/src/list.rs
+// Upstream commit: 15cc6543f76b814394c590f9e7719dedd6684e4c
 // List widget with selection, filtering, mouse support, measurable sizing, undo, and state persistence.
 
 using FrankenTui.Core;
 using FrankenTui.Layout;
 using FrankenTui.Render;
+using CanonicalA11y = FrankenTui.A11y;
 
 namespace FrankenTui.Widgets;
 
@@ -361,7 +363,7 @@ public sealed class ListState : IStateful<ListPersistState>, IUndoSupport, IList
 
     // ── IListUndoExt ─────────────────────────────────────────────────────────
 
-    int? IListUndoExt.SelectedIndex => Selected;
+    int? IListUndoExt.SelectedIndex() => Selected;
 
     void IListUndoExt.SetSelectedIndex(int? index)
     {
@@ -410,13 +412,20 @@ public sealed class ListState : IStateful<ListPersistState>, IUndoSupport, IList
 /// Implements <see cref="IStatefulWidget{ListState}"/> and <see cref="IWidget"/> (stateless wrapper).
 /// Port of Rust <c>List&lt;'a&gt;</c>.
 /// </summary>
-public sealed class ListWidget : IStatefulWidget<ListState>, IWidget, IMeasurableWidget
+public sealed class ListWidget : IStatefulWidget<ListState>, IWidget, IMeasurableWidget,
+    IAccessible, CanonicalA11y.IAccessible
 {
     Block? _block;
     readonly List<ListItem> _items;
     WidgetStyle _style;
     WidgetStyle _highlightStyle;
     WidgetStyle _hoverStyle;
+    // Default highlight symbol is null so that Measure does not add symbol width
+    // (the headless measure contract counts only explicitly-set highlight symbols).
+    // Render falls back to "›" for selected rows when neither an explicit highlight
+    // symbol nor an item marker is set; see the Render path below.
+    // DIVERGENCE: upstream defaults highlight_symbol to None and uses item.marker
+    // for selected rows. The .NET headless contract encodes a default "›" marker.
     string? _highlightSymbol;
 
     /// <summary>Optional hit ID for mouse interaction.</summary>
@@ -711,6 +720,15 @@ public sealed class ListWidget : IStatefulWidget<ListState>, IWidget, IMeasurabl
 
         if (listArea.Width == 0 || listArea.Height == 0) return;
 
+        // At Skeleton degradation and above, content is not rendered: clear the
+        // owned area and return so shorter/stale renders do not leak. Matches the
+        // upstream WidgetClearContract: RenderContent is false at Skeleton.
+        if (!frame.Degradation.RenderContent())
+        {
+            WidgetDrawing.ClearTextArea(frame, listArea, _style);
+            return;
+        }
+
         bool filterActive = state.FilterQuery().Trim().Length > 0;
 
         // Clear the owned list area so shorter rows and empty states do not
@@ -790,9 +808,10 @@ public sealed class ListWidget : IStatefulWidget<ListState>, IWidget, IMeasurabl
             var rowArea = new Rect(listArea.X, y, listArea.Width, 1);
             WidgetDrawing.ClearTextRow(frame, rowArea, itemStyle);
 
-            // Determine symbol
+            // Determine symbol: explicit highlight symbol, else the item marker,
+            // else the .NET default "›" for selected rows (headless contract).
             string symbol = isSelected
-                ? (_highlightSymbol ?? item.Marker)
+                ? (_highlightSymbol ?? (item.Marker.Length > 0 ? item.Marker : "›"))
                 : item.Marker;
 
             ushort x = listArea.X;
@@ -849,6 +868,51 @@ public sealed class ListWidget : IStatefulWidget<ListState>, IWidget, IMeasurabl
         if (legacy >= 0)
             state.Select(legacy);
         Render(area, frame, state);
+    }
+
+    // ── Accessibility ─────────────────────────────────────────────────────────
+
+    /// <summary>Get the legacy compatibility projection of this list's accessibility nodes.</summary>
+    public List<A11yNodeInfo> AccessibilityNodes(Rect area) =>
+        LegacyAccessibilityAdapter.FromCanonical(CanonicalAccessibilityNodes(area));
+
+    List<CanonicalA11y.A11yNodeInfo> CanonicalA11y.IAccessible.AccessibilityNodes(Rect area) =>
+        CanonicalAccessibilityNodes(area);
+
+    private List<CanonicalA11y.A11yNodeInfo> CanonicalAccessibilityNodes(Rect area)
+    {
+        ulong baseId = WidgetDrawing.A11yNodeId(area);
+        int itemCount = _items.Count;
+        ulong[] childIds = Enumerable.Range(0, itemCount)
+            .Select(index => baseId + 1UL + (ulong)index)
+            .ToArray();
+
+        string title = _block?.TitleText() ?? string.Empty;
+        CanonicalA11y.A11yNodeInfo listNode = CanonicalA11y.A11yNodeInfo
+            .New(baseId, CanonicalA11y.A11yRole.List, area)
+            .WithChildren(childIds);
+        if (title.Length > 0)
+            listNode = listNode.WithName(title);
+        listNode = listNode.WithDescription($"{itemCount} items");
+
+        var nodes = new List<CanonicalA11y.A11yNodeInfo>(itemCount + 1) { listNode };
+        for (int index = 0; index < itemCount; index++)
+        {
+            ulong itemId = baseId + 1UL + (ulong)index;
+            TextContent content = _items[index].Content;
+            string itemText = content.Lines.Length == 0
+                ? string.Empty
+                : string.Concat(content.Lines[0].Spans.Select(span => span.Content));
+
+            CanonicalA11y.A11yNodeInfo itemNode = CanonicalA11y.A11yNodeInfo
+                .New(itemId, CanonicalA11y.A11yRole.ListItem, area)
+                .WithParent(baseId);
+            if (itemText.Length > 0)
+                itemNode = itemNode.WithName(itemText);
+            nodes.Add(itemNode);
+        }
+
+        return nodes;
     }
 
     // ── IMeasurableWidget ─────────────────────────────────────────────────────

@@ -1,31 +1,45 @@
-// Upstream source: crates/ftui-render/src/frame.rs (HitId, HitRegion, HitCell, HitGrid, HitData, HitOwner, HitTestResult)
-// Upstream basis: f958e59e1406a90fdb92512103e3591911a9d68c
-// Direct 1-1 port of frame hit-testing infrastructure.
+// SPDX-License-Identifier: Apache-2.0
+// Ported from crates/ftui-render/src/frame.rs at
+// 15cc6543f76b814394c590f9e7719dedd6684e4c.
+// Source SHA-256: FC7E3000C4ABA1B9A335A68A03C940A2EA6CAEFD023B250842B3E724C0C977EB.
 
 using FrankenTui.Core;
 
 namespace FrankenTui.Render;
 
-/// <summary>Identifier for a clickable region in the hit grid.</summary>
-public readonly record struct HitId(ulong Id)
+public readonly record struct HitId(uint Id)
 {
     public static HitId New(uint id) => new(id);
-    public ulong Value => Id;
+
+    public uint Value => Id;
 }
 
-/// <summary>Opaque user data for hit callbacks.</summary>
 public readonly record struct HitData(ulong Value)
 {
     public static readonly HitData Zero = new(0);
+
+    public static implicit operator HitData(ulong value) => new(value);
+
+    public static implicit operator HitData(int value) => value >= 0
+        ? new((ulong)value)
+        : throw new ArgumentOutOfRangeException(nameof(value));
+
+    public static implicit operator ulong(HitData data) => data.Value;
 }
 
-/// <summary>Optional ownership tag attached to a hit region.</summary>
 public readonly record struct HitOwner(ulong Value)
 {
     public static readonly HitOwner None = new(0);
+
+    public static implicit operator HitOwner(ulong value) => new(value);
+
+    public static implicit operator ulong(HitOwner owner) => owner.Value;
 }
 
-/// <summary>Regions within a widget for mouse interaction.</summary>
+/// <summary>
+/// Existing target projection of hit-region variants. Named modal variants are retained as
+/// compatibility conveniences for source <c>Custom(tag)</c> values.
+/// </summary>
 public enum HitRegionKind
 {
     None,
@@ -35,104 +49,298 @@ public enum HitRegionKind
     Handle,
     Button,
     Link,
-    Custom, // carries u8 upstream; simplified here
-    // DIVERGENCE: upstream models these as HitRegion::Custom(n). Modeled as named
-    // variants here so the modal/dialog widgets can reference them by name.
+    Custom,
     DialogInput,
     ModalBackdrop,
     ModalContent,
 }
 
-/// <summary>Full hit-test metadata, including optional ownership provenance.</summary>
+/// <summary>Source-shaped hit region, including the payload of <c>Custom(u8)</c>.</summary>
+public readonly record struct HitRegion(HitRegionKind Kind, byte CustomTag = 0)
+{
+    public static readonly HitRegion None = new(HitRegionKind.None);
+    public static readonly HitRegion Content = new(HitRegionKind.Content);
+    public static readonly HitRegion Border = new(HitRegionKind.Border);
+    public static readonly HitRegion Scrollbar = new(HitRegionKind.Scrollbar);
+    public static readonly HitRegion Handle = new(HitRegionKind.Handle);
+    public static readonly HitRegion Button = new(HitRegionKind.Button);
+    public static readonly HitRegion Link = new(HitRegionKind.Link);
+
+    public static HitRegion Custom(byte tag) => new(HitRegionKind.Custom, tag);
+
+    public bool IsCustom => Kind == HitRegionKind.Custom;
+
+    public HitRegionKind ToCompatibilityKind() => Kind;
+
+    public static HitRegion FromCompatibilityKind(HitRegionKind kind) => kind switch
+    {
+        HitRegionKind.DialogInput => Custom(1),
+        HitRegionKind.ModalBackdrop => Custom(1),
+        HitRegionKind.ModalContent => Custom(2),
+        HitRegionKind.Custom => Custom(0),
+        _ => new HitRegion(kind),
+    };
+}
+
 public readonly record struct HitTestResult
 {
     public HitId Id { get; init; }
+
+    /// <summary>Existing target projection, preserving named compatibility variants.</summary>
     public HitRegionKind Region { get; init; }
+
+    public HitRegion SourceRegion { get; init; }
+
     public HitData Data { get; init; }
+
     public HitOwner? Owner { get; init; }
 
     public (HitId, HitRegionKind, HitData) IntoTuple() => (Id, Region, Data);
+
+    public (HitId, HitRegion, HitData) IntoSourceTuple() => (Id, SourceRegion, Data);
+
+    public static HitTestResult New(
+        HitId id,
+        HitRegion region,
+        HitData data,
+        HitOwner? owner = null) => new()
+    {
+        Id = id,
+        Region = region.ToCompatibilityKind(),
+        SourceRegion = region,
+        Data = data,
+        Owner = owner,
+    };
+
+    public static HitTestResult New(
+        HitId id,
+        HitRegionKind region,
+        HitData data,
+        ulong owner) => FromCompatibility(id, region, data, new HitOwner(owner));
+
+    public static HitTestResult New(
+        HitId id,
+        HitRegionKind region,
+        HitData data) => FromCompatibility(id, region, data, null);
+
+    internal static HitTestResult FromCompatibility(
+        HitId id,
+        HitRegionKind region,
+        HitData data,
+        HitOwner? owner) => new()
+    {
+        Id = id,
+        Region = region,
+        SourceRegion = HitRegion.FromCompatibilityKind(region),
+        Data = data,
+        Owner = owner,
+    };
 }
 
-/// <summary>A single hit cell in the grid.</summary>
 public readonly record struct HitCell
 {
-    /// <summary>Widget that registered this cell, if any.</summary>
     public HitId? WidgetId { get; init; }
-    /// <summary>Region tag for the hit area.</summary>
+
+    /// <summary>Existing target projection, preserving named compatibility variants.</summary>
     public HitRegionKind Region { get; init; }
-    /// <summary>Extra data attached to this hit cell.</summary>
+
+    public HitRegion SourceRegion { get; init; }
+
     public HitData Data { get; init; }
-    /// <summary>Optional owner tag for higher-level hit routing.</summary>
+
     public HitOwner? Owner { get; init; }
 
-    public static HitCell Create(HitId widgetId, HitRegionKind region, HitData data) => new()
+    public bool IsEmpty => WidgetId is null;
+
+    public static HitCell Create(HitId widgetId, HitRegion region, HitData data) =>
+        Create(widgetId, region, data, null);
+
+    public static HitCell Create(
+        HitId widgetId,
+        HitRegion region,
+        HitData data,
+        HitOwner? owner) => new()
+    {
+        WidgetId = widgetId,
+        Region = region.ToCompatibilityKind(),
+        SourceRegion = region,
+        Data = data,
+        Owner = owner,
+    };
+
+    public static HitCell Create(HitId widgetId, HitRegionKind region, HitData data) =>
+        Create(widgetId, region, data, null);
+
+    public static HitCell Create(
+        HitId widgetId,
+        HitRegionKind region,
+        HitData data,
+        HitOwner? owner) => new()
     {
         WidgetId = widgetId,
         Region = region,
+        SourceRegion = HitRegion.FromCompatibilityKind(region),
         Data = data,
-        Owner = null,
+        Owner = owner,
     };
-
-    public bool IsEmpty => WidgetId is null;
 }
 
-/// <summary>Hit testing grid for mouse interaction.</summary>
 public sealed class HitGrid
 {
-    private readonly ushort _width;
-    private readonly ushort _height;
     private readonly HitCell[] _cells;
-
-    public ushort Width => _width;
-    public ushort Height => _height;
 
     public HitGrid(ushort width, ushort height)
     {
-        _width = width;
-        _height = height;
-        _cells = new HitCell[width * height];
+        Width = width;
+        Height = height;
+        _cells = new HitCell[checked(width * height)];
     }
 
-    private int Index(ushort x, ushort y) =>
-        x < _width && y < _height ? y * _width + x : -1;
-
-    /// <summary>Get the hit cell at (x, y).</summary>
-    public HitCell? Get(ushort x, ushort y)
+    private HitGrid(ushort width, ushort height, HitCell[] cells)
     {
-        var idx = Index(x, y);
-        return idx >= 0 ? _cells[idx] : null;
+        Width = width;
+        Height = height;
+        _cells = cells;
     }
 
-    /// <summary>Register a clickable region.</summary>
-    public void Register(Rect rect, HitId widgetId, HitRegionKind region, HitData data)
-    {
-        var xEnd = (ushort)Math.Min(rect.Right, _width);
-        var yEnd = (ushort)Math.Min(rect.Bottom, _height);
-        var cell = HitCell.Create(widgetId, region, data);
+    public ushort Width { get; }
 
-        for (var y = rect.Y; y < yEnd; y++)
+    public ushort Height { get; }
+
+    public HitCell? Get(ushort x, ushort y) =>
+        TryIndex(x, y, out var index) ? _cells[index] : null;
+
+    /// <summary>Managed mutation projection of Rust's optional mutable reference.</summary>
+    public bool TryMutate(ushort x, ushort y, Func<HitCell, HitCell> mutation)
+    {
+        ArgumentNullException.ThrowIfNull(mutation);
+        if (!TryIndex(x, y, out var index))
         {
-            var rowStart = y * _width;
+            return false;
+        }
+
+        _cells[index] = mutation(_cells[index]);
+        return true;
+    }
+
+    public void Register(Rect rect, HitId widgetId, HitRegion region, HitData data) =>
+        Register(rect, widgetId, region, data, null);
+
+    public void Register(
+        Rect rect,
+        HitId widgetId,
+        HitRegion region,
+        HitData data,
+        HitOwner? owner) => RegisterCore(
+            rect,
+            HitCell.Create(widgetId, region, data, owner));
+
+    public void Register(Rect rect, HitId widgetId, HitRegionKind region, HitData data) =>
+        Register(rect, widgetId, region, data, null);
+
+    public void Register(
+        Rect rect,
+        HitId widgetId,
+        HitRegionKind region,
+        HitData data,
+        HitOwner? owner) => RegisterCore(
+            rect,
+            HitCell.Create(widgetId, region, data, owner));
+
+    public (HitId, HitRegionKind, HitData)? HitTest(ushort x, ushort y) =>
+        HitTestDetailed(x, y)?.IntoTuple();
+
+    public (HitId, HitRegion, HitData)? HitTestSource(ushort x, ushort y) =>
+        HitTestDetailed(x, y)?.IntoSourceTuple();
+
+    public HitTestResult? HitTestDetailed(ushort x, ushort y)
+    {
+        var cell = Get(x, y);
+        if (cell is not { WidgetId: { } id } populated)
+        {
+            return null;
+        }
+
+        return new HitTestResult
+        {
+            Id = id,
+            Region = populated.Region,
+            SourceRegion = populated.SourceRegion,
+            Data = populated.Data,
+            Owner = populated.Owner,
+        };
+    }
+
+    public IReadOnlyList<(HitId Id, HitRegionKind Region, HitData Data)> HitsIn(Rect rect)
+    {
+        var hits = new List<(HitId, HitRegionKind, HitData)>();
+        Visit(rect, (x, y) =>
+        {
+            if (HitTest(x, y) is { } hit)
+            {
+                hits.Add(hit);
+            }
+        });
+        return hits;
+    }
+
+    public IReadOnlyList<(HitId Id, HitRegion Region, HitData Data)> HitsInSource(Rect rect)
+    {
+        var hits = new List<(HitId, HitRegion, HitData)>();
+        Visit(rect, (x, y) =>
+        {
+            if (HitTestSource(x, y) is { } hit)
+            {
+                hits.Add(hit);
+            }
+        });
+        return hits;
+    }
+
+    public void Clear() => Array.Clear(_cells);
+
+    public HitGrid Clone() => new(Width, Height, [.. _cells]);
+
+    private void RegisterCore(Rect rect, HitCell cell)
+    {
+        var xEnd = Math.Min((uint)rect.X + rect.Width, Width);
+        var yEnd = Math.Min((uint)rect.Y + rect.Height, Height);
+        if (rect.X >= xEnd || rect.Y >= yEnd)
+        {
+            return;
+        }
+
+        for (var y = (uint)rect.Y; y < yEnd; y++)
+        {
+            var rowStart = y * Width;
             var start = rowStart + rect.X;
             var end = rowStart + xEnd;
-            for (var i = start; i < end; i++)
-                _cells[i] = cell;
+            Array.Fill(_cells, cell, checked((int)start), checked((int)(end - start)));
         }
     }
 
-    /// <summary>Hit test at the given position.</summary>
-    public (HitId, HitRegionKind, HitData)? HitTest(ushort x, ushort y)
+    private void Visit(Rect rect, Action<ushort, ushort> visitor)
     {
-        var idx = Index(x, y);
-        if (idx < 0) return null;
-        var cell = _cells[idx];
-        return cell.WidgetId is not null ? (cell.WidgetId.Value, cell.Region, cell.Data) : null;
+        var xEnd = Math.Min((uint)rect.X + rect.Width, Width);
+        var yEnd = Math.Min((uint)rect.Y + rect.Height, Height);
+        for (var y = (uint)rect.Y; y < yEnd; y++)
+        {
+            for (var x = (uint)rect.X; x < xEnd; x++)
+            {
+                visitor((ushort)x, (ushort)y);
+            }
+        }
     }
 
-    /// <summary>Clear all hit regions.</summary>
-    public void Clear()
+    private bool TryIndex(ushort x, ushort y, out int index)
     {
-        System.Array.Clear(_cells, 0, _cells.Length);
+        if (x < Width && y < Height)
+        {
+            index = checked((y * Width) + x);
+            return true;
+        }
+
+        index = -1;
+        return false;
     }
 }

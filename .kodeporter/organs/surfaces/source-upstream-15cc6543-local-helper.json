@@ -1,0 +1,3081 @@
+{
+  "schema": "kp.surface@1",
+  "side": "source",
+  "basisLabel": "upstream-15cc6543-local-helper",
+  "method": "git-tracked-rust-production-files-v1",
+  "closed": true,
+  "closureBasis": "All 614 Git-tracked crates/**/src/**/*.rs files at upstream commit 15cc6543; excludes tests, examples, benches, scripts, docs, and the local untracked dump_screens helper.",
+  "denominator": 614,
+  "items": [
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/abstract_interpretation.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/abstract_interpretation.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/accessibility_diff.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/accessibility_diff.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/adaptive_schedule.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/adaptive_schedule.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/adversarial_fixtures.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/adversarial_fixtures.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/alien_kernel_tests.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/alien_kernel_tests.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/alien_kernel_unit_tests.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/alien_kernel_unit_tests.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/archetype_scoreboard.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/archetype_scoreboard.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/artifact_coding_tests.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/artifact_coding_tests.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/backend_capability.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/backend_capability.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/baseline_capture.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/baseline_capture.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/benchmark_harness.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/benchmark_harness.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/benchmark_regression_gate.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/benchmark_regression_gate.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/capability_gap.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/capability_gap.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/capture.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/capture.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/cegis_synthesis.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/cegis_synthesis.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/certification_report.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/certification_report.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/chaos_drill.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/chaos_drill.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/ci_outputs.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/ci_outputs.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/cli_explain_tests.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/cli_explain_tests.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/cli.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/cli.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/code_emission.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/code_emission.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/codegen_optimize.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/codegen_optimize.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/composition_matrix.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/composition_matrix.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/composition_semantics.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/composition_semantics.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/concolic_differential.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/concolic_differential.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/controller_composition.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/controller_composition.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/corpus_integrity_tests.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/corpus_integrity_tests.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/corpus.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/corpus.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/counterfactual_audit.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/counterfactual_audit.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/coverage_prioritizer.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/coverage_prioritizer.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/decision_loss_policy.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/decision_loss_policy.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/deep_assurance_gauntlet.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/deep_assurance_gauntlet.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/degradation_policy.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/degradation_policy.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/doctor.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/doctor.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/drift_monitor.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/drift_monitor.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/ecosystem_scan.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/ecosystem_scan.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/effect_canonical.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/effect_canonical.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/effect_translator.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/effect_translator.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/egraph_optimizer.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/egraph_optimizer.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/entry_header_compiler.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/entry_header_compiler.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/error.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/error.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/explain.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/explain.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/failure_mode_risk.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/failure_mode_risk.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/feedback_ingestion.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/feedback_ingestion.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/fixture_taxonomy.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/fixture_taxonomy.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/flagship_migrations.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/flagship_migrations.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/formal_assurance_gauntlet.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/formal_assurance_gauntlet.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/galaxy_brain_cards.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/galaxy_brain_cards.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/galaxy_brain_ux.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/galaxy_brain_ux.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/gap_triage.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/gap_triage.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/golden_isomorphism.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/golden_isomorphism.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/governance_validator_tests.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/governance_validator_tests.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/graveyard_control_tests.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/graveyard_control_tests.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/graveyard_gauntlet.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/graveyard_gauntlet.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/graveyard_verify.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/graveyard_verify.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/graveyardctl.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/graveyardctl.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/guarantee_assumption_registry.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/guarantee_assumption_registry.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/guarantee_layer.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/guarantee_layer.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/harness.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/harness.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/hazard_regime_model.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/hazard_regime_model.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/hierarchical_fusion.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/hierarchical_fusion.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/import.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/import.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/intent_inference.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/intent_inference.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/ir_explainer.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/ir_explainer.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/ir_normalize.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/ir_normalize.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/ir_versioning.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/ir_versioning.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/keyseq.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/keyseq.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/killer_demo.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/killer_demo.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/lib.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/lib.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/lowering.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/lowering.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/main.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/main.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/mapping_atlas.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/mapping_atlas.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/metamorphic_oracle.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/metamorphic_oracle.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/migration_config.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/migration_config.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/migration_ir.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/migration_ir.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/milestone_policy.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/milestone_policy.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/module_graph.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/module_graph.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/multi_round_drill.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/multi_round_drill.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/nightly_evaluation.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/nightly_evaluation.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/nightly_stress.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/nightly_stress.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/one_lever_policy.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/one_lever_policy.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/operator_workflows.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/operator_workflows.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/opportunity_scorer.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/opportunity_scorer.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/optimization_control_tests.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/optimization_control_tests.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/optimization_gauntlet.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/optimization_gauntlet.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/optimization_model_tests.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/optimization_model_tests.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/paper_verification.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/paper_verification.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/performance_diff.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/performance_diff.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/portfolio_governance_tests.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/portfolio_governance_tests.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/portfolio_scheduler.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/portfolio_scheduler.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/posterior_core.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/posterior_core.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/profile_orchestrator.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/profile_orchestrator.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/profile.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/profile.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/proof_artifacts.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/proof_artifacts.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/recommendation_contract.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/recommendation_contract.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/redact.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/redact.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/release_candidate_gate.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/release_candidate_gate.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/report.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/report.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/reprofile_loop.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/reprofile_loop.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/reverse_round_governance.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/reverse_round_governance.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/rollout_gate_tests.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/rollout_gate_tests.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/runmeta.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/runmeta.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/sandbox.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/sandbox.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/seed.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/seed.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/semantic_contract.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/semantic_contract.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/semantic_diff.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/semantic_diff.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/sequential_fdr.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/sequential_fdr.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/shadow_run.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/shadow_run.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/state_effects.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/state_effects.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/state_event_translator.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/state_event_translator.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/style_semantics.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/style_semantics.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/style_translator.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/style_translator.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/suite.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/suite.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/supervised_orchestration.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/supervised_orchestration.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/symptom_router.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/symptom_router.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/tape.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/tape.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/test_budget_allocator.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/test_budget_allocator.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/tier_escalator_tests.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/tier_escalator_tests.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/tier_escalator.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/tier_escalator.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/trace.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/trace.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/translation_planner.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/translation_planner.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/tsx_parser.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/tsx_parser.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/util.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/util.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/view_layout_translator.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/view_layout_translator.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/visual_diff.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/visual_diff.rs"
+    },
+    {
+      "symbolPath": "file:crates/doctor_frankentui/src/voi_probe_planner.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/doctor_frankentui/src/voi_probe_planner.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-a11y/src/lib.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-a11y/src/lib.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-a11y/src/node.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-a11y/src/node.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-a11y/src/preferences.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-a11y/src/preferences.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-a11y/src/tree.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-a11y/src/tree.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-backend/src/lib.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-backend/src/lib.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-core/src/animation/callbacks.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-core/src/animation/callbacks.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-core/src/animation/group.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-core/src/animation/group.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-core/src/animation/mod.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-core/src/animation/mod.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-core/src/animation/presets.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-core/src/animation/presets.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-core/src/animation/spring.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-core/src/animation/spring.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-core/src/animation/stagger.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-core/src/animation/stagger.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-core/src/animation/timeline.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-core/src/animation/timeline.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-core/src/capability_override.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-core/src/capability_override.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-core/src/caps_probe.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-core/src/caps_probe.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-core/src/cursor.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-core/src/cursor.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-core/src/cx.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-core/src/cx.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-core/src/event_coalescer.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-core/src/event_coalescer.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-core/src/event.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-core/src/event.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-core/src/generic_diff.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-core/src/generic_diff.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-core/src/generic_repr.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-core/src/generic_repr.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-core/src/geometry.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-core/src/geometry.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-core/src/gesture.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-core/src/gesture.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-core/src/glyph_policy.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-core/src/glyph_policy.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-core/src/hover_stabilizer.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-core/src/hover_stabilizer.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-core/src/inline_mode.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-core/src/inline_mode.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-core/src/input_parser.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-core/src/input_parser.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-core/src/key_sequence.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-core/src/key_sequence.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-core/src/keybinding.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-core/src/keybinding.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-core/src/lib.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-core/src/lib.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-core/src/logging.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-core/src/logging.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-core/src/mode_typestate.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-core/src/mode_typestate.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-core/src/mux_passthrough.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-core/src/mux_passthrough.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-core/src/read_optimized.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-core/src/read_optimized.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-core/src/s3_fifo.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-core/src/s3_fifo.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-core/src/semantic_event.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-core/src/semantic_event.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-core/src/terminal_capabilities.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-core/src/terminal_capabilities.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-core/src/terminal_session.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-core/src/terminal_session.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/app.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/app.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/assets.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/assets.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/bin/profile_sweep.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/bin/profile_sweep.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/chrome.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/chrome.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/cli.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/cli.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/data.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/data.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/determinism.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/determinism.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/lib.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/lib.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/main.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/main.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/pane_interaction.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/pane_interaction.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/3d_data.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/3d_data.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/accessibility_panel.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/accessibility_panel.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/action_timeline.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/action_timeline.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/advanced_features.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/advanced_features.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/advanced_text_editor.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/advanced_text_editor.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/async_tasks.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/async_tasks.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/code_explorer.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/code_explorer.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/command_palette_lab.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/command_palette_lab.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/dashboard.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/dashboard.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/data_viz.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/data_viz.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/determinism_lab.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/determinism_lab.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/drag_drop.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/drag_drop.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/explainability_cockpit.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/explainability_cockpit.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/file_browser.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/file_browser.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/form_validation.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/form_validation.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/forms_input.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/forms_input.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/hyperlink_playground.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/hyperlink_playground.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/i18n_demo.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/i18n_demo.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/inline_mode_story.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/inline_mode_story.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/intrinsic_sizing.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/intrinsic_sizing.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/kanban_board.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/kanban_board.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/layout_inspector.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/layout_inspector.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/layout_lab.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/layout_lab.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/log_search.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/log_search.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/macro_recorder.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/macro_recorder.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/markdown_live_editor.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/markdown_live_editor.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/markdown_rich_text.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/markdown_rich_text.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/mermaid_mega_showcase.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/mermaid_mega_showcase.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/mermaid_showcase.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/mermaid_showcase.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/mod.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/mod.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/mouse_playground.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/mouse_playground.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/notifications.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/notifications.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/performance_hud.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/performance_hud.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/performance.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/performance.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/quake.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/quake.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/responsive_demo.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/responsive_demo.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/shakespeare.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/shakespeare.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/snapshot_player.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/snapshot_player.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/table_theme_gallery.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/table_theme_gallery.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/terminal_capabilities.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/terminal_capabilities.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/theme_studio.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/theme_studio.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/virtualized_search.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/virtualized_search.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/visual_effects.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/visual_effects.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/voi_overlay.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/voi_overlay.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/widget_builder.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/widget_builder.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/screens/widget_gallery.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/screens/widget_gallery.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/test_logging.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/test_logging.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/theme.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/theme.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/tour.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/tour.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-demo-showcase/src/wasm_runner.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-demo-showcase/src/wasm_runner.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/canvas.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/canvas.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/charts.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/charts.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/clipboard.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/clipboard.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/console.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/console.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/diagram_layout.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/diagram_layout.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/diagram.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/diagram.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/doom/bsp.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/doom/bsp.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/doom/constants.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/doom/constants.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/doom/framebuffer.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/doom/framebuffer.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/doom/geometry.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/doom/geometry.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/doom/map.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/doom/map.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/doom/mod.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/doom/mod.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/doom/palette.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/doom/palette.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/doom/player.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/doom/player.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/doom/renderer.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/doom/renderer.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/doom/tables.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/doom/tables.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/doom/wad_types.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/doom/wad_types.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/doom/wad.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/doom/wad.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/dot_parser.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/dot_parser.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/export.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/export.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/filepicker.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/filepicker.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/filesize.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/filesize.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/forms.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/forms.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/glowing_text.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/glowing_text.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/help/mod.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/help/mod.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/help/spotlight.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/help/spotlight.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/help/tooltip.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/help/tooltip.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/help/tour.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/help/tour.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/image.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/image.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/lib.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/lib.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/live.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/live.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/logging.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/logging.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/markdown.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/markdown.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/mermaid_diff.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/mermaid_diff.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/mermaid_layout.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/mermaid_layout.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/mermaid_minimap.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/mermaid_minimap.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/mermaid_render.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/mermaid_render.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/mermaid.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/mermaid.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/pty_capture.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/pty_capture.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/quake/bsp_types.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/quake/bsp_types.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/quake/constants.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/quake/constants.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/quake/framebuffer.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/quake/framebuffer.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/quake/map.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/quake/map.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/quake/mod.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/quake/mod.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/quake/player.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/quake/player.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/quake/renderer.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/quake/renderer.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/sinkhorn_morph.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/sinkhorn_morph.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/stopwatch.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/stopwatch.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/syntax.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/syntax.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/terminal/mod.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/terminal/mod.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/terminal/parser.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/terminal/parser.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/terminal/state.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/terminal/state.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/terminal/widget.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/terminal/widget.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/text_effects.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/text_effects.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/theme.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/theme.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/timer.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/timer.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/traceback.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/traceback.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/validation/async_validation.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/validation/async_validation.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/validation/deadline.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/validation/deadline.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/validation/mod.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/validation/mod.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/validation/validators.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/validation/validators.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/visual_fx.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/visual_fx.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/visual_fx/effects/canvas_adapters.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/visual_fx/effects/canvas_adapters.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/visual_fx/effects/doom_fire.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/visual_fx/effects/doom_fire.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/visual_fx/effects/doom_melt/mod.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/visual_fx/effects/doom_melt/mod.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/visual_fx/effects/metaballs.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/visual_fx/effects/metaballs.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/visual_fx/effects/mod.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/visual_fx/effects/mod.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/visual_fx/effects/plasma.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/visual_fx/effects/plasma.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/visual_fx/effects/quake_console/mod.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/visual_fx/effects/quake_console/mod.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/visual_fx/effects/sampling.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/visual_fx/effects/sampling.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/visual_fx/effects/screen_melt.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/visual_fx/effects/screen_melt.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/visual_fx/effects/underwater_warp.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/visual_fx/effects/underwater_warp.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-extras/src/visual_fx/gpu.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-extras/src/visual_fx/gpu.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/artifact_manifest.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/artifact_manifest.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/asciicast.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/asciicast.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/baseline_capture.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/baseline_capture.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/benchmark_gate.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/benchmark_gate.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/bin/pane_splitter_pty_harness.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/bin/pane_splitter_pty_harness.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/cost_surface.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/cost_surface.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/determinism.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/determinism.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/doctor_cost_profile.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/doctor_cost_profile.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/doctor_topology.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/doctor_topology.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/failure_signatures.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/failure_signatures.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/fixture_runner.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/fixture_runner.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/fixture_suite.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/fixture_suite.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/flicker_detection.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/flicker_detection.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/frame_comparison.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/frame_comparison.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/golden.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/golden.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/hdd.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/hdd.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/hotspot_extraction.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/hotspot_extraction.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/input_storm.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/input_storm.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/lab_integration.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/lab_integration.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/layout_reuse.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/layout_reuse.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/lib.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/lib.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/main.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/main.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/optimization_policy.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/optimization_policy.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/perf_evidence_ledger.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/perf_evidence_ledger.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/perf_rollout_drills.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/perf_rollout_drills.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/presenter_equivalence.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/presenter_equivalence.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/promotion_scorecard.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/promotion_scorecard.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/proof_oracle.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/proof_oracle.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/proptest_support.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/proptest_support.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/pty_capture.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/pty_capture.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/render_certificate.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/render_certificate.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/render_gauntlet.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/render_gauntlet.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/resize_storm.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/resize_storm.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/rollout_runbook.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/rollout_runbook.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/rollout_scorecard.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/rollout_scorecard.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/shadow_run.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/shadow_run.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/tail_regime_monitor.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/tail_regime_monitor.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/terminal_model.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/terminal_model.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/time_travel_inspector.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/time_travel_inspector.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/time_travel.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/time_travel.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/trace_replay.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/trace_replay.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-harness/src/validation_matrix.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-harness/src/validation_matrix.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-i18n/src/catalog.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-i18n/src/catalog.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-i18n/src/lib.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-i18n/src/lib.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-i18n/src/plural.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-i18n/src/plural.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-layout/src/breakpoint.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-layout/src/breakpoint.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-layout/src/cache.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-layout/src/cache.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-layout/src/debug.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-layout/src/debug.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-layout/src/dep_graph.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-layout/src/dep_graph.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-layout/src/direction.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-layout/src/direction.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-layout/src/egraph.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-layout/src/egraph.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-layout/src/grid.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-layout/src/grid.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-layout/src/incremental.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-layout/src/incremental.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-layout/src/lib.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-layout/src/lib.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-layout/src/pane_command.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-layout/src/pane_command.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-layout/src/pane_execution.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-layout/src/pane_execution.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-layout/src/pane_memory.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-layout/src/pane_memory.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-layout/src/pane_monitors.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-layout/src/pane_monitors.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-layout/src/pane_persistent.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-layout/src/pane_persistent.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-layout/src/pane_retention.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-layout/src/pane_retention.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-layout/src/pane.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-layout/src/pane.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-layout/src/repro_max_constraint.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-layout/src/repro_max_constraint.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-layout/src/repro_space_around.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-layout/src/repro_space_around.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-layout/src/responsive_layout.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-layout/src/responsive_layout.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-layout/src/responsive.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-layout/src/responsive.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-layout/src/veb_tree.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-layout/src/veb_tree.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-layout/src/visibility.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-layout/src/visibility.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-layout/src/workspace.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-layout/src/workspace.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-pty/src/bin/frankenterm_ws_bridge.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-pty/src/bin/frankenterm_ws_bridge.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-pty/src/bin/pty_canonicalize.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-pty/src/bin/pty_canonicalize.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-pty/src/input_forwarding.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-pty/src/input_forwarding.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-pty/src/lib.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-pty/src/lib.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-pty/src/pty_process.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-pty/src/pty_process.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-pty/src/virtual_terminal.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-pty/src/virtual_terminal.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-pty/src/ws_bridge.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-pty/src/ws_bridge.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-render/src/alloc_budget.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-render/src/alloc_budget.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-render/src/ansi.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-render/src/ansi.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-render/src/arena.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-render/src/arena.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-render/src/budget.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-render/src/budget.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-render/src/buffer.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-render/src/buffer.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-render/src/cell.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-render/src/cell.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-render/src/counting_writer.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-render/src/counting_writer.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-render/src/diff_strategy.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-render/src/diff_strategy.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-render/src/diff.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-render/src/diff.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-render/src/drawing.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-render/src/drawing.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-render/src/fit_metrics.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-render/src/fit_metrics.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-render/src/frame_guardrails.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-render/src/frame_guardrails.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-render/src/frame.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-render/src/frame.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-render/src/grapheme_pool.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-render/src/grapheme_pool.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-render/src/headless.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-render/src/headless.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-render/src/lib.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-render/src/lib.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-render/src/link_registry.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-render/src/link_registry.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-render/src/presenter.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-render/src/presenter.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-render/src/quotient_filter.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-render/src/quotient_filter.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-render/src/render_certificate.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-render/src/render_certificate.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-render/src/render_context.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-render/src/render_context.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-render/src/roaring_bitmap.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-render/src/roaring_bitmap.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-render/src/sanitize.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-render/src/sanitize.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-render/src/spatial_hit_index.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-render/src/spatial_hit_index.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-render/src/terminal_model.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-render/src/terminal_model.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/allocation_budget.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/allocation_budget.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/alpha_investing.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/alpha_investing.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/asciicast.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/asciicast.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/bocpd.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/bocpd.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/cancellation.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/cancellation.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/conformal_alert.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/conformal_alert.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/conformal_frame_guard.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/conformal_frame_guard.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/conformal_predictor.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/conformal_predictor.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/conformal_stages.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/conformal_stages.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/cost_model.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/cost_model.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/countmin_sketch.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/countmin_sketch.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/debug_trace.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/debug_trace.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/decision_core.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/decision_core.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/degradation_cascade.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/degradation_cascade.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/demo.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/demo.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/diff_evidence.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/diff_evidence.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/effect_system.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/effect_system.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/eprocess_throttle.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/eprocess_throttle.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/event_trace.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/event_trace.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/evidence_bridges.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/evidence_bridges.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/evidence_sink.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/evidence_sink.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/evidence_telemetry.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/evidence_telemetry.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/flake_detector.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/flake_detector.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/flat_combine.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/flat_combine.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/input_fairness.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/input_fairness.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/input_macro.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/input_macro.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/ivm.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/ivm.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/lens.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/lens.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/lib.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/lib.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/locale.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/locale.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/log_sink.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/log_sink.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/metrics_registry.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/metrics_registry.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/pane_keymap.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/pane_keymap.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/policy_config.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/policy_config.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/policy_registry.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/policy_registry.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/process_subscription.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/process_subscription.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/program.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/program.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/queueing_scheduler.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/queueing_scheduler.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/reactive/batch.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/reactive/batch.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/reactive/binding.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/reactive/binding.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/reactive/computed.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/reactive/computed.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/reactive/mod.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/reactive/mod.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/reactive/observable.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/reactive/observable.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/render_thread.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/render_thread.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/render_trace.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/render_trace.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/resize_coalescer.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/resize_coalescer.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/resize_sla.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/resize_sla.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/retry.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/retry.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/reversible.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/reversible.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/rough_path.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/rough_path.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/schedule_trace.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/schedule_trace.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/schema_compat.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/schema_compat.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/simulator.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/simulator.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/slo.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/slo.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/sos_barrier_coeffs.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/sos_barrier_coeffs.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/sos_barrier.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/sos_barrier.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/state_persistence.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/state_persistence.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/stdio_capture.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/stdio_capture.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/string_model.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/string_model.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/subscription.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/subscription.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/telemetry_schema.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/telemetry_schema.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/telemetry.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/telemetry.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/terminal_writer.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/terminal_writer.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/tick_strategy/active_only.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/tick_strategy/active_only.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/tick_strategy/active_plus_adjacent.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/tick_strategy/active_plus_adjacent.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/tick_strategy/custom.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/tick_strategy/custom.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/tick_strategy/markov_predictor.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/tick_strategy/markov_predictor.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/tick_strategy/mod.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/tick_strategy/mod.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/tick_strategy/persistence.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/tick_strategy/persistence.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/tick_strategy/predictive.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/tick_strategy/predictive.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/tick_strategy/tick_allocation.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/tick_strategy/tick_allocation.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/tick_strategy/transition_counter.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/tick_strategy/transition_counter.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/tick_strategy/transition_history.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/tick_strategy/transition_history.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/tick_strategy/uniform.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/tick_strategy/uniform.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/timeline_aggregator.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/timeline_aggregator.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/transparency.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/transparency.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/undo/command.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/undo/command.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/undo/history.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/undo/history.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/undo/mod.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/undo/mod.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/undo/snapshot_store.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/undo/snapshot_store.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/undo/transaction.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/undo/transaction.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/unified_evidence.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/unified_evidence.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/validation_pipeline.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/validation_pipeline.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/voi_sampling.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/voi_sampling.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/voi_telemetry.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/voi_telemetry.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-runtime/src/wasm_runner.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-runtime/src/wasm_runner.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-showcase-wasm/src/lib.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-showcase-wasm/src/lib.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-showcase-wasm/src/runner_core.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-showcase-wasm/src/runner_core.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-showcase-wasm/src/wasm.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-showcase-wasm/src/wasm.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-simd/src/lib.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-simd/src/lib.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-style/src/color.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-style/src/color.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-style/src/interactive.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-style/src/interactive.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-style/src/lib.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-style/src/lib.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-style/src/style.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-style/src/style.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-style/src/stylesheet.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-style/src/stylesheet.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-style/src/table_theme.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-style/src/table_theme.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-style/src/theme.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-style/src/theme.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-text/src/bidi.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-text/src/bidi.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-text/src/cluster_map.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-text/src/cluster_map.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-text/src/cursor.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-text/src/cursor.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-text/src/editor.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-text/src/editor.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-text/src/hyphenation.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-text/src/hyphenation.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-text/src/incremental_break.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-text/src/incremental_break.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-text/src/justification.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-text/src/justification.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-text/src/layout_policy.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-text/src/layout_policy.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-text/src/lib.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-text/src/lib.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-text/src/markup.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-text/src/markup.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-text/src/normalization.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-text/src/normalization.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-text/src/rope.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-text/src/rope.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-text/src/script_segmentation.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-text/src/script_segmentation.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-text/src/search.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-text/src/search.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-text/src/segment.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-text/src/segment.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-text/src/shaped_render.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-text/src/shaped_render.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-text/src/shaping_fallback.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-text/src/shaping_fallback.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-text/src/shaping.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-text/src/shaping.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-text/src/text.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-text/src/text.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-text/src/tier_budget.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-text/src/tier_budget.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-text/src/vertical_metrics.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-text/src/vertical_metrics.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-text/src/view.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-text/src/view.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-text/src/width_cache.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-text/src/width_cache.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-text/src/wrap.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-text/src/wrap.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-tty/src/lib.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-tty/src/lib.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-web/src/input_parser.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-web/src/input_parser.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-web/src/lib.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-web/src/lib.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-web/src/pane_keyboard.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-web/src/pane_keyboard.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-web/src/pane_pointer_capture.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-web/src/pane_pointer_capture.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-web/src/release_readiness.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-web/src/release_readiness.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-web/src/runtime_options.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-web/src/runtime_options.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-web/src/sdk_adapter.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-web/src/sdk_adapter.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-web/src/sdk_event_model.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-web/src/sdk_event_model.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-web/src/session_record.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-web/src/session_record.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-web/src/step_program.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-web/src/step_program.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/adaptive_radix.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/adaptive_radix.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/align.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/align.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/badge.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/badge.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/block.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/block.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/borders.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/borders.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/cached.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/cached.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/choreography.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/choreography.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/columns.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/columns.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/command_palette/mod.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/command_palette/mod.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/command_palette/palette.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/command_palette/palette.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/command_palette/property_tests.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/command_palette/property_tests.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/command_palette/rank_confidence.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/command_palette/rank_confidence.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/command_palette/scorer.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/command_palette/scorer.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/constraint_overlay.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/constraint_overlay.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/debug_overlay.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/debug_overlay.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/decision_card.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/decision_card.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/diagnostics.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/diagnostics.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/drag.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/drag.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/drift_visualization.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/drift_visualization.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/elias_fano.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/elias_fano.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/emoji.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/emoji.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/error_boundary.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/error_boundary.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/fenwick.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/fenwick.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/file_picker.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/file_picker.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/focus/graph.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/focus/graph.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/focus/indicator.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/focus/indicator.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/focus/manager.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/focus/manager.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/focus/mod.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/focus/mod.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/focus/spatial.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/focus/spatial.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/group.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/group.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/height_predictor.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/height_predictor.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/help_index.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/help_index.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/help_registry.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/help_registry.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/help.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/help.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/hint_ranker.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/hint_ranker.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/history_panel.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/history_panel.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/input.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/input.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/inspector.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/inspector.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/json_view.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/json_view.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/keyboard_drag.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/keyboard_drag.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/layout_debugger.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/layout_debugger.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/layout.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/layout.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/lib.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/lib.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/list_helper.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/list_helper.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/list.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/list.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/log_ring.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/log_ring.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/log_viewer.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/log_viewer.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/louds.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/louds.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/measurable.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/measurable.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/measure_cache.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/measure_cache.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/modal/animation.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/modal/animation.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/modal/container.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/modal/container.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/modal/dialog.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/modal/dialog.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/modal/focus_integration.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/modal/focus_integration.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/modal/mod.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/modal/mod.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/modal/stack.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/modal/stack.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/mouse.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/mouse.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/notification_queue.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/notification_queue.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/padding.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/padding.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/paginator.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/paginator.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/panel.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/panel.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/paragraph.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/paragraph.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/popover.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/popover.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/pretty.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/pretty.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/progress.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/progress.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/receipt_verifier_panel.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/receipt_verifier_panel.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/rule.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/rule.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/scrollbar.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/scrollbar.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/sparkline.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/sparkline.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/spinner.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/spinner.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/state.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/state.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/stateful.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/stateful.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/status_line.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/status_line.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/stopwatch.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/stopwatch.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/table.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/table.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/tabs.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/tabs.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/textarea.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/textarea.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/timer.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/timer.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/toast.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/toast.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/tree.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/tree.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/undo_support.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/undo_support.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/validation_error.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/validation_error.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/virtualized.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/virtualized.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui-widgets/src/voi_debug_overlay.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui-widgets/src/voi_debug_overlay.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui/src/error.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui/src/error.rs"
+    },
+    {
+      "symbolPath": "file:crates/ftui/src/lib.rs",
+      "kind": "rust-production-file",
+      "signature": "crates/ftui/src/lib.rs"
+    }
+  ]
+}

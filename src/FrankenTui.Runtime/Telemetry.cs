@@ -69,7 +69,7 @@ public sealed class TraceId
     /// <summary>Parse a 32-char lowercase hex string into a trace ID.</summary>
     public static TraceId? Parse(string s)
     {
-        if (s.Length != 32 || !s.All(c => char.IsAsciiHexDigit(c) && !char.IsAsciiHexDigitUpper(c)))
+        if (s.Length != 32 || !s.All(c => (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f')))
             return null;
         var bytes = new byte[16];
         for (int i = 0; i < 16; i++)
@@ -95,7 +95,7 @@ public sealed class SpanId
     /// <summary>Parse a 16-char lowercase hex string into a span ID.</summary>
     public static SpanId? Parse(string s)
     {
-        if (s.Length != 16 || !s.All(c => char.IsAsciiHexDigit(c) && !char.IsAsciiHexDigitUpper(c)))
+        if (s.Length != 16 || !s.All(c => (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f')))
             return null;
         var bytes = new byte[8];
         for (int i = 0; i < 8; i++)
@@ -115,9 +115,18 @@ public sealed class SpanId
 
 public abstract record TelemetryError
 {
-    public sealed record SubscriberAlreadySet : TelemetryError;
-    public sealed record ExporterInit(string Message) : TelemetryError;
-    public sealed record ProviderSetup(string Message) : TelemetryError;
+    public sealed record SubscriberAlreadySet : TelemetryError
+    {
+        public override string ToString() => "A global tracing subscriber is already set. Use build_layer() instead.";
+    }
+    public sealed record ExporterInit(string Message) : TelemetryError
+    {
+        public override string ToString() => $"Failed to initialize OTLP exporter: {Message}";
+    }
+    public sealed record ProviderSetup(string Message) : TelemetryError
+    {
+        public override string ToString() => $"Failed to set up tracer provider: {Message}";
+    }
 
     public override string ToString() => this switch
     {

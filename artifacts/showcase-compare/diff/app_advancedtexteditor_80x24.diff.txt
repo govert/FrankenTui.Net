@@ -2,8 +2,8 @@
 Upstream snapshot: app_advancedtexteditor_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 810
-Local nonblank chars: 833
-Local/upstream char ratio: 1.028
+Local nonblank chars: 1160
+Local/upstream char ratio: 1.432
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -14,64 +14,64 @@ upstream: ╭──────────────────────�
 local   : ╭─────────────────────────────Advanced Text Editor─────────────────────────────╮
 @@ row 03
 upstream: │╭───────────────────────────────────────────────────────Editor─────────────────
-local   : │╰───────────────────────────────────Search───────────────────────────────────╯│
+local   : │Welcome to the Advanced Text Editor!   ╭──────────Search / Replace───────────╮│
 @@ row 04
 upstream: ││ 1  Welcome to the Advanced Text Editor!
-local   : │╭────────────────────────────────────────────────────────────────────────────╮│
+local   : │                                       │Search / Replace                     ││
 @@ row 05
 upstream: ││ 2
-local   : ││ 1 │ use std::collections::HashMap;                                         ││
+local   : │This is a demonstration of FrankenTUI's│Search: editor                       ││
 @@ row 06
 upstream: ││ 3  This is a demonstration of FrankenTUI's text editing capabilities.
-local   : ││ 2 │                                                                        ││
+local   : │ text editing capabilities.            │Replace: buffer                      ││
 @@ row 07
 upstream: ││ 4  You can edit text, select regions, search, and replace.
-local   : ││ 3 │ fn main() {                                                            ││
+local   : │You can edit text, select regions, sear│2/5 | Focus: editor | Cursor line: 9 ││
 @@ row 08
 upstream: ││ 5
-local   : ││ 4 │     let mut map = HashMap::new();                                      ││
+local   : │ch, and replace.                       │Ctrl+R: Replace | Ctrl+A: Replace all││
 @@ row 09
 upstream: ││ 6  Features:
-local   : ││ 5 │     map.insert("key", "value");                                        ││
+local   : │                                       │                                     ││
 @@ row 10
 upstream: ││ 7  - Multi-line editing with line numbers
-local   : ││ 6 │                                                                        ││
+local   : │Features:                              │Focus: editor -> search -> replace   ││
 @@ row 11
 upstream: ││ 8  - Selection with Shift+Arrow keys
-local   : ││ 7 │     for (k, v) in &map {                                               ││
+local   : │- Multi-line editing with▌line numbers │Ctrl+Left/Right, Tab/Shift+Tab cycle ││
 @@ row 12
 upstream: ││ 9  - Undo (Ctrl+Z) and Redo (Ctrl+Y)
-local   : ││ 8 │         println!("{k}: {v}");                                          ││
+local   : │- Selection with Shift+Arrow keys      ╰─────────────────────────────────────╯│
 @@ row 13
 upstream: ││10  - Search (Ctrl+F) with next/prev match
-local   : ││ 9 │     }                                                                  ││
+local   : │- Undo (Ctrl+Z) and Redo (Ctrl+Y)      ╭────────────Undo History─────────────╮│
 @@ row 14
 upstream: ││11  - Replace (Ctrl+H) single or all matches
-local   : ││10 │ }                                                                      ││
+local   : │- Search (Ctrl+F) with next/prev match │Undo History                         ││
 @@ row 15
 upstream: ││12
-local   : ││11 │                                                                        ││
+local   : │- Replace (Ctrl+H) single or all matche│Selected history row: 0              ││
 @@ row 16
 upstream: ││13  Try editing this text or loading your own content.
-local   : ││12 │ // TODO: Add error handling                                            ││
+local   : │s                                      │Undo (3)                             ││
 @@ row 17
 upstream: ││14
-local   : ││13 │ // TODO: Add unit tests                                                ││
+local   : │                                       │  text_edited insert "buffer"        ││
 @@ row 18
 upstream: ││15  Unicode support:
-local   : ││14 │                                                                        ││
+local   : │Unicode support: emoji, CJK, accented t│  replace_performed editor->buffer   ││
 @@ row 19
 upstream: ││16  - Emoji: 🎉 🚀 ✨
-local   : ││15 │ #[cfg(test)]                                                           ││
+local   : │ext                                    │  selection_cleared                  ││
 @@ row 20
 upstream: ││17  - CJK: 你好世界
-local   : ││16 │ mod tests {                                                            ││
+local   : │                                       │                                     ││
 @@ row 21
 upstream: ││18  - Accented: café résumé naïve
-local   : ││17 │     use super::*;                                                      ││
+local   : │                                       │Redo (1)                             ││
 @@ row 22
 upstream: ││19
-local   : │╰────────────────────────────────────────────────────────────────────────────╯│
+local   : │Ln 9, Col 26 | Focus: editor | Match 2/╰─────────────────────────────────────╯│
 @@ row 23
 upstream: ││20  The editor uses a rope data structure internally for efficient
 local   : ╰──────────────────────────────────────────────────────────────────────────────╯

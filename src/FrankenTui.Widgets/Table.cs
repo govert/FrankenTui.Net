@@ -1,9 +1,11 @@
 // Port of .external/frankentui/crates/ftui-widgets/src/table.rs
+// Upstream commit: 15cc6543f76b814394c590f9e7719dedd6684e4c
 // Table widget with rows, column widths, headers, selection, filtering, sorting, and theming.
 
 using FrankenTui.Core;
 using FrankenTui.Layout;
 using FrankenTui.Render;
+using CanonicalA11y = FrankenTui.A11y;
 using System.Collections.ObjectModel;
 using Buffer = FrankenTui.Render.Buffer;
 
@@ -377,7 +379,7 @@ public sealed class TableState : IStateful<TablePersistState>, IUndoSupport, ITa
 
     // ── ITableUndoExt ───────────────────────────────────────────────────
 
-    public (int? Column, bool Ascending) SortState => (SortColumn, SortAscending);
+    public (int? Column, bool Ascending) SortState() => (SortColumn, SortAscending);
 
     public void SetSortState(int? column, bool ascending)
     {
@@ -385,7 +387,7 @@ public sealed class TableState : IStateful<TablePersistState>, IUndoSupport, ITa
         SortAscending = ascending;
     }
 
-    public string FilterText => Filter;
+    public string FilterText() => Filter;
 
     public void SetFilterText(string filter) => Filter = filter;
 
@@ -514,7 +516,8 @@ public sealed class TableState : IStateful<TablePersistState>, IUndoSupport, ITa
 
 /// <summary>A widget to display data in a table.
 /// Port of ftui_widgets::table::Table.</summary>
-public sealed class Table : IWidget, IMeasurableWidget, IStatefulWidget<TableState>
+public sealed class Table : IWidget, IMeasurableWidget, IStatefulWidget<TableState>,
+    IAccessible, CanonicalA11y.IAccessible
 {
     private readonly List<Row> _rows;
     private readonly TableConstraint[] _widths;
@@ -592,6 +595,28 @@ public sealed class Table : IWidget, IMeasurableWidget, IStatefulWidget<TableSta
         => RenderStateful(area, frame, state);
 
     public void Render(Rect area, Frame frame, TableState state) => RenderStateful(area, frame, state);
+
+    // ── Accessibility ────────────────────────────────────────────────────
+
+    /// <summary>Get the legacy compatibility projection of this table's accessibility node.</summary>
+    public List<A11yNodeInfo> AccessibilityNodes(Rect area) =>
+        LegacyAccessibilityAdapter.FromCanonical(CanonicalAccessibilityNodes(area));
+
+    List<CanonicalA11y.A11yNodeInfo> CanonicalA11y.IAccessible.AccessibilityNodes(Rect area) =>
+        CanonicalAccessibilityNodes(area);
+
+    private List<CanonicalA11y.A11yNodeInfo> CanonicalAccessibilityNodes(Rect area)
+    {
+        int rowCount = _rows.Count;
+        int columnCount = _widths.Length;
+        CanonicalA11y.A11yNodeInfo node = CanonicalA11y.A11yNodeInfo
+            .New(WidgetDrawing.A11yNodeId(area), CanonicalA11y.A11yRole.Table, area)
+            .WithDescription($"{rowCount} rows, {columnCount} columns");
+        string title = _block?.TitleText() ?? string.Empty;
+        if (title.Length > 0)
+            node = node.WithName(title);
+        return [node];
+    }
 
     // ── IMeasurableWidget ────────────────────────────────────────────────
 

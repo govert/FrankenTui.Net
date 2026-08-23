@@ -1,0 +1,2681 @@
+{
+  "schema": "kp.surface@1",
+  "side": "target",
+  "basisLabel": "target-current-worktree",
+  "method": "rg-csharp-production-files-v1",
+  "closed": true,
+  "closureBasis": "All 445 C# files under src/, apps/, and tools/ in the current target worktree, excluding bin/ and obj/. This closes only the production-owner file denominator, not tests or behavioral coverage.",
+  "denominator": 445,
+  "items": [
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/AdvancedFeaturesWidget.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/AdvancedFeaturesWidget.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/DashboardPlasmaWidget.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/DashboardPlasmaWidget.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/DashboardWidget.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/DashboardWidget.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/DataVizWidget.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/DataVizWidget.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/Program.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/Program.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/Properties/AssemblyInfo.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/Properties/AssemblyInfo.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/Screens/QuakeMapData.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/Screens/QuakeMapData.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/Screens/Screen08DataVizEngine.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/Screens/Screen08DataVizEngine.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/Screens/Screen16MermaidEngine.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/Screens/Screen16MermaidEngine.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/Screens/Screen45QuakeEngine.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/Screens/Screen45QuakeEngine.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/Screens/Screens19_36_27.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/Screens/Screens19_36_27.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/Screens/Screens41_14_21.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/Screens/Screens41_14_21.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/Screens/ScreensBatch3.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/Screens/ScreensBatch3.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/Screens/ScreensBatch4.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/Screens/ScreensBatch4.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/Screens/ScreensBatch5.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/Screens/ScreensBatch5.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/Screens/ScreensBatch6.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/Screens/ScreensBatch6.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/Screens/ScreensBatch7.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/Screens/ScreensBatch7.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/Screens/ScreensBatch8.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/Screens/ScreensBatch8.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/Screens/ScreensBatch9.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/Screens/ScreensBatch9.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/Screens/ScreensContentFix.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/Screens/ScreensContentFix.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/Screens/ScreensContentFix2.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/Screens/ScreensContentFix2.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/Screens/ScreensGraphical.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/Screens/ScreensGraphical.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/Screens/ScreensGraphical2.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/Screens/ScreensGraphical2.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/ShakespeareWidget.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/ShakespeareWidget.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/ShowcaseCatalog.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/ShowcaseCatalog.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/ShowcaseCliHelp.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/ShowcaseCliHelp.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/ShowcaseCliOptions.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/ShowcaseCliOptions.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/ShowcaseCommandPalette.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/ShowcaseCommandPalette.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/ShowcaseEvidenceJsonlWriter.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/ShowcaseEvidenceJsonlWriter.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/ShowcaseFrameHitRegistry.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/ShowcaseFrameHitRegistry.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/ShowcaseHarnessJsonlWriter.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/ShowcaseHarnessJsonlWriter.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/ShowcaseInteractiveProgram.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/ShowcaseInteractiveProgram.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/ShowcasePaneWorkspacePersistence.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/ShowcasePaneWorkspacePersistence.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/ShowcaseSurface.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/ShowcaseSurface.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/ShowcaseTourStoryboard.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/ShowcaseTourStoryboard.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/ShowcaseVfxEffects.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/ShowcaseVfxEffects.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/ShowcaseVfxGoldenRegistry.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/ShowcaseVfxGoldenRegistry.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/ShowcaseViewFactory.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/ShowcaseViewFactory.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/ShowcaseViewportResolver.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/ShowcaseViewportResolver.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/SimulatedData.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/SimulatedData.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Demo.Showcase/TabBarWidget.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Demo.Showcase/TabBarWidget.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Showcase.Wasm/Properties/AssemblyInfo.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Showcase.Wasm/Properties/AssemblyInfo.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Showcase.Wasm/ShowcasePage.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Showcase.Wasm/ShowcasePage.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:apps/FrankenTui.Showcase.Wasm/ShowcaseRunnerCore.cs",
+      "kind": "csharp-production-file",
+      "signature": "apps/FrankenTui.Showcase.Wasm/ShowcaseRunnerCore.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.A11y/AccessibilitySnapshot.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.A11y/AccessibilitySnapshot.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.A11y/AccessibleNode.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.A11y/AccessibleNode.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.A11y/Properties/AssemblyInfo.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.A11y/Properties/AssemblyInfo.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Backend/InlineTerminalWriter.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Backend/InlineTerminalWriter.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Backend/ITerminalBackend.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Backend/ITerminalBackend.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Backend/ITerminalEventSource.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Backend/ITerminalEventSource.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Backend/ITerminalOutputSink.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Backend/ITerminalOutputSink.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Backend/ITerminalSessionLifecycle.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Backend/ITerminalSessionLifecycle.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Backend/MemoryTerminalBackend.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Backend/MemoryTerminalBackend.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Backend/Properties/AssemblyInfo.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Backend/Properties/AssemblyInfo.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Backend/SingleWriterGate.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Backend/SingleWriterGate.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Backend/TerminalBackendFeatures.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Backend/TerminalBackendFeatures.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Backend/TerminalFeatureControl.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Backend/TerminalFeatureControl.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Backend/TerminalLifecycleState.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Backend/TerminalLifecycleState.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Backend/TerminalLogWriteOptions.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Backend/TerminalLogWriteOptions.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Backend/TerminalOutputSanitizer.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Backend/TerminalOutputSanitizer.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Backend/TerminalSessionConfiguration.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Backend/TerminalSessionConfiguration.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Core/CapabilityOverrideSet.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Core/CapabilityOverrideSet.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Core/CapabilityProfileBuilder.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Core/CapabilityProfileBuilder.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Core/CursorManager.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Core/CursorManager.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Core/CursorSaveStrategy.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Core/CursorSaveStrategy.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Core/HoverStabilizer.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Core/HoverStabilizer.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Core/KeyGesture.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Core/KeyGesture.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Core/MouseGesture.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Core/MouseGesture.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Core/Properties/AssemblyInfo.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Core/Properties/AssemblyInfo.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Core/Rect.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Core/Rect.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Core/SemanticEvent.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Core/SemanticEvent.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Core/Sides.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Core/Sides.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Core/Size.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Core/Size.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Core/TerminalCapabilities.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Core/TerminalCapabilities.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Core/TerminalCapabilityDetector.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Core/TerminalCapabilityDetector.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Core/TerminalEvent.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Core/TerminalEvent.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Core/TerminalEventCoalescer.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Core/TerminalEventCoalescer.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Core/TerminalInputParser.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Core/TerminalInputParser.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Core/TerminalKey.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Core/TerminalKey.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Core/TerminalMode.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Core/TerminalMode.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Core/TerminalModifiers.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Core/TerminalModifiers.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Core/TerminalMouseButton.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Core/TerminalMouseButton.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Core/TerminalMouseKind.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Core/TerminalMouseKind.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Core/TerminalProfile.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Core/TerminalProfile.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Core/TerminalTextWidth.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Core/TerminalTextWidth.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/BufferExport.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/BufferExport.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/CanvasPrimitives.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/CanvasPrimitives.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/Clipboard.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/Clipboard.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/ClipboardNative.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/ClipboardNative.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/CommandPalette.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/CommandPalette.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/Console.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/Console.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/ConsoleText.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/ConsoleText.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/DashboardSurface.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/DashboardSurface.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/DiagramAndAsciicast.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/DiagramAndAsciicast.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/ExtrasShowcaseFactory.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/ExtrasShowcaseFactory.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/FileSize.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/FileSize.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/FormWidgets.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/FormWidgets.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/GlowingImage.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/GlowingImage.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/HelpWidgets.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/HelpWidgets.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/HintRanker.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/HintRanker.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/HostedParityInputEngine.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/HostedParityInputEngine.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/HostedParityScenario.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/HostedParityScenario.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/HostedParitySurface.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/HostedParitySurface.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/LiveStream.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/LiveStream.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/Logging.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/Logging.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/LogSearch.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/LogSearch.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/MacroRecorder.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/MacroRecorder.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/MarkdownDocumentBuilder.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/MarkdownDocumentBuilder.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/MermaidContractSurface.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/MermaidContractSurface.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/MermaidEngine.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/MermaidEngine.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/PaneWorkspaceWidget.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/PaneWorkspaceWidget.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/PerformanceHud.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/PerformanceHud.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/Properties/AssemblyInfo.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/Properties/AssemblyInfo.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/PtyCapture.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/PtyCapture.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/PtyNative.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/PtyNative.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/PtyNative.Unix.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/PtyNative.Unix.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/PtyNative.Windows.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/PtyNative.Windows.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/SyntaxHighlighter.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/SyntaxHighlighter.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/TextEffects.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/TextEffects.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/ThemePalette.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/ThemePalette.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/Timer.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/Timer.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/TimingWidgets.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/TimingWidgets.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/Traceback.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/Traceback.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/TracebackWidget.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/TracebackWidget.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/UiHelpers.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/UiHelpers.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/Validation.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/Validation.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Extras/VisualFx.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Extras/VisualFx.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.I18n/LocalizationCatalog.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.I18n/LocalizationCatalog.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.I18n/LocalizedString.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.I18n/LocalizedString.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.I18n/Properties/AssemblyInfo.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.I18n/Properties/AssemblyInfo.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Layout/LayoutCache.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Layout/LayoutCache.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Layout/LayoutConstraint.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Layout/LayoutConstraint.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Layout/LayoutConstraintKind.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Layout/LayoutConstraintKind.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Layout/LayoutDirection.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Layout/LayoutDirection.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Layout/LayoutPlan.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Layout/LayoutPlan.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Layout/LayoutSolver.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Layout/LayoutSolver.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Layout/LayoutTrace.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Layout/LayoutTrace.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Layout/PaneWorkspace.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Layout/PaneWorkspace.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Layout/Properties/AssemblyInfo.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Layout/Properties/AssemblyInfo.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Layout/ResponsiveBreakpoint.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Layout/ResponsiveBreakpoint.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Layout/ResponsiveLayout.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Layout/ResponsiveLayout.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Render/AnsiBuilder.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Render/AnsiBuilder.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Render/Budget.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Render/Budget.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Render/Buffer.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Render/Buffer.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Render/BufferDiff.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Render/BufferDiff.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Render/BufferPainter.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Render/BufferPainter.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Render/Cell.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Render/Cell.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Render/CellAttributes.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Render/CellAttributes.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Render/CellContent.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Render/CellContent.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Render/CellPosition.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Render/CellPosition.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Render/CellStyleFlags.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Render/CellStyleFlags.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Render/ChangeRun.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Render/ChangeRun.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Render/CountingWriter.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Render/CountingWriter.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Render/DiffStrategy.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Render/DiffStrategy.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Render/EraseDisplayMode.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Render/EraseDisplayMode.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Render/EraseLineMode.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Render/EraseLineMode.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Render/Frame.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Render/Frame.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Render/GraphemeId.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Render/GraphemeId.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Render/GraphemePool.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Render/GraphemePool.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Render/GraphemeRegistry.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Render/GraphemeRegistry.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Render/HeadlessBufferView.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Render/HeadlessBufferView.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Render/HitRegion.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Render/HitRegion.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Render/IBufferDiffAccelerator.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Render/IBufferDiffAccelerator.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Render/InlineMode.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Render/InlineMode.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Render/LinkRegistry.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Render/LinkRegistry.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Render/PackedRgba.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Render/PackedRgba.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Render/Presenter.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Render/Presenter.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Render/PresentResult.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Render/PresentResult.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Render/Properties/AssemblyInfo.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Render/Properties/AssemblyInfo.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Render/RenderInfra.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Render/RenderInfra.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Render/Sanitize.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Render/Sanitize.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Render/TerminalModel.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Render/TerminalModel.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/AdaptiveRadix.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/AdaptiveRadix.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/AlphaInvesting.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/AlphaInvesting.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/AppCommand.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/AppCommand.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/AppRuntime.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/AppRuntime.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/AppSession.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/AppSession.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/AppSimulator.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/AppSimulator.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/Bocpd.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/Bocpd.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/Cancellation.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/Cancellation.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/Cmd.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/Cmd.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/ConformalAlert.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/ConformalAlert.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/ConformalPredictor.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/ConformalPredictor.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/ConformalStages.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/ConformalStages.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/CostModel.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/CostModel.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/CountMinSketch.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/CountMinSketch.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/DataStructures.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/DataStructures.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/DebugTrace.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/DebugTrace.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/DegradationCascade.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/DegradationCascade.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/DemoAndBarrier.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/DemoAndBarrier.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/DiffEvidence.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/DiffEvidence.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/EffectSystem.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/EffectSystem.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/EliasFano.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/EliasFano.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/EProcessThrottle.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/EProcessThrottle.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/EventTrace.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/EventTrace.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/EvidenceBridges.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/EvidenceBridges.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/EvidenceSinkAndMore.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/EvidenceSinkAndMore.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/FenwickTree.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/FenwickTree.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/FlakeDetector.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/FlakeDetector.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/FlatCombine.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/FlatCombine.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/GestureConfig.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/GestureConfig.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/GestureRecognizer.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/GestureRecognizer.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/IAppProgram.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/IAppProgram.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/InputFairness.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/InputFairness.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/InputMacro.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/InputMacro.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/IRuntimeView.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/IRuntimeView.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/Ivm.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/Ivm.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/KeybindingConfig.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/KeybindingConfig.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/KeybindingResolver.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/KeybindingResolver.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/Lens.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/Lens.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/LoadGovernor.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/LoadGovernor.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/Locale.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/Locale.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/LogSink.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/LogSink.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/LoudsTree.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/LoudsTree.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/MetricsRegistry.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/MetricsRegistry.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/Observable.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/Observable.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/PerformanceAndMath.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/PerformanceAndMath.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/PolicyConfig.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/PolicyConfig.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/PolicyRegistry.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/PolicyRegistry.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/ProcessSubscription.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/ProcessSubscription.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/Program.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/Program.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/ProgramConfig.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/ProgramConfig.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/Properties/AssemblyInfo.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/Properties/AssemblyInfo.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/QueueingScheduler.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/QueueingScheduler.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/RenderThread.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/RenderThread.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/RenderTrace.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/RenderTrace.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/ReplayTape.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/ReplayTape.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/ResizeCoalescer.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/ResizeCoalescer.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/Retry.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/Retry.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/Reversible.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/Reversible.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/RuntimeCore.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/RuntimeCore.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/RuntimeEffectQueueConfig.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/RuntimeEffectQueueConfig.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/RuntimeExecutionPolicy.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/RuntimeExecutionPolicy.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/RuntimeFrameStats.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/RuntimeFrameStats.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/RuntimeInputController.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/RuntimeInputController.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/RuntimeInputEngine.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/RuntimeInputEngine.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/RuntimeInputEnvelope.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/RuntimeInputEnvelope.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/RuntimePolicyConfig.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/RuntimePolicyConfig.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/RuntimeQueueingScheduler.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/RuntimeQueueingScheduler.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/RuntimeRenderContext.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/RuntimeRenderContext.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/RuntimeStepResult.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/RuntimeStepResult.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/RuntimeTrace.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/RuntimeTrace.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/ScheduleTrace.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/ScheduleTrace.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/SchemaCompat.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/SchemaCompat.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/Slo.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/Slo.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/StatePersistence.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/StatePersistence.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/StdioCapture.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/StdioCapture.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/StringModel.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/StringModel.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/Subscription.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/Subscription.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/Telemetry.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/Telemetry.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/TelemetryConfig.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/TelemetryConfig.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/TelemetryExporter.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/TelemetryExporter.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/TelemetryInfra.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/TelemetryInfra.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/TelemetrySchema.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/TelemetrySchema.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/TelemetrySnapshots.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/TelemetrySnapshots.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/TerminalWriter.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/TerminalWriter.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/TimelineAggregator.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/TimelineAggregator.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/UnifiedEvidence.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/UnifiedEvidence.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/UpdateResult.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/UpdateResult.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/ValidationPipeline.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/ValidationPipeline.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Runtime/VoiSampling.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Runtime/VoiSampling.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Simd/Properties/AssemblyInfo.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Simd/Properties/AssemblyInfo.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Simd/SimdAccelerators.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Simd/SimdAccelerators.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Simd/SimdBufferDiffAccelerator.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Simd/SimdBufferDiffAccelerator.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Simd/SimdCapabilities.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Simd/SimdCapabilities.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Simd/SimdTextWrapAccelerator.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Simd/SimdTextWrapAccelerator.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Style/InteractiveStyleSet.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Style/InteractiveStyleSet.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Style/Properties/AssemblyInfo.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Style/Properties/AssemblyInfo.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Style/StyleSheet.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Style/StyleSheet.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Style/TableTheme.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Style/TableTheme.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Style/Theme.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Style/Theme.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Style/UiStyle.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Style/UiStyle.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/ArtifactManifestContract.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/ArtifactManifestContract.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/ArtifactPathBuilder.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/ArtifactPathBuilder.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/AsupersyncEvidence.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/AsupersyncEvidence.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/BaselineCapture.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/BaselineCapture.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/DoctorBootstrapSummary.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/DoctorBootstrapSummary.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/DoctorCostProfile.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/DoctorCostProfile.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/DoctorRunMeta.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/DoctorRunMeta.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/DoctorSeedExecution.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/DoctorSeedExecution.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/DoctorSeedPlan.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/DoctorSeedPlan.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/DoctorSuiteAggregator.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/DoctorSuiteAggregator.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/DoctorSuiteManifest.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/DoctorSuiteManifest.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/DoctorSuiteReport.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/DoctorSuiteReport.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/DoctorWorkflowSummary.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/DoctorWorkflowSummary.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/EvidenceManifest.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/EvidenceManifest.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/FailureSignatures.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/FailureSignatures.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/FixtureRunner.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/FixtureRunner.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/FixtureSuite.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/FixtureSuite.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/GitRepositoryMetadata.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/GitRepositoryMetadata.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/HarnessJson.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/HarnessJson.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/HostedParityEvidence.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/HostedParityEvidence.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/HostedParityRuntimeHarness.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/HostedParityRuntimeHarness.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/LayoutReuseContract.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/LayoutReuseContract.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/OpenTuiContractGate.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/OpenTuiContractGate.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/OpenTuiMigrationContracts.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/OpenTuiMigrationContracts.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/OpenTuiPlanner.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/OpenTuiPlanner.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/PerformanceBenchmarkRunner.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/PerformanceBenchmarkRunner.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/PresenterEquivalence.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/PresenterEquivalence.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/ProcessCommandRunner.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/ProcessCommandRunner.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/Properties/AssemblyInfo.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/Properties/AssemblyInfo.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/RenderGauntlet.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/RenderGauntlet.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/RenderHarness.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/RenderHarness.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/RenderSnapshot.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/RenderSnapshot.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/RepositoryPaths.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/RepositoryPaths.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/RolloutScorecard.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/RolloutScorecard.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/SharedSampleComparison.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/SharedSampleComparison.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/SnapshotAssert.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/SnapshotAssert.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/TerminalProcessRouter.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/TerminalProcessRouter.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/UpstreamReferencePaths.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/UpstreamReferencePaths.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Harness/WebDomRunner.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Harness/WebDomRunner.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Pty/Properties/AssemblyInfo.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Pty/Properties/AssemblyInfo.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Pty/PtyRunResult.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Pty/PtyRunResult.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Testing.Pty/ScriptPtyRunner.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Testing.Pty/ScriptPtyRunner.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Text/ITextWrapAccelerator.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Text/ITextWrapAccelerator.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Text/MarkupParser.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Text/MarkupParser.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Text/Properties/AssemblyInfo.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Text/Properties/AssemblyInfo.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Text/TextCursor.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Text/TextCursor.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Text/TextDirection.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Text/TextDirection.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Text/TextDocument.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Text/TextDocument.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Text/TextLine.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Text/TextLine.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Text/TextNormalizer.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Text/TextNormalizer.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Text/TextRenderer.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Text/TextRenderer.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Text/TextRenderOptions.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Text/TextRenderOptions.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Text/TextScript.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Text/TextScript.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Text/TextSearch.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Text/TextSearch.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Text/TextSegmenter.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Text/TextSegmenter.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Text/TextSpan.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Text/TextSpan.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Text/TextWrapMode.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Text/TextWrapMode.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Text/TextWrapper.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Text/TextWrapper.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Tty/ConsoleTerminalBackend.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Tty/ConsoleTerminalBackend.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Tty/Properties/AssemblyInfo.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Tty/Properties/AssemblyInfo.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Tty/TerminalCleanupPlan.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Tty/TerminalCleanupPlan.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Tty/TerminalHostMatrix.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Tty/TerminalHostMatrix.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Tty/TerminalHostProfile.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Tty/TerminalHostProfile.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Tty/TerminalSession.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Tty/TerminalSession.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Tty/TerminalSessionOptions.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Tty/TerminalSessionOptions.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Tty/UnixTerminalBackend.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Tty/UnixTerminalBackend.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Tty/WindowsTerminalBackend.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Tty/WindowsTerminalBackend.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Web/Properties/AssemblyInfo.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Web/Properties/AssemblyInfo.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Web/WebFrame.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Web/WebFrame.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Web/WebHost.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Web/WebHost.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Web/WebRenderOptions.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Web/WebRenderOptions.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/AdvancedWidgets.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/AdvancedWidgets.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/Align.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/Align.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/Block.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/Block.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/BlockWidget.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/BlockWidget.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/Borders.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/Borders.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/Cached.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/Cached.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/ChartWidgets.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/ChartWidgets.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/Columns.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/Columns.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/ColumnsWidget.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/ColumnsWidget.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/command_palette/CommandPaletteScorer.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/command_palette/CommandPaletteScorer.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/CommandPalette.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/CommandPalette.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/ContainerWidgets.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/ContainerWidgets.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/DataWidgets.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/DataWidgets.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/DebugWidgets.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/DebugWidgets.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/Diagnostics.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/Diagnostics.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/DisplayWidgets.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/DisplayWidgets.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/Drag.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/Drag.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/DrawingPrimitives.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/DrawingPrimitives.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/DriftVisualization.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/DriftVisualization.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/FilePicker.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/FilePicker.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/FocusGraph.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/FocusGraph.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/FocusManager.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/FocusManager.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/FocusSpatial.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/FocusSpatial.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/HeightPredictor.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/HeightPredictor.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/Help.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/Help.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/HelpSystemWidget.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/HelpSystemWidget.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/InfraWidgets.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/InfraWidgets.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/Input.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/Input.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/Inspector.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/Inspector.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/InspectorWidgets.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/InspectorWidgets.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/KeyboardDrag.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/KeyboardDrag.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/LayoutDebuggerWidgets.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/LayoutDebuggerWidgets.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/LayoutWidgets.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/LayoutWidgets.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/Lib.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/Lib.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/List.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/List.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/LogRingBufferWidget.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/LogRingBufferWidget.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/LogViewer.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/LogViewer.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/LogViewerWidget.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/LogViewerWidget.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/Measurable.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/Measurable.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/MeasureCache.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/MeasureCache.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/MiscWidgets.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/MiscWidgets.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/Modal.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/Modal.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/modal/ModalAnimation.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/modal/ModalAnimation.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/modal/ModalDialog.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/modal/ModalDialog.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/modal/ModalFocusIntegration.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/modal/ModalFocusIntegration.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/modal/ModalStack.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/modal/ModalStack.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/Mouse.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/Mouse.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/NotificationQueue.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/NotificationQueue.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/NotificationQueueWidget.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/NotificationQueueWidget.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/PaddingWidget.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/PaddingWidget.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/PanelWidget.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/PanelWidget.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/Paragraph.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/Paragraph.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/ParagraphWidget.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/ParagraphWidget.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/Progress.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/Progress.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/Properties/AssemblyInfo.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/Properties/AssemblyInfo.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/Rule.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/Rule.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/Scrollbar.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/Scrollbar.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/ScrollbarWidget.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/ScrollbarWidget.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/ShowcaseCompat.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/ShowcaseCompat.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/Sparkline.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/Sparkline.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/SparklineWidget.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/SparklineWidget.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/Spinner.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/Spinner.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/StackWidget.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/StackWidget.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/Stateful.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/Stateful.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/StatusWidget.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/StatusWidget.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/Table.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/Table.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/TableWidget.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/TableWidget.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/Tabs.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/Tabs.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/TextArea.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/TextArea.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/TextAreaInternals.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/TextAreaInternals.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/TextContent.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/TextContent.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/TextInputWidget.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/TextInputWidget.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/Toast.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/Toast.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/ToastWidget.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/ToastWidget.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/Tree.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/Tree.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/UndoSupport.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/UndoSupport.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/UtilWidgets.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/UtilWidgets.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/Virtualized.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/Virtualized.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/VirtualizedListWidget.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/VirtualizedListWidget.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/VizWidgets.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/VizWidgets.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/VoiDebugOverlay.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/VoiDebugOverlay.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/WidgetCore.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/WidgetCore.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/WidgetFocusGraph.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/WidgetFocusGraph.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/WidgetFocusManager.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/WidgetFocusManager.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/WidgetInputState.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/WidgetInputState.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/WidgetModalStack.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/WidgetModalStack.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui.Widgets/WidgetRenderHelpers.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui.Widgets/WidgetRenderHelpers.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui/Properties/AssemblyInfo.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui/Properties/AssemblyInfo.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/FrankenTui/Ui.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/FrankenTui/Ui.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/RustLib.Tracing/Core.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/RustLib.Tracing/Core.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/RustLib.Tracing/Facade.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/RustLib.Tracing/Facade.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:src/RustLib.Tracing/Subscriber.cs",
+      "kind": "csharp-production-file",
+      "signature": "src/RustLib.Tracing/Subscriber.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:tools/FrankenTui.Doctor/DoctorDashboardViewFactory.cs",
+      "kind": "csharp-production-file",
+      "signature": "tools/FrankenTui.Doctor/DoctorDashboardViewFactory.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:tools/FrankenTui.Doctor/DoctorReport.cs",
+      "kind": "csharp-production-file",
+      "signature": "tools/FrankenTui.Doctor/DoctorReport.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:tools/FrankenTui.Doctor/EnvironmentDoctor.cs",
+      "kind": "csharp-production-file",
+      "signature": "tools/FrankenTui.Doctor/EnvironmentDoctor.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:tools/FrankenTui.Doctor/Program.cs",
+      "kind": "csharp-production-file",
+      "signature": "tools/FrankenTui.Doctor/Program.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:tools/FrankenTui.Doctor/Properties/AssemblyInfo.cs",
+      "kind": "csharp-production-file",
+      "signature": "tools/FrankenTui.Doctor/Properties/AssemblyInfo.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:tools/FrankenTui.HostEvidence/Program.cs",
+      "kind": "csharp-production-file",
+      "signature": "tools/FrankenTui.HostEvidence/Program.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:tools/FrankenTui.HostEvidence/Properties/AssemblyInfo.cs",
+      "kind": "csharp-production-file",
+      "signature": "tools/FrankenTui.HostEvidence/Properties/AssemblyInfo.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:tools/FrankenTui.ShowcaseCompare/Program.cs",
+      "kind": "csharp-production-file",
+      "signature": "tools/FrankenTui.ShowcaseCompare/Program.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:tools/FrankenTui.ShowcaseCompare/Properties/AssemblyInfo.cs",
+      "kind": "csharp-production-file",
+      "signature": "tools/FrankenTui.ShowcaseCompare/Properties/AssemblyInfo.cs",
+      "realization": "unknown"
+    },
+    {
+      "symbolPath": "file:tools/FrankenTui.SideBySide/Program.cs",
+      "kind": "csharp-production-file",
+      "signature": "tools/FrankenTui.SideBySide/Program.cs",
+      "realization": "unknown"
+    }
+  ]
+}

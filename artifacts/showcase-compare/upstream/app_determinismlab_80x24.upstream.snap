@@ -1,7 +1,7 @@
- 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
+﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
 ╭───────────────────────────────────────────────────Determinism Lab─────────────
-│Determinism Lab  Seed: 7  Frame: 27  Status: Live  Fault: off                  
-│                                                                               
+│Determinism Lab  Seed: 7  Frame: 27  Status: Live  Fault: off
+│
 │┌Equivalence──────────────────────────────────────────────────────────┐┌Scene P
 ││Strategy  Changes   Checksum             Status                      ││OTYFKRX
 OLFMLY  NKV X.NMI.52  E0D977b9ee8257bc8ba   OK                         ││.PED.TO
@@ -21,4 +21,4 @@ OX GY.OTPEVMBNAUJEGWBMLQ ARKJ WX MHKQ                                  │└─
 ││                                                                     ││  Drift
 ││                                                                     ││  Fault
 ││                                                                     ││Runs  (
-)  Tab/Shift+Tab: next/prev   0x0 00:00                                ││       
+)  Tab/Shift+Tab: next/prev   0x0 00:00                                ││

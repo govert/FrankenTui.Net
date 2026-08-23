@@ -1,9 +1,9 @@
 ﻿Screen 32: Performance Challenge
 Upstream snapshot: app_performancehud_80x24.snap
 Viewport: 80x24
-Upstream nonblank chars: 684
-Local nonblank chars: 916
-Local/upstream char ratio: 1.339
+Upstream nonblank chars: 737
+Local nonblank chars: 1193
+Local/upstream char ratio: 1.619
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -14,67 +14,67 @@ upstream: ╭──────────────────────�
 local   : ╭────────────────────────────Performance Challenge─────────────────────────────╮
 @@ row 03
 upstream: │PERFORMANCE CHALLENGE MODE — DEGRADATION TIERS
-local   : │PERFORMANCE CHALLENGE MODE — DEGRADATION TIERS                                │
+local   : │PERFORMANCE CHALLENGE MODE - DEGRADATION TIERS                                │
 @@ row 04
 upstream: │╭──────Real-Time Metrics───────╮╭──────────────Tick Intervals (µs)─────────────
-local   : │╭─────────────Real-Time Metrics──────────────╮╭─────Tick Intervals (µs)─────╮ │
+local   : │╭───────Real-Time Metrics────────╮╭╮╭─────────────Render Budget──────────────╮│
 @@ row 05
-upstream: ││  Sim FPS:         9.0 (Minima││                   █
-local   : ││  Sim FPS:         9.0 (Minimum viable)     ││█  █  █  █  ▅  █ ▆█▇  ▄  █   │ │
+upstream: ││  Sim FPS:         9.5 (Minima││            █
+local   : ││Metric  Value   Metric  Value   ││││Budget: 17.00ms (60fps target)          ││
 @@ row 06
-upstream: ││  Obs FPS:         9.0        ││                   █                         0
-local   : ││  Obs FPS:         9.0                      ││███ ▄ █ ▆ ▅  █ ████ ██ █ █   │ │
+upstream: ││  Obs FPS:         9.5        ││     █      █           ▇ ▇                  5
+local   : ││avg     12.80ms p50     14.20ms ││││Observed: 12.80ms avg                   ││
 @@ row 07
-upstream: .9902ms avgte:       9.0 tps    ││                   █                         0
-local   : ││  Frame time:      110.99ms avg             ││█▇▇ █  ██  █ ████ ██████▅████│ │
+upstream: 43237ms avgte:       9.5 tps    ││     █      █           █ █                  5
+local   : ││p95     18.70ms p99     31.40ms ││││Simulated: 12.80ms (+0.0ms)             ││
 @@ row 08
-upstream: .992ms (+0.0ms)67ms (+0.0ms)     │                   █                         6
-local   : ││  Tick rate:        9.0 tps                 ││█ ███  █▆████ ███████████▅█▅ │ │
+upstream: 4327ms (+0.0ms)67ms (+0.0ms)     │     █   █  █   █       █ █                  3
+local   : ││min     8.10ms  max     42.80ms ││││Usage: 75%                              ││
 @@ row 09
-upstream: 9Usage:  672%                    │                   █
-local   : ││  Diff:             0.992ms (+0.0ms)        ││███  ██████ ██████████████   │ │
+upstream: 2Usage:  608%                    │   ▇ █   █  █   █   █   █ █
+local   : ││views   0       samples 120     ││││Tier: Full Fidelity                     ││
 @@ row 10
-upstream: ││  avg:    110.99              ││                   █
-local   : ││  Render:          1.667ms (+0.0ms)         ││████                         │ │
+upstream: ││  avg:    105.54              ││ █ █ █   █  █   █   █   █ █
+local   : ││V/Tick  1.30    Tick Rat60.0 tps│││╰────────────────────────────────────────╯│
 @@ row 11
-upstream: ││  p50:    110.87              ││                   █
-local   : ││  Present:          0.672ms                 ││                             │ │
+upstream: ││  p50:    101.15              ││ █ █ █   █  █   █   █   █ █
+local   : ││                                │││╭─────────────Stress Harness─────────────╮│
 @@ row 12
-upstream:  █  p95:    113.04               │                   █
-local   : ││  Budget Usage:     16.7%                   ││                             │ │
+upstream:  █  p95:    115.81               │ █ █ █   █  █   █   █   █ █
+local   : ││                                │╰╯│Mode: Ramp | Load 0% | +0.0ms           ││
 @@ row 13
-upstream: ││  p99:    115.47              ││   ▅               █
-local   : ││                                            ││                             │ │
+upstream: ││  p99:    116.60              ││ █ █ █   █  █   █   █   █ █
+local   : ││                                │╭╮│Decision: hold                          ││
 @@ row 14
-upstream: ││  min:    109.68              ││   █               █                         9
-local   : ││avg:    110.99   p50:    110.87   p95:      ││                             │ │
+upstream: ││  min:    100.09              ││ █ █ █   █  █   █   █   █ █                  5
+local   : ││                                ││││States: Off, Ramp, Peak, Cool           ││
 @@ row 15
-upstream: .0fpsax:    115.47              ││   █               █
-local   : ││113.04   p99:    115.47                     ││                             │ │
+upstream: .0fpsax:    116.60              ││ █ █ █   █  █   █   █   █ █
+local   : ││                                │││╰────────────────────────────────────────╯│
 @@ row 16
-upstream: ││                              ││   █               █                         3
-local   : ││  min:    109.68   max:    115.47           ││                             │ │
+upstream: ││                              ││ █ █ █   █  █   █   █   █ █
+local   : ││                                │││╭───────────Degradation Tiers────────────╮│
 @@ row 17
-upstream: icrecovergrade)                 ││█  █               █
-local   : ││                                            ││                             │ │
+upstream: ││  Counters                    ││ █ █ █   █  █   █   █   █ █
+local   : ││                                ││││          Tier      Threshold Response  ││
 @@ row 18
-upstream: ││  Views:            28        ││█  █               █
-local   : ││                                            ││                             │ │
+upstream: ││  Views:            29        ││ ███ █   █  █   █   █   █ █
+local   : ││                                ││││>         Full      >=50fps   full fidelit
 @@ row 19
-upstream: ││  Ticks:            27        ││█ ▆█▇     ▄        █
-local   : ││                                            ││                             │ │
+upstream: ││  Ticks:            28        ││ ███ █   █  █   █   █   █ █
+local   : ││                                ││││          Reduced   20-49fps  no FX     ││
 @@ row 20
-upstream: ││  Samples:          26        ││█ ███  ▄  █ ▆  ▅   █                         █
-local   : ││                                            ││                             │ │
+upstream: ││  Samples:          27        ││ ███ █   █  █   █   █   █ █
+local   : ││                                ││││          Minimal   5-19fps   minimal rend
 @@ row 21
-upstream:  ██Minimal          1.00         │█ ████ ██ █ █  █▇▇ █   ██
-local   : │╰────────────────────────────────────────────╯╰─────────────────────────────╯ │
+upstream:  ██░░ Minimal       1.00         │ ███ █   █  █   █   █   █ █
+local   : │╰────────────────────────────────╯╰╯╰────────────────────────────────────────╯│
 @@ row 22
-upstream: ││                              ││█ ████ ██████▅████ █  ███
-local   : │0/120 budget:17ms | samples:2/120                                             │
+upstream: ││                              ││ ███ █   █  █   █   █   █ █
+local   : │s:stress(Ramp) | c:cool | r:reset | p:pause | m:mode(intervals) |             │
 @@ row 23
-upstream: ││  Stress Harness              ││█▆████ ███████████▅█▅ ███
+upstream: ││  Stress Harness              ││▄███ █   █  █   █ █ █   █ █
 local   : ╰──────────────────────────────────────────────────────────────────────────────╯
 @@ row 24
-upstream: 0/120 budget:17ms | samples:2/120 ██████ ██████████████ ████
+upstream: 0/120 budget:17ms | samples:0/120 ██████  ▆██ █ █ █ █▆███ ███
 local   : Performance Challenge [32/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

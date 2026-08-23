@@ -1,17 +1,17 @@
- 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
+﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
 ╭─────────────────────────────────────────────────────Async Tasks───────────────
-│Q:0 R:2 D:1 F:0 | FIFO[First-In-First-Out] | Aging:✓                           
+│Q:0 R:2 D:1 F:0 | FIFO[First-In-First-Out] | Aging:✓
 │╭─────────────────────────────Task Queue──────────────────────────────╮╭───────
-││▶ Running  [M] Initial Setup                             ███████  97%││ID: 1  
+││▶ Running  [M] Initial Setup                             ███████  97%││ID: 1
 ││  Running  [L] Data Sync                                 ████░░░  58%││Name: I
 ││  Done     [H] Cache Warm                                            ││State:R
 unning                                                                 ││Priorit
 ││                                                                     ││Progres
 0%                                                                     ││Elapsed
 0 ticks                                                                ││Estimat
-││                                                                     ││       
-││                                                                     ││       
-││                                                                     ││       
+││                                                                     ││
+││                                                                     ││
+││                                                                     ││
 ││                                                                     │╰───────
 ││                                                                     │╭───────
 ││                                                                     ││Spawned
@@ -20,5 +20,5 @@ unning                                                                 ││Pri
 ││                                                                     ││Started
 : Initial Setup                                                        ││Started
 : Data Sync                                                            ││Started
-: Cache Warm                                                           ││       
- Tab/Shift+Tab: next/prev     0x0 00:00                                ││       
+: Cache Warm                                                           ││
+ Tab/Shift+Tab: next/prev     0x0 00:00                                ││

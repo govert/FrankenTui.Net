@@ -1,60 +1,12 @@
 // Port of .external/frankentui/crates/ftui-widgets/src/tabs.rs
+// Upstream commit: 15cc6543f76b814394c590f9e7719dedd6684e4c
 // Horizontal tab bar with keyboard navigation, overflow handling, closable tabs, and tab reordering helpers.
 
 using FrankenTui.Core;
 using FrankenTui.Render;
+using CanonicalA11y = FrankenTui.A11y;
 
 namespace FrankenTui.Widgets;
-
-// ── Accessibility role extensions ──────────────────────────────────────────
-// The upstream tabs.rs uses A11yRole::Group and A11yRole::Tab which are not in
-// the base A11yRole enum (Input.cs). We extend the enum here as partial additions
-// are not possible in C#, so we handle this via the WithChildren/WithParent
-// extension pattern on A11yNodeInfo.
-// DIVERGENCE: A11yRole.Group and A11yRole.Tab are added to the existing A11yRole
-// enum in Input.cs via extension methods on A11yNodeInfo rather than modifying
-// Input.cs, because the enum is defined there and we cannot use partial enums.
-// The accessibility methods below use the closest available roles (Generic for Group,
-// Generic for Tab) and annotate divergence.
-
-/// <summary>
-/// Extension methods for A11yNodeInfo to support child/parent relationships.
-/// Upstream uses A11yNodeInfo::with_children and A11yNodeInfo::with_parent.
-/// </summary>
-internal static class A11yNodeInfoExtensions
-{
-    // DIVERGENCE: Upstream A11yNodeInfo has with_children(Vec<u64>) and with_parent(u64).
-    // These are not in the base C# A11yNodeInfo (Input.cs). Added here as extension methods
-    // on a wrapper; stored in a side dictionary since A11yNodeInfo is sealed with no extension points.
-    // For the tabs port, children/parent fields are tracked here.
-
-    private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<A11yNodeInfo, A11yNodeInfoMeta>
-        _meta = new();
-
-    private sealed class A11yNodeInfoMeta
-    {
-        public List<ulong>? Children;
-        public ulong? Parent;
-    }
-
-    public static A11yNodeInfo WithChildrenList(this A11yNodeInfo node, List<ulong> childIds)
-    {
-        _meta.GetOrCreateValue(node).Children = childIds;
-        return node;
-    }
-
-    public static A11yNodeInfo WithParentId(this A11yNodeInfo node, ulong parentId)
-    {
-        _meta.GetOrCreateValue(node).Parent = parentId;
-        return node;
-    }
-
-    public static List<ulong>? GetChildren(this A11yNodeInfo node) =>
-        _meta.TryGetValue(node, out var m) ? m.Children : null;
-
-    public static ulong? GetParentId(this A11yNodeInfo node) =>
-        _meta.TryGetValue(node, out var m) ? m.Parent : null;
-}
 
 // ── Tab ──────────────────────────────────────────────────────────────────────
 
@@ -200,7 +152,7 @@ public sealed class TabsState
 // ── Tabs ──────────────────────────────────────────────────────────────────────
 
 /// <summary>Tabs widget.</summary>
-public sealed class Tabs : IStatefulWidget<TabsState>, IWidget, IAccessible
+public sealed class Tabs : IStatefulWidget<TabsState>, IWidget, IAccessible, CanonicalA11y.IAccessible
 {
     private readonly List<Tab> _tabs;
     private WidgetStyle _style;
@@ -506,34 +458,37 @@ public sealed class Tabs : IStatefulWidget<TabsState>, IWidget, IAccessible
     // ── IAccessible ────────────────────────────────────────────────────────
 
     /// <summary>
-    /// Get accessibility nodes for this widget.
+    /// Get the legacy compatibility projection of this widget's accessibility nodes.
     /// Port of ftui_a11y::Accessible::accessibility_nodes.
     /// </summary>
-    public List<A11yNodeInfo> AccessibilityNodes(Rect area)
+    public List<A11yNodeInfo> AccessibilityNodes(Rect area) =>
+        LegacyAccessibilityAdapter.FromCanonical(CanonicalAccessibilityNodes(area));
+
+    List<CanonicalA11y.A11yNodeInfo> CanonicalA11y.IAccessible.AccessibilityNodes(Rect area) =>
+        CanonicalAccessibilityNodes(area);
+
+    private List<CanonicalA11y.A11yNodeInfo> CanonicalAccessibilityNodes(Rect area)
     {
-        ulong baseId = A11yNodeId(area);
+        ulong baseId = WidgetDrawing.A11yNodeId(area);
         int tabCount = _tabs.Count;
         var childIds = Enumerable.Range(0, tabCount)
             .Select(i => baseId + 1 + (ulong)i)
             .ToList();
 
-        // DIVERGENCE: A11yRole.Group and A11yRole.Tab do not exist in the base A11yRole enum
-        // (defined in Input.cs). We use A11yRole.Generic for both and annotate below.
-        // Upstream: A11yNodeInfo::new(base_id, A11yRole::Group, area).with_name(format!("{tab_count} tabs")).with_children(child_ids)
-        var groupNode = A11yNodeInfo.New(baseId, A11yRole.Generic, area)
+        CanonicalA11y.A11yNodeInfo groupNode = CanonicalA11y.A11yNodeInfo
+            .New(baseId, CanonicalA11y.A11yRole.Group, area)
             .WithName($"{tabCount} tabs")
-            .WithChildrenList(childIds);
+            .WithChildren(childIds);
 
-        var nodes = new List<A11yNodeInfo> { groupNode };
+        var nodes = new List<CanonicalA11y.A11yNodeInfo> { groupNode };
         for (int i = 0; i < _tabs.Count; i++)
         {
             var tab = _tabs[i];
             ulong tabId = baseId + 1 + (ulong)i;
-            // DIVERGENCE: A11yRole.Tab not in enum; using Generic.
             nodes.Add(
-                A11yNodeInfo.New(tabId, A11yRole.Generic, area)
+                CanonicalA11y.A11yNodeInfo.New(tabId, CanonicalA11y.A11yRole.Tab, area)
                     .WithName(tab.Title())
-                    .WithParentId(baseId));
+                    .WithParent(baseId));
         }
         return nodes;
     }
@@ -561,13 +516,5 @@ public sealed class Tabs : IStatefulWidget<TabsState>, IWidget, IAccessible
     {
         int r = a - b;
         return r < 0 ? 0 : r;
-    }
-
-    private static ulong A11yNodeId(Rect area)
-    {
-        // DIVERGENCE: Rust uses crate::a11y_node_id(area) which hashes the area.
-        // C# packs the four 16-bit fields into a ulong for a stable, unique id.
-        return (ulong)area.X << 48 | (ulong)area.Y << 32 |
-               (ulong)area.Width << 16 | area.Height;
     }
 }

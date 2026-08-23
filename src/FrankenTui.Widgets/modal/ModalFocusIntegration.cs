@@ -240,6 +240,10 @@ public sealed class UpstreamFocusManager
         _current = null;
         if (prev.HasValue)
         {
+            ModalTelemetry.WriteEvent(
+                ModalTelemetry.FocusChangeEventName,
+                ("from_widget", prev.Value),
+                ("trigger", "blur"));
             _lastEvent = new UpstreamFocusEvent.FocusLost(prev.Value);
             _focusChangeCount++;
         }
@@ -308,7 +312,13 @@ public sealed class UpstreamFocusManager
     public bool PushTrap(uint groupId)
     {
         var returnFocus = _hostFocused ? _current : (_current ?? DeferredFocusTarget());
-        if (!PushTrapWithReturnFocus(groupId, returnFocus)) return false;
+        if (!PushTrapWithReturnFocus(groupId, returnFocus))
+        {
+            ModalTelemetry.WriteEvent(
+                "focus.trap_push rejected: group missing or empty",
+                ("group_id", groupId));
+            return false;
+        }
 
         if (_hostFocused && !IsCurrentFocusableInGroup(groupId))
             FocusFirstInGroupWithoutHistory(groupId);
@@ -324,6 +334,10 @@ public sealed class UpstreamFocusManager
         var trap = _trapStack[^1];
         _trapStack.RemoveAt(_trapStack.Count - 1);
         var hadCurrent = _current.HasValue;
+        ModalTelemetry.WriteEvent(
+            ModalTelemetry.FocusTrapPopEventName,
+            ("group_id", trap.GroupId),
+            ("return_focus", trap.ReturnFocus));
 
         if (!_hostFocused)
         {
@@ -446,6 +460,10 @@ public sealed class UpstreamFocusManager
     internal bool PushTrapWithReturnFocus(uint groupId, ulong? returnFocus)
     {
         if (!GroupHasFocusableMember(groupId)) return false;
+        ModalTelemetry.WriteEvent(
+            ModalTelemetry.FocusTrapPushEventName,
+            ("group_id", groupId),
+            ("return_focus", returnFocus));
         _trapStack.Add(new UpstreamFocusTrap(groupId, returnFocus));
         return true;
     }
@@ -521,6 +539,21 @@ public sealed class UpstreamFocusManager
         _lastEvent = prev.HasValue
             ? new UpstreamFocusEvent.FocusMoved(prev.Value, id)
             : (UpstreamFocusEvent)new UpstreamFocusEvent.FocusGained(id);
+        if (prev.HasValue)
+        {
+            ModalTelemetry.WriteEvent(
+                ModalTelemetry.FocusChangeEventName,
+                ("from_widget", prev.Value),
+                ("to_widget", id),
+                ("trigger", "navigate"));
+        }
+        else
+        {
+            ModalTelemetry.WriteEvent(
+                ModalTelemetry.FocusChangeEventName,
+                ("to_widget", id),
+                ("trigger", "initial"));
+        }
         _current = id;
         _focusChangeCount++;
         return true;

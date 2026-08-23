@@ -1,24 +1,24 @@
- 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
+﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
 ╭───────────────────────────────────────────────────Layout Inspector────────────
 │╭───────────────Inspector────────────────╮  ╭───────────────────Layout─────────
 ││Scenario: Flex Trio                     │  │╭Fixed 44x3 [0..∞ x 3..3])────────
-││Details: Vertical flex: Fixed + Min + Ma│  ││                                 
+││Details: Vertical flex: Fixed + Min + Ma│  ││
 ││Step: Constraints - Inspect min/max boun│  │╰─────────────────────────────────
-││                                        │  │                                  
+││                                        │  │
 ││Overlay: on   Tree: on                  │  │.Min 44x4→44x7 [0..∞ x 4..∞]──────
-││                                        │  ││                                 
-││Keys: n/p scenario  [/ ] step  o overlay│  ││                                 
-││                                        │  │.                                 
-││FlexRoot  req 44x15  got 44x15  min 0x0 │  ││                                 
-││  Fixed  req 44x3  got 44x3  min 0x3  ma│  ││                                 
+││                                        │  ││
+││Keys: n/p scenario  [/ ] step  o overlay│  ││
+││                                        │  │.
+││FlexRoot  req 44x15  got 44x15  min 0x0 │  ││
+││  Fixed  req 44x3  got 44x3  min 0x3  ma│  ││
 ││  Min  req 44x4  got 44x7  min 0x4  max │  │╰─────────────────────────────────
-││  Max  req 44x6  got 44x3  min 0x0  max │  │                                  
+││  Max  req 44x6  got 44x3  min 0x0  max │  │
 ││                                        │  │.Max 44x6→44x3 [0..∞ x 0..6]──────
-││                                        │  ││                                 
+││                                        │  ││
 ││                                        │  │.─────────────────────────────────
 ││                                        │  ╰──────────────────────────────────
-││                                        │                                     
+││                                        │
 ││                                        │  ╭────────────────────Tree──────────
 ││                                        │  │FlexRoot req=44x15 got=44x15 min=0
-││                                        │  │  Fixed req=44x3 got=44x3 min=0x3 
+││                                        │  │  Fixed req=44x3 got=44x3 min=0x3
 d)  Tab/Shift+Tab: next/prev  0x0 00:00   │  │  Min req=44x4 got=44x7 min=0x4 ma

@@ -2,8 +2,8 @@
 Upstream snapshot: app_hyperlinkplayground_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 779
-Local nonblank chars: 997
-Local/upstream char ratio: 1.280
+Local nonblank chars: 1306
+Local/upstream char ratio: 1.677
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -14,64 +14,64 @@ upstream: ╭──────────────────────�
 local   : ╭─────────────────────────────Hyperlink Playground─────────────────────────────╮
 @@ row 03
 upstream: │Hyperlink Playground  OSC-8 + Hit Regions
-local   : │╭────────────────────────────────────────────────────────────────────────────╮│
+local   : │Hyperlink Playground | OSC-8 + Hit Regions                                    │
 @@ row 04
 upstream: │Up/Down move · Tab cycle · Enter activate · Mouse hover/click
-local   : ││Hyperlink Playground  OSC-8 + Hit Regions                                   ││
+local   : │Up/Down move | Tab cycle | Enter activate | Mouse hover/click                 │
 @@ row 05
 upstream: │
-local   : ││Up/Down move · Tab cycle · Enter activate · Mouse hover/click               ││
+local   : │                                                                              │
 @@ row 06
 upstream: │╭Links (OSC-8)──────────────────────────────────────╮╭Details & Registry───────
-local   : │╰────────────────────────────────────────────────────────────────────────────╯│
+local   : │╭─────Links (OSC-8) [focus 1]─────╮╭───Details & Registry────╮╭Controls + JSONL
 @@ row 07
 upstream: ││> ]8;;https://ftui.devFrankenTUI]8;;                                       ││S
-local   : │╭────────────────────Links (OSC-8)─────────────────────╮╭─Details & Registry─╮│
+local   : ││>   FrankenTUI  https://ftui.dev ││Selected: FrankenTUI     ││Up/Down move │ │
 @@ row 08
 upstream: ││  ]8;;https://ftui.dev/docsDocs]8;;
-local   : ││> FrankenTUI                                          ││Selected: FrankenTUI││
+local   : ││Docs        https://ftui.dev/docs││URL: https://ftui.dev    ││focus | Tab  │ │
 @@ row 09
 upstream: ││  ]8;;https://github.com/Dicklesworthstone/frankentuiGitHub]8;;
-local   : ││  Docs                                                ││URL:                ││
+local   : ││GitHub                           ││Registry ID: 1           ││cycle links |│ │
 @@ row 10
 upstream: ││  ]8;;https://iterm2.com/documentation-escape-codes.htmlOSC 8 Spec]8;;
-local   : ││  GitHub                                              ││https://ftui.dev    ││
+local   : ││https://github.com/Dicklesworthst││Hit: id=8000 region=Link ││Enter        │ │
 @@ row 11
 upstream: ││  ]8;;https://vt100.net/docs/vt510-rm/OSC.htmlANSI Reference]8;;
-local   : ││  OSC 8 Spec                                          ││Registry ID: 1      ││
+local   : ││one/frankentui                   ││data=1                   ││activate |   │ │
 @@ row 12
 upstream: ││                                                   ││OSC 8 close: \x1b]8;;\x1b
-local   : ││  ANSI Reference                                      ││Hit: id=8000        ││
+local   : ││OSC 8 Spec                       ││OSC 8 open:              ││Space        │ │
 @@ row 13
 upstream: ││                                                   ││Notes: Project home + ove
-local   : ││                                                      ││region=Link data=1  ││
+local   : ││https://iterm2.com/documentation-││\x1b]8;;https://ftui.dev\││activate | c │ │
 @@ row 14
 upstream: ││                                                   ││Hover: None
-local   : ││                                                      ││OSC 8 open:         ││
+local   : ││escape-codes.html                ││x1b\                     ││copy URL     │ │
 @@ row 15
 upstream: ││                                                   ││
-local   : ││                                                      ││\x1b]8;;https://ftui││
+local   : ││ANSI Reference                   ││OSC 8 close:             ││Mouse:       │ │
 @@ row 16
 upstream: ││                                                   ││Registry map
-local   : ││                                                      ││.dev\x1b\           ││
+local   : ││https://vt100.net/docs/vt510-rm/O││\x1b]8;;\x1b\            ││move/drag    │ │
 @@ row 17
 upstream: ││                                                   ││[1] FrankenTUI
-local   : ││                                                      ││OSC 8 close:        ││
+local   : ││SC.html                          ││Notes: FrankenTUI target ││hover, down  │ │
 @@ row 18
 upstream: ││                                                   ││[2] Docs
-local   : ││                                                      ││\x1b]8;;\x1b\       ││
+local   : ││                                 ││Hover: None | Action:    ││selects, up  │ │
 @@ row 19
 upstream: ││                                                   ││[3] GitHub
-local   : ││                                                      ││Notes: Project home ││
+local   : ││Each row registers LinkRegistry  ││idle                     ││activates    │ │
 @@ row 20
 upstream: ││                                                   ││[4] OSC 8 Spec
-local   : ││                                                      ││+ overview          ││
+local   : ││id plus HitRegion::Link data.    ││Copied: no | Activations:││when inside  │ │
 @@ row 21
 upstream: ││                                                   ││[5] ANSI Reference
-local   : ││                                                      ││Hover: None         ││
+local   : │╰─────────────────────────────────╯╰─────────────────────────╯╰─────────────╯ │
 @@ row 22
 upstream: ││                                                   ││
-local   : │╰──────────────────────────────────────────────────────╯╰────────────────────╯│
+local   : │LinkRegistry | HitRegion::Link | OSC-8 open/close | FTUI_LINK_REPORT_PATH     │
 @@ row 23
 upstream: ││                                                   ││
 local   : ╰──────────────────────────────────────────────────────────────────────────────╯

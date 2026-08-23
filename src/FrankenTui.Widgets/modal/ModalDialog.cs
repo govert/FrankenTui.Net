@@ -370,8 +370,10 @@ public sealed class ModalContainerSizeConstraints
         ushort h = availHeight;
         if (MaxWidth.HasValue) w = Math.Min(w, MaxWidth.Value);
         if (MaxHeight.HasValue) h = Math.Min(h, MaxHeight.Value);
-        if (MinWidth.HasValue) w = Math.Clamp(w, MinWidth.Value, availWidth);
-        if (MinHeight.HasValue) h = Math.Clamp(h, MinHeight.Value, availHeight);
+        // Never exceed available; when the minimum exceeds the available area
+        // (tiny terminal), use the available area rather than throwing.
+        if (MinWidth.HasValue) w = (ushort)Math.Min(Math.Max(w, MinWidth.Value), availWidth);
+        if (MinHeight.HasValue) h = (ushort)Math.Min(Math.Max(h, MinHeight.Value), availHeight);
         return (w, h);
     }
 }

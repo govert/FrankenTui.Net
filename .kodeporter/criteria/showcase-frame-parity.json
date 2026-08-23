@@ -1,0 +1,15 @@
+{
+  "id": "showcase-frame-parity",
+  "version": "1",
+  "description": "Screen-by-screen showcase preservation under pinned viewport, seed, frame, input tape, and host mode.",
+  "dimensions": ["result", "effects", "determinism", "realization"],
+  "warrantMethods": ["differential", "property-adversarial", "reviewed"],
+  "comparisonMethod": "exact-json-v1",
+  "settings": {
+    "staticFrames": "Exact normalized terminal frame equality is required for declared exact lanes.",
+    "interactive": "State transitions and evidence streams must be compared from the same scripted inputs.",
+    "partial": "Similarity metrics are diagnostic observations only and never preservation decisions.",
+    "hosts": "Terminal and web runners must identify realization and host context separately.",
+    "adapterResult": "The exact JSON result is a normalized terminal frame; the normalization version and execution context are pinned by the verification plan."
+  }
+}

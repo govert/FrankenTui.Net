@@ -1,24 +1,24 @@
 ﻿1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 ╭──────────────────────────────Time-Travel Studio──────────────────────────────╮
-│Time-Travel Studio  |  Snapshots: 42  |  Frame: 24/42  |  ▶ Playing (1.0x)    │
-│╭──────────────────────────────────Timeline──────────────────────────────────╮│
-││[0]──[10]──[20]──▶[24]──[30]──[40]                                          ││
-││                                                                            ││
-││Controls:                                                                   ││
-││  Space play/pause  ←→ step  Home/End first/last                            ││
-││  r record  c clear  e export                                               ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-│╰────────────────────────────────────────────────────────────────────────────╯│
+│╭──────────Timeline (1/50) [focus]───────────╮╭──────────Frame Info──────────╮│
+││=........................                   ││Status: Paused                ││
+││Markers: frame 1, 8, 16 | Click timeline /  ││Frame: 1/50                   ││
+│╰────────────────────────────────────────────╯│Size: 40x15                   ││
+│╭────Frame Preview────╮╭──Frame A/B Compare──╮│Changes: 42 cells             ││
+││MetriValueFieldData  ││Slot FrameFieldValue ││Memory: 28800 bytes           ││
+││Frame1/50 PatteTime Tr│> A  framecheck0x8F34A│Checksum: 8F34AB1200000000    ││
+││Delta42 ceRende100us ││B    framecheck0x8F34A│Chain hash: 0x0F0E0D0C0B0A0908││
+││Check0x8F3Chainverifie│Diff 37 ceconte24    │╰──────────────────────────────╯│
+││Markeyes  StatePaused││Style13   HeatmOverlay╭───────────Controls───────────╮│
+││                     ││                     ││State: Paused                 ││
+││                     ││                     ││Space: Play/Pause             ││
+││                     ││                     ││Left/Right or h/l: Step frame ││
+││                     ││                     │╰──────────────────────────────╯│
+││                     ││                     │╭─────Diagnostics + Export─────╮│
+││                     ││                     ││Diagnostics scroll: 0         ││
+││                     ││                     ││Events: nav, playback, record,││
+││                     ││                     ││marker, clear                 ││
+││                     ││                     ││JSONL report:                 ││
+│╰─────────────────────╯╰─────────────────────╯╰──────────────────────────────╯│
 ╰──────────────────────────────────────────────────────────────────────────────╯
 Time-Travel Studio [31/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

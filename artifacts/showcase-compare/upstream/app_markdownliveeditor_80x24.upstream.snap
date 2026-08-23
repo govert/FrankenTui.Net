@@ -1,24 +1,24 @@
- 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
+﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
 ╭─────────────────────────────────────────────────Live Markdown Editor──────────
 │╭───────────────────────────────────────────────────────Search─────────────────
-││Query:    Search in editor (Ctrl+F)                                           
+││Query:    Search in editor (Ctrl+F)
 │╰──────────────────────────────────────────────────────────────────────────────
-│                                                                               
+│
 │╭─────────────────────────Editor──────────────────────────╮ ╭──────────────────
 ││ 1  # Live Markdown Editor                               │ │Live Markdown Edit
-││ 2                                                       │ │                  
-││ 3  Write Markdown on the left, preview on the right.    │ │Write Markdown on 
-││ 4                                                       │ │                  
-││ 5  ## Goals                                             │ │Goals             
+││ 2                                                       │ │
+││ 3  Write Markdown on the left, preview on the right.    │ │Write Markdown on
+││ 4                                                       │ │
+││ 5  ## Goals                                             │ │Goals
 ││ 6                                                       │ │• Split view edito
 ││ 7  - Split view editor + preview                        │ │• Live updates wit
 ││ 8  - Live updates without flicker                       │ │• Search with high
 ││ 9  - Search with highlighted matches                    │ │• Diff mode: raw v
-││10  - Diff mode: raw vs rendered width                   │ │                  
-││11                                                       │ │Notes             
-││12  ## Notes                                             │ │                  
+││10  - Diff mode: raw vs rendered width                   │ │
+││11                                                       │ │Notes
+││12  ## Notes                                             │ │
 ││13                                                       │ │Inline math: E = m
-││14  Inline math: $E = mc^2$                              │ │                  
-││15                                                       │ │─── rust ───      
+││14  Inline math: $E = mc^2$                              │ │
+││15                                                       │ │─── rust ───
 ││16  ```rust                                              │ │  fn render(frame:
 orced)Tab/Shift+Tab: next/prev0x0 00:00                    │ │      // Draw widg

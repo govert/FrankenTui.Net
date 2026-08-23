@@ -1,24 +1,24 @@
- 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
+﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
 ╭────────────────────────────────────────────────────Widget Gallery─────────────
-│▸ A: Inputs │   B: Display │   C: Status │   D: Data Viz │   E: Navigation │   
+│▸ A: Inputs │   B: Display │   C: Status │   D: Data Viz │   E: Navigation │
 │╭TextInput─────╮╭Masked Input─╮╭Command Palette─────────╮╭Log Viewer───────────
 ││o@example.com ││••••••       ││                        ││INFO  boot: FrankenTU
-││              ││             ││ ╭─ Command Palette ──╮ ││demo started         
+││              ││             ││ ╭─ Command Palette ──╮ ││demo started
 ││              ││             ││ │>Type to search...  │ ││DEBUG layout: resolve
-│╰──────────────╯╰─────────────╯│ │> [App] Quit  Exit …│ ││6 constraints        
-│╭TextArea─────────────────────╮│ │  [File] Open File  │ ││WARN  io: slow disk  
+│╰──────────────╯╰─────────────╯│ │> [App] Quit  Exit …│ ││6 constraints
+│╭TextArea─────────────────────╮│ │  [File] Open File  │ ││WARN  io: slow disk
 ││1  FrankenTUI text area      ││ ╰────────────────────╯ ││detected, using cache
-││2  - Multi-line editing      ││                        ││INFO  render: diff   
+││2  - Multi-line editing      ││                        ││INFO  render: diff
 ││3  - Soft wrap enabled       │╰────────────────────────╯│cells=512 runs=18   0
 ││4  - Line numbers            │╭File Picker─────────────╮╰─────────────────────
 ││                             ││.                       │╭ProgressBar──────────
-││                             ││> 📁 .beads             ││          0%          
-││                             ││  📁 .cargo             ││         25%          
-││                             ││  📁 .git               ││         50%          
-││                             ││  📁 .github            ││         75%          
+││                             ││> 📁 .beads             ││          0%
+││                             ││  📁 .cargo             ││         25%
+││                             ││  📁 .git               ││         50%
+││                             ││  📁 .github            ││         75%
 │╰─────────────────────────────╯│  📁 crates             │╰──────────────────────
 │╭Checkbo╮╭Select╮╭Validation +╮╰────────────────────────╯╭Spinners─────────────
-││[ ] Ena││Select││! Invalid e…│╭Notifications───────────╮│⠇ Loading (DOTS)     
+││[ ] Ena││Select││! Invalid e…│╭Notifications───────────╮│⠇ Loading (DOTS)
 ││[x] Syn││Number││ETA  00:59  ││                        │╰─────────────────────
 ││( ) Lig││Slider││🧭 …        ││                        │╭Toast─────────────────
   Tab/Shift+Tab: next/prev    0x0 00:00                  ││┌────────────────────

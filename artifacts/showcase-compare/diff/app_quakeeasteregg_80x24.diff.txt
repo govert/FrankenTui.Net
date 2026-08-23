@@ -2,8 +2,8 @@
 Upstream snapshot: app_quakeeasteregg_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 1110
-Local nonblank chars: 560
-Local/upstream char ratio: 0.505
+Local nonblank chars: 1244
+Local/upstream char ratio: 1.121
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -14,64 +14,64 @@ upstream: ╭──────────────────────�
 local   : ╭───────────────────────────Quake E1M1 (Easter Egg)────────────────────────────╮
 @@ row 03
 upstream: │WASD move · Arrows look · Space jump · F fire · V quality [Reduced] · R reset
-local   : │WASD move · Arrows look · Space jump · F fire · V quality [Reduced] · R reset │
+local   : │Quake E1M1 (Easter Egg) | WASD move | Arrows look | Space jump | F fire | V   │
 @@ row 04
 upstream: │
-local   : │                                                                              │
+local   : │quality [Full] | R reset                                                      │
 @@ row 05
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠛  ⢀⣠⣴⣾⣿⣿⣿⣿⣿⣿
-local   : │    ⡏⠉⠉⠉⠉⠉⠉⠉⠉⠉⡏⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⡏⠉⠉⠉⠉⠉⠉⠉⠉⠉⡇                                 │
+local   : │Real upstream screen renders QUAKE_E1M1 mesh with physics, collision, depth,  │
 @@ row 06
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠛⠁⢀⣠⣴⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-local   : │    ⡇         ⡇                ⢰  ⡇         ⡇                                 │
+local   : │╭───────Quake E1M1 [focus flash=0]───────╮╭────────Player + Physics─────────╮ │
 @@ row 07
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠛⢁⣠⣴⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿                                       ⢀⢤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤
-local   : │    ⡇         ⡇         ⡄      ⢸  ⡇         ⡇                                 │
+local   : ││ ⠻⢿⣿⣿⣿⣿⡿⠃          ⠘⠿⣿⣿⣿⣿⣿⠟           ⠻⢿││pos=(0.54,0.51,0.18) yaw=0.00    │ │
 @@ row 08
 upstream: ⣿⣿⣿⣿⣿⡿⢛⣡⣴⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿                                       ⢀⣮⣿⡿⠿⠿⠿⠿⠛⠛⠛⠛⠉
-local   : │    ⡇         ⡇      ⢀⣀⣀⣇⣀⣀    ⢸  ⡇         ⡇                                 │
+local   : ││   ⠈⠉⠉     ⢀⣀⣠⣤⣀⡀     ⠉⠉⠁     ⣀⣀⣤⣄⣀     ││pitch=0.00 quality=Full flash=0  │ │
 @@ row 09
 upstream: │      ⢿⣿⣿⣻⣵⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿                                 ⣷⣄         ⣿
-local   : │    ⡇         ⡇      ⢸  ⡇ ⢸    ⢸  ⡇         ⡇                                 │
+local   : ││          ⢴⣿⣿⣿⣿⣿⣿⣷          ⠠⣾⣿⣿⣿⣿⣿⣿⡆   ││reset=0 scroll=0                 │ │
 @@ row 10
 upstream: ⣿⣿⡿⠟⢂⡏⠉⠙⠛⠻⠿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿                                    ⣿⣿⣷⣄       ⣿
-local   : │    ⡏⠉⠉⠉⠉⠉⠉⠉⠉⠉⠁      ⢸⠉⠁⡇⠉⢹    ⢸  ⡇         ⡇                                 │
+local   : ││          ⠈⠙⠻⠿⠿⠟⠛⠁           ⠉⠛⠿⠿⠿⠛⠉    │╰─────────────────────────────────╯ │
 @@ row 11
 upstream: ⣿⣿⠁⣠⣿⡇       ⠈⠉⠉⠛⠛⠿⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿                                    ⣿⣿⣿⣿⣿⣦⡀    ⣿
-local   : │    ⡇ ⢰⠒⠒⠒⠒⢲         ⠘⠒⠒⡗⠒⠚    ⠘  ⡇         ⡇                                 │
+local   : ││ ⣠⣴⣶⣶⣶⣶⣤⡀          ⢀⣤⣶⣶⣶⣶⣦⣄           ⣠⣴│╭─Mesh Raster Evidence [scroll 0]─╮ │
 @@ row 12
 upstream: ⣿⡟⡰⣿⣿⡇                ⠉⠉⠛⠛⠻⠿⢿⣿⣿⣿                                    ⣿⣿⣿⣿⣿⣿⣿⣦⡀  ⣿
-local   : │    ⡇ ⢸    ⢸            ⠇         ⡇     ⢀⢠⢰⢸⡇                                 │
+local   : ││ ⠻⣿⣿⣿⣿⣿⡿⠇          ⠘⢿⣿⣿⣿⣿⣿⠿           ⠻⣿││Renderer:                        │ │
 @@ row 13
 upstream: ⣿⢃⡇⠈⠻⡇                        ⠈⠉                                    ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⣄⣿
-local   : │    ⡇ ⢸⣀⣀⣀⣀⣸                      ⡇ ⢀⢠⢰⢸⢸⢸⢸⢸⡇                                 │
+local   : ││   ⠉⠉⠉⠁     ⣀⣀⣀⣀     ⠈⠉⠉⠉     ⢀⣀⣀⣀⡀     ││local-fps-braille-canvas         │ │
 @@ row 14
 upstream: ⡿⣸⡇                                                                 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷
-local   : │    ⡇                             ⡇ ⢸⢸⢸⢸⢸⢸⢸⢸⡇                                 │
+local   : ││          ⢰⣿⣿⣿⣿⣿⣿⣦          ⠠⣾⣿⣿⣿⣿⣿⣷⡄   ││Mode: braille | Frame: 0 |       │ │
 @@ row 15
 upstream: ⣄     ⣿⣇⣿⡇  ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿                        ⠇       ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-local   : │    ⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠁                                 │
+local   : ││          ⠈⠛⠻⠿⠿⠿⠛⠁           ⠙⠻⠿⠿⠿⠟⠋    │╰─────────────────────────────────╯ │
 @@ row 16
 upstream: ⣿⣷⣄⡀  ⣿⣼⣿⡇  ⣿⣿⣿⡿⠛⠻⠿⣿⣿⣿                                    ⠉⠁⡅⠉⠁   ⠤⣤⣿⣿⡿⠿⠿⠿⠿⠿⠿⠿⠿⠿
-local   : │                                                                              │
+local   : ││ ⢀⣤⣶⣶⣶⣶⣤⡀           ⣠⣴⣶⣶⣶⣦⣄           ⢀⣤│╭──────Harness + Divergence───────╮ │
 @@ row 17
 upstream: ⠿⠿⠿⠿⠦⣿⣯⣿⣿⡇⣜⣿⣿⣿⠏     ⣿    ⣿    ⣟⣿⣿⣿⢿⣿⣿⣿⣿                     ⠁        ⠉⠉⠛⠒⠶⠶⣖⣲⡶⠶⣶
-local   : │                                                                              │
+local   : ││ ⠻⣿⣿⣿⣿⣿⣿⠇          ⠘⢿⣿⣿⣿⣿⣿⡿           ⠻⣿││FPS-style Quake slipgate raster  │ │
 @@ row 18
 upstream: ⣶⣶⣶⣶⣶  ⣿⣿⣷⣿⣿⠟⠁⣠⣴⡇   ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿    ⣿    ⡀  ⢀    ⡀         ⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀    ⠈⠉⠙⠒
-local   : │                                                                              │
+local   : ││   ⠉⠉⠉⠉     ⢀⣀⣀⣀     ⠈⠉⠉⠉⠁     ⣀⣀⣀⡀     ││approximation.                   │ │
 @@ row 19
 upstream: ⣉⡁⣿⣿⣿⣿⣿⠟⣡⣴⣿⣿⣿⡇   ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿  ⢀⣠⣴⡤⠾⣻⣿⣿⣿⠶⠒⢒⣾⡷⠶⠶⠶⠶⠶⠖⢒⣲⣶⣿⣿⣿⣿⣿⣿⣿⣿⠿⠯⠭⠭⣭⡭⣉⠉⠉⠉⡉
-local   : │                                                                              │
+local   : ││          ⣰⣾⣿⣿⣿⣿⣿⣦          ⢀⣶⣿⣿⣿⣿⣿⣷⡄   ││Canvas.ensure_for_area(mode=Brail│ │
 @@ row 20
 upstream: ⢹⣿⣿⣿⣿⣿⣿⣿⣿⡇   ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢀⣀⣴⣶⣶⣾⣿⣿⣿⣾⣿⣾⣿⣷⣿⡂⣰⣽⣿⣇⣀⣀⣀⣀⣤⣶⣿⣿⣿⣿⣿⣿⣿⡿⣿⣭⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-local   : │                                                                              │
+local   : ││          ⠈⠛⠿⠿⠿⠿⠟⠁           ⠙⠻⠿⠿⠿⠿⠋    │╰─────────────────────────────────╯ │
 @@ row 21
 upstream: ⣿⣿⣿⣿⣿   ⣿⣿⠟⠛⠛⠛  ⠁   ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡂⠉⠉⠁⣿⣿⣿⣿⣿⣿⣿⣯⣟⣿⣟⣹⣽⣾⣿⣿⣿⣧⣤⣼⣾⣿⣿⣿⣿⣿⣿⣿⣟⣋⣁⣀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⣻⣿⡟
-local   : │                                                                              │
+local   : ││ ⢀⣤⣴⣶⣶⣦⣄⡀           ⣠⣤⣶⣶⣶⣤⣀           ⢀⣤│                                    │
 @@ row 22
 upstream: │ ⣿          ⣿⣿⣿⣿⣿⣿⣿⣿⣀⠠ ⣶⣶⠶⠶⣿⣿⣿⣿⣦⣄⣸⣷⣮⣿⣿⣿⣻⣿⣿⣿⣿⣿⣥⣤⣤⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⣿⣿⣶⣦⣿⣭⣭⣵⣶⣶⣿⣿⣿⣗⣽⣿⣧⣿
-local   : │                                                                              │
+local   : │╰────────────────────────────────────────╯                                    │
 @@ row 23
 upstream: ⣿⡿⠿⠛⠛⠛⠋⣿⣿⡿⠿⠛⣿⣿⣿⣀⣠⣤⠶⠚⠉⣿⣿⣿⣿⣿⣦⣤⣿⣿⣿⣿⡿⠟⣿⣿⣿⣿⣿⣿⣀⣼⣿⣿⣾⣧⣾⣿⣿⣿⣿⣿⡿⢻⠛⠛⠟⠛⣻⠛⠛⣿⠻⢿⣿⣿⣿⣿⣿⣿⣿⣶⣽⣿⣿⣶⣿⣿⣿⢈
 local   : ╰──────────────────────────────────────────────────────────────────────────────╯

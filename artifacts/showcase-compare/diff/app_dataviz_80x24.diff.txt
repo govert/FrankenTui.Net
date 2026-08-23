@@ -2,8 +2,8 @@
 Upstream snapshot: app_dataviz_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 1225
-Local nonblank chars: 672
-Local/upstream char ratio: 0.549
+Local nonblank chars: 748
+Local/upstream char ratio: 0.611
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -14,64 +14,64 @@ upstream: ╭──────────────────────�
 local   : ╭───────────────────────────────────Data Viz───────────────────────────────────╮
 @@ row 03
 upstream: │╭─────────────Sparklines──────────────╮╭────────Bar Chart (Vertical)─────────╮╭
-local   : │                                                                              │
+local   : │                                        ╭─────────────Narrative──────────────╮│
 @@ row 04
 upstream: ││Sine wave: +0.96                     ││                              ▄▄    █│█
-local   : │                  ⣀⣀⠤⠤⠤⠒⠢⠤⠤⢄⣀                   ⣀⠤⠔⠒⠉⠉⠉⠉⠉⠉⠉⠉⠑⠒⠤⢄⣀             │
+local   : │                                        │Active panel: Progress              ││
 @@ row 05
 upstream:  █▄▇█▅▁   █▆▂ ▂▆█▇▃ ▁▅█▇▄▁ ▃▇█▅▁▇█▅▁ ▃▇││          ▁▁    ▅▅            ██ ▃▃ █│
-local   : │⠉⠙⠫⠭⣉⡉⠉⠉⠉⠉⠉⠉⢉⣉⠭⠝⠛⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠙⠛⠭⣉⡉⠉⠉⠉⠉⠉⠉⠉⠉⢉⡩⠭⠛⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⣉⣉⣉⣉⣙⣛⡛⠭⠁       │
+local   : │           frame budget used            │Selected metric row: 0              ││
 @@ row 06
 upstream:  █ █ █     █   -0.29                   ││      ▇▇  ██    ██     ▄▄ ▁▁  ██ ██ █│█
-local   : │⠤⠤⠒⠢⠤⠬⢍⣉⠉⠉⠉⠉⠁              ⣀⠤⠔⠒⠉⠉⠉⠉⠉⠙⠛⣛⣳⢲⡮⣍⣁    ⢰⢲⡖⡆   ⣀⡠⢴⢲⡟⡏⠉      ⠈⠉        │
+local   : │                                        │Narrative detail: 0                 ││
 @@ row 07
 upstream:    █ █▁ █     ▇█▅▁ ▃▇█▆▂ ▂▆█▇▃ ▁▆▂ ▁▅█▇││▄▄    ██  ██ ▆▆ ██     ██ ██  ██ ██ █│█
-local   : │⠉⠉⠉⠉⠉⠉⠉⠉⠉⠙⠛⠭⣉⡉⠉⠉⠉⠉⠉⠉⠉⠉⢉⡩⠭⠛⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⡏⣿⢹⣏⣏⣉⣉⣙⣛⡟⣿⢽⡯⣿⢻⠋⠉⠉⡭⣽⢹⡏⣿⢹⠉⠉⠉⠉⠉⠉⠉⠉⠁       │
+local   : │                                        │Context action: clear               ││
 @@ row 08
 upstream:    █ █ █      : -0.82                  ││██ ██ ██  ██ ██ ██  ▆▆ ██ ██  ██ ██ █│
-local   : │      ⣀⠤⠔⠒⠉⠉⠉⠉⠉⠙⠛⠛⠓⠒⠮⢍⣁           ⣀⡠⢴⢲⡏⣿⢹⡇⣿⢸ ⢀⣀⡏⣿⢹⡗⣿⢼⣀  ⡇⣿⢸⡇⣿⢸⡤⡄     ⣀        │
+local   : │                                        │                                    ││
 @@ row 09
 upstream:  █   █ █▃█    ▂ ▃▃▆▃▅█▁█▄ ▇▆▃▁  ▇▁▃▁▅▃▄││██ ██ ██  ██ ██ ██  ██ ██ ██  ██ ██ █│
-local   : │⠉⢉⡩⠭⠛⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠙⠛⠛⠭⠭⠭⠝⠛⠋⠉⠉⠉⢹⢹⡏⣿⢹⡏⣿⢹⡭⣽⢹⡏⣿⢹⡏⣿⢹⡏⣿⢻⡯⣿⣹⣏⣿⣹⣏⣏⣭⠭⠛⠋⠉⠉⠁       │
+local   : │              cache reuse               │Detail: progress lanes selected;    ││
 @@ row 10
 upstream:  █ █ █████████ COS ███░░░░░ RND █░░░░░░││██ ██ ██  ██ ██ ██  ██ ██ ██  ██ ██ █│█
-local   : │⠉⠁                                 ⠯⠿⠼⠧⠿⠼⠧⠿⠼⠧⠿⠼⠧⠿⠼⠧⠿⠼⠧⠿⠼⠧⠿⠼⠧⠿⠼⠧⠿⠼             │
+local   : │                                        │chart parity remains pending.       ││
 @@ row 11
 upstream:  █ █ █ █     █                         ││██ ██ ██  ██ ██ ██  ██ ██ ██  ██ ██ █││
-local   : │                                                                              │
+local   : │Metric              Value               │                                    ││
 @@ row 12
 upstream:  █                                     ││   Q1        Q2        Q3        Q4  ││
-local   : │                                                                              │
+local   : │FPS target          60                  │The .NET port does not yet have     ││
 @@ row 13
 upstream: │╰─────────────────────────────────────╯╰─────────────────────────────────────╯╰
-local   : │                                                                              │
+local   : │Dirty rows          3                   │upstream chart/canvas widgets, so   ││
 @@ row 14
 upstream: │╭─────────────Line Chart──────────────╮╭──────────Canvas + Heatmap───────────╮╭
-local   : │                                                                              │
+local   : │Frames              1                   │this screen uses density through    ││
 @@ row 15
 upstream: │││⣆⡄ ⢠⡀⡆ ⣀⣴⡀ ⢀⣦⡀ ⢰⢀⡄⢀⢤  ⣄⡆ ⣀⣄■ sin(t)⡄││⡏⣭⣭⡭⠭⠭⠭⠭⠍⠭⠭⠭⠩⠭⡉⣉⡉⣉⣉⣉⢉⣉⢉⠭⠍⠭⠭⠭⠩⠭⠭⠭⠭⢭⣭⣭⡇││
-local   : │                                                                              │
+local   : │Cells               128                 │tables, progress lanes, and runtime ││
 @@ row 16
 upstream: │││⢻⢱ ⡸⢸⢱ ⣿⣏⢱ ⣮⣿⡇ ⣎⡇⢣⢸⠸⡀⢰⢹⢱ ⣿⣹■ cos(t) ││⡇  ⠈⣉⣉⡲⠶⠦⠲⠶⠴⢊⣁⡉⡉⠈   ⠁⢉⢉⣈⡑⠦⠶⠖⠴⠶⢖⣉⣉⠁  ⡇│
-local   : │                                                                              │
+local   : │                                        │counters.                           ││
 @@ row 17
 upstream:    ⣾⠘⡄⡇⡞⣼⢰⡏⣿⢸⡇⡏⣿⣷ ⣿⢳⢸⢸⡄⡇⡎⢸⣼⡀⡏⡟■⡇     ⣿ ││⡇⡖⠋⠉⠁   ⢀⣀⣀⢀⠤⠄⠤⠚⠑⠋⠉⠙⠊⠓⠤⠠⠤⡀⣀⣀⡀   ⠈⠉⠙⢢⡇│
-local   : │                                                                              │
+local   : │                                        │                                    ││
 @@ row 18
 upstream:    ⠿⡆⡇⣇⢇⣿⣼⣿⠿⣠⣿⢃⢿⣿⢀⣿⡾⣸⣾⡇⡇⣷⣇⡏⣇⣿⠇⣧⣿⠇⣿⡇⣇⣷⡇⡇││⡇⣉⠷⠦⠶⠶⣉⣉⣁⡀                 ⢀⣈⣉⣉⠶⠶⠴⠾⣉⡇│
-local   : │                                                                              │
+local   : │                                        │                                    ││
 @@ row 19
 upstream:     ⣧⣷⢻⠃⡏⣿⢸⢠⡿⣿⢸⢸⡟⣾⢸⡇⡇⡏⢿⣷⠋⡏⡇⣿⢿ ⣿⣿⢠⢻⡇⣿⢸⢸⠃││⠧⠵⠶⠶⠶⠶⠶⠶⠶⠾⠼⠿⠯⠾⠿⠴⠶⠶⠶⠶⠶⠦⠿⠷⠽⠿⠧⠷⠶⠶⠶⠶⠶⠶⠶⠮⠇│
-local   : │                                                                              │
+local   : │                                        │                                    ││
 @@ row 20
 upstream:     ⢿⢸⡜  ⣿⢸⡸⢱⣽⡎⢸⢇⣿⡎⠸⣱⡇⠸⣸⢸ ⢸⢹⣸⢰⢹⣽⢸⢸⢣⢸⡎⠈⡆││Heatmap                              │
-local   : │                                                                              │
+local   : │                                        │                                    ││
 @@ row 21
 upstream:     ⠈⠎   ⠋⠇⠇ ⠛⠁⠈⠸⠙  ⠙⠃ ⠏⠃ ⠘⠙⠇⠏ ⠛⠁⠈⠈⠟⠃ ⠁││                                     │
-local   : │                                                                              │
+local   : │                                        │                                    ││
 @@ row 22
 upstream:                                      ──││                                     │
-local   : │                                                                              │
+local   : │                                        ╰────────────────────────────────────╯│
 @@ row 23
 upstream:                                      ──╯╰─────────────────────────────────────╯╰
 local   : ╰──────────────────────────────────────────────────────────────────────────────╯

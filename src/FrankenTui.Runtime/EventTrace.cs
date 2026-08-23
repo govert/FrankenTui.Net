@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 // Port of .external/frankentui/crates/ftui-runtime/src/event_trace.rs
-// Upstream commit: f958e59e1406a90fdb92512103e3591911a9d68c
+// Upstream basis: 15cc6543f76b814394c590f9e7719dedd6684e4c.
 //
 // Event trace recording and replay for deterministic debugging.
 // Records all external events and Bayesian evidence entries with
@@ -9,13 +9,10 @@
 // DIVERGENCE: Uses System.Text.Json instead of serde.
 // DIVERGENCE: GZip compression via System.IO.Compression instead of flate2.
 
-using System.Diagnostics;
 using System.IO.Compression;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using FrankenTui.Core;
-
 namespace FrankenTui.Runtime;
 
 // ── Schema ────────────────────────────────────────────────────────────────
@@ -35,19 +32,23 @@ public enum SerKeyCode
     Up, Down, Left, Right,
     F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12,
     Null,
+    MediaPlayPause, MediaStop, MediaNextTrack, MediaPrevTrack,
 }
 
 [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum SerKeyEventKind { Press, Release, Repeat }
 
 [JsonConverter(typeof(JsonStringEnumConverter))]
-public enum SerMouseEventKind { Down, Up, Drag, Moved, ScrollDown, ScrollUp, ScrollLeft, ScrollRight }
+public enum SerMouseEventKind { Down, Up, Drag, Moved, ScrollUp, ScrollDown, ScrollLeft, ScrollRight }
 
 [JsonConverter(typeof(JsonStringEnumConverter))]
-public enum SerImePhase { Enabled, Disabled, Preedit, Commit }
+public enum SerMouseButton { Left, Right, Middle }
 
 [JsonConverter(typeof(JsonStringEnumConverter))]
-public enum SerClipboardSource { Osc52, Native, External, Unknown }
+public enum SerImePhase { Start, Update, Commit, Cancel }
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
+public enum SerClipboardSource { Osc52, Unknown }
 
 /// <summary>Serializable character key code wrapper.</summary>
 public sealed class SerCharKeyCode
@@ -91,7 +92,7 @@ public sealed record TraceKey(
 
 public sealed record TraceMouse(
     [property: JsonPropertyName("ts_ns")] ulong TsNs,
-    [property: JsonPropertyName("kind")] SerMouseEventKind Kind,
+    [property: JsonPropertyName("kind")] JsonElement Kind,
     [property: JsonPropertyName("x")] ushort X,
     [property: JsonPropertyName("y")] ushort Y,
     [property: JsonPropertyName("modifiers")] byte Modifiers
@@ -154,20 +155,19 @@ public sealed record TraceSummary(
 /// <summary>JSON-serializable evidence entry mirror.</summary>
 public sealed record EvidenceEntryJson
 {
-    [JsonPropertyName("id")] public ulong Id { get; set; }
-    [JsonPropertyName("ts_ns")] public ulong TsNs { get; set; }
-    [JsonPropertyName("domain")] public string Domain { get; set; } = "";
-    [JsonPropertyName("log_posterior")] public double LogPosterior { get; set; }
-    [JsonPropertyName("evidence")] public List<EvidenceTermJson>? Evidence { get; set; }
-    [JsonPropertyName("action")] public string Action { get; set; } = "";
-    [JsonPropertyName("loss_avoided")] public double LossAvoided { get; set; }
-    [JsonPropertyName("ci")] public double[]? Ci { get; set; }
+    [JsonPropertyName("decision_id")] public ulong DecisionId { get; init; }
+    [JsonPropertyName("domain")] public string Domain { get; init; } = "";
+    [JsonPropertyName("log_posterior")] public double LogPosterior { get; init; }
+    [JsonPropertyName("evidence")] public List<EvidenceTermJson> Evidence { get; init; } = [];
+    [JsonPropertyName("action")] public string Action { get; init; } = "";
+    [JsonPropertyName("loss_avoided")] public double LossAvoided { get; init; }
+    [JsonPropertyName("confidence_interval")] public double[] ConfidenceInterval { get; init; } = [0.0, 0.0];
 }
 
 public sealed record EvidenceTermJson
 {
-    [JsonPropertyName("label")] public string Label { get; set; } = "";
-    [JsonPropertyName("bf")] public double Bf { get; set; }
+    [JsonPropertyName("label")] public string Label { get; init; } = "";
+    [JsonPropertyName("bayes_factor")] public double BayesFactor { get; init; }
 }
 
 // ── EventTraceWriter ──────────────────────────────────────────────────────
@@ -181,9 +181,14 @@ public sealed class EventTraceWriter : IDisposable
     private readonly StreamWriter _writer;
     private readonly string _sessionName;
     private readonly (ushort, ushort) _terminalSize;
+    private readonly ulong? _seed;
     private ulong _eventCount;
-    private readonly Stopwatch _sw = Stopwatch.StartNew();
+    private ulong _evidenceCount;
+    private ulong? _firstTimestampNs;
+    private ulong _lastTimestampNs;
     private bool _headerWritten;
+    private bool _finished;
+    private bool _disposed;
 
     private static readonly JsonSerializerOptions JsonOpts = new()
     {
@@ -195,9 +200,10 @@ public sealed class EventTraceWriter : IDisposable
     {
         _sessionName = sessionName;
         _terminalSize = terminalSize;
+        _seed = seed;
         var fs = new FileStream(path, FileMode.Create, FileAccess.Write);
-        _gzip = new GZipStream(fs, CompressionLevel.Optimal);
-        _writer = new StreamWriter(_gzip, Encoding.UTF8, leaveOpen: false);
+        _gzip = new GZipStream(fs, CompressionLevel.Fastest);
+        _writer = new StreamWriter(_gzip, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false), leaveOpen: false);
     }
 
     private void WriteHeader()
@@ -207,7 +213,7 @@ public sealed class EventTraceWriter : IDisposable
             EventTraceSchema.SchemaVersion,
             _sessionName,
             [_terminalSize.Item1, _terminalSize.Item2],
-            null);
+            _seed);
         WriteLine(header);
         _headerWritten = true;
     }
@@ -219,106 +225,183 @@ public sealed class EventTraceWriter : IDisposable
         _writer.Flush();
     }
 
-    public void RecordKey(ulong tsNs, SerKeyCode code, char? ch, byte modifiers, SerKeyEventKind kind)
+    /// <summary>Writes any non-header/summary trace record and updates summary counters.</summary>
+    public void WriteRecord(TraceRecord record)
     {
+        ArgumentNullException.ThrowIfNull(record);
+        ThrowIfFinished();
+        if (record is TraceHeader or TraceSummary)
+        {
+            throw new ArgumentException("Headers and summaries are owned by the writer lifecycle.", nameof(record));
+        }
+
         WriteHeader();
-        var keyRecord = new TraceKey(tsNs,
-            ch.HasValue
-                ? JsonSerializer.SerializeToElement(new SerCharKeyCode { Value = ch.Value })
-                : JsonSerializer.SerializeToElement(new { type = code.ToString().ToLowerInvariant(), value = JsonSerializer.SerializeToElement("") }.GetType()),
-            modifiers, kind);
-        WriteLine(keyRecord);
+        WriteLine(record);
+        if (TryGetTimestamp(record, out var timestampNs))
+        {
+            _firstTimestampNs ??= timestampNs;
+            _lastTimestampNs = timestampNs;
+        }
+
         _eventCount++;
+        if (record is TraceEvidence)
+        {
+            _evidenceCount++;
+        }
     }
 
-    public void RecordMouse(ulong tsNs, SerMouseEventKind kind, ushort x, ushort y, byte modifiers)
+    public void RecordKey(ulong tsNs, SerKeyCode code, char? ch, byte modifiers, SerKeyEventKind kind)
     {
-        WriteHeader();
-        WriteLine(new TraceMouse(tsNs, kind, x, y, modifiers));
-        _eventCount++;
+        WriteRecord(new TraceKey(tsNs, SerializeKeyCode(code, ch), modifiers, kind));
+    }
+
+    public void RecordMouse(
+        ulong tsNs,
+        SerMouseEventKind kind,
+        ushort x,
+        ushort y,
+        byte modifiers,
+        SerMouseButton button = SerMouseButton.Left)
+    {
+        WriteRecord(new TraceMouse(tsNs, SerializeMouseKind(kind, button), x, y, modifiers));
     }
 
     public void RecordResize(ulong tsNs, ushort cols, ushort rows)
     {
-        WriteHeader();
-        WriteLine(new TraceResize(tsNs, cols, rows));
-        _eventCount++;
+        WriteRecord(new TraceResize(tsNs, cols, rows));
     }
 
     public void RecordPaste(ulong tsNs, string text, bool bracketed)
     {
-        WriteHeader();
-        WriteLine(new TracePaste(tsNs, text, bracketed));
-        _eventCount++;
+        WriteRecord(new TracePaste(tsNs, text, bracketed));
     }
 
     public void RecordIme(ulong tsNs, SerImePhase phase, string text)
     {
-        WriteHeader();
-        WriteLine(new TraceIme(tsNs, phase, text));
-        _eventCount++;
+        WriteRecord(new TraceIme(tsNs, phase, text));
     }
 
     public void RecordFocus(ulong tsNs, bool gained)
     {
-        WriteHeader();
-        WriteLine(new TraceFocus(tsNs, gained));
-        _eventCount++;
+        WriteRecord(new TraceFocus(tsNs, gained));
     }
 
     public void RecordClipboard(ulong tsNs, string content, SerClipboardSource source)
     {
-        WriteHeader();
-        WriteLine(new TraceClipboard(tsNs, content, source));
-        _eventCount++;
+        WriteRecord(new TraceClipboard(tsNs, content, source));
     }
 
     public void RecordTick(ulong tsNs)
     {
-        WriteHeader();
-        WriteLine(new TraceTick(tsNs));
-        _eventCount++;
+        WriteRecord(new TraceTick(tsNs));
     }
+
+    public void RecordFrameTime(ulong tsNs, ulong? renderUs = null) =>
+        WriteRecord(new TraceFrameTime(tsNs, renderUs));
+
+    public void RecordRngSeed(ulong tsNs, ulong seed) =>
+        WriteRecord(new TraceRngSeed(tsNs, seed));
 
     public void RecordEvidence(ulong tsNs, EvidenceEntry entry)
     {
-        WriteHeader();
         var jsonEntry = new EvidenceEntryJson
         {
-            Id = entry.DecisionId,
-            TsNs = entry.TimestampNs,
+            DecisionId = entry.DecisionId,
             Domain = DecisionDomainMeta.AsStr(entry.Domain),
             LogPosterior = entry.LogPosterior,
             Evidence = entry.TopEvidence
                 .Where(t => t != null)
-                .Select(t => new EvidenceTermJson { Label = t!.Label, Bf = t.BayesFactor })
+                .Select(t => new EvidenceTermJson { Label = t!.Label, BayesFactor = t.BayesFactor })
                 .ToList(),
             Action = entry.Action,
             LossAvoided = entry.LossAvoided,
-            Ci = [entry.ConfidenceInterval.Lower, entry.ConfidenceInterval.Upper],
+            ConfidenceInterval = [entry.ConfidenceInterval.Lower, entry.ConfidenceInterval.Upper],
         };
-        WriteLine(new TraceEvidence(tsNs, jsonEntry));
-        _eventCount++;
+        WriteRecord(new TraceEvidence(tsNs, jsonEntry));
     }
 
     public void Finish()
     {
+        if (_finished)
+        {
+            return;
+        }
+
         WriteHeader();
-        WriteLine(new TraceSummary(_eventCount, (ulong)(_sw.Elapsed.TotalMilliseconds * 1_000_000), null));
+        var durationNs = _firstTimestampNs is { } first && _lastTimestampNs >= first
+            ? _lastTimestampNs - first
+            : 0;
+        WriteLine(new TraceSummary(
+            _eventCount,
+            durationNs,
+            _evidenceCount == 0 ? null : _evidenceCount));
         _writer.Flush();
+        _finished = true;
     }
 
     public void Dispose()
     {
+        if (_disposed)
+        {
+            return;
+        }
+
         try { Finish(); } catch { }
         _writer.Dispose();
         _gzip.Dispose();
+        _disposed = true;
+    }
+
+    private static JsonElement SerializeKeyCode(SerKeyCode code, char? character)
+    {
+        if (character is { } value)
+        {
+            return JsonSerializer.SerializeToElement(new SerCharKeyCode { Value = value }, JsonOpts);
+        }
+
+        var functionNumber = code is >= SerKeyCode.F1 and <= SerKeyCode.F12
+            ? (int)code - (int)SerKeyCode.F1 + 1
+            : 0;
+        return functionNumber == 0
+            ? JsonSerializer.SerializeToElement(new { type = code.ToString() }, JsonOpts)
+            : JsonSerializer.SerializeToElement(new { type = "F", value = functionNumber }, JsonOpts);
+    }
+
+    private static JsonElement SerializeMouseKind(SerMouseEventKind kind, SerMouseButton button) =>
+        kind is SerMouseEventKind.Down or SerMouseEventKind.Up or SerMouseEventKind.Drag
+            ? JsonSerializer.SerializeToElement(new { type = kind.ToString(), button = button.ToString() }, JsonOpts)
+            : JsonSerializer.SerializeToElement(new { type = kind.ToString() }, JsonOpts);
+
+    private static bool TryGetTimestamp(TraceRecord record, out ulong timestampNs)
+    {
+        timestampNs = record switch
+        {
+            TraceKey value => value.TsNs,
+            TraceMouse value => value.TsNs,
+            TraceResize value => value.TsNs,
+            TracePaste value => value.TsNs,
+            TraceIme value => value.TsNs,
+            TraceFocus value => value.TsNs,
+            TraceClipboard value => value.TsNs,
+            TraceTick value => value.TsNs,
+            TraceFrameTime value => value.TsNs,
+            TraceRngSeed value => value.TsNs,
+            TraceEvidence value => value.TsNs,
+            _ => 0,
+        };
+        return record is not TraceHeader and not TraceSummary;
+    }
+
+    private void ThrowIfFinished()
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+        if (_finished)
+        {
+            throw new InvalidOperationException("The event trace has already been finished.");
+        }
     }
 }
 
 // ── EventTraceReader / EventReplayer / EvidenceVerifier ────────────────────
 
-// DIVERGENCE: Reading/replay/verification deferred. The upstream EventTraceReader,
-// EventReplayer, and EvidenceVerifier (bulk of the 2254 lines) depend on serde
-// deserialization and event reconstruction. These will be ported when the
-// deterministic replay test infrastructure is needed (Phase I verification).
+// Reader, replay, and evidence-verification support lives in EventTraceReplay.cs.

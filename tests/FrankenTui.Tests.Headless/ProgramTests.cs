@@ -5,6 +5,7 @@ using FrankenTui.Core;
 using FrankenTui.Render;
 using FrankenTui.Runtime;
 using System.Threading.Channels;
+using GuardrailsConfig = FrankenTui.Runtime.GuardrailsConfig;
 
 namespace FrankenTui.Tests.Headless;
 
@@ -33,7 +34,105 @@ public class ProgramTests
         public void View(FrankenTui.Render.Frame frame) { }
     }
 
+    sealed class LifecycleModel : IModel<string>
+    {
+        public Func<Cmd<string>> InitCommand { get; set; } = () => Cmd<string>.QuitCmd;
+        public Func<string, Cmd<string>> UpdateCommand { get; set; } = _ => Cmd<string>.NoneCmd;
+        public Func<Cmd<string>> ShutdownCommand { get; set; } = () => Cmd<string>.NoneCmd;
+        public Func<string, Cmd<string>> ErrorCommand { get; set; } = _ => Cmd<string>.NoneCmd;
+        public Func<List<ISubscription<string>>> SubscriptionFactory { get; set; } = () => new();
+        public List<string> Events { get; } = new();
+        public int ShutdownCount { get; private set; }
+
+        public Cmd<string> Init()
+        {
+            Events.Add("init");
+            return InitCommand();
+        }
+
+        public Cmd<string> Update(string msg)
+        {
+            Events.Add($"update:{msg}");
+            return UpdateCommand(msg);
+        }
+
+        public void View(FrankenTui.Render.Frame frame) => Events.Add("view");
+
+        public List<ISubscription<string>> Subscriptions() => SubscriptionFactory();
+
+        public Cmd<string> OnShutdown()
+        {
+            ShutdownCount++;
+            Events.Add("shutdown");
+            return ShutdownCommand();
+        }
+
+        public Cmd<string> OnError(string error)
+        {
+            Events.Add($"error:{error}");
+            return ErrorCommand(error);
+        }
+    }
+
+    sealed class ArenaLifecycleModel : IModel<string>
+    {
+        public Action? AfterView { get; set; }
+        public List<long> Generations { get; } = [];
+        public List<int> CountsBeforeAllocation { get; } = [];
+
+        public Cmd<string> Init() => new Cmd<string>.Tick(TimeSpan.FromMilliseconds(1));
+        public Cmd<string> Update(string msg) => Cmd<string>.NoneCmd;
+
+        public void View(Frame frame)
+        {
+            var arena = Assert.IsType<FrameArena>(frame.Arena);
+            Generations.Add(arena.Generation);
+            CountsBeforeAllocation.Add(arena.AllocationCount);
+            arena.AllocStr($"frame-{Generations.Count}");
+            AfterView?.Invoke();
+        }
+    }
+
+    sealed class FailingSubscription : ISubscription<string>
+    {
+        public SubId Id => 41;
+
+        public void Run(ChannelWriter<string> writer, StopSignal stop) =>
+            throw new InvalidOperationException("subscription boom");
+    }
+
+    sealed class QuittingSubscription : ISubscription<string>
+    {
+        public SubId Id => 42;
+        public ManualResetEventSlim Stopped { get; } = new();
+
+        public void Run(ChannelWriter<string> writer, StopSignal stop)
+        {
+            try
+            {
+                writer.TryWrite("quit");
+                while(!stop.WaitTimeout(TimeSpan.FromMilliseconds(5))) { }
+            }
+            finally
+            {
+                Stopped.Set();
+            }
+        }
+    }
+
+    sealed class FailingLogWriter : StringWriter
+    {
+        public override void Write(string? value)
+        {
+            if(value=="shutdown-log")throw new IOException("shutdown log failed");
+            base.Write(value);
+        }
+    }
+
     static TerminalWriter MakeWriter() => new(new StringWriter(), new ScreenMode.AltScreen(), UiAnchor.Bottom, TerminalCapabilities.Basic());
+
+    static TerminalWriter MakeInlineWriter(TextWriter writer) =>
+        new(writer, new ScreenMode.Inline(4), UiAnchor.Bottom, TerminalCapabilities.Basic());
 
     // ── Cmd tests ──────────────────────────────────────────────────────────
 
@@ -167,6 +266,25 @@ public class ProgramTests
     {
         var p = new Program<string>(new Counter(), MakeWriter());
         Assert.NotNull(p);
+    }
+
+    [Fact]
+    public void ProgramAttachesAndResetsFrameArenaForEveryView()
+    {
+        var model = new ArenaLifecycleModel();
+        var program = new Program<string>(model, MakeWriter());
+        model.AfterView = () =>
+        {
+            if (model.Generations.Count == 2)
+            {
+                program.Quit();
+            }
+        };
+
+        program.Run();
+
+        Assert.Equal([1L, 2L], model.Generations);
+        Assert.Equal([0, 0], model.CountsBeforeAllocation);
     }
 
     // ── ProgramConfig tests ────────────────────────────────────────────────
@@ -352,9 +470,9 @@ public class ProgramTests
         Assert.False(new Program<string>(new Counter(), MakeWriter()).HasPersistence);
     }
 
-    [Fact] public void Program_TriggerSave_ReturnsTrue()
+    [Fact] public void Program_TriggerSave_ReturnsFalseWithoutRegistry()
     {
-        Assert.True(new Program<string>(new Counter(), MakeWriter()).TriggerSave());
+        Assert.False(new Program<string>(new Counter(), MakeWriter()).TriggerSave());
     }
 
     [Fact] public void Program_TriggerLoad_ReturnsZero()
@@ -493,5 +611,117 @@ public class ProgramTests
     [Fact] public void Program_StopRecording_ReturnsNull()
     {
         Assert.Null(new Program<string>(new Counter(),MakeWriter()).StopRecording());
+    }
+
+    [Fact]
+    public void Program_Run_InitQuit_CompletesLifecycleOnce()
+    {
+        var model = new LifecycleModel
+        {
+            ShutdownCommand = () => Cmd<string>.BatchCmd(new List<Cmd<string>>
+            {
+                new Cmd<string>.Msg("cleanup-a"),
+                new Cmd<string>.Msg("cleanup-b"),
+            }),
+        };
+        var program = new Program<string>(model, MakeWriter());
+
+        program.Run();
+
+        Assert.Equal(
+            new[] { "init", "shutdown", "update:cleanup-a", "update:cleanup-b" },
+            model.Events);
+        Assert.Equal(1, model.ShutdownCount);
+        Assert.False(program.IsRunning);
+
+        var error = Assert.Throws<InvalidOperationException>(() => program.Run());
+        Assert.Equal("program lifecycle has already completed", error.Message);
+        Assert.Equal(1, model.ShutdownCount);
+    }
+
+    [Fact]
+    public void Program_Run_InitFailure_ReportsErrorAndStillShutsDown()
+    {
+        var model = new LifecycleModel
+        {
+            InitCommand = () => throw new InvalidOperationException("init failed"),
+            ErrorCommand = _ => new Cmd<string>.Msg("recover"),
+            ShutdownCommand = () => new Cmd<string>.Msg("cleanup"),
+        };
+        var program = new Program<string>(model, MakeWriter());
+
+        var error = Assert.Throws<InvalidOperationException>(() => program.Run());
+
+        Assert.Equal("init failed", error.Message);
+        Assert.Equal(
+            new[] { "init", "error:init failed", "update:recover", "shutdown", "update:cleanup" },
+            model.Events);
+        Assert.Equal(1, model.ShutdownCount);
+        Assert.False(program.IsRunning);
+    }
+
+    [Fact]
+    public async Task Program_Run_SubscriptionFailure_IsReportedAndCanRecover()
+    {
+        var model = new LifecycleModel
+        {
+            InitCommand = () => Cmd<string>.NoneCmd,
+            SubscriptionFactory = () => new List<ISubscription<string>> { new FailingSubscription() },
+            ErrorCommand = _ => Cmd<string>.QuitCmd,
+        };
+        var program = new Program<string>(model, MakeWriter());
+
+        var run = Task.Run(program.Run);
+        if(await Task.WhenAny(run,Task.Delay(TimeSpan.FromSeconds(2)))!=run)
+        {
+            program.Quit();
+            await run.WaitAsync(TimeSpan.FromSeconds(1));
+            Assert.Fail("runtime did not observe the subscription failure");
+        }
+        await run;
+
+        Assert.Contains(model.Events, entry =>
+            entry == "error:subscription 41 failed: subscription boom");
+        Assert.Equal(1, model.ShutdownCount);
+    }
+
+    [Fact]
+    public async Task Program_Run_BackgroundTaskFailure_ReportsErrorAndShutsDown()
+    {
+        var model = new LifecycleModel
+        {
+            InitCommand = () => new Cmd<string>.BackgroundTask(
+                new TaskSpec(),
+                () => throw new InvalidOperationException("task boom")),
+        };
+        var program = new Program<string>(model, MakeWriter());
+
+        var error = await Assert.ThrowsAsync<InvalidOperationException>(async () =>
+            await Task.Run(program.Run).WaitAsync(TimeSpan.FromSeconds(2)));
+
+        Assert.Equal("background task failed: task boom", error.Message);
+        Assert.Contains("error:background task failed: task boom", model.Events);
+        Assert.Equal(1, model.ShutdownCount);
+    }
+
+    [Fact]
+    public void Program_Run_ShutdownCommandFailure_DoesNotSkipSubscriptionStop()
+    {
+        var subscription = new QuittingSubscription();
+        var model = new LifecycleModel
+        {
+            InitCommand = () => Cmd<string>.NoneCmd,
+            UpdateCommand = message => message == "quit" ? Cmd<string>.QuitCmd : Cmd<string>.NoneCmd,
+            SubscriptionFactory = () => new List<ISubscription<string>> { subscription },
+            ShutdownCommand = () => new Cmd<string>.Log("shutdown-log"),
+        };
+        var program = new Program<string>(model, MakeInlineWriter(new FailingLogWriter()));
+
+        var error = Assert.Throws<IOException>(() => program.Run());
+
+        Assert.Equal("shutdown log failed", error.Message);
+        Assert.True(subscription.Stopped.IsSet);
+        Assert.Equal(1, model.ShutdownCount);
+        Assert.False(program.IsRunning);
     }
 }

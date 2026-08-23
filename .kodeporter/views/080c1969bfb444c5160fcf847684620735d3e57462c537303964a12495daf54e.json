@@ -1,0 +1,165 @@
+{
+  "envelope": {
+    "contextName": "kp-current",
+    "contextHash": "014ee6bf963701ed2edeac35c16114c928eb39ad1dce3add1faf16b2272afc07",
+    "dataCut": 21,
+    "definitionCut": 21,
+    "consumedCount": 21,
+    "consumedSetHash": "ccd66a83c9eb4cef4e6a0cc96722bb1dd4aacc86a9f2d724618b16520e0464f3",
+    "resultHash": "9571b53fad8b0c6945c0ef702315936366574eab6469cf114db502decc7d7f17",
+    "receiptId": "080c1969bfb444c5160fcf847684620735d3e57462c537303964a12495daf54e",
+    "standing": "current",
+    "survivalGrade": "ungraded",
+    "generatedAt": "2026-07-16T00:19:30.9569903\u002B00:00",
+    "replay": "gneiss:080c1969bfb444c5160fcf847684620735d3e57462c537303964a12495daf54e"
+  },
+  "conclusions": [
+    {
+      "aid": "25ac896bcc1a56898b5a8cdd8c08d4bc21ebcdbd1cc5f1b60091192a31df4dab",
+      "subject": "kp-current",
+      "predicate": "gneiss.context",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "0ca64a0b5a44052fb4a41e23a1202f1dce9282bbd113c9d1e1eddd3d2c2819e4",
+      "subject": "kp.behavior",
+      "predicate": "gneiss.predicate",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "37e50818dd014128ddf749b637457cf5274576fa1f3e28df7be214f89b22a561",
+      "subject": "kp.correspondence",
+      "predicate": "gneiss.predicate",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "6fa4d69b28fc5b3ee995798a97504d4fedf646d13e870d190d9a979c256639fc",
+      "subject": "kp.evidence.anchor",
+      "predicate": "gneiss.predicate",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "00e6a9d20fbcd0bdd771dd1228b958446c8f807e1c1c787e6b810e7d9045f037",
+      "subject": "kp.policy",
+      "predicate": "gneiss.predicate",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "ecbdce449c039e96da0a813c34c8dcf14a1142eca881e781332c852a73cb08fd",
+      "subject": "kp.preservation",
+      "predicate": "gneiss.predicate",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "2187873d6f138876155a30e4d26822468e43d9e27be1bd867618b3a6c56d7174",
+      "subject": "kp.run.observation",
+      "predicate": "gneiss.predicate",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "ecd9a5e8a75e4d6e6b5c51b461ca1ef2f7a1df1bd5f3c6b33fb99b8a7b8a41a6",
+      "subject": "kp.stale",
+      "predicate": "gneiss.predicate",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "d61fd887e44e349634db6f1476b898fd7587d29e91389f18209ba885aa3b6905",
+      "subject": "kp.verification",
+      "predicate": "gneiss.predicate",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "a58625690379949be4f2652caaca2d979477672252160a6f511d26949ca4b2b2",
+      "subject": "anchor:0e64cf2a9590f3b5b901a89f0864ff5bac344bfa167f5bac69fa55e46f0417a5",
+      "predicate": "kp.evidence.anchor",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "a6de2f04a684f1c582167d27a7a3189c4cac1362873141af7edf17146b0324e1",
+      "subject": "anchor:306e727c4d48a953f8c0cdb47e08ca6aade8983bd76e30fdcd1fb138139bc66d",
+      "predicate": "kp.evidence.anchor",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "25a39bbd389f7fed274b39c2cdea661f7c8d593729438b845e208116fe343571",
+      "subject": "anchor:3eebf9e1f80a5fb6a5ece412357d5f621008587457fd1cf15d6c391613622bf9",
+      "predicate": "kp.evidence.anchor",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "60d61a599d9045c83ce1ab71f110d9be887ffa391c371f8b750c708576f3bddf",
+      "subject": "anchor:68c3b1c21ed741950735f8e2023c78c82f4e45adbb03db0bbc49a14e544e5274",
+      "predicate": "kp.evidence.anchor",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "9de1a4ca5a16f7a0747dd904d3ccee432e13c86fbb1b2444c3cd22f02a496e91",
+      "subject": "anchor:8792fe9f84690b1006b6dec40bdae9154d5f3dc912ec34f4efad455718399cf4",
+      "predicate": "kp.evidence.anchor",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "3616884b937837c7aebb7418c9b464397e114c1589649ce54eb8303fa75fca53",
+      "subject": "anchor:9824c7b85879261845acbeef3ad15868a9375582238c1f935da60e1f323a92d6",
+      "predicate": "kp.evidence.anchor",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "0536329a9e45aafa98d7df37a15e425050c893395a1f9a6a891c3f398ed5a12d",
+      "subject": "anchor:9b6ef109befe63f7ac9427409be40735b2c1f33fbe9af010558e38e06222334b",
+      "predicate": "kp.evidence.anchor",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "edc9dc672636234baf3e0e2139fc50db5e478dd407d1246df6cbbc9439292402",
+      "subject": "anchor:d444e51c5e823191d006e270a8b2f30b04bad45b93918301170d2f347bab4c63",
+      "predicate": "kp.evidence.anchor",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "e7e33fec9e38c4a465cc81a4c9d9785249002486974d40f8b6d22911b9431f05",
+      "subject": "anchor:ea5e11abb8f9df66ac0b594f9d3266b4bdcff6babb83df9f1ee3ef1ab6ecedb0",
+      "predicate": "kp.evidence.anchor",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "6470a67f99e00ebc86312c5e38ef0752d1dbed7f20a71035c8b39b071f65f34e",
+      "subject": "anchor:ff586b6feb0b53ab67bf3215801662bd5a4e59d18f917e1f9b154659c561c65f",
+      "predicate": "kp.evidence.anchor",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "d310b159e2192267f3786937e30b77d54b906c0b8971b3f3c806135455dd4352",
+      "subject": "policy:frankentui-systems-port@1:02545d7dd0797a2b6d25efc3b3f2984164dd5a516d2f19691610f0891c40a066",
+      "predicate": "kp.policy",
+      "status": "accepted",
+      "staleViaJustification": false
+    },
+    {
+      "aid": "a4f724df57fab0c5af055b02af38c920929be8f55e88e14f36fd5ce743765c69",
+      "subject": "run:showcase-hosts:showcase-static-frames:8385ccca9ade9a752d6c5b2dac54fd43271eab62f1d5ea5058102ac301f16764",
+      "predicate": "kp.run.observation",
+      "status": "accepted",
+      "staleViaJustification": false
+    }
+  ]
+}

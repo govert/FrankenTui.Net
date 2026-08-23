@@ -1,24 +1,24 @@
- 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
+﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
 ╭──────────────────────────────────────────────────────Dashboard────────────────
 │FRANKENTUI DASHBOARD                                          ╭────────────────
 │╭──────Plasma───────╮╭─────────Charts · Pulse─────────╮╭────Co│1/16 · Tour · LI
 ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││g:cycle · sparklines + mini bars││// run│Speed 1.00x · N5
-.9⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││CPU ▃ ▃▃▂▂▁▁▄▃▄▂▅▅▅▆▂▄▅▃▆▅▄▄ 41%││use st│Dashboard       
+.9⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││CPU ▃ ▃▃▂▂▁▁▄▃▄▂▅▅▅▆▂▄▅▃▆▅▄▄ 41%││use st│Dashboard
 ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││MEM ▅▂ ▃▁▄▄▂▂▇▅▃▅▂▃▄▆▄▇█▂▆▅▄ 42%││      │This is the home
-││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││NET ▁▁▁▁▁  ▁   ▇▁▁    ▁ █▁▁▁▁ 25││use ft│clicked.        
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││NET ▁▁▁▁▁  ▁   ▇▁▁    ▁ █▁▁▁▁ 25││use ft│clicked.
 ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││OUT ▁▁▁▃▁█  ▁▁ ▁  ▁▁▇    ▁    73││use ft│Click a tile (or
-││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││EPS █  76% DSK █  67% IO  ░   4%││Click │Controls: Space 
-││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                │╰──────│Steps:          
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││EPS █  76% DSK █  67% IO  ░   4%││Click │Controls: Space
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                │╰──────│Steps:
 ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                │╭──────│▶ Tour · Dashboa
 ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                ││Status│• Tour · Dashboa
 ││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                ││EPS:11│• Visuals · Merm
-││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                ││Cyberp│• Tour · Inline 
+││⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿││                                ││Cyberp│• Tour · Inline
 ││Click → Visual Effe││Click → Data Viz                ││Click ╰────────────────
 │╰───────────────────╯╰────────────────────────────────╯╰───────────────────────
 │╭Text FX · 3-Up (1/2│╭───────────Activity────────────│╭────Markdown · Complete─
-─│Sample 1 of 3 · 3-U││SEV TIME  COMP  MESSAGE        ││FrankenTUI Field Notes  
-││1 · None · S1      ││ INFO  00:02   CPU spike detect││                        
+─│Sample 1 of 3 · 3-U││SEV TIME  COMP  MESSAGE        ││FrankenTUI Field Notes
+││1 · None · S1      ││ INFO  00:02   CPU spike detect││
 ││# FX Lab · Determin││ INFO  00:02   CPU spike detect│││ Goal: deterministic ou
-tpu · FadeIn · S2    ││                               ││                        
-││## GFM Stress · Led⋮│                               ⋮│Highlights              
-Tab/Shift+Tab: next/prev      0x0 00:00               ││✓ Inline mode with      
+tpu · FadeIn · S2    ││                               ││
+││## GFM Stress · Led⋮│                               ⋮│Highlights
+Tab/Shift+Tab: next/prev      0x0 00:00               ││✓ Inline mode with

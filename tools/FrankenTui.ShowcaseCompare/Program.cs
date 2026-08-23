@@ -1,11 +1,17 @@
 using System.Globalization;
 using System.Text;
+using System.Text.Json;
 using FrankenTui.Core;
 using FrankenTui.Demo.Showcase;
 using FrankenTui.Render;
 using FrankenTui.Runtime;
 using FrankenTui.Style;
 using RenderBuffer = FrankenTui.Render.Buffer;
+
+if (TryRunKodePorterAdapter(args, out var adapterExitCode))
+{
+    return adapterExitCode;
+}
 
 var options = CompareOptions.Parse(args);
 var repoRoot = FindRepoRoot(AppContext.BaseDirectory);
@@ -69,6 +75,82 @@ if (missingCount > 0)
 
 return 0;
 
+static bool TryRunKodePorterAdapter(string[] args, out int exitCode)
+{
+    exitCode = 0;
+    var optionIndex = Array.IndexOf(args, "--kodeporter-adapter");
+    if (optionIndex < 0)
+    {
+        return false;
+    }
+
+    if (optionIndex + 1 >= args.Length || args[optionIndex + 1] is not ("source" or "target"))
+    {
+        Console.Error.WriteLine("--kodeporter-adapter requires source or target");
+        exitCode = 2;
+        return true;
+    }
+
+    var side = args[optionIndex + 1];
+    var repoRoot = FindRepoRoot(AppContext.BaseDirectory);
+    var upstreamDirectory = Path.Combine(
+        repoRoot,
+        ".external",
+        "frankentui",
+        "crates",
+        "ftui-demo-showcase",
+        "tests",
+        "snapshots");
+
+    string? line;
+    while ((line = Console.ReadLine()) is not null)
+    {
+        if (string.IsNullOrWhiteSpace(line))
+        {
+            continue;
+        }
+
+        using var request = JsonDocument.Parse(line);
+        var root = request.RootElement;
+        var name = root.GetProperty("name").GetString()
+            ?? throw new InvalidDataException("KodePorter case name cannot be null.");
+        var screenNumber = root.GetProperty("screen").GetInt32();
+        var width = root.GetProperty("width").GetUInt16();
+        var height = root.GetProperty("height").GetUInt16();
+        var frame = root.GetProperty("frame").GetInt32();
+        var screen = ScreenCases.All.Single(item => item.Number == screenNumber) with
+        {
+            Width = width,
+            Height = height,
+        };
+
+        var normalizedFrame = side == "source"
+            ? ReadUpstreamFrame(screen, upstreamDirectory)
+            : Normalize(RenderLocalAtFrame(screen, frame));
+
+        Console.WriteLine(JsonSerializer.Serialize(new
+        {
+            name,
+            result = new { frame = normalizedFrame },
+        }));
+    }
+
+    return true;
+}
+
+static string ReadUpstreamFrame(ScreenCase screen, string upstreamDirectory)
+{
+    var path = Path.Combine(
+        upstreamDirectory,
+        $"app_{Slug(screen)}_{screen.Width}x{screen.Height}.snap");
+    if (!File.Exists(path))
+    {
+        throw new FileNotFoundException("Upstream showcase snapshot is missing.", path);
+    }
+
+    return Normalize(File.ReadAllText(path, Encoding.UTF8));
+}
+
 static ComparisonResult Compare(ScreenCase screen, string upstreamDirectory, string outputDirectory)
 {
     var baseName = $"app_{Slug(screen)}_{screen.Width}x{screen.Height}";
@@ -100,13 +182,15 @@ static ComparisonResult Compare(ScreenCase screen, string upstreamDirectory, str
         RelativePath(outputDirectory, diffPath));
 }
 
-static string RenderLocal(ScreenCase screen)
+static string RenderLocal(ScreenCase screen) => RenderLocalAtFrame(screen, frame: 0);
+
+static string RenderLocalAtFrame(ScreenCase screen, int frame)
 {
     var buffer = new RenderBuffer((ushort)screen.Width, (ushort)screen.Height);
     var view = ShowcaseViewFactory.Build(
         inlineMode: false,
         screenNumber: screen.Number,
-        frame: 0,
+        frame: frame,
         width: (ushort)screen.Width,
         height: (ushort)screen.Height);
 

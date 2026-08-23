@@ -1,24 +1,24 @@
- 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
+﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
 ╭────────────────────────────────────────────────Explainability Cockpit─────────
-│Explainability Cockpit · source: (disabled)                                    
-│Evidence source disabled                                                       
+│Explainability Cockpit · source: (disabled)
+│Evidence source disabled
 │╭───────────────────────────────────────────────Explainability Cockpit─────────
-││Evidence source disabled                                                      
-││Enable evidence logging to populate this cockpit.                             
-││Set FTUI_DEMO_EVIDENCE_JSONL to a writable path.                              
+││Evidence source disabled
+││Enable evidence logging to populate this cockpit.
+││Set FTUI_DEMO_EVIDENCE_JSONL to a writable path.
 ││Example: FTUI_DEMO_EVIDENCE_JSONL=/tmp/ftui_evidence.jsonl cargo run -p ftui-d
-││                                                                              
-││                                                                              
-││                                                                              
-││                                                                              
-││                                                                              
-││                                                                              
+││
+││
+││
+││
+││
+││
 │╰──────────────────────────────────────────────────────────────────────────────
 │╔═════════════════════════════════════════════════Decision Timeline════════════
-│║No recent decisions.                                                          
-│║                                                                              
-│║                                                                              
-│║                                                                              
-│║                                                                              
-│║                                                                              
-b/Shift+Tab: next/prev        0x0 00:00                                         
+│║No recent decisions.
+│║
+│║
+│║
+│║
+│║
+b/Shift+Tab: next/prev        0x0 00:00

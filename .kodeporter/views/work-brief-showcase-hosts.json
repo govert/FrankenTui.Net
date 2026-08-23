@@ -1,0 +1,55 @@
+{
+  "envelope": {
+    "contextName": "kp-current",
+    "contextHash": "9e194737d2052959f6b50a078c7adcf2a4b5cddc6fad7a8b4d03540500a4dc47",
+    "dataCut": 50,
+    "definitionCut": 50,
+    "consumedCount": 50,
+    "consumedSetHash": "ff9d44737bd0d2ddbc1c53babc0cdacc1bb9bdcf5ccdf05c8a4a9c41c2cc8641",
+    "resultHash": "e324dabe2a6c7a8d423d9f2f163f13e086be8f0a998544b7cf9a8ccf23a81bb2",
+    "receiptId": "49e15598a985ade808a730d027a2d6fa361935424aa91deccb9cb969de3ef1ae",
+    "standing": "current",
+    "survivalGrade": "ungraded",
+    "generatedAt": "2026-07-16T00:21:48.8788085\u002B00:00",
+    "replay": "gneiss:49e15598a985ade808a730d027a2d6fa361935424aa91deccb9cb969de3ef1ae"
+  },
+  "item": "showcase-hosts",
+  "unit": "showcase-hosts",
+  "intent": "Use \u0060showcase-frame-parity@1\u0060 and \u0060terminal-host-parity@1\u0060. All screens must have materially matching visible structure, state, interaction, evidence, and shared-model host behavior. Exact static frame lanes are closed only by exact normalized equality; similarity is diagnostic. Remaining differences must be narrow, named, and host/runtime-necessary.",
+  "whatFor": "Port the full 45-screen showcase, app/chrome/control plane, terminal and web/WASM runners, deterministic harnesses, and supported host behavior.",
+  "sourceAnchors": [
+    "ftui-demo-showcase@upstream-15cc6543-local-helper#3eb4851049aa4ee1419655e5bd03404e3291796a00d8cf97ccb8548e545b9d9c",
+    "ftui-web@upstream-15cc6543-local-helper#789d7122427f53e607523d43a8eee8a23aaff150de1dc978e2374279e1bebe85",
+    "ftui-showcase-wasm@upstream-15cc6543-local-helper#1b11b5b40062af90657acc3473d53efa41f7f5f94398516a1da5b8d5829c9c7a",
+    "ftui@upstream-15cc6543-local-helper#af02308626b51cafdd7605a55658aff92e46a376083d9ed3da8712d5f5eb6a60"
+  ],
+  "targetAnchors": [
+    "FrankenTui.Demo.Showcase@target-current-worktree#04f88399b2e6f64ca3e4aca1b6ffe7fdb76750cce0d1051a91ad8b451bd84b1a",
+    "FrankenTui.Web@target-current-worktree#50777baf83da2b7a81676c2727a62ecb505fb9d04520eb622501e4d28063d18a",
+    "FrankenTui.Showcase.Wasm@target-current-worktree#9859043d03035283862c746749ad8491966c691a8b06917d49221d740029ac9e"
+  ],
+  "criteria": [
+    "frankentui-systems-parity@1 [interface,result,effects,failure,determinism,realization,operational]",
+    "showcase-frame-parity@1 [result,effects,determinism,realization]",
+    "terminal-host-parity@1 [effects,failure,determinism,realization,operational]"
+  ],
+  "verificationPlans": [
+    "showcase-static-frames@1"
+  ],
+  "policy": "frankentui-systems-port@1",
+  "policyHash": "02545d7dd0797a2b6d25efc3b3f2984164dd5a516d2f19691610f0891c40a066",
+  "authority": "policy:frankentui-systems-port@1",
+  "expectedEvidence": [
+    "differential",
+    "operationally-observed",
+    "property-adversarial",
+    "reviewed",
+    "structural"
+  ],
+  "stopOrEscalateWhen": [
+    "The requested change exceeds the named migration unit or scoped authority.",
+    "Applicable evidence is unavailable, implementation-coupled where independence is required, or contradicts current testimony.",
+    "A compatibility dimension, divergence, closure claim, or policy exception needs an accountable decision."
+  ],
+  "evidenceReceipt": "49e15598a985ade808a730d027a2d6fa361935424aa91deccb9cb969de3ef1ae"
+}

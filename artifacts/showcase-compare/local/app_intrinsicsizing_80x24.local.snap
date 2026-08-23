@@ -1,24 +1,24 @@
 ﻿1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 ╭───────────────────────────────Intrinsic Sizing───────────────────────────────╮
-│ Intrinsic Sizing Demo • Adaptive Sidebar (1/4)                               │
-│╭────────Menu────────╮╭───────────────────Content────────────────────╮╭──────╮│
-││📊 Dashboard        ││Current width: 72                             ││21px  ││
-││⚙️ Settings          ││Sidebar mode: Full sidebar mode (width >= 60) ││      ││
-││❓ Help              ││                                              ││┃     ││
-││🔔 Notifications    ││The sidebar adapts to terminal width:         ││┃     ││
-││👤 Profile          ││• Narrow: icon-only (4 cols)                  ││┃     ││
-││                    ││• Wide: full labels (20 cols)                 ││┃     ││
-││                    ││                                              ││──    ││
-││                    ││Try resizing your terminal!                   ││      ││
-││                    ││                                              ││      ││
-││                    ││                                              ││      ││
-││                    ││                                              ││      ││
-││                    ││                                              ││      ││
-││                    ││                                              ││      ││
-││                    ││                                              ││      ││
-││                    ││                                              ││      ││
-││                    ││                                              ││      ││
-││                    ││                                              ││      ││
-│╰────────────────────╯╰──────────────────────────────────────────────╯╰──────╯│
+│╭───────────────────────Intrinsic Sizing Demo [focus]────────────────────────╮│
+││Scenario: Adaptive Sidebar (1/4) | Effective width: 120 | Width preset: 2 | ││
+││Terminal: 80x24                                                             ││
+│╰────────────────────────────────────────────────────────────────────────────╯│
+│╭─────────Scenarios─────────╮╭────Adaptive Sidebar────╮╭Controls + Pane Studio│
+││#        Scenario Intrinsic │Adaptive Sidebar        ││Intrinsic Sizing Demo││
+││1        Adaptive icon-only │Effective width: 120    ││1-4 switch scenario |││
+││2        Flexible stacked <6│Sidebar: full labels 20 ││Left/Right or n/p    ││
+││3        Auto-SiziID/status/│cols                    ││cycle                ││
+││4        Responsivone column│                        ││w cycle width preset:││
+││                           ││Menu                    ││50 -> 80 -> 120 ->   ││
+││                           ││  Dashboard             ││auto                 ││
+││                           ││  Settings              ││+/- adjust simulated ││
+││                           ││  Help                  ││width by 10 | r reset││
+││                           ││  Notifications         ││Click/Scroll content ││
+││                           ││  Profile               ││cycles scenario      ││
+││                           ││                        ││Width preset: 2 |    ││
+││                           ││                        ││Detail scroll: 0     ││
+││                           ││                        ││Focus: 0 focus       ││
+│╰───────────────────────────╯╰────────────────────────╯╰─────────────────────╯│
 ╰──────────────────────────────────────────────────────────────────────────────╯
 Intrinsic Sizing [23/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

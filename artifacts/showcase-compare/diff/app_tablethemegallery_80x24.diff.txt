@@ -2,8 +2,8 @@
 Upstream snapshot: app_tablethemegallery_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 341
-Local nonblank chars: 511
-Local/upstream char ratio: 1.499
+Local nonblank chars: 857
+Local/upstream char ratio: 2.513
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -14,64 +14,64 @@ upstream: ╭──────────────────────�
 local   : ╭─────────────────────────────Table Theme Gallery──────────────────────────────╮
 @@ row 03
 upstream: │
-local   : │╭────────────────────────────Table Theme Gallery─────────────────────────────╮│
+local   : │╭───Preset A [active]────╮╭───────Preset B────────╮╭────────Preset C─────────╮│
 @@ row 04
 upstream: │
-local   : ││                                                                            ││
+local   : ││Theme   Tone    Use     ││Theme  Tone   Use      ││Theme   Tone    Use      ││
 @@ row 05
 upstream: │
-local   : ││                                                                            ││
+local   : ││Default stable  terminal-│Defaultstable terminal-s│Default stable  terminal-sa
 @@ row 06
 upstream: │
-local   : ││                                                                            ││
+local   : ││Contrastwarn    high-visi│Contraswarn   high-visib│Contrastwarn    high-visibi
 @@ row 07
 upstream: │
-local   : ││                                                                            ││
+local   : ││Muted   info    documenta│Muted  info   documentat│Muted   info    documentati
 @@ row 08
 upstream: │
-local   : ││                                                                            ││
+local   : ││Alert   criticalops surfa│Alert  criticaops surfac│Alert   criticalops surface
 @@ row 09
 upstream: │
-local   : ││                                                                            ││
+local   : ││                        ││                       ││                         ││
 @@ row 10
 upstream: │
-local   : ││                                                                            ││
+local   : ││                        ││                       ││                         ││
 @@ row 11
 upstream: │
-local   : ││                                                                            ││
+local   : ││                        ││                       ││                         ││
 @@ row 12
 upstream: │
-local   : ││                                                                            ││
+local   : ││                        ││                       ││                         ││
 @@ row 13
 upstream: │
-local   : ││                                                                            ││
+local   : ││                        ││                       ││                         ││
 @@ row 14
 upstream: │
-local   : ││                                                                            ││
+local   : ││                        ││                       ││                         ││
 @@ row 15
 upstream: │
-local   : ││                                                                            ││
+local   : ││                        ││                       ││                         ││
 @@ row 16
 upstream: │
-local   : ││                                                                            ││
+local   : ││                        ││                       ││                         ││
 @@ row 17
 upstream: │
-local   : ││                                                                            ││
+local   : ││                        ││                       ││                         ││
 @@ row 18
 upstream: │
-local   : ││                                                                            ││
+local   : ││                        ││                       ││                         ││
 @@ row 19
 upstream: │
-local   : ││                                                                            ││
+local   : ││                        ││                       ││                         ││
 @@ row 20
 upstream: │
-local   : ││                                                                            ││
+local   : ││                        ││                       ││                         ││
 @@ row 21
 upstream: │
-local   : ││                                                                            ││
+local   : ││                        ││                       ││                         ││
 @@ row 22
 upstream: │╭────────────────────────────────────────────Preview · Aurora · Markdown───────
-local   : │╰────────────────────────────────────────────────────────────────────────────╯│
+local   : │╰────────────────────────╯╰───────────────────────╯╰─────────────────────────╯│
 @@ row 23
 upstream: ││View(V): Markdown | Header(H): Off | Zebra(Z): Subtle
 local   : ╰──────────────────────────────────────────────────────────────────────────────╯

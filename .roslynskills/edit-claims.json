@@ -1,3 +1,37 @@
 {
-  "claims": []
+  "claims": [
+    {
+      "claim_id": "claim_3cf111389861456dadead1c5f564d339",
+      "owner": "runtime-evidence-bridges",
+      "reason": "upstream-15cc-layout-workspace",
+      "paths": [
+        "src/FrankenTui.Layout/PaneWorkspace.cs",
+        "tests/FrankenTui.Tests.Headless/WorkspaceTests.cs"
+      ],
+      "created_at_utc": "2026-07-16T03:37:44.0623652+00:00",
+      "expires_at_utc": "2026-07-16T07:37:44.0623652+00:00"
+    },
+    {
+      "claim_id": "claim_9e633a9ceaf94b239a5b29f32e0cffb0",
+      "owner": "core-animation-composition",
+      "reason": "upstream-15cc-ftui-text-incremental-break",
+      "paths": [
+        "src/FrankenTui.Text/IncrementalBreak.cs",
+        "tests/FrankenTui.Tests.Headless/IncrementalBreakTests.cs"
+      ],
+      "created_at_utc": "2026-07-16T03:43:48.8606096+00:00",
+      "expires_at_utc": "2026-07-16T07:43:48.8606096+00:00"
+    },
+    {
+      "claim_id": "claim_5705946cda9f4517b5d09b4c32065869",
+      "owner": "root-script-segmentation",
+      "reason": "Port current ftui-text script_segmentation.rs with UTF-8 coordinate parity",
+      "paths": [
+        "src/FrankenTui.Text/ScriptSegmentation.cs",
+        "tests/FrankenTui.Tests.Headless/ScriptSegmentationTests.cs"
+      ],
+      "created_at_utc": "2026-07-16T03:45:30.6310047+00:00",
+      "expires_at_utc": "2026-07-16T09:45:30.6310047+00:00"
+    }
+  ]
 }

@@ -1,24 +1,24 @@
- 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
+﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
 ╭───────────────────────────────────────────────────────Advanced────────────────
 │╭─────────────────────Error Traceback─────────────────────╮╭───────────────────
 ││── Application Error ──                                  ││Compact timer: 4m57
 .9s (0%) "src/main.rs", line 42, in main                   ││Clock timer:   01:5
-9│   40 │ fn main() -> Result<()> {                        ││                   
-││   41 │     let config = Config::load()?;                ││Spinners:          
-││ ❱ 42 │     app::run(config)?;                           ││dots        ⠧      
-││   43 │     Ok(())                                       ││line        \      
-││   44 │ }                                                ││braille     ⠧      
+9│   40 │ fn main() -> Result<()> {                        ││
+││   41 │     let config = Config::load()?;                ││Spinners:
+││ ❱ 42 │     app::run(config)?;                           ││dots        ⠧
+││   43 │     Ok(())                                       ││line        \
+││   44 │ }                                                ││braille     ⠧
 ││  File "src/app.rs", line 128, in run                    ││Progress: ░░░░░░░░░
 ││   125 │ pub fn run(config: Config) -> Result<()> {      │╰───────────────────
 ││   126 │     let db = Database::connect(&config.db_url)?;│╭───────────────────
-││   127 │     let server = Server::new(db);               ││State: Idle        
-││ ❱ 128 │     server.listen(config.port)?;                ││Macro: none        
-││   129 │     Ok(())                                      ││Events: 0          
-││   130 │ }                                               ││Duration: -        
-││  File "src/database.rs", line 56, in connect            ││Speed: 1.00x       
-││   53 │ pub fn connect(url: &str) -> Result<Self> {      ││Loop: Off          
+││   127 │     let server = Server::new(db);               ││State: Idle
+││ ❱ 128 │     server.listen(config.port)?;                ││Macro: none
+││   129 │     Ok(())                                      ││Events: 0
+││   130 │ }                                               ││Duration: -
+││  File "src/database.rs", line 56, in connect            ││Speed: 1.00x
+││   53 │ pub fn connect(url: &str) -> Result<Self> {      ││Loop: Off
 ││   54 │     let pool = Pool::builder()                   │╰───────────────────
 ││   55 │         .max_size(10)                            │╭───────────────────
 ││ ❱ 56 │         .build(url)?;                            ││FrankenTUI Demo Sho
-││   57 │     Ok(Self { pool })                            ││                   
+││   57 │     Ok(Self { pool })                            ││
 Tab/Shift+Tab: next/prev      0x0 00:00                    ││Framework: ftui (Ru

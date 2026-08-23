@@ -11,7 +11,6 @@
 
 using System.Globalization;
 using System.Text;
-using FrankenTui.Widgets;
 
 namespace FrankenTui.Widgets.TextAreaInternals;
 
@@ -81,179 +80,572 @@ public struct Selection
 // ============================================================================
 
 /// <summary>
-/// Minimal Rope implementation backed by a list of strings.
-/// Port of ftui_text::rope::Rope — only the API surface needed by Editor
-/// and CursorNavigator is implemented here.
-/// DIVERGENCE: The upstream Rope is a gap-buffer / B-tree rope. This port uses
-/// a List&lt;string&gt; of lines for simplicity; the API contract is identical.
+/// Mutable UTF-8-coordinate text storage.
+/// Port of <c>ftui_text::rope::Rope</c> at upstream basis
+/// <c>15cc6543f76b814394c590f9e7719dedd6684e4c</c>.
 /// </summary>
-public sealed class Rope
+/// <remarks>
+/// The managed realization deliberately uses an immutable <see cref="string"/> as its
+/// backing store rather than Ropey's B-tree. Public coordinates named <c>char</c> in
+/// upstream are Unicode scalar coordinates and are represented here by <see cref="Rune"/>
+/// indices, never UTF-16 code-unit indices.
+///
+/// Two pre-existing editor contracts remain as compatibility projections:
+/// <see cref="Line(int)"/> excludes a line terminator, while the source-equivalent
+/// <see cref="LineWithTerminator(int)"/> includes it; <see cref="ByteToLineCol(int)"/>
+/// returns a UTF-8 byte column, while <see cref="ByteToScalarLineCol(int)"/> is the
+/// source-equivalent scalar-column operation.
+/// </remarks>
+public sealed class Rope : ICloneable
 {
-    // Lines are stored WITHOUT the trailing newline, except possibly the last
-    // line when the text ends with \n. Line count mirrors upstream behaviour:
-    //   text = "a\nb\nc"  => lines = ["a","b","c"]        line_count=3
-    //   text = "a\nb\n"   => lines = ["a","b",""]         line_count=3
-    //   text = ""         => lines = [""]                  line_count=1
-    private readonly List<string> _lines;
+    private string _text;
 
-    public Rope()
-    {
-        _lines = [""];
-    }
+    private readonly record struct LineSpan(int Start, int ContentEnd, int End);
 
+    /// <summary>Create an empty rope.</summary>
+    public Rope() : this(string.Empty) { }
+
+    /// <summary>Create a rope from valid UTF-16 text.</summary>
+    /// <exception cref="ArgumentException">The text contains an unpaired surrogate.</exception>
     public Rope(string text)
     {
-        _lines = SplitIntoLines(text);
+        ArgumentNullException.ThrowIfNull(text);
+        ValidateUtf16(text);
+        _text = text;
     }
 
-    private static List<string> SplitIntoLines(string text)
-    {
-        text = text.Replace("\r\n", "\n", StringComparison.Ordinal)
-                   .Replace('\r', '\n');
-        var parts = text.Split('\n');
-        return new List<string>(parts);
-    }
-
+    /// <summary>Create a rope from text.</summary>
     public static Rope FromText(string text) => new(text);
 
-    /// <summary>Number of lines (always &gt;= 1).</summary>
-    public int LenLines() => _lines.Count;
+    /// <summary>Parse text into a rope. Parsing cannot fail for valid UTF-16 text.</summary>
+    public static Rope Parse(string text) => new(text);
 
-    /// <summary>Total byte length of the stored text.</summary>
-    public int LenBytes()
+    /// <summary>Try to parse text into a rope.</summary>
+    public static bool TryParse(string? text, out Rope? rope)
     {
-        int total = 0;
-        for (int i = 0; i < _lines.Count; i++)
+        if (text is null || !IsValidUtf16(text))
         {
-            total += Encoding.UTF8.GetByteCount(_lines[i]);
-            if (i < _lines.Count - 1) total += 1; // newline byte
+            rope = null;
+            return false;
         }
-        return total;
+
+        rope = new Rope(text);
+        return true;
     }
 
-    public bool IsEmpty() => _lines.Count == 1 && _lines[0].Length == 0;
+    /// <summary>Source <c>From&lt;&amp;str&gt;</c>/<c>From&lt;String&gt;</c> projection.</summary>
+    public static implicit operator Rope(string text) => new(text);
 
-    /// <summary>Get a line by index. Returns null if out of bounds.</summary>
+    /// <summary>Create an independent copy.</summary>
+    public Rope Clone() => new(_text);
+
+    object ICloneable.Clone() => Clone();
+
+    /// <summary>Total length in UTF-8 bytes.</summary>
+    public int LenBytes() => Encoding.UTF8.GetByteCount(_text);
+
+    /// <summary>Total length in Unicode scalar values.</summary>
+    public int LenChars() => CountScalars(_text);
+
+    /// <summary>Total line count. An empty rope has one line.</summary>
+    public int LenLines() => GetLineSpans(_text).Count;
+
+    /// <summary>Whether the rope contains no text.</summary>
+    public bool IsEmpty() => _text.Length == 0;
+
+    /// <summary>
+    /// Get a line without its terminator. This preserves the original TextArea contract.
+    /// Use <see cref="LineWithTerminator(int)"/> for source <c>Rope::line</c> semantics.
+    /// </summary>
     public string? Line(int index)
     {
-        if (index < 0 || index >= _lines.Count) return null;
-        return _lines[index];
+        List<LineSpan> spans = GetLineSpans(_text);
+        if (index < 0 || index >= spans.Count) return null;
+        LineSpan span = spans[index];
+        return _text[span.Start..span.ContentEnd];
     }
 
-    /// <summary>Full text as a string.</summary>
-    public override string ToString()
+    /// <summary>Get a line including its terminator, matching upstream <c>Rope::line</c>.</summary>
+    public string? LineWithTerminator(int index)
     {
-        return string.Join('\n', _lines);
+        List<LineSpan> spans = GetLineSpans(_text);
+        if (index < 0 || index >= spans.Count) return null;
+        LineSpan span = spans[index];
+        return _text[span.Start..span.End];
     }
 
-    /// <summary>Replace all content.</summary>
+    /// <summary>Enumerate lines including their terminators.</summary>
+    public IEnumerable<string> Lines()
+    {
+        string snapshot = _text;
+        foreach (LineSpan span in GetLineSpans(snapshot))
+            yield return snapshot[span.Start..span.End];
+    }
+
+    /// <summary>Get a Unicode-scalar slice. Invalid ranges return the empty string.</summary>
+    public string Slice(Range range)
+    {
+        int max = LenChars();
+        if (!TryResolveRange(range, max, out int start, out int end)) return string.Empty;
+        return Slice(start, end);
+    }
+
+    /// <summary>Get the half-open Unicode-scalar slice <c>[start, end)</c>.</summary>
+    public string Slice(int start, int end)
+    {
+        int max = LenChars();
+        if (start < 0 || end < start || start > max || end > max) return string.Empty;
+        int utf16Start = Utf16OffsetFromScalarIndex(start);
+        int utf16End = Utf16OffsetFromScalarIndex(end);
+        return _text[utf16Start..utf16End];
+    }
+
+    /// <summary>Get the inclusive Unicode-scalar slice <c>[start, end]</c>.</summary>
+    public string SliceInclusive(int start, int end)
+    {
+        if (end == int.MaxValue) return string.Empty;
+        return Slice(start, end + 1);
+    }
+
+    /// <summary>Insert text at a Unicode-scalar index. Indices beyond the end clamp.</summary>
+    public void Insert(int charIndex, string text)
+    {
+        ArgumentNullException.ThrowIfNull(text);
+        ValidateUtf16(text);
+        int offset = Utf16OffsetFromScalarIndex(Math.Clamp(charIndex, 0, LenChars()));
+        _text = _text.Insert(offset, text);
+    }
+
+    /// <summary>Insert text at an extended-grapheme-cluster index.</summary>
+    public void InsertGrapheme(int graphemeIndex, string text)
+    {
+        ArgumentNullException.ThrowIfNull(text);
+        ValidateUtf16(text);
+        int offset = Utf16OffsetFromGraphemeIndex(Math.Max(0, graphemeIndex));
+        _text = _text.Insert(offset, text);
+    }
+
+    /// <summary>Remove a half-open Unicode-scalar range.</summary>
+    public void Remove(Range range)
+    {
+        int max = LenChars();
+        if (!TryResolveRemovalRange(range, max, out int start, out int end)) return;
+        Remove(start, end);
+    }
+
+    /// <summary>
+    /// Remove a Unicode-scalar range. Set <paramref name="endInclusive"/> to represent
+    /// Rust's inclusive <c>RangeBounds</c>; endpoints are clamped like upstream.
+    /// </summary>
+    public void Remove(int start, int end, bool endInclusive = false)
+    {
+        (start, end) = NormalizeRange(start, end, endInclusive, LenChars());
+        if (start >= end) return;
+        int utf16Start = Utf16OffsetFromScalarIndex(start);
+        int utf16End = Utf16OffsetFromScalarIndex(end);
+        _text = _text.Remove(utf16Start, utf16End - utf16Start);
+    }
+
+    /// <summary>Remove a half-open extended-grapheme-cluster range.</summary>
+    public void RemoveGraphemeRange(Range range)
+    {
+        int max = GraphemeCount();
+        if (!TryResolveRemovalRange(range, max, out int start, out int end)) return;
+        RemoveGraphemeRange(start, end);
+    }
+
+    /// <summary>Remove an extended-grapheme-cluster range.</summary>
+    public void RemoveGraphemeRange(int start, int end, bool endInclusive = false)
+    {
+        if (endInclusive && end < int.MaxValue) end++;
+        start = Math.Max(0, start);
+        end = Math.Max(0, end);
+        start = Math.Min(start, end);
+        if (start >= end) return;
+
+        int utf16Start = Utf16OffsetFromGraphemeIndex(start);
+        int utf16End = Utf16OffsetFromGraphemeIndex(end);
+        if (utf16Start < utf16End)
+            _text = _text.Remove(utf16Start, utf16End - utf16Start);
+    }
+
+    /// <summary>Replace the entire contents.</summary>
     public void Replace(string text)
     {
-        _lines.Clear();
-        _lines.AddRange(SplitIntoLines(text));
+        ArgumentNullException.ThrowIfNull(text);
+        ValidateUtf16(text);
+        _text = text;
     }
+
+    /// <summary>Append text to the end.</summary>
+    public void Append(string text) => Insert(LenChars(), text);
 
     /// <summary>Clear all content.</summary>
-    public void Clear()
+    public void Clear() => _text = string.Empty;
+
+    /// <summary>Convert a Unicode-scalar index to a UTF-8 byte index.</summary>
+    public int CharToByte(int charIndex)
     {
-        _lines.Clear();
-        _lines.Add("");
+        int offset = Utf16OffsetFromScalarIndex(Math.Clamp(charIndex, 0, LenChars()));
+        return Encoding.UTF8.GetByteCount(_text.AsSpan(0, offset));
     }
 
-    // ── Byte/char index conversion helpers ───────────────────────────────────
+    /// <summary>
+    /// Convert a UTF-8 byte index to a Unicode-scalar index. An index inside a
+    /// multibyte sequence maps to the scalar containing that byte, as Ropey does.
+    /// </summary>
+    public int ByteToChar(int byteIndex)
+    {
+        int target = Math.Clamp(byteIndex, 0, LenBytes());
+        int bytes = 0;
+        int scalars = 0;
+        foreach (Rune rune in _text.EnumerateRunes())
+        {
+            int next = bytes + rune.Utf8SequenceLength;
+            if (target < next) return scalars;
+            bytes = next;
+            scalars++;
+        }
+        return scalars;
+    }
 
-    /// <summary>Convert a byte offset in the full text to (lineIdx, byteOffsetInLine).</summary>
+    /// <summary>Convert a Unicode-scalar index to a line index.</summary>
+    public int CharToLine(int charIndex)
+    {
+        int target = Math.Clamp(charIndex, 0, LenChars());
+        List<LineSpan> spans = GetLineSpans(_text);
+        int line = 0;
+        for (int i = 1; i < spans.Count; i++)
+        {
+            int lineStart = ScalarIndexFromUtf16Offset(spans[i].Start);
+            if (lineStart > target) break;
+            line = i;
+        }
+        return line;
+    }
+
+    /// <summary>Get the Unicode-scalar index at the start of a line.</summary>
+    public int LineToChar(int lineIndex)
+    {
+        List<LineSpan> spans = GetLineSpans(_text);
+        if (lineIndex < 0) return 0;
+        if (lineIndex >= spans.Count) return LenChars();
+        return ScalarIndexFromUtf16Offset(spans[lineIndex].Start);
+    }
+
+    /// <summary>
+    /// Convert a UTF-8 byte index to a line and UTF-8 byte column. This is the
+    /// historical TextArea projection; use <see cref="ByteToScalarLineCol(int)"/>
+    /// for the source-equivalent Unicode-scalar column.
+    /// </summary>
     public (int line, int byteInLine) ByteToLineCol(int byteOffset)
     {
-        int remaining = byteOffset;
-        for (int i = 0; i < _lines.Count; i++)
-        {
-            int lineBytes = Encoding.UTF8.GetByteCount(_lines[i]);
-            if (remaining <= lineBytes || i == _lines.Count - 1)
-                return (i, Math.Min(remaining, lineBytes));
-            remaining -= lineBytes + 1; // +1 for '\n'
-        }
-        return (_lines.Count - 1, Encoding.UTF8.GetByteCount(_lines[^1]));
+        int byteIndex = Math.Clamp(byteOffset, 0, LenBytes());
+        int line = CharToLine(ByteToChar(byteIndex));
+        return (line, byteIndex - LineStartByte(line));
     }
 
-    /// <summary>Get the byte offset of the start of the given line.</summary>
-    public int LineStartByte(int lineIdx)
+    /// <summary>Convert a UTF-8 byte index to a line and Unicode-scalar column.</summary>
+    public (int line, int column) ByteToScalarLineCol(int byteIndex)
     {
-        int offset = 0;
-        for (int i = 0; i < lineIdx && i < _lines.Count; i++)
-            offset += Encoding.UTF8.GetByteCount(_lines[i]) + 1; // +1 for '\n'
-        return offset;
+        int charIndex = ByteToChar(byteIndex);
+        int line = CharToLine(charIndex);
+        return (line, charIndex - LineToChar(line));
     }
 
-    // ── Mutation helpers ─────────────────────────────────────────────────────
+    /// <summary>Convert a line and Unicode-scalar column to a UTF-8 byte index.</summary>
+    public int LineColToByte(int lineIndex, int column)
+    {
+        if (lineIndex < 0) return 0;
+        int lineStart = LineToChar(lineIndex);
+        int nextLineStart = lineIndex < LenLines() - 1
+            ? LineToChar(lineIndex + 1)
+            : LenChars();
+        int lineLength = Math.Max(0, nextLineStart - lineStart);
+        int charIndex = Math.Min(LenChars(), lineStart + Math.Clamp(column, 0, lineLength));
+        return CharToByte(charIndex);
+    }
 
-    /// <summary>Insert text at the given byte offset in the full text.</summary>
+    /// <summary>Get the UTF-8 byte index at the start of a line.</summary>
+    public int LineStartByte(int lineIndex) => CharToByte(LineToChar(lineIndex));
+
+    /// <summary>Enumerate Unicode scalar values.</summary>
+    public IEnumerable<Rune> Chars()
+    {
+        string snapshot = _text;
+        int offset = 0;
+        while (offset < snapshot.Length)
+        {
+            Rune.DecodeFromUtf16(snapshot.AsSpan(offset), out Rune rune, out int consumed);
+            offset += consumed;
+            yield return rune;
+        }
+    }
+
+    /// <summary>Return all extended grapheme clusters.</summary>
+    public IReadOnlyList<string> Graphemes()
+    {
+        if (_text.Length == 0) return Array.Empty<string>();
+        int[] starts = StringInfo.ParseCombiningCharacters(_text);
+        var result = new string[starts.Length];
+        for (int i = 0; i < starts.Length; i++)
+        {
+            int end = i + 1 < starts.Length ? starts[i + 1] : _text.Length;
+            result[i] = _text[starts[i]..end];
+        }
+        return result;
+    }
+
+    /// <summary>Count extended grapheme clusters.</summary>
+    public int GraphemeCount() => StringInfo.ParseCombiningCharacters(_text).Length;
+
+    /// <summary>Insert text at a UTF-8 byte boundary (legacy editor helper).</summary>
+    /// <exception cref="ArgumentException">The byte index is inside a UTF-8 sequence.</exception>
     public void InsertAtByte(int byteOffset, string text)
     {
-        var (lineIdx, byteInLine) = ByteToLineCol(byteOffset);
-        if (lineIdx >= _lines.Count) lineIdx = _lines.Count - 1;
-
-        string lineSrc = _lines[lineIdx];
-        int charInLine = ByteOffsetToCharOffset(lineSrc, byteInLine);
-        string before = lineSrc[..charInLine];
-        string after  = lineSrc[charInLine..];
-
-        text = text.Replace("\r\n", "\n", StringComparison.Ordinal).Replace('\r', '\n');
-
-        if (!text.Contains('\n'))
-        {
-            _lines[lineIdx] = before + text + after;
-        }
-        else
-        {
-            string[] newParts = text.Split('\n');
-            _lines[lineIdx] = before + newParts[0];
-            for (int i = 1; i < newParts.Length - 1; i++)
-                _lines.Insert(lineIdx + i, newParts[i]);
-            _lines.Insert(lineIdx + newParts.Length - 1, newParts[^1] + after);
-        }
+        ArgumentNullException.ThrowIfNull(text);
+        ValidateUtf16(text);
+        int utf16Offset = Utf16OffsetFromByteBoundary(byteOffset);
+        _text = _text.Insert(utf16Offset, text);
     }
 
-    /// <summary>Remove bytes in [startByte, endByte) from the full text.</summary>
+    /// <summary>Remove UTF-8 bytes in <c>[startByte, endByte)</c> (legacy editor helper).</summary>
+    /// <exception cref="ArgumentException">Either index is inside a UTF-8 sequence.</exception>
     public void RemoveBytes(int startByte, int endByte)
     {
+        startByte = Math.Clamp(startByte, 0, LenBytes());
+        endByte = Math.Clamp(endByte, 0, LenBytes());
         if (startByte >= endByte) return;
-        string full   = ToString();
-        byte[] utf8   = Encoding.UTF8.GetBytes(full);
-        startByte     = Math.Clamp(startByte, 0, utf8.Length);
-        endByte       = Math.Clamp(endByte,   0, utf8.Length);
-        byte[] before = utf8[..startByte];
-        byte[] after  = utf8[endByte..];
-        string result = Encoding.UTF8.GetString(before) + Encoding.UTF8.GetString(after);
-        Replace(result);
+        int start = Utf16OffsetFromByteBoundary(startByte);
+        int end = Utf16OffsetFromByteBoundary(endByte);
+        _text = _text.Remove(start, end - start);
     }
 
-    /// <summary>Slice bytes [startByte, endByte) from the full text.</summary>
+    /// <summary>Slice UTF-8 bytes in <c>[startByte, endByte)</c> (legacy editor helper).</summary>
+    /// <exception cref="ArgumentException">Either index is inside a UTF-8 sequence.</exception>
     public string SliceBytes(int startByte, int endByte)
     {
-        string full = ToString();
-        byte[] utf8 = Encoding.UTF8.GetBytes(full);
-        startByte   = Math.Clamp(startByte, 0, utf8.Length);
-        endByte     = Math.Clamp(endByte,   0, utf8.Length);
-        if (startByte >= endByte) return "";
-        return Encoding.UTF8.GetString(utf8[startByte..endByte]);
+        startByte = Math.Clamp(startByte, 0, LenBytes());
+        endByte = Math.Clamp(endByte, 0, LenBytes());
+        if (startByte >= endByte) return string.Empty;
+        int start = Utf16OffsetFromByteBoundary(startByte);
+        int end = Utf16OffsetFromByteBoundary(endByte);
+        return _text[start..end];
     }
 
-    // ── Static helpers ────────────────────────────────────────────────────────
-
-    /// <summary>Convert a byte offset within a UTF-8 string to a char (UTF-16) index.</summary>
-    public static int ByteOffsetToCharOffset(string s, int byteOffset)
+    /// <summary>
+    /// Convert a UTF-8 byte offset to a UTF-16 code-unit offset. An interior byte
+    /// maps to the start of its containing scalar. This is a managed-only adapter.
+    /// </summary>
+    public static int ByteOffsetToCharOffset(string text, int byteOffset)
     {
-        byte[] utf8 = Encoding.UTF8.GetBytes(s);
-        byteOffset  = Math.Clamp(byteOffset, 0, utf8.Length);
-        return Encoding.UTF8.GetCharCount(utf8, 0, byteOffset);
+        ArgumentNullException.ThrowIfNull(text);
+        ValidateUtf16(text);
+        int target = Math.Clamp(byteOffset, 0, Encoding.UTF8.GetByteCount(text));
+        int bytes = 0;
+        int utf16 = 0;
+        foreach (Rune rune in text.EnumerateRunes())
+        {
+            int next = bytes + rune.Utf8SequenceLength;
+            if (target < next) return utf16;
+            bytes = next;
+            utf16 += rune.Utf16SequenceLength;
+        }
+        return utf16;
     }
 
-    /// <summary>Convert a char (UTF-16) offset in a string to a byte offset.</summary>
-    public static int CharOffsetToByteOffset(string s, int charOffset)
+    /// <summary>
+    /// Convert a UTF-16 code-unit offset to a UTF-8 byte offset. An offset between
+    /// a surrogate pair maps to the start of the represented scalar.
+    /// </summary>
+    public static int CharOffsetToByteOffset(string text, int charOffset)
     {
-        charOffset = Math.Clamp(charOffset, 0, s.Length);
-        return Encoding.UTF8.GetByteCount(s[..charOffset]);
+        ArgumentNullException.ThrowIfNull(text);
+        ValidateUtf16(text);
+        int offset = Math.Clamp(charOffset, 0, text.Length);
+        if (offset > 0 && offset < text.Length &&
+            char.IsHighSurrogate(text[offset - 1]) && char.IsLowSurrogate(text[offset]))
+        {
+            offset--;
+        }
+        return Encoding.UTF8.GetByteCount(text.AsSpan(0, offset));
+    }
+
+    /// <summary>Full text, matching the source Display implementation.</summary>
+    public override string ToString() => _text;
+
+    private int Utf16OffsetFromScalarIndex(int scalarIndex)
+    {
+        int target = Math.Clamp(scalarIndex, 0, LenChars());
+        int scalars = 0;
+        int utf16 = 0;
+        foreach (Rune rune in _text.EnumerateRunes())
+        {
+            if (scalars == target) return utf16;
+            scalars++;
+            utf16 += rune.Utf16SequenceLength;
+        }
+        return utf16;
+    }
+
+    private int ScalarIndexFromUtf16Offset(int utf16Offset)
+    {
+        int target = Math.Clamp(utf16Offset, 0, _text.Length);
+        int scalars = 0;
+        int utf16 = 0;
+        foreach (Rune rune in _text.EnumerateRunes())
+        {
+            if (utf16 >= target) break;
+            utf16 += rune.Utf16SequenceLength;
+            scalars++;
+        }
+        return scalars;
+    }
+
+    private int Utf16OffsetFromGraphemeIndex(int graphemeIndex)
+    {
+        if (graphemeIndex <= 0 || _text.Length == 0) return 0;
+        int[] starts = StringInfo.ParseCombiningCharacters(_text);
+        return graphemeIndex >= starts.Length ? _text.Length : starts[graphemeIndex];
+    }
+
+    private int Utf16OffsetFromByteBoundary(int byteOffset)
+    {
+        int target = Math.Clamp(byteOffset, 0, LenBytes());
+        int bytes = 0;
+        int utf16 = 0;
+        foreach (Rune rune in _text.EnumerateRunes())
+        {
+            if (bytes == target) return utf16;
+            int next = bytes + rune.Utf8SequenceLength;
+            if (target < next)
+                throw new ArgumentException("The byte index must be on a UTF-8 scalar boundary.", nameof(byteOffset));
+            bytes = next;
+            utf16 += rune.Utf16SequenceLength;
+        }
+        return utf16;
+    }
+
+    private static (int start, int end) NormalizeRange(int start, int end, bool endInclusive, int max)
+    {
+        start = Math.Clamp(start, 0, max);
+        if (endInclusive && end < int.MaxValue) end++;
+        end = Math.Clamp(end, 0, max);
+        return end < start ? (start, start) : (start, end);
+    }
+
+    private static bool TryResolveRange(Range range, int max, out int start, out int end)
+    {
+        if (!TryResolveIndex(range.Start, max, out start) ||
+            !TryResolveIndex(range.End, max, out end) || end < start)
+        {
+            start = end = 0;
+            return false;
+        }
+        return true;
+    }
+
+    private static bool TryResolveRemovalRange(Range range, int max, out int start, out int end)
+    {
+        if (!TryResolveRemovalIndex(range.Start, max, out start) ||
+            !TryResolveRemovalIndex(range.End, max, out end))
+        {
+            start = end = 0;
+            return false;
+        }
+        return true;
+    }
+
+    private static bool TryResolveRemovalIndex(Index index, int max, out int value)
+    {
+        if (!index.IsFromEnd)
+        {
+            value = index.Value;
+            return true;
+        }
+
+        if (index.Value > max)
+        {
+            value = 0;
+            return false;
+        }
+        value = max - index.Value;
+        return true;
+    }
+
+    private static bool TryResolveIndex(Index index, int max, out int value)
+    {
+        if (index.IsFromEnd)
+        {
+            if (index.Value > max)
+            {
+                value = 0;
+                return false;
+            }
+            value = max - index.Value;
+            return true;
+        }
+
+        value = index.Value;
+        return value <= max;
+    }
+
+    private static int CountScalars(string text)
+    {
+        int count = 0;
+        foreach (Rune _ in text.EnumerateRunes()) count++;
+        return count;
+    }
+
+    private static List<LineSpan> GetLineSpans(string text)
+    {
+        var result = new List<LineSpan>();
+        int lineStart = 0;
+        int offset = 0;
+        while (offset < text.Length)
+        {
+            int terminatorLength = text[offset] switch
+            {
+                '\r' when offset + 1 < text.Length && text[offset + 1] == '\n' => 2,
+                '\r' or '\n' or '\v' or '\f' or '\u0085' or '\u2028' or '\u2029' => 1,
+                _ => 0,
+            };
+
+            if (terminatorLength > 0)
+            {
+                result.Add(new LineSpan(lineStart, offset, offset + terminatorLength));
+                offset += terminatorLength;
+                lineStart = offset;
+                continue;
+            }
+
+            Rune.DecodeFromUtf16(text.AsSpan(offset), out _, out int consumed);
+            offset += consumed;
+        }
+
+        result.Add(new LineSpan(lineStart, text.Length, text.Length));
+        return result;
+    }
+
+    private static bool IsValidUtf16(string text)
+    {
+        int offset = 0;
+        while (offset < text.Length)
+        {
+            if (Rune.DecodeFromUtf16(text.AsSpan(offset), out _, out int consumed) !=
+                System.Buffers.OperationStatus.Done)
+            {
+                return false;
+            }
+            offset += consumed;
+        }
+        return true;
+    }
+
+    private static void ValidateUtf16(string text)
+    {
+        if (!IsValidUtf16(text))
+            throw new ArgumentException("Text must contain well-formed UTF-16.", nameof(text));
     }
 }
 

@@ -1,9 +1,9 @@
 ﻿Screen 18: Visual Effects
 Upstream snapshot: app_visualeffects_80x24.snap
 Viewport: 80x24
-Upstream nonblank chars: 1415
-Local nonblank chars: 448
-Local/upstream char ratio: 0.317
+Upstream nonblank chars: 1382
+Local nonblank chars: 1081
+Local/upstream char ratio: 0.782
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -13,65 +13,65 @@ local   : 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: La
 upstream: ╭────────────────────────────────────────────────────Visual Effects─────────────
 local   : ╭────────────────────────────────Visual Effects────────────────────────────────╮
 @@ row 03
-upstream: │ ⬤ Metaballs │ ←/→ Switch │ [t] Text FX │ 48.1 FPS │ 20.8ms avg │ 16.0/31.6ms
-local   : │⬤ Metaballs │ ←/→ Switch │ [t] Text FX │ FPS │ Frame time                     │
+upstream: │ ⬤ Metaballs │ ←/→ Switch │ [t] Text FX │ 50.4 FPS │ 19.8ms avg │ 16.0/31.2ms
+local   : │vfx mouse focus=0 effect_idx=2 effect=plasma harness_scroll=0                 │
 @@ row 04
-upstream: │                                        ⣀⣀⣤⣤⣶⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-local   : │                    ⢀⣀⢄⣀                  ⢰⢝   ⢘⠄ ⢱                           │
+upstream: │                                           ⢀⣀⣀⣀⣤⣤⣤⣤⣴⣶⣶⣶⣶⣶⣶⣶⣶⣶⣿⣿⣿⣿⣿⣿⣶⣶⣶⣶⣶⣶⣶⣶⣶⣤⣤⣤
+local   : │╭────────────────Plasma────────────────╮╭──────────────Harness───────────────╮│
 @@ row 05
-upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣶⣦⣤⣤⣀⣀            ⣀⣠⣤⣴⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-local   : │                  ⢀⡴⠓⠑⠢⡀⠑⢄                ⢱⠈⠢⢄⠤⠊  ⢰⠁                          │
+upstream: ⣤⣤⣀⣀⣀⡀                            ⣀⣀⣠⣤⣴⣶⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+local   : ││⣿⠋        ⢾⣿⣿⣿⣿⣿⠿⠛⠁     ⡀⠘⢿⣿⣿⣿⣿⣿⣄     ││Effect: plasma                      ││
 @@ row 06
-upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣶⣤⣤⣀⢀⣀⣤⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-local   : │                 ⢀⠗⡅   ⡕  ⢇                ⠑⢄   ⢀⠔⠁                           │
+upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣷⣶⣶⣦⣤⣤⣀⣀          ⢀⣀⣠⣤⣶⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+local   : ││⠁            ⢀⠔⠁      ⡠⠊   ⠙⣿⣿⣿⣿⣿⣆    ││Label: Plasma                       ││
 @@ row 07
-upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢀⣠⣤⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-local   : │                  ⢇⠈⠒⠔⠊  ⢀⠇                  ⠉⠑⠉⠁                             │
+upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣶⢀⣀⣤⣴⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+local   : ││ ⢀⣴⣶⣿⠆     ⢀⠔⢁⣤⣶⣶⣦⣄⡀⡠⠊      ⢈⠿⣿⣿⣿⣿⣆   ││Renderer:                           ││
 @@ row 08
-upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢀⣀⣤⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-local   : │                   ⠑⢄⣀⢀⣀⠔⠁                                                    │
+upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣀⣠⣴⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+local   : ││⣰⣿⣿⣿⡟    ⢀⠔⠁⣴⣿⣿⣿⣿⣿⣿⣿⠆     ⢀⠔⠁ ⠈⠛⠿⣿⣿⡀  ││local-effect-braille-canvas         ││
 @@ row 09
-upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣀⣤⣴⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿────────────Markdown Overlay────────────⣿
-local   : │                      ⠁                             ⢀⣔⢖⡑⠒⢄                    │
+upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣀⣤⣴⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣤⣀    ────────────Markdown Overlay────────────⣿
+local   : ││⣿⣿⣿⣿⠁  ⢀⠔⠁ ⣼⣿⣿⣿⣿⣿⠟⠋     ⢀⢿⣿⣿⣶⣄   ⡈⠉   ││Mode: braille                       ││
 @@ row 10
-upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣀⣤⣴⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│FrankenTUI Visual FX                         ⣿
-local   : │                                                   ⣔⠏  ⠈⢆ ⠑⡄                  │
+upstream: ⣿⣿⣿⣿⣿⣀⣤⣴⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│FrankenTUI Visual FX                         ⣿
+local   : ││⣿⣿⣿⡏ ⢀⠔⠁  ⣸⣿⣿⣿⡿⠋      ⢀⠔⠁⠈⢿⣿⣿⣿⣧⡠⠊     ││focus=0                             ││
 @@ row 11
-upstream: ⣿⣿⣿⢀⣀⣤⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│                                             ⣿
-local   : │                                                  ⠐⡅⠣⣀⢀⡠⠃  ⡕                  │
+upstream: ⣿⣠⣴⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│                                             ⣿
+local   : ││⣿⣿⣿⢁⠔⠁    ⠻⠛⡩⠊  ⣀⣀⣀ ⢀⠔⠁   ⠘⣿⣿⣿⣿⡇      ││harness_scroll=0                    ││
 @@ row 12
-upstream: ⣿⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│This panel is real markdown rendered on top o⣿
-local   : │                  ⢀⣔⢖⡑⠒⢄                           ⠑⢄ ⠁  ⢀⠔⠁                  │
+upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│This panel is real markdown rendered on top o⣿
+local   : ││⣿⣿⣿⠁      ⡠⠊  ⢀⣾⣿⣿⣿⣷⡅      ⣹⣿⣿⣿⣷      ││                                    ││
 @@ row 13
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│animated backdrops.                          ⣿
-local   : │                                                                              │
+local   : ││⣿⣿⣿     ⡠⠊    ⢸⣿⣿⣿⣿⠁     ⡠⠊⢸⣿⣿⣿⣿ ⢀⠔⠁  ││Layered trigonometric plasma field. ││
 @@ row 14
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│• deterministic output                       ⣿
-local   : │                                                                              │
+local   : ││⣿⣿⣿   ⡠⠊      ⢘⣿⣿⣿⣿⣷⠆  ⡠⠊  ⢸⣿⣿⣿⣿⠔⠁    ││                                    ││
 @@ row 15
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│• alpha-correct compositing                  ⣿
-local   : │                                                                              │
+local   : ││⣿⣿⣿ ⡠⠊    ⣠⣀⢀⠔⠁⠈⠛⠛⠛⠁ ⡠⠊   ⢀⣿⣿⣿⣿⡇      ││                                    ││
 @@ row 16
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│• crisp text over motion                     ⣿
-local   : │                                                                              │
+local   : ││⣿⣿⣿⡏      ⢻⣿⣿⣶⣄⡀   ⡠⠊     ⣼⣿⣿⣿⡿⠁      ││                                    ││
 @@ row 17
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│                                             ⣿
-local   : │                                                                              │
+local   : ││⣿⣿⣿⣿    ⢀⠔⠉⢿⣿⣿⣿⣿⣶⣤⡊      ⣼⣿⣿⣿⠟⠁       ││                                    ││
 @@ row 18
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│`←/→` switch effects · `p` palette · `t` text⣿
-local   : │                                                                              │
+local   : ││⢻⣿⣿⣿⣇  ⠔⠁  ⠈⢿⣿⣿⣿⣿⣿⣿⣶⡄  ⢀⠔⠉⠉⠉   ⣀⣤⣾⣿⠂  ││                                    ││
 @@ row 19
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│                                             ⣿
-local   : │                                                                              │
+local   : ││ ⠙⢿⣿⣿⡄       ⡹⠿⣿⣿⡿⠟⠋ ⢀⠔⠁     ⣠⣾⣿⣿⣿⡟   ││                                    ││
 @@ row 20
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│                                             ⣿
-local   : │                                                                              │
+local   : ││    ⠉      ⠠⠊      ⢀⠔⠁     ⢀⣾⣿⣿⣿⣿⡟    ││                                    ││
 @@ row 21
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│                                             ⣿
-local   : │                                                                              │
+local   : ││⣷⡀        ⣴⣶⣶⣶⣶⣶⣤⣀⠔⠁     ⢀⣴⣿⣿⣿⣿⣿⠟     ││                                    ││
 @@ row 22
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿│                                             ⣿
-local   : │                                                                              │
+local   : │╰──────────────────────────────────────╯╰────────────────────────────────────╯│
 @@ row 23
 upstream: ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿╰─────────────────────────────────────────────⣿
 local   : ╰──────────────────────────────────────────────────────────────────────────────╯

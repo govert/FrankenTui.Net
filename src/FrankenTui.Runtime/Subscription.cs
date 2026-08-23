@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 // Port of .external/frankentui/crates/ftui-runtime/src/subscription.rs
-// Upstream commit: f958e59e1406a90fdb92512103e3591911a9d68c
+// Upstream commit: 15cc6543f76b814394c590f9e7719dedd6684e4c
 //
 // Subscription system for continuous event sources.
 //
@@ -114,25 +114,41 @@ internal sealed class StopTrigger
 
 // ── RunningSubscription ──────────────────────────────────────────────────
 
+internal sealed record SubscriptionFailure(SubId Id, string Error);
+
+internal sealed class SubscriptionRunState
+{
+    private int _panicked;
+
+    internal bool HasPanicked => Volatile.Read(ref _panicked) != 0;
+
+    internal void MarkPanicked() => Interlocked.Exchange(ref _panicked, 1);
+}
+
 internal sealed class RunningSubscription
 {
     internal SubId Id { get; }
     private readonly StopTrigger _trigger;
+    private readonly SubscriptionRunState _state;
     private Thread? _thread;
-    internal int Panicked; // 0 = false, 1 = true (Interlocked)
 
     private static readonly TimeSpan StopJoinTimeout = TimeSpan.FromMilliseconds(250);
     private static readonly TimeSpan StopJoinPoll = TimeSpan.FromMilliseconds(1);
 
-    internal RunningSubscription(SubId id, StopTrigger trigger, Thread thread)
+    internal RunningSubscription(
+        SubId id,
+        StopTrigger trigger,
+        Thread thread,
+        SubscriptionRunState? state = null)
     {
         Id = id;
         _trigger = trigger;
         _thread = thread;
+        _state = state ?? new SubscriptionRunState();
     }
 
     /// <summary>Returns true if the subscription thread panicked.</summary>
-    internal bool HasPanicked => Interlocked.CompareExchange(ref Panicked, 0, 0) != 0;
+    internal bool HasPanicked => _state.HasPanicked;
 
     internal void SignalStop()
     {
@@ -199,13 +215,19 @@ internal sealed class SubscriptionManager<M> where M : class
 {
     internal List<RunningSubscription> Active = new();
     private readonly Channel<M> _channel = Channel.CreateUnbounded<M>();
+    private readonly Channel<SubscriptionFailure> _failureChannel =
+        Channel.CreateUnbounded<SubscriptionFailure>();
     private readonly ChannelWriter<M> _writer;
     private readonly ChannelReader<M> _reader;
+    private readonly ChannelWriter<SubscriptionFailure> _failureWriter;
+    private readonly ChannelReader<SubscriptionFailure> _failureReader;
 
     internal SubscriptionManager()
     {
         _writer = _channel.Writer;
         _reader = _channel.Reader;
+        _failureWriter = _failureChannel.Writer;
+        _failureReader = _failureChannel.Reader;
     }
 
     internal int ActiveCount => Active.Count;
@@ -260,7 +282,8 @@ internal sealed class SubscriptionManager<M> where M : class
             EffectSystem.RecordDynamicsSubStart();
             var (signal, trigger) = StopSignal.Create();
             var writer = _writer;
-            var panicked = 0;
+            var failureWriter = _failureWriter;
+            var state = new SubscriptionRunState();
 
             var thread = new Thread(() =>
             {
@@ -270,9 +293,10 @@ internal sealed class SubscriptionManager<M> where M : class
                 }
                 catch (Exception ex)
                 {
-                    Interlocked.Exchange(ref panicked, 1);
+                    state.MarkPanicked();
                     EffectSystem.RecordDynamicsSubPanic();
                     EffectSystem.ErrorEffectPanic("subscription", $"sub_id={id}: {ex.Message}");
+                    failureWriter.TryWrite(new SubscriptionFailure(id, ex.Message));
                 }
             })
             {
@@ -280,7 +304,7 @@ internal sealed class SubscriptionManager<M> where M : class
             };
             thread.Start();
 
-            Active.Add(new RunningSubscription(id, trigger, thread));
+            Active.Add(new RunningSubscription(id, trigger, thread, state));
         }
 
         DebugTrace.Trace($"reconcile complete: active_after={Active.Count}");
@@ -293,6 +317,15 @@ internal sealed class SubscriptionManager<M> where M : class
         while (_reader.TryRead(out var msg))
             messages.Add(msg);
         return messages;
+    }
+
+    /// <summary>Drain subscription failures not yet reported to the model.</summary>
+    internal List<SubscriptionFailure> DrainFailures()
+    {
+        var failures = new List<SubscriptionFailure>();
+        while (_failureReader.TryRead(out var failure))
+            failures.Add(failure);
+        return failures;
     }
 
     /// <summary>Stop all running subscriptions using two-phase parallel shutdown.</summary>

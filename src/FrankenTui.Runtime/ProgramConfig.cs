@@ -24,6 +24,8 @@ public sealed class PersistenceConfig
     public static PersistenceConfig Default=>new();
     public static PersistenceConfig Disabled()=>new();
     public PersistenceConfig WithRegistry(object r){Registry=r;return this;}
+    public PersistenceConfig WithRegistry(StateRegistry r){Registry=r;return this;}
+    public StateRegistry? StateRegistry=>Registry as StateRegistry;
     public PersistenceConfig CheckpointEvery(TimeSpan t){CheckpointInterval=t;return this;}
     public PersistenceConfig WithAutoLoad(bool e){AutoLoad=e;return this;}
     public PersistenceConfig WithAutoSave(bool e){AutoSave=e;return this;}

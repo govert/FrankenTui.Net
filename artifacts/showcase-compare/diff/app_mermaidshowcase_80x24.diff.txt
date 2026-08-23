@@ -2,8 +2,8 @@
 Upstream snapshot: app_mermaidshowcase_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 1148
-Local nonblank chars: 452
-Local/upstream char ratio: 0.394
+Local nonblank chars: 1014
+Local/upstream char ratio: 0.883
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -14,67 +14,67 @@ upstream: ╭──────────────────────�
 local   : ╭───────────────────────────────Mermaid Showcase───────────────────────────────╮
 @@ row 03
 upstream: │Mermaid Showcase | Flow Basic (1/29) | Layout: Auto | Score: 0.8 | Viewport: au
-local   : │┌──────┐     ┌─────────┐                                                      │
+local   : │mouse focus=0 sample_idx=0 zoom_step=0 panel_scroll=0 status_scroll=0         │
 @@ row 04
 upstream: │╭─────────────Samples─────────────╮╭────────────────────────────────────Viewpor
-local   : ││ Start ├────>│ Decision │                                                    │
+local   : │Mermaid Showcase  Sample: Flow-01  Layout: Auto  Tier: Rich  Status: OK       │
 @@ row 05
 upstream: ││> Flow Basic [flow, S, branch, de││
-local   : │└──────┘     └────┬────┘                                                      │
+local   : │╭────Library─────╮╭────────────Viewport─────────────╮╭───────Controls────────╮│
 @@ row 06
 upstream: ││  Flow Subgraphs [flow, M, subgra││
-local   : │                  │                                                           │
+local   : ││› Flow-01 [Flow]││Plan ──▶ Audit                   ││Sample: Flow-01        ││
 @@ row 07
 upstream: ││  Flow Dense [flow, L, dense, dag││
-local   : │            ┌─────┴─────┐                                                     │
+local   : ││Sequence-01 [Seq││Audit ──▶ Port                   ││Glyph: unicode         ││
 @@ row 08
 upstream: ││  Flow Long Labels [flow, M, labe││
-local   : │            │            │                                                    │
+local   : ││State-01 [State]││Port ──▶ Test                    ││Render: adaptive       ││
 @@ row 09
 upstream: ││  Flow Unicode [flow, S, unicode,││
-local   : │            ▼            ▼                                                    │
+local   : ││                ││Test ──▶ Ship                    ││Palette: default       ││
 @@ row 10
 upstream: ││  Flow Styles [flow, M, classdef,││ ⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤                ⣀⣀⣤⣄⣀
-local   : │       ┌────────┐  ┌────────┐                                                 │
+local   : ││                ││                                 ││Guard: default         ││
 @@ row 11
 upstream: ││  Sequence Mini [sequence, S, com││ ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿   Start    ⣄⡀ ⣀⣀⣤⣴   Check
-local   : │       │Process │  │  End   │                                                 │
+local   : ││                ││                                 ││Zoom: 100%  Pan: 0,0   ││
 @@ row 12
 upstream: ││  Sequence Checkout [sequence, M,││ ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿            ⠟⠋⠉⠙⠛⠻⠿
-local   : │       └────────┘  └────────┘                                                 │
+local   : ││                ││                                 ││Viewport override: off ││
 @@ row 13
 upstream: ││  Sequence Dense [sequence, L, de││ ⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛               ⠈⠉⠙⠛⠛⠉
-local   : │                                                                              │
+local   : ││                ││                                 ││Layout: auto           ││
 @@ row 14
 upstream: ││  Class Basic [class, S, inherita││
-local   : │                                                                              │
+local   : ││                ││                                 ││Tier: rich             ││
 @@ row 15
 upstream: ││  Class Members [class, M, fields││
-local   : │                                                                              │
+local   : ││                ││                                 ││Wrap: wordchar         ││
 @@ row 16
 upstream: ││  State Basic [state, S, start-en││
-local   : │                                                                              │
+local   : ││                ││                                 │╰───────────────────────╯│
 @@ row 17
 upstream: ││  State Composite [state, M, comp││
-local   : │                                                                              │
+local   : ││                ││                                 │╭────────Metrics────────╮│
 @@ row 18
 upstream: ││  ER Basic [er, M, cardinality, r││
-local   : │                                                                              │
+local   : ││                ││                                 ││Parse: 2.96 ms         ││
 @@ row 19
 upstream: ││  Gantt Basic [gantt, M, sections│╰───────────────────────────────────────────
-local   : │                                                                              │
+local   : ││                ││                                 ││Layout: 1.11 ms        ││
 @@ row 20
 upstream: ││  Mindmap Seed [mindmap, S, tree]│╭─────────────────────────────────────Metric
-local   : │                                                                              │
+local   : ││                ││                                 ││Render: 2.25 ms        ││
 @@ row 21
 upstream: ││  Mindmap Deep [mindmap, L, deep,││Cache: hit 27  miss 1  last hit
-local   : │                                                                              │
+local   : ││                ││                                 ││Iter: 20               ││
 @@ row 22
 upstream: ││  Pie Basic [pie, S, title, showd││Warnings: 0
-local   : │                                                                              │
+local   : │╰────────────────╯╰─────────────────────────────────╯╰───────────────────────╯│
 @@ row 23
-upstream: ││  Pie Many [pie, M, many-slices] ││Parse: 0.09 ms
+upstream: ││  Pie Many [pie, M, many-slices] ││Parse: 0.06 ms
 local   : ╰──────────────────────────────────────────────────────────────────────────────╯
 @@ row 24
-upstream: d)  Tab/Shift+Tab: next/prev  0x0 00:00 out: 0.10 ms
+upstream: d)  Tab/Shift+Tab: next/prev  0x0 00:00 out: 0.05 ms
 local   : Mermaid Showcase [16/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

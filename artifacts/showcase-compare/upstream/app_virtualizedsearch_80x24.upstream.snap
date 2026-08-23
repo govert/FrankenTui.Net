@@ -1,24 +1,24 @@
- 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
+﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
 ╭──────────────────────────────────────────────────Virtualized Search───────────
 │╭Search (/ to focus, Esc to clear)─────────────────────────────────────────────
-││Type to search...                                                             
+││Type to search...
 │╰──────────────────────────────────────────────────────────────────────────────
 │╭───────────────────────────────Items (10000 total)────────────────────────────
-││[00000] Configuration :: CoreService initialized — payload_0                  
-││[00001] Authentication :: CoreService initialized — payload_1                 
-││[00002] Database :: CoreService initialized — payload_2                       
-││[00003] Network :: CoreService initialized — payload_3                        
-││[00004] FileSystem :: CoreService initialized — payload_4                     
-││[00005] Logging :: CoreService initialized — payload_5                        
-││[00006] Security :: CoreService initialized — payload_6                       
-││[00007] Performance :: CoreService initialized — payload_7                    
-││[00008] Configuration :: CoreService updated — payload_8                      
-││[00009] Authentication :: CoreService updated — payload_9                     
-││[00010] Database :: CoreService updated — payload_10                          
-││[00011] Network :: CoreService updated — payload_11                           
-││[00012] FileSystem :: CoreService updated — payload_12                        
-││[00013] Logging :: CoreService updated — payload_13                           
-││[00014] Security :: CoreService updated — payload_14                          
-││[00015] Performance :: CoreService updated — payload_15                       
-││[00016] Configuration :: CoreService validated — payload_16                   
-ced) Tab/Shift+Tab: next/prev 0x0 00:00 validated — payload_17                  
+││[00000] Configuration :: CoreService initialized — payload_0
+││[00001] Authentication :: CoreService initialized — payload_1
+││[00002] Database :: CoreService initialized — payload_2
+││[00003] Network :: CoreService initialized — payload_3
+││[00004] FileSystem :: CoreService initialized — payload_4
+││[00005] Logging :: CoreService initialized — payload_5
+││[00006] Security :: CoreService initialized — payload_6
+││[00007] Performance :: CoreService initialized — payload_7
+││[00008] Configuration :: CoreService updated — payload_8
+││[00009] Authentication :: CoreService updated — payload_9
+││[00010] Database :: CoreService updated — payload_10
+││[00011] Network :: CoreService updated — payload_11
+││[00012] FileSystem :: CoreService updated — payload_12
+││[00013] Logging :: CoreService updated — payload_13
+││[00014] Security :: CoreService updated — payload_14
+││[00015] Performance :: CoreService updated — payload_15
+││[00016] Configuration :: CoreService validated — payload_16
+ced) Tab/Shift+Tab: next/prev 0x0 00:00 validated — payload_17

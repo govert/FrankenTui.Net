@@ -2,8 +2,8 @@
 Upstream snapshot: app_virtualizedsearch_80x24.snap
 Viewport: 80x24
 Upstream nonblank chars: 1314
-Local nonblank chars: 1240
-Local/upstream char ratio: 0.944
+Local nonblank chars: 1373
+Local/upstream char ratio: 1.045
 Equal rows: 0; differing rows: 24
 
 @@ row 01
@@ -14,64 +14,64 @@ upstream: ╭──────────────────────�
 local   : ╭──────────────────────────────Virtualized Search──────────────────────────────╮
 @@ row 03
 upstream: │╭Search (/ to focus, Esc to clear)─────────────────────────────────────────────
-local   : │╭───────────────────────────────────Search───────────────────────────────────╮│
+local   : │╭─────────────────────Search (/ to focus, Esc to clear)──────────────────────╮│
 @@ row 04
 upstream: ││Type to search...
-local   : │╰────────────────────────────────────────────────────────────────────────────╯│
+local   : ││Type to search...  query="cfg"  focus=List                                  ││
 @@ row 05
 upstream: │╰──────────────────────────────────────────────────────────────────────────────
-local   : │╭──────────────────────────────Virtualized List──────────────────────────────╮│
+local   : │╰────────────────────────────────────────────────────────────────────────────╯│
 @@ row 06
 upstream: │╭───────────────────────────────Items (10000 total)────────────────────────────
-local   : ││[0000] Item #00000 — Virtualized list entry 0                               ││
+local   : │╭───────────Results (1250 of 10000 match)────────────╮╭────────Stats─────────╮│
 @@ row 07
 upstream: ││[00000] Configuration :: CoreService initialized — payload_0
-local   : ││[0001] Item #00001 — Virtualized list entry 1                               ││
+local   : ││             Item         Score        MatchPos     ││Total:    10000 items ││
 @@ row 08
 upstream: ││[00001] Authentication :: CoreService initialized — payload_1
-local   : ││[0002] Item #00002 — Virtualized list entry 2                               ││
+local   : ││>            [00000] Confi61ration :: C0,7,13vice ini│Matches:  1250        ││
 @@ row 09
 upstream: ││[00002] Database :: CoreService initialized — payload_2
-local   : ││[0003] Item #00003 — Virtualized list entry 3                               ││
+local   : ││             [00048] Confi58ration :: A0,7,13way vali│Selected: 1           ││
 @@ row 10
 upstream: ││[00003] Network :: CoreService initialized — payload_3
-local   : ││[0004] Item #00004 — Virtualized list entry 4                               ││
+local   : ││             [00096] Confi55ration :: W0,7,13ool cach│Query:    "cfg"       ││
 @@ row 11
 upstream: ││[00004] FileSystem :: CoreService initialized — payload_4
-local   : ││[0005] Item #00005 — Virtualized list entry 5                               ││
+local   : ││             [00144] Confi52ration :: C0,7,13nager co│Focus:    List        ││
 @@ row 12
 upstream: ││[00005] Logging :: CoreService initialized — payload_5
-local   : ││[0006] Item #00006 — Virtualized list entry 6                               ││
+local   : ││             [00192] Confi49ration :: E0,7,13s initia│Top score: 61         ││
 @@ row 13
 upstream: ││[00006] Security :: CoreService initialized — payload_6
-local   : ││[0007] Item #00007 — Virtualized list entry 7                               ││
+local   : ││             [00240] Confi46ration :: C0,7,13vice val│                      ││
 @@ row 14
 upstream: ││[00007] Performance :: CoreService initialized — payload_7
-local   : ││[0008] Item #00008 — Virtualized list entry 8                               ││
+local   : ││             [00288] Confi43ration :: A0,7,13way cach│Keybindings:          ││
 @@ row 15
 upstream: ││[00008] Configuration :: CoreService updated — payload_8
-local   : ││[0009] Item #00009 — Virtualized list entry 9                               ││
+local   : ││             [00336] Confi40ration :: W0,7,13ool comp│/        Focus search ││
 @@ row 16
 upstream: ││[00009] Authentication :: CoreService updated — payload_9
-local   : ││[0010] Item #00010 — Virtualized list entry 10                              ││
+local   : ││             [00384] Confi37ration :: C0,7,13nager in│Esc      Clear search ││
 @@ row 17
 upstream: ││[00010] Database :: CoreService updated — payload_10
-local   : ││[0011] Item #00011 — Virtualized list entry 11                              ││
+local   : ││             [00432] Confi34ration :: E0,7,13s valida╰──────────────────────╯│
 @@ row 18
 upstream: ││[00011] Network :: CoreService updated — payload_11
-local   : ││[0012] Item #00012 — Virtualized list entry 12                              ││
+local   : ││             [00480] Confi31ration :: C0,7,13vice cac╭─────Diagnostics──────╮│
 @@ row 19
 upstream: ││[00012] FileSystem :: CoreService updated — payload_12
-local   : ││[0013] Item #00013 — Virtualized list entry 13                              ││
+local   : ││             [00528] Confi28ration :: A0,7,13way comp│Selected diagnostic: 0││
 @@ row 20
 upstream: ││[00013] Logging :: CoreService updated — payload_13
-local   : ││[0014] Item #00014 — Virtualized list entry 14                              ││
+local   : ││                                                    ││Diagnostics scroll: 0 ││
 @@ row 21
 upstream: ││[00014] Security :: CoreService updated — payload_14
-local   : ││                                                                            ││
+local   : ││                                                    ││FTUI_VSEARCH_DIAGNOSTI││
 @@ row 22
 upstream: ││[00015] Performance :: CoreService updated — payload_15
-local   : │╰────────────────────────────────────────────────────────────────────────────╯│
+local   : │╰────────────────────────────────────────────────────╯╰──────────────────────╯│
 @@ row 23
 upstream: ││[00016] Configuration :: CoreService validated — payload_16
 local   : ╰──────────────────────────────────────────────────────────────────────────────╯

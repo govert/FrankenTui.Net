@@ -187,3 +187,78 @@ public static class TelemetryRedactor
         return builder.ToString();
     }
 }
+
+// ── Schema-meta wrapper types ──────────────────────────────────────────────
+// Port of .external/frankentui/crates/ftui-runtime/src/telemetry_schema.rs
+// constants and ALL_TARGETS / ALL_EVENTS / ALL_METRICS arrays. Exposed as the
+// TelemetrySchemaMeta / TelemetryTarget / TelemetryEventNames / TelemetryMetric
+// wrappers the test suite (the upstream spec) expects.
+
+/// <summary>
+/// Schema-version and manifest meta for the runtime telemetry contract.
+/// Mirrors upstream <c>SCHEMA_VERSION</c> and the schema-manifest constants.
+/// </summary>
+public static class TelemetrySchemaMeta
+{
+    /// <summary>Schema version for forward compatibility. Upstream <c>SCHEMA_VERSION</c>.</summary>
+    public const string SchemaVersion = "1.0.0";
+}
+
+/// <summary>Registered tracing targets. Upstream <c>ALL_TARGETS</c>.</summary>
+public static class TelemetryTarget
+{
+    public const string Runtime = "ftui.runtime";
+    public const string Effect = "ftui.effect";
+    public const string Process = "ftui.process";
+    public const string Resize = "ftui.decision.resize";
+    public const string Voi = "ftui.voi";
+    public const string Bocpd = "ftui.bocpd";
+    public const string EProcess = "ftui.eprocess";
+
+    public static IReadOnlyList<string> All { get; } =
+    [
+        Runtime, Effect, Process, Resize, Voi, Bocpd, EProcess,
+    ];
+}
+
+/// <summary>Canonical structured event names. Upstream <c>event::*</c> and <c>ALL_EVENTS</c>.</summary>
+public static class TelemetryEventNames
+{
+    public const string RuntimeStartup = "runtime.startup";
+    public const string EffectQueueShutdown = "effect_queue.shutdown";
+    public const string SpawnExecutorShutdown = "spawn_executor.shutdown";
+    public const string SubscriptionStopAll = "subscription.stop_all";
+    public const string SubscriptionStop = "subscription.stop";
+    public const string EffectCommand = "effect.command";
+    public const string EffectSubscription = "effect.subscription";
+    public const string QueueDrop = "effect_queue.drop";
+    public const string EffectTimeout = "effect.timeout";
+    public const string EffectPanic = "effect.panic";
+
+    public static IReadOnlyList<string> All { get; } =
+    [
+        RuntimeStartup, EffectQueueShutdown, SpawnExecutorShutdown,
+        SubscriptionStopAll, SubscriptionStop, EffectCommand,
+        EffectSubscription, QueueDrop, EffectTimeout, EffectPanic,
+    ];
+}
+
+/// <summary>Counter/gauge metric names. Upstream <c>metric::*</c> and <c>ALL_METRICS</c>.</summary>
+public static class TelemetryMetric
+{
+    public const string EffectsCommandTotal = "effects_command_total";
+    public const string EffectsSubscriptionTotal = "effects_subscription_total";
+    public const string EffectsExecutedTotal = "effects_executed_total";
+    public const string EffectsQueueEnqueued = "effects_queue_enqueued";
+    public const string EffectsQueueProcessed = "effects_queue_processed";
+    public const string EffectsQueueDropped = "effects_queue_dropped";
+    public const string EffectsQueueHighWater = "effects_queue_high_water";
+    public const string EffectsQueueInFlight = "effects_queue_in_flight";
+
+    public static IReadOnlyList<string> All { get; } =
+    [
+        EffectsCommandTotal, EffectsSubscriptionTotal, EffectsExecutedTotal,
+        EffectsQueueEnqueued, EffectsQueueProcessed, EffectsQueueDropped,
+        EffectsQueueHighWater, EffectsQueueInFlight,
+    ];
+}

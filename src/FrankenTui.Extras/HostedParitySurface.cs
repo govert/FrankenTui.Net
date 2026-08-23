@@ -46,7 +46,7 @@ public static class HostedParitySurface
                                     Items = description.Modules,
                                     SelectedIndex = session.SelectedModuleIndex,
                                     FocusedIndex = string.Equals(focus, "modules", StringComparison.Ordinal) ? session.SelectedModuleIndex : -1
-                                }
+                                }.WithHighlightSymbol("")
                             }),
                             (LayoutConstraint.Percentage(34), new PanelWidget
                             {

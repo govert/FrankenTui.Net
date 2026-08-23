@@ -1,24 +1,24 @@
 ﻿1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 ╭─────────────────────────────Table Theme Gallery──────────────────────────────╮
-│╭────────────────────────────Table Theme Gallery─────────────────────────────╮│
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-│╰────────────────────────────────────────────────────────────────────────────╯│
+│╭───Preset A [active]────╮╭───────Preset B────────╮╭────────Preset C─────────╮│
+││Theme   Tone    Use     ││Theme  Tone   Use      ││Theme   Tone    Use      ││
+││Default stable  terminal-│Defaultstable terminal-s│Default stable  terminal-sa
+││Contrastwarn    high-visi│Contraswarn   high-visib│Contrastwarn    high-visibi
+││Muted   info    documenta│Muted  info   documentat│Muted   info    documentati
+││Alert   criticalops surfa│Alert  criticaops surfac│Alert   criticalops surface
+││                        ││                       ││                         ││
+││                        ││                       ││                         ││
+││                        ││                       ││                         ││
+││                        ││                       ││                         ││
+││                        ││                       ││                         ││
+││                        ││                       ││                         ││
+││                        ││                       ││                         ││
+││                        ││                       ││                         ││
+││                        ││                       ││                         ││
+││                        ││                       ││                         ││
+││                        ││                       ││                         ││
+││                        ││                       ││                         ││
+││                        ││                       ││                         ││
+│╰────────────────────────╯╰───────────────────────╯╰─────────────────────────╯│
 ╰──────────────────────────────────────────────────────────────────────────────╯
 Table Theme Gallery [11/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

@@ -1,24 +1,24 @@
-﻿1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: [Layout] │ 7: Forms │
+﻿1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 ╭──────────────────────────────────Layout Lab──────────────────────────────────╮
-│Layout + Pane Studio  |  Preset: Flex Vertical  |  n/p: cycle presets  |  [/]:
-│                                                                              │
-│ ⢸⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⠭⢽ ⣏⣉⣉⣉⣉⣉⡇                                      │
-│ ⢸⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⢺ ⡧⠤⠤⠤⠤⠤⡇                                      │
-│ ⢸⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣹ ⡗⠒⠒⠒⠒⠒⡇                                      │
-│                                 ⣏⣉⣉⣉⣉⣉⡇                                      │
-│                                                                              │
-│                                                                              │
-│                                                                              │
-│                                                                              │
-│                                                                              │
-│                                                                              │
-│                                                                              │
-│                                                                              │
-│                                                                              │
-│                                                                              │
-│                                                                              │
-│                                                                              │
-│                                                                              │
-│FlexRoot req=44x15 got=44x15 min=0x0 | Fixed=44x3 | Min=44x4 | Max=44x6       │
+│╭────Pane Workspace [focus zoom=0]─────╮╭────Workspace Metrics [scroll=0]────╮│
+││selected_pane_index=0 context=idle    ││Selected: editor local_index=0      ││
+││mouse=layout_lab:workspace            ││Mode: Compare focus=0 zoom=0        ││
+││╭──────Files──────╮╭──────Logs───────╮││Hash: D5B520171B43                  ││
+│││                 ││                 │││Timeline: 0 actions scroll=0        ││
+│││ files           ││ logs            │││Load: default workspace             ││
+│││                 ││                 │││Context: idle                       ││
+│││                 ││                 │││Mouse: workspace click cycles pane, ││
+│││                 ││                 │││wheel zooms; metrics wheel scrolls  ││
+│││                 ││                 │││                                    ││
+││╰─────────────────╯╰─────────────────╯││                                    ││
+││╭────Editor *─────╮╭───────HUD───────╮││                                    ││
+│││                 ││                 │││                                    ││
+│││ selected=editor ││ hud             │││                                    ││
+│││ mode=Compare    ││                 │││                                    ││
+│││ hash=D5B520171B ││                 │││                                    ││
+│││ 43              ││                 │││                                    ││
+│││                 ││                 │││                                    ││
+││╰─────────────────╯╰─────────────────╯││                                    ││
+│╰──────────────────────────────────────╯╰────────────────────────────────────╯│
 ╰──────────────────────────────────────────────────────────────────────────────╯
 Layout Lab [6/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

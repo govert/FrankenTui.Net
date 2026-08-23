@@ -37,6 +37,23 @@ unresolvable build break or a file still failing oversight after retries.
 | 3 | ftui-render / ftui-text | depth fills (diff, presenter, width_cache, editor, rope) | many partial | not started |
 | 4 | rest | extras (Mermaid/effects/syntax), harness, pty, web, doctor, showcase | large | not started |
 
+## Incident + recovery (2026-06-09)
+
+During batch 4 an autonomous workflow agent ran `git reset --hard HEAD`, wiping
+uncommitted refactor work across Runtime/Render. Recovered from dangling stash
+`ce828df`. Converged the Runtime two-model conflict on **single-type files**
+(canonical), canonicalized Widgets to the **new generation** (`Lib.cs`
+`IWidget:IRuntimeView`), fixed all consumers. **Production solution now builds
+clean** (`dotnet build FrankenTui.Net.sln --no-incremental` → 0 errors outside
+tests). Committed: `afd20f0` (and `fe4ea4b`). Workflows hardened to forbid
+destructive git. See memory `frankentui-git-reset-incident`.
+
+OUTSTANDING before the loop can resume: `tests/FrankenTui.Tests.Headless` has
+~1676 compile errors from API drift between the recovered/canonicalized
+production APIs and the test files (tests are the upstream spec). This must be
+reconciled (likely restoring some lost production APIs from the stash to match
+the tests) before test-validated porting continues.
+
 ## Iteration log
 
 - 2026-06-09 — Batch 0 (validation): ported 8 widget stubs; oversight rigorous;

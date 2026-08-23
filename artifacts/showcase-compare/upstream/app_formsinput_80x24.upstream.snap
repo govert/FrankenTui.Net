@@ -1,24 +1,24 @@
- 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
+﻿ 1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8
 ╭────────────────────────────────────────────────────Forms & Input──────────────
 │╭────────────────────Registration Form────────────────────╮╭───────────────────
 ││ DRAFT   REQ 0/3   ERR 0   FIELDS 3/6                    ││ Search   Search...
-││Name *:         Enter your name...                       ││ Password Password 
-││Email *:        user@example.com                         ││                   
+││Name *:         Enter your name...                       ││ Password Password
+││Email *:        user@example.com                         ││
 ││Role:             Developer                              │╰───────────────────
 ││Theme:          (1) Light                                │╭───────────────────
-││Age:              25                                     ││1  Hello, world!   
-││Accept Terms *: [ ]                                      ││2                  
+││Age:              25                                     ││1  Hello, world!
+││Accept Terms *: [ ]                                      ││2
 ││                                                         ││3  This is a multi-
 ││                                                         ││4  You can type, se
-││                                                         ││5                  
-││                                                         ││6  Try Shift+Arrow 
+││                                                         ││5
+││                                                         ││6  Try Shift+Arrow
 ││                                                         ││7  Ctrl+A selects a
-││                                                         ││8  Ctrl+Z to undo, 
-││                                                         ││                   
-││                                                         ││                   
-││                                                         ││                   
-││                                                         ││                   
-││                                                         ││                   
-││                                                         ││                   
-││                                                         ││                   
-  Tab/Shift+Tab: next/prev    0x0 00:00                    ││                   
+││                                                         ││8  Ctrl+Z to undo,
+││                                                         ││
+││                                                         ││
+││                                                         ││
+││                                                         ││
+││                                                         ││
+││                                                         ││
+││                                                         ││
+  Tab/Shift+Tab: next/prev    0x0 00:00                    ││

@@ -2,7 +2,10 @@ namespace FrankenTui.Render;
 
 public enum EraseDisplayMode : byte
 {
-    Below = 0,
-    Above = 1,
-    All = 2
+    ToEnd = 0,
+    Below = ToEnd,
+    ToStart = 1,
+    Above = ToStart,
+    All = 2,
+    Scrollback = 3
 }

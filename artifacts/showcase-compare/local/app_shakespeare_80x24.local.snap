@@ -1,24 +1,24 @@
-﻿1: Tour │ 2: Dash │ 3: [Shakes] │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │
+﻿1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 ╭─────────────────────────────────Shakespeare──────────────────────────────────╮
-│╭───────────────────────────────────Search───────────────────────────────────╮│
-│╰────────────────────────────────────────────────────────────────────────────╯│
-│╭────────────────────────────────Shakespeare─────────────────────────────────╮│
-││To be, or not to be, that is the question:                                  ││
-││Whether 'tis nobler in the mind to suffer                                   ││
-││The slings and arrows of outrageous fortune,                                ││
-││Or to take arms against a sea of troubles,                                  ││
-││And by opposing end them. To die: to sleep;                                 ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-│╰────────────────────────────────────────────────────────────────────────────╯│
+│shakespeare mouse focus=0 query_idx=0 search_scroll=0 notes_scroll=0          │
+│╭──────────────Log Search──────────────╮╭───────────────Notes────────────────╮│
+││                                      ││A text-heavy screen driven through  ││
+││ / be                                 ││the same search primitives used     ││
+││ mode=literal case=insensitive        ││elsewhere in the demo.              ││
+││ context=0 matches=1                  ││                                    ││
+││ To «be», or not to «be», that is the ││focus=0 query_idx=0 query=be        ││
+││ question:                            ││search_scroll=0                     ││
+││                                      ││notes_scroll=0                      ││
+││                                      ││context=idle                        ││
+││                                      ││                                    ││
+││                                      ││                                    ││
+││                                      ││                                    ││
+││                                      ││                                    ││
+││                                      ││                                    ││
+││                                      ││                                    ││
+││                                      ││                                    ││
+││                                      ││                                    ││
+││                                      ││                                    ││
+│╰──────────────────────────────────────╯╰────────────────────────────────────╯│
 ╰──────────────────────────────────────────────────────────────────────────────╯
 Shakespeare [3/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)

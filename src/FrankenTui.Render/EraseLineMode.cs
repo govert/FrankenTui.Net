@@ -2,7 +2,9 @@ namespace FrankenTui.Render;
 
 public enum EraseLineMode : byte
 {
-    Right = 0,
-    Left = 1,
+    ToEnd = 0,
+    Right = ToEnd,
+    ToStart = 1,
+    Left = ToStart,
     All = 2
 }

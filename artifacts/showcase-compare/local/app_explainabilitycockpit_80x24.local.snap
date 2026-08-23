@@ -1,24 +1,24 @@
 ﻿1: Tour │ 2: Dash │ 3: Shakes │ 4: Code │ 5: Widgets │ 6: Layout │ 7: Forms │ 8:
 ╭────────────────────────────Explainability Cockpit────────────────────────────╮
-│╭───────────────────────────Explainability Cockpit───────────────────────────╮│
-││Frame: 42  |  Mode: Full  |  Refresh: 1s                                    ││
-││                                                                            ││
-││Diff Decision:                                                              ││
-││  Strategy: Dirty Rows (3 rows, 15 cells)                                   ││
-││  Cost: 250µs (vs 500µs full redraw)                                        ││
-││  Why: Posterior mean 0.87, Risk 0.10, Budget pressure low (12.6%)          ││
-││                                                                            ││
-││Budget: Used 2.1ms / 16.7ms (12.6%)                                         ││
-││  Diff: 250µs  Render: 500µs  Present: 250µs  Overhead: 1.1ms               ││
-││                                                                            ││
-││Degradation: None  |  Recovery: N/A  |  Cooldown: 0 frames                  ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
-││                                                                            ││
+│Explainability Cockpit | source: (disabled) | state=live | focus=0            │
+│Loaded deterministic sample evidence for diff, resize, budget, and timeline   │
+│╭─────Diff Strategy──────╮╭─Resize Regime (BOCPD)─╮╭───Budget Decisions────╮  │
+││Decision: full          ││Decision: coalesce     ││Decision: hold         │  │
+││Why: strategy full;     ││(burst)                ││Frame: 0.00ms / 16.00ms│  │
+│╰────────────────────────╯╰───────────────────────╯╰───────────────────────╯  │
+│╭─────────────────────────────Decision Timeline──────────────────────────────╮│
+││Timeline scroll: 0                                                          ││
+││diff   #  0 strategy full | mu=0.31 sigma2=0.12                             ││
+││resize #  1 coalesce burst | LBF=1.23                                       ││
+││budget #  2 hold budget | e=0.05                                            ││
+││scroll: n/p or Up/Down; click panels to focus; mouse wheel over timeline    ││
+│╰────────────────────────────────────────────────────────────────────────────╯│
+│╭─────────────────────────────Source + Controls──────────────────────────────╮│
+││Explainability Cockpit | source: (disabled)                                 ││
+││State: live | Auto-refresh: on | Overlay: off | Source scroll: 0            ││
+││Set FTUI_DEMO_EVIDENCE_JSONL or FTUI_HARNESS_EVIDENCE_JSONL to a writable   ││
+││path.                                                                       ││
+││Refresh every 5 ticks unless paused; max evidence lines=400; max timeline   ││
 │╰────────────────────────────────────────────────────────────────────────────╯│
 ╰──────────────────────────────────────────────────────────────────────────────╯
 Explainability Cockpit [33/45]  default [h] [cmd] [p] [d]  Mouse: AUTO (alt:OFF)
